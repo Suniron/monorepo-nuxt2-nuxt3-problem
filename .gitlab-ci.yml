@@ -1,0 +1,547 @@
+.npm_clean_install:
+  before_script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "App version: $VERSION"'
+    - npm ci --cache .npm --prefer-offline
+    - echo "Checking NPM version"
+    - npm -v
+    - echo "Checking node version"
+    - node -v
+.yarn_clean_install:
+  before_script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "App version: $VERSION"'
+    - yarn --frozen-lockfile --cache-folder .npm --prefer-offline
+    - echo "Checking NPM version"
+    - npm -v
+    - echo "Checking Yarn version"
+    - yarn -v
+    - echo "Checking node version"
+    - node -v
+
+stages: # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - create-image
+  - deploy
+
+
+# =========
+# =========
+# == API ==
+# =========
+# =========
+# Cache modules in between jobs
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
+
+api-unit-test-job:
+  extends: .npm_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Running unit tests..."
+    - npm test
+    - echo "Tests completed"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-lint-test-job:
+  extends: .npm_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Linting code..."
+    - npm run lint
+    - echo "Code lint finished"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-create-recette-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - env
+    - echo creating new Recette image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_api:rec . # Create a Docker image with recette tag
+    - docker push $DOCKER_REGISTRY/xrator_api:rec # Push Docker image to "rec" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-create-prerelease-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - echo creating new PreRelease image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_api:pre-$VERSION -t $DOCKER_REGISTRY/xrator_api:pre . # Create a Docker image with recette tags
+    - docker push $DOCKER_REGISTRY/xrator_api:pre-$VERSION # Push Docker image with versioned recette tag
+    - docker push $DOCKER_REGISTRY/xrator_api:pre # Push Docker image to "pre" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-create-prod-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_api:prod-$VERSION -t $DOCKER_REGISTRY/xrator_api . # Create a Docker image with production tags
+    - docker push $DOCKER_REGISTRY/xrator_api:prod-$VERSION # Push Docker image with versioned production tag
+    - docker push $DOCKER_REGISTRY/xrator_api # Push Docker image to "latest" tag
+  rules:
+    - if: $CI_COMMIT_TAG
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-start-job:
+  stage: deploy
+  tags:
+    - recettage
+    - front
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/git/xrator-frontend-compose/
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_api # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_api:rec # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_api # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+api-start-prerelease:
+  stage: deploy
+  tags:
+    - prerelease
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/xrator-compose/
+    - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_api # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_api:pre # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.yml" up -d --build xrator_api # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/api/**/*.js
+      - apps/api/**/*.ts
+      - apps/api/**/*.json
+
+# =========
+# =========
+# == WEB ==
+# =========
+# =========
+web-unit-test-job:
+  extends: .npm_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Running unit tests..."
+    - npm test
+    - echo "Tests completed"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+web-lint-test-job:
+  extends: .npm_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Linting code..."
+    - npm run lint
+    - echo "Code lint finished"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+web-create-recette-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - env
+    - echo creating new Recette image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_ui:rec . # Create a Docker image with recette tag
+    - docker push $DOCKER_REGISTRY/xrator_ui:rec # Push Docker image to "rec" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+web-create-prerelease-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - echo creating new PreRelease image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/xrator_ui:pre . # Create a Docker image with recette tags
+    - docker push $DOCKER_REGISTRY/xrator_ui:pre-$VERSION # Push Docker image with versioned recette tag
+    - docker push $DOCKER_REGISTRY/xrator_ui:pre # Push Docker image to "pre" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+web-create-prod-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/xrator_ui . # Create a Docker image with production tags
+    - docker push $DOCKER_REGISTRY/xrator_ui:prod-$VERSION # Push Docker image with versioned production tag
+    - docker push $DOCKER_REGISTRY/xrator_ui # Push Docker image to "latest" tag
+  rules:
+    - if: $CI_COMMIT_TAG
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+web-start-job:
+  stage: deploy
+  tags:
+    - recettage
+    - front
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/git/xrator-frontend-compose/
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_ui # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_ui:rec # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_ui # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+       
+web-start-prerelease:
+  stage: deploy
+  tags:
+    - prerelease
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/xrator-compose/
+    - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_ui # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_ui:pre # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.yml" up -d --build xrator_ui # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/web/**/*.ts
+      - apps/web/**/*.js
+      - apps/web/**/*.json
+
+# ===========
+# ===========
+# == STORE ==
+# ===========
+# ===========
+.store-variables:
+  variables:
+    JWT_ACCESS_SECRET: R4nd0m-4-T€sT
+    JWT_ACCESS_LIFE: 30m
+    JWT_ACCESS_TYPE: access
+    JWT_ACCESS_AUD: https://xrator.com
+    JWT_ACCESS_ISS: https://store.xrator.com
+    JWT_REFRESH_SECRET: R4nd0m-4-0thEr-T€sT
+    JWT_REFRESH_LIFE: 90d
+    JWT_REFRESH_LIFE_MS: 7776000000
+    JWT_REFRESH_TYPE: refresh
+    JWT_REFRESH_AUD: https://xrator.com
+    JWT_REFRESH_ISS: https://store.xrator.com
+    JWT_REFRESH_DOMAIN: ""
+
+store-unit-test-job:
+  extends: 
+  - .store-variables
+  - .yarn_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Running unit tests..."
+    - yarn test
+    - echo "Tests completed"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-lint-test-job:
+  extends: 
+  - .store-variables
+  - .yarn_clean_install
+  stage: test
+  tags:
+    - validation
+  script:
+    - echo "Linting code..."
+    - yarn lint
+    - echo "Code lint finished"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-create-recette-image:
+  extends: 
+  - .store-variables
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - env
+    - echo creating new Recette image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_store:rec . # Create a Docker image with recette tag
+    - docker push $DOCKER_REGISTRY/xrator_store:rec # Push Docker image to "rec" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-create-prerelease-image:
+  extends: 
+  - .store-variables
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - echo creating new PreRelease image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_store:pre-$VERSION -t $DOCKER_REGISTRY/xrator_store:pre . # Create a Docker image with recette tags
+    - docker push $DOCKER_REGISTRY/xrator_store:pre-$VERSION # Push Docker image with versioned recette tag
+    - docker push $DOCKER_REGISTRY/xrator_store:pre # Push Docker image to "pre" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-create-prod-image:
+  extends: 
+  - .store-variables
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_store:prod-$VERSION -t $DOCKER_REGISTRY/xrator_store . # Create a Docker image with production tags
+    - docker push $DOCKER_REGISTRY/xrator_store:prod-$VERSION # Push Docker image with versioned production tag
+    - docker push $DOCKER_REGISTRY/xrator_store # Push Docker image to "latest" tag
+  rules:
+    - if: $CI_COMMIT_TAG
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-start-job:
+  extends: 
+  - .store-variables
+  stage: deploy
+  tags:
+    - recettage
+    - store
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/git/xrator-db-compose/
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_store # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_store:rec # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_store # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+store-start-prerelease:
+  extends: 
+  - .store-variables
+  stage: deploy
+  tags:
+    - prerelease
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/xrator-compose/
+    - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_store # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_store:pre # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.yml" up -d --build xrator_store # Start service again
+  after_script:
+    - docker exec xrator_store npm run prestart # Wait for DB to be ready
+    - docker exec xrator_store npm run import-demo || true # Import demo data (do not fail job if seeders did not run, as they are already imported)
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/store/**/*.js
+      - apps/store/**/*.ts
+      - apps/store/**/*.json
+
+
+# ========
+# ========
+# == DB ==
+# ========
+# ========
+db-create-recette-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - env
+    - echo creating new Recette image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_db:rec . # Create a Docker image with recette tag
+    - docker push $DOCKER_REGISTRY/xrator_db:rec # Push Docker image to "rec" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
+    - changes:
+      - apps/db/**/*
+
+db-create-prerelease-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - echo creating new PreRelease image for tag $VERSION
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_db:pre-$VERSION -t $DOCKER_REGISTRY/xrator_db:pre . # Create a Docker image with recette tags
+    - docker push $DOCKER_REGISTRY/xrator_db:pre-$VERSION # Push Docker image with versioned recette tag
+    - docker push $DOCKER_REGISTRY/xrator_db:pre # Push Docker image to "pre" tag
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/db/**/*
+
+db-create-prod-image:
+  stage: create-image
+  tags:
+    - recettage
+  script:
+    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - docker build --target prod -t $DOCKER_REGISTRY/xrator_db:prod-$VERSION -t $DOCKER_REGISTRY/xrator_db . # Create a Docker image with production tags
+    - docker push $DOCKER_REGISTRY/xrator_db:prod-$VERSION # Push Docker image with versioned production tag
+    - docker push $DOCKER_REGISTRY/xrator_db # Push Docker image to "latest" tag
+  rules:
+    - if: $CI_COMMIT_TAG
+    - changes:
+      - apps/db/**/*
+
+db-start-job:
+  stage: deploy
+  tags:
+    - recettage
+    - store
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/git/xrator-db-compose/
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_db # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_db:rec # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_db # Start service again
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
+    - changes:
+      - apps/db/**/*
+
+db-start-prerelease:
+  stage: deploy
+  tags:
+    - prerelease
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Starting..."
+    - cd /home/user/xrator-compose/
+    - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_db # Remove service
+    - docker pull $DOCKER_REGISTRY/xrator_db:pre # Pull new image
+    - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
+    - docker-compose -f "docker-compose.yml" up -d --build xrator_db # Start service again
+  after_script:
+    - docker exec xrator_store npm run prestart # Waiting for Postgres DB to be ready
+    - docker exec xrator_store npm run import-demo # Import the demo data in new prerelease database
+  rules:
+    # Should be run after push on develop
+    - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
+    - changes:
+      - apps/db/**/*
