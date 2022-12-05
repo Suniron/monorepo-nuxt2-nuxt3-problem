@@ -1,0 +1,28 @@
+{
+  "name": "xrator-operator",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
+    "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
+    "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "eslint-config-custom": "workspace:*",
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "packageManager": "pnpm@7.14.2"
+}

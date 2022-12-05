@@ -1,0 +1,134 @@
+{
+        "folders": [
+                // FRONT
+                {
+                        "path": "../xrator_api"
+                },
+                {
+                        "path": "../xrator_ui"
+                },
+                // BACK
+                {
+                        "path": "../xrator_store"
+                },
+                {
+                        "path": "../xrator_db"
+                },
+                // COMMON
+                {
+                        "path": "../xrator-dev-compose"
+                }
+        ],
+        "extensions": {
+                "recommendations": [
+                        // FRONT
+                        "octref.vetur",
+                        // COMMON       
+                        "dbaeumer.vscode-eslint",
+                        "eamodio.gitlens",
+                        "esbenp.prettier-vscode",
+                        "ms-azuretools.vscode-docker",
+                        "atlassian.atlascode",
+                        "orta.vscode-jest",
+                        "naumovs.color-highlight",
+                        "yzhang.markdown-all-in-one",
+                        "atlassian.atlascode",
+                        // BACK
+                        "mtxr.sqltools",
+                        "prisma.prisma",
+                        "mtxr.sqltools-driver-pg"
+                        // OPTIONNAL
+                        // "github.copilot",
+                        // "github.copilot-labs",
+                        // gruntfuggly.todo-tree
+                ],
+                "unwantedRecommendations": [
+                        "vue.volar",
+                        "firefox-devtools.vscode-firefox-debug",
+                        "ms-edgedevtools.vscode-edge-devtools",
+                        "ms-mssql.mssql",
+                        "mtxr.sqltools",
+                        "googlecloudtools.cloudcode",
+                        "oracle.oracledevtools"
+                ]
+        },
+        "settings": {
+                // == FRONT ==
+                // Vetur:
+                "vetur.validation.interpolation": true,
+                "vetur.experimental.templateInterpolationService": true,
+                "vetur.validation.templateProps": true,
+                "vetur.completion.tagCasing": "initial",
+                // == COMMON ==
+                // Formatters:
+                "eslint.format.enable": true,
+                "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+                "[vue]": {
+                        "editor.defaultFormatter": "octref.vetur"
+                },
+                "[markdown]": {
+                        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+                },
+                // Jira:
+                "atlascode.jira.todoIssues.enabled": false,
+                "atlascode.jira.startWorkBranchTemplate.customPrefixes": [
+                        "feature/",
+                        "bugfix/",
+                        "hotfix/"
+                ],
+                // Jest:
+                "jest.nodeEnv": {
+                        "PORT": "3002",
+                        "POSTGRES_URI": "postgres://postgres:z445YcjKMgoJrGSaOCtO7nASF9H2nxwO@xrator_db:5432/xrator",
+                        "JWT_ACCESS_SECRET": "uW%k02xpw&ukfF0C2!VYAM!WK%76rTSY",
+                        "JWT_ACCESS_LIFE": "30m",
+                        "JWT_ACCESS_TYPE": "access",
+                        "JWT_ACCESS_AUD": "https://xrator.com",
+                        "JWT_ACCESS_ISS": "https://store.xrator.com",
+                        "JWT_REFRESH_SECRET": "ZpfvsB5!&CvCCYba*mWtHXsRVH&0fLrF",
+                        "JWT_REFRESH_LIFE": "90d",
+                        "JWT_REFRESH_LIFE_MS": "7776000000",
+                        "JWT_REFRESH_TYPE": "refresh",
+                        "JWT_REFRESH_AUD": "https://xrator.com",
+                        "JWT_REFRESH_ISS": "https://store.xrator.com",
+                        "JWT_REFRESH_DOMAIN": ""
+                },
+                "jest.disabledWorkspaceFolders": [
+                        "xrator_ui",
+                        "xrator_api",
+                        "xrator_db",
+                        "xrator-dev-compose"
+                ],
+                "jest.autoRun": {"watch": false, "onSave": "test-file", "onStartup": ["all-tests"]},
+
+                // Vscode optimization:
+                "files.watcherExclude": {
+                        "**/.git/objects/**": true,
+                        "**/.git/subtree-cache/**": true,
+                        "**/.hg/store/**": true,
+                        "**/node_modules/*/**": true,
+                },
+                "editor.codeActionsOnSave": {
+                        //"source.organizeImports": true, // TODO: clean all imports in differents projects
+                        "source.fixAll": true
+                },
+                "sqltools.connections": [
+                        {
+                                "previewLimit": 50,
+                                "server": "169.254.254.6",
+                                "port": 5432,
+                                "driver": "PostgreSQL",
+                                "name": "xrator db",
+                                "database": "xrator",
+                                "username": "postgres",
+                                "password": "z445YcjKMgoJrGSaOCtO7nASF9H2nxwO"
+                        }
+                ],
+                "[prisma]": {
+                        "editor.defaultFormatter": "Prisma.prisma"
+                },
+                "[json]": {
+                        "editor.defaultFormatter": "vscode.json-language-features"
+                }
+        }
+}

@@ -1,0 +1,65 @@
+{
+    "summary": {
+        "CRITICAL": 1,
+        "HIGH": 6,
+        "MEDIUM": 38,
+        "LOW": 5
+    },
+    "top5": [
+        {
+            "name": "Backup file",
+            "value": 38.0
+        },
+        {
+            "name": "SQL injection",
+            "value": 28.0
+        },
+        {
+            "name": "Path-relative style sheet import",
+            "value": 28.0
+        },
+        {
+            "name": "Input returned in response (reflected)",
+            "value": 26.0
+        },
+        {
+            "name": "Cross-site request forgery",
+            "value": 18.0
+        }
+    ],
+    "global": 42,
+    "heatmap": [
+        {
+            "Severity": "critical",
+            "Rare": 0,
+            "Unlikely": 0,
+            "Moderate": 1,
+            "Likely": 0,
+            "Almost Certain": 0
+        },
+        {
+            "Severity": "high",
+            "Rare": 0,
+            "Unlikely": 0,
+            "Moderate": 6,
+            "Likely": 0,
+            "Almost Certain": 0
+        },
+        {
+            "Severity": "medium",
+            "Rare": 0,
+            "Unlikely": 11,
+            "Moderate": 27,
+            "Likely": 0,
+            "Almost Certain": 0
+        },
+        {
+            "Severity": "low",
+            "Rare": 0,
+            "Unlikely": 4,
+            "Moderate": 1,
+            "Likely": 0,
+            "Almost Certain": 0
+        }
+    ]
+}

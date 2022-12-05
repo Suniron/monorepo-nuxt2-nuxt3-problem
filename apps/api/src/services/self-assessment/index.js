@@ -1,0 +1,19 @@
+import { SUCCESS } from '@/common/constants'
+import { createServiceError } from '@/common/errors/service'
+import { complianceAPIs } from '@/api/store'
+
+var groupBy = function (xs, key) {
+  return xs.reduce(function (rv, x) {
+    ;(rv[x[key]] = rv[x[key]] || []).push(x)
+    return rv
+  }, {})
+}
+
+export const fetchComplianceService = async (params, accessToken = '') => {
+  let result = await complianceAPIs.fetchCompliance(params, accessToken)
+  const { compliance = null } = params
+  if (compliance) {
+    result.compliances = groupBy(result.compliances, 'chapter')
+  }
+  return result
+}

@@ -1,0 +1,17 @@
+{
+  "id": "5dfa3005-5f8f-41f6-befe-bb1603e6dd9c",
+  "firstName": "DefaultValue",
+  "lastName": "DefaultValue",
+  "username": "DefaultValued",
+  "email": "DefaultValue@xrator.fr",
+  "companyId": 1,
+  "companyName": "DefaultValue",
+  "roles": [
+    "admin"
+  ],
+  "typ": "access",
+  "iat": 1647445921,
+  "exp": 1647447721,
+  "aud": "https://xrator.com",
+  "iss": "https://store.xrator.com"
+}

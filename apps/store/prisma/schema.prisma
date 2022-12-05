@@ -1,0 +1,981 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+  binaryTargets   = ["native"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URI")
+}
+
+model alembic_version {
+  version_num String @id(map: "alembic_version_pkc") @db.VarChar(32)
+}
+
+model asset {
+  id                                     Int                   @id @default(autoincrement())
+  owner                                  String?               @db.Uuid
+  maintainer                             String?               @db.Uuid
+  company_id                             Int?
+  name                                   String?               @db.VarChar
+  type                                   String                @default("SERVER") @db.VarChar
+  risk_score                             String?               @db.VarChar
+  exposure_level                         String?               @db.VarChar
+  company                                company?              @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_asset_maintainerTouser            user?                 @relation("asset_maintainerTouser", fields: [maintainer], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_asset_ownerTouser                 user?                 @relation("asset_ownerTouser", fields: [owner], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  asset_building                         asset_building?
+  asset_compliance                       asset_compliance?
+  asset_document                         asset_document?
+  asset_mission                          asset_mission[]
+  asset_network                          asset_network?
+  asset_server                           asset_server?
+  asset_user                             asset_user?
+  asset_web                              asset_web?
+  cartography_element                    cartography_element[]
+  cpe_asset                              cpe_asset[]
+  group_asset                            group_asset[]
+  latest_scan_summary                    latest_scan_summary?
+  relation_assetTorelation_from_asset_id relation[]            @relation("assetTorelation_from_asset_id")
+  relation_assetTorelation_to_asset_id   relation[]            @relation("assetTorelation_to_asset_id")
+  scan_asset                             scan_asset[]
+  score_asset                            score_asset[]
+  score_asset_history                    score_asset_history[]
+  tag_asset                              tag_asset[]
+  vulnerability_asset                    vulnerability_asset[]
+
+  @@unique([id, type], map: "asset_id_key")
+  @@unique([name, type, company_id], map: "asset_name_type_key")
+}
+
+model asset_building {
+  id             Int     @id
+  type           String? @default("BUILDING") @db.VarChar
+  location       String? @db.VarChar
+  longitude      String? @db.VarChar
+  latitude       String? @db.VarChar
+  postal_address String? @db.VarChar
+  phone_number   String? @db.VarChar
+  asset          asset?  @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_building_asset_id_fkey")
+
+  @@unique([id, type], map: "asset_building_id_pkey")
+}
+
+model asset_compliance {
+  id            Int         @id
+  type          String?     @default("COMPLIANCE") @db.VarChar
+  compliance_id Int?
+  status        String?     @db.VarChar
+  mitigation    String?     @db.VarChar
+  residual_risk String?     @db.VarChar
+  asset         asset?      @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_compliance_asset_id_fkey")
+  compliance    compliance? @relation(fields: [compliance_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([id, type], map: "asset_compliance_id_pkey")
+}
+
+model asset_document {
+  id       Int        @id
+  type     String?    @db.VarChar
+  location String?    @db.VarChar
+  asset    asset?     @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_document_asset_id_fkey")
+  revision revision[]
+
+  @@unique([id, type], map: "asset_document_id_pkey")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model asset_mission {
+  id               Int       @id
+  last_update_date DateTime? @db.Date
+  version          Int?
+  type             String?   @default("MISSION") @db.VarChar
+  asset            asset?    @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_mission_asset_id_fkey")
+}
+
+model score_asset_history {
+  id          Int       @id @default(autoincrement())
+  fk_asset_id Int
+  type        ScoreType
+  score       Float?    @db.Real
+  log_date    DateTime  @db.Date
+  asset       asset     @relation(fields: [fk_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([fk_asset_id, type, log_date], map: "score_asset_history_type_log_date_key")
+}
+
+model score_asset {
+  id          Int       @id @default(autoincrement())
+  fk_asset_id Int
+  type        ScoreType
+  score       Float?    @db.Real
+  asset       asset     @relation(fields: [fk_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([fk_asset_id, type], map: "score_asset_type_key")
+}
+
+model asset_network {
+  id      Int     @id
+  type    String? @default("NETWORK") @db.VarChar
+  netmask String? @db.VarChar
+  network String? @db.VarChar
+  gateway String? @db.VarChar
+  asset   asset?  @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_network_asset_id_fkey")
+
+  @@unique([id, type], map: "asset_network_id_pkey")
+}
+
+model asset_server {
+  id                 Int       @id
+  type               String?   @default("SERVER") @db.VarChar
+  os                 String?   @db.VarChar
+  os_version         String?   @db.VarChar
+  os_build           String?   @db.VarChar
+  hostname           String?   @db.VarChar
+  o365_id            String?   @db.VarChar
+  aad_device_id      String?   @db.VarChar
+  first_seen         DateTime? @db.Date
+  last_seen          DateTime? @db.Date
+  os_processor       String?   @db.VarChar
+  architecture       String?   @db.VarChar
+  health_status      String?   @db.VarChar
+  external_address   String?   @db.VarChar
+  defender_av_status String?   @db.VarChar
+  is_ad_joined       Boolean?
+  onboarding_status  String?   @db.VarChar
+  managed_by         String?   @db.VarChar
+  managed_by_status  String?   @db.VarChar
+  asset              asset?    @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_server_asset_id_fkey")
+  ip                 ip[]
+
+  @@unique([id, type], map: "asset_server_id_pkey")
+}
+
+model asset_user {
+  id       Int     @id
+  type     String? @default("USER") @db.VarChar
+  position String? @db.VarChar
+  mail     String? @db.VarChar
+  tel      String? @db.VarChar
+  asset    asset?  @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_user_asset_id_fkey")
+
+  @@unique([id, type], map: "asset_user_id_pkey")
+}
+
+model asset_web {
+  id       Int     @id
+  type     String? @default("WEB") @db.VarChar
+  url      String? @db.VarChar
+  language String? @db.VarChar
+  asset    asset?  @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_web_asset_id_fkey")
+  uri      uri[]
+
+  @@unique([id, type], map: "asset_web_id_pkey")
+}
+
+model business_impact {
+  id                                                     Int                                                      @unique @default(autoincrement())
+  business_impact_name                                   String?                                                  @db.VarChar
+  business_mission_unit_feared_event_has_business_impact business_mission_unit_feared_event_has_business_impact[]
+}
+
+model business_mission_unit_feared_event_has_business_impact {
+  id                                     Int                                    @unique @default(autoincrement())
+  business_mission_unit_feared_event_id  Int
+  id_business_impact                     Int
+  business_impact                        business_impact                        @relation(fields: [id_business_impact], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fkey_business_impact")
+  business_mission_unit_has_feared_event business_mission_unit_has_feared_event @relation(fields: [business_mission_unit_feared_event_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fkey_business_mission_unit_has_feared_event")
+}
+
+model business_mission_unit_has_feared_event {
+  id                                                     Int                                                      @unique @default(autoincrement())
+  business_mission_unit_id                               Int
+  feared_event_id                                        Int
+  severity_id                                            Int?
+  feared_event                                           feared_event                                             @relation(fields: [feared_event_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "business_mission_unit_id")
+  relation                                               relation                                                 @relation(fields: [business_mission_unit_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fkey_business_mission_unit_id")
+  severity                                               severity?                                                @relation(fields: [severity_id], references: [id], onUpdate: NoAction, map: "fkey_severity")
+  business_mission_unit_feared_event_has_business_impact business_mission_unit_feared_event_has_business_impact[]
+}
+
+model cartography {
+  id                  Int                   @id @unique(map: "cartography_id_pkey") @default(autoincrement())
+  company_id          Int?
+  name                String?               @db.VarChar
+  company             company?              @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cartography_element cartography_element[]
+}
+
+model cartography_element {
+  id             Int          @id @unique(map: "cartography_element_id_pkey") @default(autoincrement())
+  cartography_id Int?
+  asset_id       Int?
+  relation_id    Int?
+  cygroup        String?      @db.VarChar
+  parent         String?      @db.VarChar
+  x              Float?
+  y              Float?
+  asset          asset?       @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cartography    cartography? @relation(fields: [cartography_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  relation       relation?    @relation(fields: [relation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model cipher_suite {
+  id         Int          @id @unique(map: "cipher_suite_id_pkey") @default(autoincrement())
+  port_id    Int?
+  strength   String?      @db.VarChar
+  tls        String?      @db.VarChar
+  names      String[]
+  port       port?        @relation(fields: [port_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan_asset scan_asset[]
+}
+
+model comment {
+  id                                        Int                  @id @unique(map: "comment_id_pkey") @default(autoincrement())
+  vulnerability_asset_id                    Int?
+  revision_id                               Int?
+  reply_comment_id                          Int?
+  user_id                                   String?              @db.Uuid
+  title                                     String?              @db.VarChar
+  comment                                   String?
+  created_at                                DateTime?            @db.Timestamp(6)
+  updated_at                                DateTime?            @db.Timestamp(6)
+  is_evidence                               Boolean?
+  comment_commentTocomment_reply_comment_id comment?             @relation("commentTocomment_reply_comment_id", fields: [reply_comment_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  revision                                  revision?            @relation(fields: [revision_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user                                      user?                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vulnerability_asset                       vulnerability_asset? @relation(fields: [vulnerability_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  other_comment                             comment[]            @relation("commentTocomment_reply_comment_id")
+}
+
+model comment_watch {
+  id                     Int                  @id @unique(map: "comment_watch_id_pkey") @default(autoincrement())
+  vulnerability_asset_id Int?
+  revision_id            Int?
+  user_id                String?              @db.Uuid
+  new_comment            Boolean?
+  revision               revision?            @relation(fields: [revision_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user                   user?                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vulnerability_asset    vulnerability_asset? @relation(fields: [vulnerability_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model company {
+  id                             Int                       @id @unique @default(autoincrement())
+  name                           String?                   @db.VarChar
+  base64_logo                    Bytes?
+  fk_phishing_scenario_domain_id Int?
+  phishing_scenario_domain       phishing_scenario_domain? @relation(fields: [fk_phishing_scenario_domain_id], references: [id], onUpdate: NoAction, map: "phishing_scenario_domain_fkey")
+  asset                          asset[]
+  cartography                    cartography[]
+  group                          group[]
+  probe                          probe[]
+  remediation_project            remediation_project[]
+  scan                           scan[]
+  setting                        setting[]
+  tag                            tag[]
+  user                           user[]
+}
+
+model compliance {
+  id                       Int                @id @unique(map: "compliance_id_pkey") @default(autoincrement())
+  compliance               String?            @db.VarChar
+  chapter                  String?            @db.VarChar
+  chapter_small            String?            @db.VarChar
+  title                    String?            @db.VarChar
+  section                  String?            @db.VarChar
+  description              String?            @db.VarChar
+  non_existant_risk        String?            @db.VarChar
+  inneffective_risk        String?            @db.VarChar
+  partially_effective_risk String?            @db.VarChar
+  effective_risk           String?            @db.VarChar
+  asset_compliance         asset_compliance[]
+}
+
+model cpe {
+  id                  Int                   @id @unique(map: "cpe_id_pkey") @default(autoincrement())
+  cpe                 String?               @db.VarChar
+  type                String?               @db.VarChar
+  vendor              String?               @db.VarChar
+  product             String?               @db.VarChar
+  version             String?               @db.VarChar
+  update              String?               @db.VarChar
+  edition             String?               @db.VarChar
+  language            String?               @db.VarChar
+  cpe_asset           cpe_asset[]
+  vulnerability_asset vulnerability_asset[]
+}
+
+model cpe_asset {
+  id         Int          @id @unique @default(autoincrement())
+  cpe_id     Int?
+  asset_id   Int?
+  asset      asset?       @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cpe        cpe?         @relation(fields: [cpe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan_asset scan_asset[]
+}
+
+model credinfo {
+  id                      Int     @id @unique @default(autoincrement())
+  scan_id                 Int?
+  type                    String? @db.VarChar
+  auth_method             String? @db.VarChar
+  username                String? @db.VarChar
+  password                String? @db.VarChar
+  port                    Int?
+  security_level          String? @db.VarChar
+  auth_algorithm          String? @db.VarChar
+  auth_password           String? @db.VarChar
+  privacy_algorithm       String? @db.VarChar
+  privacy_password        String? @db.VarChar
+  private_key             String?
+  private_key_passphrase  String? @db.VarChar
+  user_cert               String?
+  kdc                     String? @db.VarChar
+  kdc_port                Int?
+  kdc_transport           String? @db.VarChar
+  realm                   String? @db.VarChar
+  elevate_privileges_with String? @db.VarChar
+  escalation_password     String? @db.VarChar
+  escalation_account      String? @db.VarChar
+  bin_directory           String? @db.VarChar
+  su_user                 String? @db.VarChar
+  custom_password_prompt  String? @db.VarChar
+  domain                  String? @db.VarChar
+  ca_crt                  String?
+  scan                    scan?   @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model cvss {
+  id                  Int                   @id @unique @default(autoincrement())
+  code                String?               @db.VarChar
+  score               Float?
+  version             Float?
+  temporal_score      Float?
+  temporal_vector     String?               @db.VarChar
+  impact_score        Float?
+  vulnerability_asset vulnerability_asset[]
+}
+
+model dashboard_item {
+  id              Int              @id @unique(map: "dashboard_item_id_pkey") @default(autoincrement())
+  breakpoint      String?          @db.VarChar
+  breakpointwidth Int?
+  /// Default x postion if user has not moved the item
+  x               Int?
+  /// Default y postion if user has not moved the item
+  y               Int?
+  /// Default width if user has not resized the item
+  width           Int?
+  /// Default height if user has not resized the item
+  height          Int?
+  name            String?          @db.VarChar
+  prop            String?          @db.VarChar
+  ckey            String?          @db.VarChar
+  dashboard_user  dashboard_user[]
+}
+
+model dashboard_user {
+  user_id           String         @db.Uuid
+  dashboard_item_id Int
+  x                 Int?
+  y                 Int?
+  width             Int?
+  height            Int?
+  visible           Boolean?
+  dashboard_item    dashboard_item @relation(fields: [dashboard_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user              user           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([dashboard_item_id, user_id])
+  @@unique([dashboard_item_id, user_id], map: "dashboard_user_id_pkey")
+}
+
+model feared_event {
+  id                                     Int                                      @unique @default(autoincrement())
+  name                                   String?                                  @db.VarChar
+  business_mission_unit_has_feared_event business_mission_unit_has_feared_event[]
+}
+
+model group {
+  id          Int           @id @unique @default(autoincrement())
+  company_id  Int?
+  name        String?       @unique(map: "name_unique") @db.VarChar
+  company     company?      @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  group_asset group_asset[]
+  user_group  user_group[]
+}
+
+model group_asset {
+  asset_id Int
+  group_id Int
+  asset    asset @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  group    group @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([asset_id, group_id])
+}
+
+model header {
+  id          Int       @id @unique(map: "header_id_pkey") @default(autoincrement())
+  request_id  Int?
+  response_id Int?
+  name        String?   @db.VarChar
+  value       String?   @db.VarChar
+  request     request?  @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  response    response? @relation(fields: [response_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model info {
+  id      Int     @id @unique @default(autoincrement())
+  scan_id Int?
+  network String? @db.VarChar
+  cidr    Int?
+  address String? @db.VarChar
+  scan    scan?   @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model ip {
+  id                  Int                   @id @unique(map: "ip_id_pkey") @default(autoincrement())
+  asset_server_id     Int?
+  type                String?               @db.VarChar
+  address             String?               @db.VarChar
+  mac                 String?               @db.VarChar
+  iface               String?               @db.VarChar
+  mask                String?               @db.VarChar
+  operational_status  String?               @db.VarChar
+  asset_server        asset_server?         @relation(fields: [asset_server_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  port                port[]
+  vulnerability_asset vulnerability_asset[]
+}
+
+model latest_scan_summary {
+  asset_id                 Int   @id @unique(map: "latest_scan_summary_id_key")
+  scan_id                  Int?
+  low_vulnerabilities      Int?
+  medium_vulnerabilities   Int?
+  high_vulnerabilities     Int?
+  critical_vulnerabilities Int?
+  asset                    asset @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan                     scan? @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model mitre {
+  id               Int            @id @unique @default(autoincrement())
+  vulnerability_id Int?
+  code             String?        @db.VarChar
+  vulnerability    vulnerability? @relation(fields: [vulnerability_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model phishing_scenario {
+  id          Int     @id @unique @default(autoincrement())
+  name        String? @db.VarChar
+  description String? @db.VarChar
+  severity    Int?
+}
+
+model port {
+  id                  Int                   @id @unique @default(autoincrement())
+  ip_id               Int?
+  cpe_id              Int?
+  number              Int?
+  version             String?               @db.VarChar
+  service             String?               @db.VarChar
+  protocol            String?               @db.VarChar
+  detail              String?               @db.VarChar
+  status              String?               @db.VarChar
+  ip                  ip?                   @relation(fields: [ip_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cipher_suite        cipher_suite[]
+  scan_asset          scan_asset[]
+  vulnerability_asset vulnerability_asset[]
+}
+
+model probe {
+  id         Int        @id @unique(map: "probe_id_pkey") @default(autoincrement())
+  company_id Int?
+  store_id   String?    @db.Uuid
+  cdate      DateTime?  @default(now()) @db.Timestamptz(6)
+  name       String?    @db.VarChar
+  probe_type ProbeType?
+  status     String?    @db.VarChar
+  gw         String?    @db.VarChar
+  exit_ip    String?    @db.VarChar
+  address    String?    @db.VarChar
+  mask       String?    @db.VarChar
+  mac        String?    @db.VarChar
+  url        String?    @db.VarChar
+  info       String?    @db.VarChar
+  company    company?   @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  store      store?     @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan       scan[]
+}
+
+model reference {
+  id               Int            @id @unique @default(autoincrement())
+  vulnerability_id Int?
+  type             String?        @db.VarChar
+  value            String?        @db.VarChar
+  vulnerability    vulnerability? @relation(fields: [vulnerability_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model relation {
+  id                                     Int                                      @id @unique(map: "relation_id_pkey") @default(autoincrement())
+  type                                   String?                                  @db.VarChar
+  from_asset_id                          Int?
+  to_asset_id                            Int?
+  asset_assetTorelation_from_asset_id    asset?                                   @relation("assetTorelation_from_asset_id", fields: [from_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_from_asset_id")
+  asset_assetTorelation_to_asset_id      asset?                                   @relation("assetTorelation_to_asset_id", fields: [to_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_to_asset_id")
+  business_mission_unit_has_feared_event business_mission_unit_has_feared_event[]
+  cartography_element                    cartography_element[]
+
+  @@unique([type, from_asset_id, to_asset_id], map: "relation_uniq")
+}
+
+model request {
+  id           Int        @id @unique(map: "request_id_pkey") @default(autoincrement())
+  uri_id       Int?
+  type         String?    @db.VarChar
+  method       String?    @db.VarChar
+  http_version String?    @db.VarChar
+  parameters   String?    @db.VarChar
+  body         String?    @db.VarChar
+  uri          uri?       @relation(fields: [uri_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  header       header[]
+  response     response[]
+}
+
+model response {
+  id         Int      @id @unique(map: "response_id_pkey") @default(autoincrement())
+  request_id Int?
+  code       Int?
+  body       String?  @db.VarChar
+  request    request? @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  header     header[]
+}
+
+model result {
+  id       Int    @id @unique @default(autoincrement())
+  scan_id  Int?
+  raw_file Bytes?
+  scan     scan?  @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model revision {
+  id                Int             @id @unique(map: "revision_id_pkey") @default(autoincrement())
+  store_id          String?         @db.Uuid
+  asset_document_id Int?
+  cdate             DateTime?       @db.Date
+  revision          String?         @db.VarChar
+  description       String?         @db.VarChar
+  asset_document    asset_document? @relation(fields: [asset_document_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  store             store?          @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  comment           comment[]
+  comment_watch     comment_watch[]
+}
+
+model scan {
+  id                    Int                   @id @unique @default(autoincrement())
+  company_id            Int?
+  probe_id              Int?
+  name                  String?               @db.VarChar
+  cdate                 DateTime?             @default(now()) @db.Timestamptz(6)
+  sdate                 DateTime?             @db.Timestamptz(6)
+  fdate                 DateTime?             @db.Timestamptz(6)
+  start_date            DateTime?             @db.Date
+  end_date              DateTime?             @db.Date
+  start_time            DateTime?             @db.Timetz(6)
+  end_time              DateTime?             @db.Timetz(6)
+  scan_type             String?               @db.VarChar
+  container_id          String?               @db.VarChar
+  parameters            Json?                 @db.Json
+  status                String?               @db.VarChar
+  company               company?              @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  probe                 probe?                @relation(fields: [probe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  credinfo              credinfo[]
+  info                  info[]
+  latest_scan_summary   latest_scan_summary[]
+  result                result[]
+  scan_asset            scan_asset[]
+  v_scan_asset_details  v_scan_asset_details[]
+  v_scan_severity_count v_scan_severity_count[]
+}
+
+model scan_asset {
+  id                     Int                  @id @unique @default(autoincrement())
+  scan_id                Int?
+  asset_id               Int?
+  port_id                Int?
+  ip_id                  Int?
+  uri_id                 Int?
+  vulnerability_asset_id Int?
+  cpe_asset_id           Int?
+  site_map_id            Int?
+  cipher_suite_id        Int?
+  asset                  asset?               @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cipher_suite           cipher_suite?        @relation(fields: [cipher_suite_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cpe_asset              cpe_asset?           @relation(fields: [cpe_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  port                   port?                @relation(fields: [port_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scan                   scan?                @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vulnerability_asset    vulnerability_asset? @relation(fields: [vulnerability_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model severity {
+  id                                     Int                                      @unique @default(autoincrement())
+  name                                   String?                                  @db.VarChar
+  business_mission_unit_has_feared_event business_mission_unit_has_feared_event[]
+}
+
+model status_update {
+  id                     Int                  @id @unique(map: "status_update_id_pkey") @default(autoincrement())
+  vulnerability_asset_id Int?
+  orig_status            String?              @db.VarChar
+  updated_status         String?              @db.VarChar
+  cdate                  DateTime?            @db.Timestamp(6)
+  comment                String?              @db.VarChar
+  vulnerability_asset    vulnerability_asset? @relation(fields: [vulnerability_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model store {
+  id       String     @id @unique(map: "store_id_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String?    @db.VarChar
+  type     String?    @db.VarChar
+  md5      String?    @db.VarChar
+  size     Int?
+  udate    DateTime?  @default(now()) @db.Timestamptz(6)
+  path     String?    @db.VarChar
+  probe    probe[]
+  revision revision[]
+}
+
+model tag {
+  id         Int         @id @unique @default(autoincrement())
+  name       String?     @db.VarChar
+  company_id Int?
+  color      String?     @db.VarChar
+  company    company?    @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag_asset  tag_asset[]
+
+  @@unique([name, company_id], map: "tag_name_un")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model tag_asset {
+  asset_id Int
+  tag_id   Int
+  asset    asset @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag      tag   @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([asset_id, tag_id])
+}
+
+model uri {
+  id                  Int                   @id @unique(map: "uri_id_pkey") @default(autoincrement())
+  asset_web_id        Int?
+  uri                 String?               @db.VarChar
+  asset_web           asset_web?            @relation(fields: [asset_web_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  request             request[]
+  vulnerability_asset vulnerability_asset[]
+}
+
+model user {
+  id                                 String                               @id @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  company_id                         Int?
+  first_name                         String?                              @db.VarChar
+  last_name                          String?                              @db.VarChar
+  username                           String?                              @db.VarChar
+  password                           String?                              @db.VarChar
+  salt                               String?                              @db.VarChar
+  email                              String?                              @unique @db.VarChar
+  roles                              String[]
+  reset_token                        String?                              @db.VarChar
+  token_expires_at                   String?                              @db.VarChar
+  company                            company?                             @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  asset_asset_maintainerTouser       asset[]                              @relation("asset_maintainerTouser")
+  asset_asset_ownerTouser            asset[]                              @relation("asset_ownerTouser")
+  comment                            comment[]
+  comment_remediation_project        comment_remediation_project[]
+  comment_watch                      comment_watch[]
+  dashboard_user                     dashboard_user[]
+  remediation_project                remediation_project[]
+  remediation_project_assignee       remediation_project_assignee[]
+  remediation_project_status_history remediation_project_status_history[]
+  user_group                         user_group[]
+  user_session                       user_session[]
+  v_remediation_project_summary_list v_remediation_project_summary_list[]
+}
+
+model user_group {
+  user_id  String @db.Uuid
+  group_id Int
+  group    group  @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user     user   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([user_id, group_id])
+}
+
+model user_session {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String?   @db.Uuid
+  token      String?   @db.VarChar
+  type       String?   @db.VarChar
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  user       user?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, token, type], map: "user_id_token_type_key")
+}
+
+model vulnerability {
+  id                  Int                   @id @unique @default(autoincrement())
+  type                String?               @default("vulnerability") @db.VarChar
+  baseline            String?               @db.VarChar
+  oid                 String?               @db.VarChar
+  burp_id             Int?
+  name                String?               @db.VarChar
+  description         String?               @db.VarChar
+  remediation         String?               @db.VarChar
+  insight             String?               @db.VarChar
+  affected            String?               @db.VarChar
+  vulndetect          String?               @db.VarChar
+  cluster_id          Int?
+  mitre               mitre[]
+  reference           reference[]
+  vulnerability_asset vulnerability_asset[]
+}
+
+model vulnerability_asset {
+  id                        Int                         @id @unique @default(autoincrement())
+  asset_id                  Int?
+  vulnerability_id          Int?
+  cvss_id                   Int?
+  cpe_id                    Int?
+  ip_id                     Int?
+  port_id                   Int?
+  uri_id                    Int?
+  severity                  VulnerabilitySeverityEnum?
+  confidence                String?                     @db.VarChar
+  likelihood                String?                     @db.VarChar
+  details                   String?                     @db.VarChar
+  exploit_code_maturity     String?                     @db.VarChar
+  exploitability_ease       String?                     @db.VarChar
+  patch_publication_date    String?                     @db.VarChar
+  plugin_modification_date  String?                     @db.VarChar
+  vuln_publication_date     String?                     @db.VarChar
+  exploit_available         Boolean?
+  exploit_framework_core    Boolean?
+  exploited_by_malware      Boolean?
+  status                    String?                     @db.VarChar
+  custom_description        String?                     @db.VarChar
+  custom_remediation        String?                     @db.VarChar
+  asset                     asset?                      @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cpe                       cpe?                        @relation(fields: [cpe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  cvss                      cvss?                       @relation(fields: [cvss_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ip                        ip?                         @relation(fields: [ip_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  port                      port?                       @relation(fields: [port_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  uri                       uri?                        @relation(fields: [uri_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vulnerability             vulnerability?              @relation(fields: [vulnerability_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  comment                   comment[]
+  comment_watch             comment_watch[]
+  remediation_project_scope remediation_project_scope[]
+  scan_asset                scan_asset[]
+  status_update             status_update[]
+}
+
+model comment_remediation_project {
+  id                                       Int                                 @id @default(autoincrement())
+  fk_remediation_project_id                Int
+  fk_user_id                               String?                             @db.Uuid
+  fk_remediation_project_status_history_id Int?                                @unique(map: "fk_remediation_project_status_history_id_key")
+  comment                                  String                              @db.VarChar
+  created_at                               DateTime                            @default(now()) @db.Timestamptz(6)
+  remediation_project                      remediation_project                 @relation(fields: [fk_remediation_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  remediation_project_status_history       remediation_project_status_history? @relation(fields: [fk_remediation_project_status_history_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_remediation_project_fk_remediation_project_status_histo")
+  user                                     user?                               @relation(fields: [fk_user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+}
+
+model project_priority {
+  id                  Int                   @id @unique
+  name                String                @unique @db.VarChar(255)
+  weight              Int
+  remediation_project remediation_project[]
+}
+
+model project_status {
+  id                                                                                Int                                  @id @unique
+  name                                                                              String                               @unique @db.VarChar(255)
+  weight                                                                            Int
+  project_status_workflow_project_statusToproject_status_workflow_fk_from_status_id project_status_workflow[]            @relation("project_statusToproject_status_workflow_fk_from_status_id")
+  project_status_workflow_project_statusToproject_status_workflow_fk_to_status_id   project_status_workflow[]            @relation("project_statusToproject_status_workflow_fk_to_status_id")
+  remediation_project_status_history                                                remediation_project_status_history[]
+}
+
+model project_status_workflow {
+  id                                                                       Int            @id @default(autoincrement())
+  transition                                                               String         @db.VarChar(255)
+  fk_from_status_id                                                        Int
+  fk_to_status_id                                                          Int
+  project_status_project_statusToproject_status_workflow_fk_from_status_id project_status @relation("project_statusToproject_status_workflow_fk_from_status_id", fields: [fk_from_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  project_status_project_statusToproject_status_workflow_fk_to_status_id   project_status @relation("project_statusToproject_status_workflow_fk_to_status_id", fields: [fk_to_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([fk_from_status_id, fk_to_status_id], map: "fk_from_status_id_fk_to_status_id_key")
+}
+
+model remediation_project {
+  id                                 Int                                  @id @default(autoincrement())
+  fk_company_id                      Int
+  name                               String                               @db.VarChar(255)
+  description                        String                               @db.VarChar
+  fk_owner                           String                               @db.Uuid
+  fk_priority_id                     Int
+  start_date                         DateTime?                            @db.Timestamptz(6)
+  creation_date                      DateTime                             @default(now()) @db.Timestamptz(6)
+  due_date                           DateTime                             @db.Timestamptz(6)
+  company                            company                              @relation(fields: [fk_company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                               user                                 @relation(fields: [fk_owner], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  project_priority                   project_priority                     @relation(fields: [fk_priority_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  comment_remediation_project        comment_remediation_project[]
+  remediation_project_assignee       remediation_project_assignee[]
+  remediation_project_scope          remediation_project_scope[]
+  remediation_project_status_history remediation_project_status_history[]
+  v_remediation_project_summary_list v_remediation_project_summary_list[]
+}
+
+model remediation_project_assignee {
+  id                  Int                 @id @default(autoincrement())
+  fk_project_id       Int
+  fk_user_id          String              @db.Uuid
+  remediation_project remediation_project @relation(fields: [fk_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user                user                @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([fk_project_id, fk_user_id], map: "fk_project_id_fk_user_id_key")
+}
+
+model remediation_project_scope {
+  id                         Int                  @id @default(autoincrement())
+  fk_project_id              Int
+  fk_vulnerability_asset_id  Int?
+  deleted_asset_name         String?              @db.VarChar
+  deleted_vulnerability_name String?              @db.VarChar
+  is_done                    Boolean              @default(false)
+  remediation_project        remediation_project  @relation(fields: [fk_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vulnerability_asset        vulnerability_asset? @relation(fields: [fk_vulnerability_asset_id], references: [id], onUpdate: NoAction)
+
+  @@unique([fk_project_id, fk_vulnerability_asset_id], map: "fk_project_id_fk_vulnerability_asset_id_key")
+}
+
+model setting {
+  id         Int      @id @unique(map: "setting_id_pkey") @default(autoincrement())
+  company_id Int?
+  key        String?  @db.VarChar
+  value      String?  @db.VarChar
+  company    company? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model phishing_scenario_domain {
+  id      Int       @unique @default(autoincrement())
+  name    String?   @db.VarChar
+  company company[]
+}
+
+model remediation_project_status_history {
+  id                          Int                          @id @default(autoincrement())
+  fk_project_id               Int
+  fk_user_id                  String?                      @db.Uuid
+  fk_status_id                Int                          @default(1)
+  start_date                  DateTime                     @default(now()) @db.Timestamptz(6)
+  end_date                    DateTime?                    @db.Timestamptz(6)
+  remediation_project         remediation_project          @relation(fields: [fk_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  project_status              project_status               @relation(fields: [fk_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                        user?                        @relation(fields: [fk_user_id], references: [id], onUpdate: NoAction)
+  comment_remediation_project comment_remediation_project?
+}
+
+model v_asset_risk_scores {
+  asset_id        Int       @id
+  asset_name      String    @db.VarChar
+  asset_type      String    @db.VarChar
+  inherent_score  Float?
+  inherited_score Float?
+  compound_score  Float?
+  last_scan_date  DateTime? @db.Timestamptz(6)
+  company_id      Int
+}
+
+model v_remediation_project_summary_list {
+  project_id          Int                 @id
+  project_name        String              @db.VarChar
+  owner_id            String              @db.VarChar
+  owner_name          String              @db.VarChar
+  priority            String              @db.VarChar
+  priority_weight     Int
+  status              String              @db.VarChar
+  status_weight       Int
+  due_date            DateTime            @db.Timestamptz(6)
+  is_overdue          Boolean
+  company_id          Int
+  remediation_project remediation_project @relation(fields: [project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  owner               user                @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model v_scan_asset_details {
+  scan_id    Int      @id
+  asset_id   Int 
+  name       String   @db.VarChar
+  lower_name String 
+  os         String?  @db.VarChar
+  hostname   String?  @db.VarChar
+  ip_address String[]
+  language   String?  @db.VarChar
+  url        String?  @db.VarChar
+  mail       String?  @db.VarChar
+  scan       scan     @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model v_scan_severity_count {
+  scan_id  Int   @id
+  info     Int?
+  low      Int?
+  medium   Int?
+  high     Int?
+  critical Int?
+  scan     scan? @relation(fields: [scan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model db_migrations {
+  id             Int       @id @default(autoincrement())
+  name           String?   @db.VarChar(255)
+  batch          Int?
+  migration_time DateTime? @db.Timestamptz(6)
+}
+
+model db_migrations_lock {
+  index     Int  @id @default(autoincrement())
+  is_locked Int?
+}
+
+model scan_label {
+  type  String @id(map: "scan_label_pk") @db.VarChar
+  label String @db.VarChar
+}
+
+enum ProbeType {
+  SERVER
+  VMDK
+  OVA
+  VHD
+}
+
+enum ScoreType {
+  RISK
+}
+
+enum UserSessionTypeEnum {
+  access
+  refresh
+}
+
+enum VulnerabilitySeverityEnum {
+  info
+  low
+  medium
+  high
+  critical
+}

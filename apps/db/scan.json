@@ -1,0 +1,46 @@
+{
+    "Scan 1": {
+        "date": "2021-01-02",
+        "status": "Completed",
+        "Critical": 5,
+        "High": 12,
+        "Medium": 51,
+        "Low": 11,
+        "Ips": [
+            "10.254.0.0/24"
+        ],
+        "Urls": [
+            "bratrstvi.company.com"
+        ],
+        "Authenticated (Network)": true,
+        "Authenticated (Web)": false
+    },
+    "Scan 2": {
+        "date": "2021-02-02",
+        "status": "Completed",
+        "Critical": 1,
+        "High": 6,
+        "Medium": 38,
+        "Low": 5,
+        "Ips": [
+            "10.254.0.0/24"
+        ],
+        "Urls": [
+            "bratrstvi.company.com"
+        ],
+        "Authenticated (Network)": true,
+        "Authenticated (Web)": false
+    },
+    "Scan 3": {
+        "date": "CAN YOU SET TO 'NOW' ?",
+        "status": "Running",
+        "Ips": [
+            "10.254.0.0/24"
+        ],
+        "Urls": [
+            "bratrstvi.company.com"
+        ],
+        "Authenticated (Network)": true,
+        "Authenticated (Web)": false
+    }
+}

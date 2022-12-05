@@ -1,0 +1,7 @@
+{
+    "low": 5,
+    "medium": 4, 
+    "high": 1,
+    "critical": 2,
+    "healthy": 31
+}

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2019",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "CommonJS",
+    "strictNullChecks": true
+  },
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,2 @@
+CREATE TYPE "ProbeType" AS ENUM ('SERVER', 'VMDK', 'OVA', 'VHD');
+CREATE TYPE "ScoreType" AS ENUM ('RISK');

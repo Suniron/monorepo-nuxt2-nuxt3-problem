@@ -1,0 +1,30 @@
+
+[
+    {
+    "name": "Agent France - Paris",
+    "cdate": "2021-04-10",
+    "exitIp": "N/A",
+    "intIp": "172.16.0.2",
+    "gw": "172.16.0.254",
+    "mask": "16",
+    "status": "down"
+  },
+  {
+    "name": "Agent Spain - Toledo",
+    "cdate": "2021-06-10",
+    "exitIp": "N/A",
+    "intIp": "192.168.20.2",
+    "gw": "192.168.20.254",
+    "mask": "24",
+    "status": "down"
+  },
+  {
+    "name": "Agent Portugal - Cadafais",
+    "cdate": "2021-07-10",
+    "exitIp": "N/A",
+    "intIp": "192.168.30.2",
+    "gw": "192.168.30.254",
+    "mask": "24",
+    "status": "down"
+  }
+]

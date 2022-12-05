@@ -1,0 +1,166 @@
+{
+  "input": [
+    {
+      "cluster_id": 16,
+      "remediation": "Please install the updated package(s).",
+      "count_vuln": "7",
+      "count_asset": "7",
+      "count_asset_vuln": "7",
+      "count_asset_vuln_unmanaged": "7"
+    },
+    {
+      "cluster_id": 246,
+      "remediation": "Enable the mitigation(s) in the Linux Kernel or update to a more  recent Linux Kernel.",
+      "count_vuln": "6",
+      "count_asset": "6",
+      "count_asset_vuln": "6",
+      "count_asset_vuln_unmanaged": "6"
+    },
+    {
+      "cluster_id": 2,
+      "remediation": "The vendor has released updates. Please see  the references for more information.",
+      "count_vuln": "3",
+      "count_asset": "3",
+      "count_asset_vuln": "3",
+      "count_asset_vuln_unmanaged": "3"
+    },
+    {
+      "cluster_id": 8,
+      "remediation": null,
+      "count_vuln": "2",
+      "count_asset": "2",
+      "count_asset_vuln": "2",
+      "count_asset_vuln_unmanaged": "2"
+    },
+    {
+      "cluster_id": 11,
+      "remediation": "For Debian 9 stretch, these problems have been fixed in version2.7.13-2+deb9u5.\\n\\nWe recommend that you upgrade your python2.7 packages.",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    },
+    {
+      "cluster_id": 17,
+      "remediation": "For the stable distribution (buster), these problems have been fixed inversion 0.23.15-2+deb10u1.\\n\\nWe recommend that you upgrade your p11-kit packages.",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    },
+    {
+      "cluster_id": 21,
+      "remediation": "<p>Applications should use transport-level encryption (SSL/TLS) to protect all communications passing between the client and the server. The Strict-Transport-Security HTTP header should be used to ensure that clients refuse to access the server over an insecure connection.</p>",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    },
+    {
+      "cluster_id": 24,
+      "remediation": "Upgrade to Mozilla Firefox version 85  or later, Please see the references for more information.",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    },
+    {
+      "cluster_id": 29,
+      "remediation": "For the stable distribution (buster), this problem has been fixed inversion 1.3.8+dfsg-3+deb10u1.\\n\\nWe recommend that you upgrade your libzstd packages.",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    },
+    {
+      "cluster_id": 34,
+      "remediation": "For Debian 9 stretch, this problem has been fixed in version10.1.48-0+deb9u2.\\n\\nWe recommend that you upgrade your mariadb-10.1 packages.",
+      "count_vuln": "1",
+      "count_asset": "1",
+      "count_asset_vuln": "1",
+      "count_asset_vuln_unmanaged": "1"
+    }
+  ],
+  "output": [
+    {
+      "cluster_id": 16,
+      "remediation": "Please install the updated package(s).",
+      "count_vuln": 7,
+      "count_asset": 7,
+      "count_asset_vuln": 7,
+      "count_asset_vuln_unmanaged": 7
+    },
+    {
+      "cluster_id": 246,
+      "remediation": "Enable the mitigation(s) in the Linux Kernel or update to a more  recent Linux Kernel.",
+      "count_vuln": 6,
+      "count_asset": 6,
+      "count_asset_vuln": 6,
+      "count_asset_vuln_unmanaged": 6
+    },
+    {
+      "cluster_id": 2,
+      "remediation": "The vendor has released updates. Please see  the references for more information.",
+      "count_vuln": 3,
+      "count_asset": 3,
+      "count_asset_vuln": 3,
+      "count_asset_vuln_unmanaged": 3
+    },
+    {
+      "cluster_id": 8,
+      "remediation": null,
+      "count_vuln": 2,
+      "count_asset": 2,
+      "count_asset_vuln": 2,
+      "count_asset_vuln_unmanaged": 2
+    },
+    {
+      "cluster_id": 11,
+      "remediation": "For Debian 9 stretch, these problems have been fixed in version2.7.13-2+deb9u5.\\n\\nWe recommend that you upgrade your python2.7 packages.",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    },
+    {
+      "cluster_id": 17,
+      "remediation": "For the stable distribution (buster), these problems have been fixed inversion 0.23.15-2+deb10u1.\\n\\nWe recommend that you upgrade your p11-kit packages.",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    },
+    {
+      "cluster_id": 21,
+      "remediation": "<p>Applications should use transport-level encryption (SSL/TLS) to protect all communications passing between the client and the server. The Strict-Transport-Security HTTP header should be used to ensure that clients refuse to access the server over an insecure connection.</p>",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    },
+    {
+      "cluster_id": 24,
+      "remediation": "Upgrade to Mozilla Firefox version 85  or later, Please see the references for more information.",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    },
+    {
+      "cluster_id": 29,
+      "remediation": "For the stable distribution (buster), this problem has been fixed inversion 1.3.8+dfsg-3+deb10u1.\\n\\nWe recommend that you upgrade your libzstd packages.",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    },
+    {
+      "cluster_id": 34,
+      "remediation": "For Debian 9 stretch, this problem has been fixed in version10.1.48-0+deb9u2.\\n\\nWe recommend that you upgrade your mariadb-10.1 packages.",
+      "count_vuln": 1,
+      "count_asset": 1,
+      "count_asset_vuln": 1,
+      "count_asset_vuln_unmanaged": 1
+    }
+  ]
+}

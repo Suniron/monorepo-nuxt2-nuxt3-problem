@@ -1,0 +1,331 @@
+{
+  "assets": {
+    "id": 1,
+    "name": "bratrstvi.x-rator.com",
+    "os": null,
+    "hostname": null,
+    "type": "WEB",
+    "url": "bratrstvi.company.comd",
+    "language": "FR",
+    "position": null,
+    "mail": null,
+    "tel": null,
+    "location": null,
+    "relations": [
+      {
+        "id": 1,
+        "rel_id": 70,
+        "type": "BELONGS_TO",
+        "name": "CLOUD",
+        "to_id": 45
+      },
+      {
+        "id": 1,
+        "rel_id": 180,
+        "type": "LOCATED_TO",
+        "name": "10.254.1.13",
+        "to_id": 4
+      },
+      {
+        "id": 1,
+        "rel_id": 248,
+        "type": "LOCATED_TO",
+        "name": "10.254.1.13",
+        "to_id": 4
+      },
+      {
+        "id": 1,
+        "rel_id": 264,
+        "type": "MAINTAINED_BY",
+        "name": "Bob",
+        "to_id": 29
+      },
+      {
+        "id": 1,
+        "rel_id": 265,
+        "type": "MAINTAINED_BY",
+        "name": "Clara",
+        "to_id": 30
+      },
+      {
+        "id": 1,
+        "rel_id": 266,
+        "type": "MAINTAINED_BY",
+        "name": "Cristobal",
+        "to_id": 26
+      }
+    ],
+    "ips": [],
+    "revision": null,
+    "rev_cdate": null,
+    "netmask": null,
+    "network": null,
+    "gateway": null,
+    "latitude": null,
+    "longitude": null,
+    "vulnerabilities": {
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "tags": [
+      {
+        "id": 7,
+        "name": "CCTV",
+        "color": "#D7DAD5"
+      }
+    ],
+    "groups": [
+      {
+        "id": 3,
+        "name": "Portugal"
+      }
+    ],
+    "sitemap": [
+      {
+        "name": "/",
+        "children": [
+          {
+            "name": "webtemp",
+            "children": [
+              {
+                "name": "jsloader-ed288164b937.js",
+                "children": []
+              },
+              {
+                "name": "jsloader-5f508db784cc.js",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "robots.txt",
+            "children": []
+          },
+          {
+            "name": "news.php",
+            "children": []
+          },
+          {
+            "name": "articles.php",
+            "children": []
+          },
+          {
+            "name": "news_cats.php",
+            "children": []
+          },
+          {
+            "name": "weblinks.php",
+            "children": []
+          },
+          {
+            "name": "downloads.php",
+            "children": []
+          },
+          {
+            "name": "photogallery.php",
+            "children": []
+          },
+          {
+            "name": "faq.php",
+            "children": []
+          },
+          {
+            "name": "contact.php",
+            "children": []
+          },
+          {
+            "name": "search.php",
+            "children": []
+          },
+          {
+            "name": "submit.php",
+            "children": []
+          },
+          {
+            "name": "index.php",
+            "children": []
+          },
+          {
+            "name": "infusions",
+            "children": [
+              {
+                "name": "devLogs",
+                "children": [
+                  {
+                    "name": "index.php",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "shoutbox_panel",
+                "children": [
+                  {
+                    "name": "shoutbox_archive.php",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "accordion_navigation_panel",
+                "children": [
+                  {
+                    "name": "accordion.js",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "register.php",
+            "children": []
+          },
+          {
+            "name": "profile.php",
+            "children": []
+          },
+          {
+            "name": "print.php",
+            "children": []
+          },
+          {
+            "name": "includes",
+            "children": [
+              {
+                "name": "securimage",
+                "children": [
+                  {
+                    "name": "securimage_play.php",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "lightbox.js",
+                "children": []
+              },
+              {
+                "name": "jscript.js",
+                "children": []
+              },
+              {
+                "name": "prototype.js",
+                "children": []
+              },
+              {
+                "name": "scriptaculous.js",
+                "children": []
+              },
+              {
+                "name": "jquery.js",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "setuser.php",
+            "children": []
+          },
+          {
+            "name": "lostpassword.php",
+            "children": []
+          },
+          {
+            "name": "messages.php",
+            "children": []
+          },
+          {
+            "name": "web_feed",
+            "children": [
+              {
+                "name": "news.php",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "static",
+            "children": [
+              {
+                "name": "js",
+                "children": [
+                  {
+                    "name": "script-ssp.js",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "js",
+            "children": [
+              {
+                "name": "script.js",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "assetBelonging": {
+    "input": [
+      {
+        "parent_id": 44,
+        "parent_name": "INTERNAL",
+        "parent_type": "NETWORK",
+        "child_id": 8,
+        "child_name": "10.254.1.1",
+        "child_type": "SERVER"
+      },
+      {
+        "parent_id": 44,
+        "parent_name": "INTERNAL",
+        "parent_type": "NETWORK",
+        "child_id": 9,
+        "child_name": "10.254.1.5",
+        "child_type": "SERVER"
+      }
+    ],
+    "output": {
+      "assets": [
+        {
+          "id": 44,
+          "name": "INTERNAL",
+          "type": "NETWORK",
+          "children_ids": [
+            8,
+            9
+          ],
+          "risk": null,
+          "parents_ids": []
+        },
+        {
+          "id": 8,
+          "name": "10.254.1.1",
+          "type": "SERVER",
+          "children_ids": [],
+          "risk": null,
+          "parents_ids": [
+            44
+          ]
+        },
+        {
+          "id": 9,
+          "name": "10.254.1.5",
+          "type": "SERVER",
+          "children_ids": [],
+          "risk": null,
+          "parents_ids": [
+            44
+          ]
+        }
+      ]
+    }
+  }
+}

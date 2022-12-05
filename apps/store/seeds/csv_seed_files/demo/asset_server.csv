@@ -1,0 +1,43 @@
+id, type, os, os_version, hostname
+"5","SERVER","Ubuntu",,"PCIUATWEB02"
+"3","SERVER","Debian",,
+"9","SERVER","Debian",,"SDIC-DC04"
+"10","SERVER","Ubuntu",,"SDIC-DC02"
+"11","SERVER","Debian",,"PCIUATAPP02"
+"7","SERVER","Debian",,"PCIUATAD01"
+"6","SERVER","Debian",,"VDIPRDACR01"
+"2","SERVER","Windows",,"CPSDRBKDD01"
+"33","SERVER","switch",,
+"35","SERVER","firewall",,
+"36","SERVER","firewall",,"PCIUATDB02"
+"37","SERVER","firewall",,
+"43","SERVER","switch",,
+"48","SERVER","wifi",,
+"49","SERVER","switch",,
+"50","SERVER","switch",,
+"52","SERVER","ldap",,"PCIUATFS02"
+"58","SERVER","Windows 10 - computer",,
+"51","SERVER","Windows 10 - computer",,
+"55","SERVER","Windows 10 - computer",,
+"56","SERVER","Windows 10 - computer",,
+"60","SERVER","Windows 10 - computer",,
+"61","SERVER","Windows 10 - computer",,
+"59","SERVER","Windows 10 - computer",,
+"65","SERVER","Windows 10 - computer",,
+"64","SERVER","Windows 10 - computer",,
+"66","SERVER","Windows 10 - computer",,
+"62","SERVER","Windows 10 - computer",,
+"53","SERVER","windows",,
+"67","SERVER","wifi",,
+"68","SERVER","switch",,
+"69","SERVER","debian",,
+"46","SERVER","vpn",,
+"70","SERVER","vpn",,
+"72","SERVER","Windows 10 - computer",,
+"57","SERVER","Windows 10 - computer",,
+"63","SERVER","Windows 10 - computer",,
+"94","SERVER",,,
+"4","SERVER","Debian",,"abab"
+"8","SERVER","Debian",,"FIRST"
+"98","SERVER","Debian",,
+"12","SERVER","Ubuntu",,

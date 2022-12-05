@@ -1,0 +1,14 @@
+{
+  "name": "xrator_db",
+  "version": "1.13.0",
+  "description": "",
+  "main": "",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.x-rator.com:xrator-db/xrator_db.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

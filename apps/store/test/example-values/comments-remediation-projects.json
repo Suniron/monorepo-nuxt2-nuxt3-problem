@@ -1,0 +1,24 @@
+{
+    "remediationProjectComments":[
+        {
+            "project_id": 1,
+            "comment_id": 2,
+            "from_date": "2022-06-07T17:30:00.000Z",
+            "user_id": "423a3c78-cfbf-4ca6-b213-1e52fab801c9",
+            "user_name": "thomas",
+            "comment": "Thanks !",
+            "from_status_name": null,
+            "to_status_name": null
+        },
+        {
+            "project_id": 1,
+            "comment_id": 1,
+            "from_date": "2022-06-07T15:30:00.000Z",
+            "user_id": "3381af4c-8690-496b-a086-b346e9fbc1bc",
+            "user_name": "françois",
+            "comment": "Hello, good luck for the project",
+            "from_status_name": null,
+            "to_status_name": null
+        }
+        ]
+}

@@ -1,0 +1,6 @@
+id, name, weight
+1,"open",1
+2,"in_progress",2
+3,"to_review",3
+4,"completed",4
+5,"canceled",5

@@ -1,0 +1,7 @@
+id, name, description, severity
+1,"scenario1-GMAIL","ALERTE / Update your GMAIL password",0
+2,"scenario2-Bank","Get your bank statement",0
+3,"scenario3-Supply_Chain","Your package is waiting for delivery",0
+4,"scenario4-LinkedIn","[Redirected] [EXTERNAL] FWD : Your payment method was declined",0
+5,"scenario5-MessageTEAMS","XRATOR - Point global avec la Team Tech (des nouveaux sont arrivés ;-))",0
+6,"scenario6-Supply_Chain_File","Consignment Notification: You Have A Package With Us",0

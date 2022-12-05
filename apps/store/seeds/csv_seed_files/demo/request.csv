@@ -1,0 +1,831 @@
+id, uri_id, type, method, http_version, parameters, body
+"1","1","SITEMAP","GET","HTTP/1.1","1427700961",
+"2","2","SITEMAP","GET","HTTP/1.1","1427913799",
+"3","3","SITEMAP","GET","HTTP/1.1",,
+"4","4","SITEMAP","GET","HTTP/1.1",,
+"5","5","SITEMAP","GET","HTTP/1.1",,
+"6","5","SITEMAP","GET","HTTP/1.1","readmore=84",
+"7","5","SITEMAP","GET","HTTP/1.1","readmore=83",
+"8","5","SITEMAP","GET","HTTP/1.1","readmore=82",
+"9","5","SITEMAP","GET","HTTP/1.1","readmore=81",
+"10","5","SITEMAP","GET","HTTP/1.1","readmore=80",
+"11","5","SITEMAP","GET","HTTP/1.1","rowstart=5",
+"12","5","SITEMAP","GET","HTTP/1.1","rowstart=10",
+"13","5","SITEMAP","GET","HTTP/1.1","rowstart=15",
+"14","5","SITEMAP","GET","HTTP/1.1","rowstart=75",
+"15","5","SITEMAP","POST","HTTP/1.1",,"user_name=KUlAKHaB&user_pass=w1W%21m4c%21R0&remember_me=y&login=P%c5%99ihl%c3%a1sit"
+"16","5","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"17","5","SITEMAP","POST","HTTP/1.1",,"shout_name=134545&shout_message=517748&sb_captcha_code=388910&post_shout=Odeslat"
+"18","5","SITEMAP","POST","HTTP/1.1",,"shout_name=759699&shout_message=575735&sb_captcha_code=744398"
+"19","5","SITEMAP","POST","HTTP/1.1",,"shout_name=660795&shout_message=157680&sb_captcha_code=632182"
+"20","5","SITEMAP","GET","HTTP/1.1","readmore=79",
+"21","5","SITEMAP","GET","HTTP/1.1","readmore=78",
+"22","5","SITEMAP","GET","HTTP/1.1","readmore=77",
+"23","5","SITEMAP","GET","HTTP/1.1","readmore=76",
+"24","5","SITEMAP","GET","HTTP/1.1","readmore=75",
+"25","5","SITEMAP","GET","HTTP/1.1","readmore=74",
+"26","5","SITEMAP","GET","HTTP/1.1","readmore=73",
+"27","5","SITEMAP","GET","HTTP/1.1","readmore=72",
+"28","5","SITEMAP","GET","HTTP/1.1","readmore=38",
+"29","5","SITEMAP","GET","HTTP/1.1","readmore=37",
+"30","5","SITEMAP","GET","HTTP/1.1","readmore=36",
+"31","5","SITEMAP","GET","HTTP/1.1","readmore=35",
+"32","5","SITEMAP","GET","HTTP/1.1","readmore=34",
+"33","5","SITEMAP","GET","HTTP/1.1","readmore=33",
+"34","5","SITEMAP","GET","HTTP/1.1","readmore=32",
+"35","5","SITEMAP","GET","HTTP/1.1","readmore=31",
+"36","5","SITEMAP","GET","HTTP/1.1","readmore=30",
+"37","5","SITEMAP","GET","HTTP/1.1","readmore=29",
+"38","5","SITEMAP","GET","HTTP/1.1","readmore=41",
+"39","5","SITEMAP","GET","HTTP/1.1","readmore=40",
+"40","5","SITEMAP","GET","HTTP/1.1","readmore=39",
+"41","5","SITEMAP","GET","HTTP/1.1","readmore=16",
+"42","5","SITEMAP","GET","HTTP/1.1","readmore=13",
+"43","5","SITEMAP","GET","HTTP/1.1","readmore=12",
+"44","5","SITEMAP","GET","HTTP/1.1","readmore=11",
+"45","5","SITEMAP","GET","HTTP/1.1","readmore=10",
+"46","5","SITEMAP","GET","HTTP/1.1","readmore=9",
+"47","5","SITEMAP","GET","HTTP/1.1","readmore=65",
+"48","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=1150",
+"49","5","SITEMAP","GET","HTTP/1.1","readmore=83&c_start=1250",
+"50","5","SITEMAP","GET","HTTP/1.1","readmore=8",
+"51","5","SITEMAP","GET","HTTP/1.1","readmore=7",
+"52","5","SITEMAP","GET","HTTP/1.1","readmore=6",
+"53","5","SITEMAP","GET","HTTP/1.1","readmore=5",
+"54","5","SITEMAP","GET","HTTP/1.1","readmore=4",
+"55","5","SITEMAP","GET","HTTP/1.1","readmore=3",
+"56","5","SITEMAP","GET","HTTP/1.1","readmore=71",
+"57","5","SITEMAP","GET","HTTP/1.1","readmore=70",
+"58","5","SITEMAP","GET","HTTP/1.1","readmore=69",
+"59","5","SITEMAP","GET","HTTP/1.1","readmore=68",
+"60","5","SITEMAP","GET","HTTP/1.1","readmore=67",
+"61","5","SITEMAP","GET","HTTP/1.1","readmore=66",
+"62","5","SITEMAP","GET","HTTP/1.1","readmore=64",
+"63","5","SITEMAP","GET","HTTP/1.1","readmore=62",
+"64","5","SITEMAP","GET","HTTP/1.1","readmore=61",
+"65","5","SITEMAP","GET","HTTP/1.1","readmore=60",
+"66","5","SITEMAP","GET","HTTP/1.1","readmore=59",
+"67","5","SITEMAP","GET","HTTP/1.1","readmore=58",
+"68","5","SITEMAP","GET","HTTP/1.1","readmore=57",
+"69","5","SITEMAP","GET","HTTP/1.1","readmore=56",
+"70","5","SITEMAP","GET","HTTP/1.1","readmore=55",
+"71","5","SITEMAP","GET","HTTP/1.1","readmore=54",
+"72","5","SITEMAP","GET","HTTP/1.1","readmore=53",
+"73","5","SITEMAP","GET","HTTP/1.1","readmore=52",
+"74","5","SITEMAP","GET","HTTP/1.1","readmore=51",
+"75","5","SITEMAP","GET","HTTP/1.1","readmore=50",
+"76","5","SITEMAP","GET","HTTP/1.1","readmore=49",
+"77","5","SITEMAP","GET","HTTP/1.1","readmore=48",
+"78","5","SITEMAP","GET","HTTP/1.1","readmore=47",
+"79","5","SITEMAP","GET","HTTP/1.1","readmore=46",
+"80","5","SITEMAP","GET","HTTP/1.1","readmore=45",
+"81","5","SITEMAP","GET","HTTP/1.1","readmore=44",
+"82","5","SITEMAP","GET","HTTP/1.1","readmore=43",
+"83","5","SITEMAP","GET","HTTP/1.1","readmore=42",
+"84","5","SITEMAP","GET","HTTP/1.1","rowstart=0",
+"85","5","SITEMAP","GET","HTTP/1.1","rowstart=20",
+"86","5","SITEMAP","GET","HTTP/1.1","rowstart=25",
+"87","5","SITEMAP","GET","HTTP/1.1","rowstart=30",
+"88","5","SITEMAP","GET","HTTP/1.1","rowstart=60",
+"89","5","SITEMAP","GET","HTTP/1.1","rowstart=65",
+"90","5","SITEMAP","GET","HTTP/1.1","rowstart=70",
+"91","5","SITEMAP","GET","HTTP/1.1","readmore=63",
+"92","5","SITEMAP","POST","HTTP/1.1",,"user_name=cnhXjEjy&user_pass=x0T%21b0w%21U6&remember_me=y&login=P%c5%99ihl%c3%a1sit"
+"93","5","SITEMAP","POST","HTTP/1.1","readmore=84","comment_name=344907&comment_message=643475&com_captcha_code=853112&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"94","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=342301&comment_message=281786&com_captcha_code=962229&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"95","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=10",
+"96","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=20",
+"97","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=30",
+"98","5","SITEMAP","GET","HTTP/1.1","readmore=83&c_start=10",
+"99","5","SITEMAP","GET","HTTP/1.1","readmore=83&c_start=20",
+"100","5","SITEMAP","GET","HTTP/1.1","readmore=83&c_start=30",
+"101","5","SITEMAP","POST","HTTP/1.1","readmore=84","shout_name=482670&shout_message=794673&sb_captcha_code=387905&post_shout=Odeslat"
+"102","5","SITEMAP","POST","HTTP/1.1","readmore=83","shout_name=691034&shout_message=634877&sb_captcha_code=968586&post_shout=Odeslat"
+"103","5","SITEMAP","POST","HTTP/1.1","rowstart=5","shout_name=190999&shout_message=547703&sb_captcha_code=877036&post_shout=Odeslat"
+"104","5","SITEMAP","POST","HTTP/1.1","rowstart=10","shout_name=144054&shout_message=960966&sb_captcha_code=142257&post_shout=Odeslat"
+"105","5","SITEMAP","POST","HTTP/1.1","rowstart=15","shout_name=623377&shout_message=746807&sb_captcha_code=807112&post_shout=Odeslat"
+"106","5","SITEMAP","POST","HTTP/1.1","rowstart=75","shout_name=332508&shout_message=748285&sb_captcha_code=556774&post_shout=Odeslat"
+"107","5","SITEMAP","POST","HTTP/1.1","readmore=84","comment_name=632896&comment_message=287125&com_captcha_code=703484"
+"108","5","SITEMAP","POST","HTTP/1.1","readmore=84","comment_name=828750&comment_message=773002&com_captcha_code=683105"
+"109","5","SITEMAP","POST","HTTP/1.1","readmore=84","shout_name=848456&shout_message=812451&sb_captcha_code=386020"
+"110","5","SITEMAP","POST","HTTP/1.1","readmore=84","shout_name=105734&shout_message=886712&sb_captcha_code=587689"
+"111","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=545574&comment_message=259531&com_captcha_code=705654"
+"112","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=624006&comment_message=594270&com_captcha_code=145896"
+"113","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=384658&comment_message=813013&com_captcha_code=125355"
+"114","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=702129&comment_message=828905&com_captcha_code=861825"
+"115","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=108805&comment_message=894930&com_captcha_code=487909"
+"116","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=158221&comment_message=240772&com_captcha_code=838873"
+"117","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=372836&comment_message=962982&com_captcha_code=231804"
+"118","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=707206&comment_message=531755&com_captcha_code=155927"
+"119","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=762803&comment_message=427630&com_captcha_code=549526"
+"120","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=869612&comment_message=148239&com_captcha_code=469108"
+"121","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=469627&comment_message=922692&com_captcha_code=565167"
+"122","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=917455&comment_message=545182&com_captcha_code=350842"
+"123","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=901476&comment_message=131354&com_captcha_code=575953"
+"124","5","SITEMAP","POST","HTTP/1.1","readmore=83","comment_name=280609&comment_message=358207&com_captcha_code=960903"
+"125","5","SITEMAP","POST","HTTP/1.1","readmore=83","shout_name=583483&shout_message=401371&sb_captcha_code=193500"
+"126","5","SITEMAP","POST","HTTP/1.1","readmore=83","shout_name=248695&shout_message=744213&sb_captcha_code=826698"
+"127","5","SITEMAP","POST","HTTP/1.1","readmore=83","shout_name=728301&shout_message=853550&sb_captcha_code=891295"
+"128","5","SITEMAP","POST","HTTP/1.1","readmore=83","shout_name=277832&shout_message=234266&sb_captcha_code=716325"
+"129","5","SITEMAP","POST","HTTP/1.1","rowstart=5","shout_name=395260&shout_message=686609&sb_captcha_code=222858"
+"130","5","SITEMAP","POST","HTTP/1.1","rowstart=5","shout_name=978311&shout_message=580709&sb_captcha_code=536185"
+"131","5","SITEMAP","POST","HTTP/1.1","rowstart=10","shout_name=607225&shout_message=142453&sb_captcha_code=488671"
+"132","5","SITEMAP","POST","HTTP/1.1","rowstart=10","shout_name=599551&shout_message=369683&sb_captcha_code=627037"
+"133","5","SITEMAP","POST","HTTP/1.1","rowstart=15","shout_name=492509&shout_message=258164&sb_captcha_code=338270"
+"134","5","SITEMAP","POST","HTTP/1.1","rowstart=15","shout_name=173570&shout_message=853018&sb_captcha_code=596278"
+"135","5","SITEMAP","POST","HTTP/1.1","rowstart=75","shout_name=250263&shout_message=479243&sb_captcha_code=229995"
+"136","5","SITEMAP","POST","HTTP/1.1","rowstart=75","shout_name=343466&shout_message=843395&sb_captcha_code=877168"
+"137","5","SITEMAP","GET","HTTP/1.1","readmore=79&c_start=2680",
+"138","5","SITEMAP","GET","HTTP/1.1","readmore=78&c_start=290",
+"139","5","SITEMAP","GET","HTTP/1.1","readmore=75&c_start=260",
+"140","5","SITEMAP","GET","HTTP/1.1","readmore=74&c_start=80",
+"141","5","SITEMAP","GET","HTTP/1.1","readmore=72&c_start=70",
+"142","5","SITEMAP","GET","HTTP/1.1","readmore=34&c_start=460",
+"143","5","SITEMAP","GET","HTTP/1.1","readmore=30&c_start=90",
+"144","5","SITEMAP","GET","HTTP/1.1","readmore=28",
+"145","5","SITEMAP","GET","HTTP/1.1","readmore=27",
+"146","5","SITEMAP","GET","HTTP/1.1","readmore=26",
+"147","5","SITEMAP","GET","HTTP/1.1","readmore=25",
+"148","5","SITEMAP","GET","HTTP/1.1","readmore=24",
+"149","5","SITEMAP","GET","HTTP/1.1","readmore=23",
+"150","5","SITEMAP","GET","HTTP/1.1","readmore=22",
+"151","5","SITEMAP","GET","HTTP/1.1","readmore=21",
+"152","5","SITEMAP","GET","HTTP/1.1","readmore=20",
+"153","5","SITEMAP","GET","HTTP/1.1","readmore=19",
+"154","5","SITEMAP","GET","HTTP/1.1","readmore=12&c_start=180",
+"155","5","SITEMAP","GET","HTTP/1.1","readmore=65&c_start=100",
+"156","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=0",
+"157","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=40",
+"158","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=60",
+"159","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=1120",
+"160","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=1130",
+"161","5","SITEMAP","GET","HTTP/1.1","readmore=84&c_start=1140",
+"162","5","SITEMAP","GET","HTTP/1.1","readmore=83&c_start=40",
+"163","5","SITEMAP","GET","HTTP/1.1","readmore=59&c_start=360",
+"164","5","SITEMAP","GET","HTTP/1.1","readmore=52&c_start=3260",
+"165","5","SITEMAP","GET","HTTP/1.1","readmore=50&c_start=400",
+"166","5","SITEMAP","GET","HTTP/1.1","readmore=45&c_start=390",
+"167","5","SITEMAP","GET","HTTP/1.1","readmore=39&c_start=110",
+"168","5","SITEMAP","GET","HTTP/1.1","readmore=8&c_start=170",
+"169","5","SITEMAP","GET","HTTP/1.1","readmore=77&c_start=50",
+"170","5","SITEMAP","GET","HTTP/1.1","readmore=13&c_start=60",
+"171","5","SITEMAP","GET","HTTP/1.1","readmore=67&c_start=110",
+"172","5","SITEMAP","GET","HTTP/1.1","readmore=56&c_start=80",
+"173","5","SITEMAP","GET","HTTP/1.1","readmore=48&c_start=260",
+"174","5","SITEMAP","GET","HTTP/1.1","readmore=47&c_start=150",
+"175","5","SITEMAP","GET","HTTP/1.1","readmore=44&c_start=120",
+"176","5","SITEMAP","GET","HTTP/1.1","rowstart=50",
+"177","5","SITEMAP","GET","HTTP/1.1","readmore=37&c_start=50",
+"178","5","SITEMAP","GET","HTTP/1.1","readmore=7&c_start=70",
+"179","5","SITEMAP","GET","HTTP/1.1","rowstart=40",
+"180","5","SITEMAP","GET","HTTP/1.1","rowstart=45",
+"181","5","SITEMAP","GET","HTTP/1.1","rowstart=55",
+"182","5","SITEMAP","GET","HTTP/1.1","readmore=38&c_start=40",
+"183","5","SITEMAP","GET","HTTP/1.1","readmore=11&c_start=50",
+"184","5","SITEMAP","GET","HTTP/1.1","readmore=46&c_start=70",
+"185","5","SITEMAP","POST","HTTP/1.1","readmore=79","comment_name=651355&comment_message=637906&com_captcha_code=148993&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"186","5","SITEMAP","GET","HTTP/1.1","readmore=35&c_start=40",
+"187","5","SITEMAP","GET","HTTP/1.1","readmore=9&c_start=50",
+"188","5","SITEMAP","GET","HTTP/1.1","rowstart=35",
+"189","5","SITEMAP","POST","HTTP/1.1","readmore=78","comment_name=657401&comment_message=297147&com_captcha_code=946933&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"190","5","SITEMAP","GET","HTTP/1.1","readmore=41&c_start=40",
+"191","5","SITEMAP","GET","HTTP/1.1","readmore=70&c_start=60",
+"192","5","SITEMAP","POST","HTTP/1.1","readmore=77","comment_name=973355&comment_message=747809&com_captcha_code=236573&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"193","5","SITEMAP","GET","HTTP/1.1","readmore=40&c_start=40",
+"194","5","SITEMAP","GET","HTTP/1.1","readmore=61&c_start=60",
+"195","5","SITEMAP","POST","HTTP/1.1","readmore=76","comment_name=262606&comment_message=418669&com_captcha_code=867018&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"196","5","SITEMAP","GET","HTTP/1.1","readmore=51&c_start=60",
+"197","5","SITEMAP","POST","HTTP/1.1","readmore=75","comment_name=677790&comment_message=726105&com_captcha_code=647274&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"198","5","SITEMAP","GET","HTTP/1.1","readmore=79&c_start=10",
+"199","5","SITEMAP","GET","HTTP/1.1","readmore=79&c_start=20",
+"200","5","SITEMAP","GET","HTTP/1.1","readmore=79&c_start=30",
+"201","5","SITEMAP","POST","HTTP/1.1","readmore=74","comment_name=114982&comment_message=536430&com_captcha_code=164590&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"202","5","SITEMAP","GET","HTTP/1.1","readmore=78&c_start=10",
+"203","5","SITEMAP","GET","HTTP/1.1","readmore=78&c_start=20",
+"204","5","SITEMAP","GET","HTTP/1.1","readmore=78&c_start=30",
+"205","5","SITEMAP","POST","HTTP/1.1","readmore=73","comment_name=606447&comment_message=831531&com_captcha_code=767536&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"206","5","SITEMAP","GET","HTTP/1.1","readmore=6&c_start=50",
+"207","5","SITEMAP","GET","HTTP/1.1","readmore=77&c_start=10",
+"208","5","SITEMAP","GET","HTTP/1.1","readmore=77&c_start=20",
+"209","5","SITEMAP","GET","HTTP/1.1","readmore=77&c_start=30",
+"210","5","SITEMAP","POST","HTTP/1.1","readmore=72","comment_name=165722&comment_message=620984&com_captcha_code=503637&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"211","5","SITEMAP","GET","HTTP/1.1","readmore=43&c_start=50",
+"212","5","SITEMAP","GET","HTTP/1.1","readmore=76&c_start=10",
+"213","5","SITEMAP","GET","HTTP/1.1","readmore=75&c_start=20",
+"214","5","SITEMAP","GET","HTTP/1.1","readmore=75&c_start=30",
+"215","5","SITEMAP","POST","HTTP/1.1","readmore=38","comment_name=181185&comment_message=785318&com_captcha_code=452621&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"216","5","SITEMAP","GET","HTTP/1.1","readmore=84&ce4dstart=0",
+"217","5","SITEMAP","GET","HTTP/1.1","readmore=75&c_start=10",
+"218","5","SITEMAP","GET","HTTP/1.1","readmore=74&c_start=20",
+"219","5","SITEMAP","GET","HTTP/1.1","readmore=74&c_start=30",
+"220","5","SITEMAP","POST","HTTP/1.1","readmore=37","comment_name=153845&comment_message=923921&com_captcha_code=201716&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"221","5","SITEMAP","GET","HTTP/1.1","readmore=74&c_start=10",
+"222","5","SITEMAP","GET","HTTP/1.1","readmore=73&c_start=20",
+"223","5","SITEMAP","GET","HTTP/1.1","readmore=72&c_start=30",
+"224","5","SITEMAP","POST","HTTP/1.1","readmore=36","comment_name=116974&comment_message=196509&com_captcha_code=807324&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"225","5","SITEMAP","GET","HTTP/1.1","readmore=73&c_start=10",
+"226","5","SITEMAP","GET","HTTP/1.1","readmore=72&c_start=20",
+"227","5","SITEMAP","GET","HTTP/1.1","readmore=38&c_start=30",
+"228","5","SITEMAP","POST","HTTP/1.1","readmore=35","comment_name=420007&comment_message=976328&com_captcha_code=510770&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"229","5","SITEMAP","GET","HTTP/1.1","readmore=72&c_start=10",
+"230","5","SITEMAP","GET","HTTP/1.1","readmore=38&c_start=20",
+"231","5","SITEMAP","GET","HTTP/1.1","readmore=37&c_start=30",
+"232","5","SITEMAP","POST","HTTP/1.1","readmore=34","comment_name=910891&comment_message=835976&com_captcha_code=975073&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"233","5","SITEMAP","GET","HTTP/1.1","readmore=68&c_start=40",
+"234","5","SITEMAP","GET","HTTP/1.1","readmore=38&c_start=10",
+"235","5","SITEMAP","GET","HTTP/1.1","readmore=37&c_start=20",
+"236","5","SITEMAP","GET","HTTP/1.1","readmore=35&c_start=30",
+"237","5","SITEMAP","POST","HTTP/1.1","readmore=33","comment_name=317631&comment_message=460990&com_captcha_code=955253&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"238","5","SITEMAP","GET","HTTP/1.1","readmore=54&c_start=40",
+"239","5","SITEMAP","GET","HTTP/1.1","readmore=37&c_start=10",
+"240","5","SITEMAP","GET","HTTP/1.1","readmore=35&c_start=20",
+"241","5","SITEMAP","GET","HTTP/1.1","readmore=34&c_start=30",
+"242","5","SITEMAP","POST","HTTP/1.1","readmore=32","comment_name=691548&comment_message=757432&com_captcha_code=295880&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"243","5","SITEMAP","GET","HTTP/1.1","readmore=53&c_start=40",
+"244","5","SITEMAP","GET","HTTP/1.1","readmore=35&c_start=10",
+"245","5","SITEMAP","GET","HTTP/1.1","readmore=34&c_start=20",
+"246","5","SITEMAP","GET","HTTP/1.1","readmore=33&c_start=30",
+"247","5","SITEMAP","POST","HTTP/1.1","readmore=31","comment_name=861297&comment_message=765412&com_captcha_code=114175&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"248","5","SITEMAP","GET","HTTP/1.1","readmore=49&c_start=40",
+"249","5","SITEMAP","GET","HTTP/1.1","readmore=34&c_start=10",
+"250","5","SITEMAP","GET","HTTP/1.1","readmore=33&c_start=20",
+"251","5","SITEMAP","GET","HTTP/1.1","readmore=30&c_start=30",
+"252","5","SITEMAP","POST","HTTP/1.1","readmore=30","comment_name=977009&comment_message=806433&com_captcha_code=865426&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"253","5","SITEMAP","GET","HTTP/1.1","readmore=33&c_start=10",
+"254","5","SITEMAP","GET","HTTP/1.1","readmore=32&c_start=20",
+"255","5","SITEMAP","POST","HTTP/1.1","readmore=29","comment_name=161267&comment_message=341805&com_captcha_code=826618&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"256","5","SITEMAP","GET","HTTP/1.1","readmore=41&c_start=30",
+"257","5","SITEMAP","GET","HTTP/1.1","readmore=32&c_start=10",
+"258","5","SITEMAP","GET","HTTP/1.1","readmore=30&c_start=20",
+"259","5","SITEMAP","POST","HTTP/1.1","readmore=41","comment_name=929387&comment_message=704112&com_captcha_code=559884&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"260","5","SITEMAP","GET","HTTP/1.1","readmore=40&c_start=30",
+"261","5","SITEMAP","GET","HTTP/1.1","readmore=30&c_start=10",
+"262","5","SITEMAP","GET","HTTP/1.1","readmore=41&c_start=20",
+"263","5","SITEMAP","POST","HTTP/1.1","readmore=40","comment_name=319040&comment_message=537188&com_captcha_code=659956&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"264","5","SITEMAP","GET","HTTP/1.1","readmore=39&c_start=30",
+"265","5","SITEMAP","GET","HTTP/1.1","readmore=29&c_start=10",
+"266","5","SITEMAP","GET","HTTP/1.1","readmore=40&c_start=20",
+"267","5","SITEMAP","POST","HTTP/1.1","readmore=39","comment_name=250458&comment_message=743093&com_captcha_code=667854&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"268","5","SITEMAP","GET","HTTP/1.1","readmore=13&c_start=30",
+"269","5","SITEMAP","GET","HTTP/1.1","readmore=41&c_start=10",
+"270","5","SITEMAP","GET","HTTP/1.1","readmore=39&c_start=20",
+"271","5","SITEMAP","POST","HTTP/1.1","readmore=16","comment_name=445713&comment_message=899817&com_captcha_code=757774&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"272","5","SITEMAP","GET","HTTP/1.1","readmore=12&c_start=30",
+"273","5","SITEMAP","POST","HTTP/1.1",,"user_name=OBGSBpAT&user_pass=y4H%21v3s%21M7&remember_me=y&login=P%c5%99ihl%c3%a1sit"
+"274","5","SITEMAP","POST","HTTP/1.1",,"shout_name=776905&shout_message=578071&sb_captcha_code=332597&post_shout=Odeslat"
+"275","5","SITEMAP","POST","HTTP/1.1",,"shout_name=870018&shout_message=164504&sb_captcha_code=361820"
+"276","5","SITEMAP","POST","HTTP/1.1",,"shout_name=396481&shout_message=112745&sb_captcha_code=782945"
+"277","6","SITEMAP","GET","HTTP/1.1","cat_id=11",
+"278","6","SITEMAP","GET","HTTP/1.1","cat_id=8",
+"279","6","SITEMAP","GET","HTTP/1.1","cat_id=9",
+"280","6","SITEMAP","GET","HTTP/1.1","cat_id=10",
+"281","6","SITEMAP","GET","HTTP/1.1","cat_id=15",
+"282","6","SITEMAP","GET","HTTP/1.1","cat_id=17",
+"283","6","SITEMAP","GET","HTTP/1.1","cat_id=14",
+"284","6","SITEMAP","GET","HTTP/1.1","cat_id=13",
+"285","6","SITEMAP","GET","HTTP/1.1","article_id=86",
+"286","6","SITEMAP","GET","HTTP/1.1","article_id=83",
+"287","6","SITEMAP","GET","HTTP/1.1","article_id=82",
+"288","6","SITEMAP","GET","HTTP/1.1","article_id=77",
+"289","6","SITEMAP","GET","HTTP/1.1","article_id=76",
+"290","6","SITEMAP","GET","HTTP/1.1","article_id=22",
+"291","6","SITEMAP","GET","HTTP/1.1","article_id=19",
+"292","6","SITEMAP","GET","HTTP/1.1","article_id=67",
+"293","6","SITEMAP","GET","HTTP/1.1","article_id=4",
+"294","6","SITEMAP","GET","HTTP/1.1","article_id=8",
+"295","6","SITEMAP","GET","HTTP/1.1","article_id=6",
+"296","6","SITEMAP","GET","HTTP/1.1","article_id=5",
+"297","6","SITEMAP","GET","HTTP/1.1","article_id=18",
+"298","6","SITEMAP","GET","HTTP/1.1","article_id=24",
+"299","6","SITEMAP","GET","HTTP/1.1","article_id=30",
+"300","6","SITEMAP","GET","HTTP/1.1","article_id=42",
+"301","6","SITEMAP","GET","HTTP/1.1","article_id=54",
+"302","6","SITEMAP","GET","HTTP/1.1","article_id=64",
+"303","6","SITEMAP","GET","HTTP/1.1","article_id=70",
+"304","6","SITEMAP","GET","HTTP/1.1","article_id=74",
+"305","6","SITEMAP","GET","HTTP/1.1","article_id=75",
+"306","6","SITEMAP","GET","HTTP/1.1","article_id=69",
+"307","6","SITEMAP","GET","HTTP/1.1","article_id=68",
+"308","6","SITEMAP","GET","HTTP/1.1","article_id=65",
+"309","6","SITEMAP","GET","HTTP/1.1","article_id=62",
+"310","6","SITEMAP","GET","HTTP/1.1","article_id=61",
+"311","6","SITEMAP","GET","HTTP/1.1","article_id=60",
+"312","6","SITEMAP","GET","HTTP/1.1","article_id=58",
+"313","6","SITEMAP","GET","HTTP/1.1","article_id=53",
+"314","6","SITEMAP","GET","HTTP/1.1","article_id=44",
+"315","6","SITEMAP","GET","HTTP/1.1","article_id=39",
+"316","6","SITEMAP","GET","HTTP/1.1","article_id=28",
+"317","6","SITEMAP","GET","HTTP/1.1","article_id=27",
+"318","6","SITEMAP","GET","HTTP/1.1","article_id=26",
+"319","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=650",
+"320","6","SITEMAP","POST","HTTP/1.1","article_id=86","comment_name=332319&comment_message=594400&com_captcha_code=239132&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"321","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=190",
+"322","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=280",
+"323","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=1880",
+"324","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=110",
+"325","6","SITEMAP","POST","HTTP/1.1","cat_id=11","shout_name=766708&shout_message=205447&sb_captcha_code=706326&post_shout=Odeslat"
+"326","6","SITEMAP","GET","HTTP/1.1","article_id=55",
+"327","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=10",
+"328","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=20",
+"329","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=30",
+"330","6","SITEMAP","POST","HTTP/1.1","article_id=77","comment_name=551629&comment_message=639524&com_captcha_code=882581&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"331","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=10",
+"332","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=20",
+"333","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=30",
+"334","6","SITEMAP","POST","HTTP/1.1","article_id=76","comment_name=296646&comment_message=786758&com_captcha_code=705639&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"335","6","SITEMAP","POST","HTTP/1.1","article_id=86","voteoption=0&poll_id=1"
+"336","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=10",
+"337","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=20",
+"338","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=30",
+"339","6","SITEMAP","POST","HTTP/1.1","cat_id=11","shout_name=546542&shout_message=835373&sb_captcha_code=436919"
+"340","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=10",
+"341","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=20",
+"342","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=30",
+"343","6","SITEMAP","POST","HTTP/1.1","cat_id=11","shout_name=140914&shout_message=307734&sb_captcha_code=454334"
+"344","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=10",
+"345","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=20",
+"346","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=30",
+"347","6","SITEMAP","POST","HTTP/1.1","cat_id=8","shout_name=203334&shout_message=939240&sb_captcha_code=368363&post_shout=Odeslat"
+"348","6","SITEMAP","POST","HTTP/1.1","cat_id=9","shout_name=310480&shout_message=621107&sb_captcha_code=953427&post_shout=Odeslat"
+"349","6","SITEMAP","POST","HTTP/1.1","cat_id=10","shout_name=210531&shout_message=724795&sb_captcha_code=994755&post_shout=Odeslat"
+"350","6","SITEMAP","POST","HTTP/1.1","cat_id=15","shout_name=557282&shout_message=126670&sb_captcha_code=914824&post_shout=Odeslat"
+"351","6","SITEMAP","POST","HTTP/1.1","cat_id=17","shout_name=902692&shout_message=588996&sb_captcha_code=181502&post_shout=Odeslat"
+"352","6","SITEMAP","POST","HTTP/1.1","cat_id=14","shout_name=841133&shout_message=879244&sb_captcha_code=499284&post_shout=Odeslat"
+"353","6","SITEMAP","POST","HTTP/1.1","cat_id=13","shout_name=908769&shout_message=367650&sb_captcha_code=334607&post_shout=Odeslat"
+"354","6","SITEMAP","POST","HTTP/1.1","article_id=86","shout_name=542110&shout_message=914154&sb_captcha_code=375051&post_shout=Odeslat"
+"355","6","SITEMAP","POST","HTTP/1.1","article_id=83","shout_name=862091&shout_message=972638&sb_captcha_code=903416&post_shout=Odeslat"
+"356","6","SITEMAP","POST","HTTP/1.1","cat_id=8","shout_name=421452&shout_message=186521&sb_captcha_code=887868"
+"357","6","SITEMAP","POST","HTTP/1.1","article_id=82","shout_name=515582&shout_message=954918&sb_captcha_code=242218&post_shout=Odeslat"
+"358","6","SITEMAP","POST","HTTP/1.1","cat_id=8","shout_name=951057&shout_message=628062&sb_captcha_code=996307"
+"359","6","SITEMAP","POST","HTTP/1.1","article_id=77","shout_name=185084&shout_message=681941&sb_captcha_code=570509&post_shout=Odeslat"
+"360","6","SITEMAP","POST","HTTP/1.1","article_id=76","shout_name=489449&shout_message=604860&sb_captcha_code=144076&post_shout=Odeslat"
+"361","6","SITEMAP","POST","HTTP/1.1","cat_id=9","shout_name=319087&shout_message=581703&sb_captcha_code=914543"
+"362","6","SITEMAP","POST","HTTP/1.1","cat_id=9","shout_name=212291&shout_message=873402&sb_captcha_code=928165"
+"363","6","SITEMAP","POST","HTTP/1.1","cat_id=10","shout_name=389537&shout_message=206304&sb_captcha_code=909190"
+"364","6","SITEMAP","POST","HTTP/1.1","cat_id=10","shout_name=773807&shout_message=855599&sb_captcha_code=292871"
+"365","6","SITEMAP","POST","HTTP/1.1","cat_id=15","shout_name=769907&shout_message=212868&sb_captcha_code=482774"
+"366","6","SITEMAP","POST","HTTP/1.1","cat_id=15","shout_name=506142&shout_message=589657&sb_captcha_code=139925"
+"367","6","SITEMAP","POST","HTTP/1.1","cat_id=17","shout_name=691593&shout_message=435476&sb_captcha_code=835657"
+"368","6","SITEMAP","POST","HTTP/1.1","cat_id=17","shout_name=733372&shout_message=109548&sb_captcha_code=336407"
+"369","6","SITEMAP","POST","HTTP/1.1","cat_id=14","shout_name=289477&shout_message=383175&sb_captcha_code=143022"
+"370","6","SITEMAP","POST","HTTP/1.1","cat_id=14","shout_name=400344&shout_message=126738&sb_captcha_code=568608"
+"371","6","SITEMAP","POST","HTTP/1.1","cat_id=13","shout_name=175682&shout_message=753456&sb_captcha_code=835921"
+"372","6","SITEMAP","POST","HTTP/1.1","cat_id=13","shout_name=937071&shout_message=792588&sb_captcha_code=826283"
+"373","6","SITEMAP","POST","HTTP/1.1","article_id=86","comment_name=870060&comment_message=964978&com_captcha_code=810007"
+"374","6","SITEMAP","POST","HTTP/1.1","article_id=86","comment_name=443029&comment_message=922280&com_captcha_code=183367"
+"375","6","SITEMAP","POST","HTTP/1.1","article_id=86","shout_name=597011&shout_message=196508&sb_captcha_code=770950"
+"376","6","SITEMAP","POST","HTTP/1.1","article_id=86","shout_name=164788&shout_message=686344&sb_captcha_code=548796"
+"377","6","SITEMAP","POST","HTTP/1.1","article_id=83","comment_name=784742&comment_message=271234&com_captcha_code=164223"
+"378","6","SITEMAP","POST","HTTP/1.1","article_id=83","comment_name=507341&comment_message=489991&com_captcha_code=395288"
+"379","6","SITEMAP","POST","HTTP/1.1","article_id=83","shout_name=784853&shout_message=167764&sb_captcha_code=813161"
+"380","6","SITEMAP","POST","HTTP/1.1","article_id=83","shout_name=998336&shout_message=964134&sb_captcha_code=253889"
+"381","6","SITEMAP","POST","HTTP/1.1","article_id=82","comment_name=867025&comment_message=160551&com_captcha_code=462299"
+"382","6","SITEMAP","POST","HTTP/1.1","article_id=82","comment_name=167063&comment_message=438721&com_captcha_code=249781"
+"383","6","SITEMAP","POST","HTTP/1.1","article_id=82","shout_name=496777&shout_message=865200&sb_captcha_code=255380"
+"384","6","SITEMAP","POST","HTTP/1.1","article_id=82","shout_name=539171&shout_message=417495&sb_captcha_code=852039"
+"385","6","SITEMAP","POST","HTTP/1.1","article_id=77","comment_name=869519&comment_message=860223&com_captcha_code=705892"
+"386","6","SITEMAP","POST","HTTP/1.1","article_id=77","comment_name=865571&comment_message=735369&com_captcha_code=910206"
+"387","6","SITEMAP","POST","HTTP/1.1","article_id=77","shout_name=556041&shout_message=638187&sb_captcha_code=854079"
+"388","6","SITEMAP","POST","HTTP/1.1","article_id=77","shout_name=652748&shout_message=685762&sb_captcha_code=511948"
+"389","6","SITEMAP","POST","HTTP/1.1","article_id=76","comment_name=798927&comment_message=275753&com_captcha_code=292160"
+"390","6","SITEMAP","POST","HTTP/1.1","article_id=76","comment_name=419425&comment_message=804905&com_captcha_code=844596"
+"391","6","SITEMAP","POST","HTTP/1.1","article_id=76","shout_name=416327&shout_message=688476&sb_captcha_code=518000"
+"392","6","SITEMAP","POST","HTTP/1.1","article_id=76","shout_name=500013&shout_message=779458&sb_captcha_code=893859"
+"393","6","SITEMAP","GET","HTTP/1.1","article_id=31",
+"394","6","SITEMAP","GET","HTTP/1.1","article_id=38",
+"395","6","SITEMAP","GET","HTTP/1.1","article_id=18&c_start=250",
+"396","6","SITEMAP","GET","HTTP/1.1","article_id=64&c_start=630",
+"397","6","SITEMAP","GET","HTTP/1.1","article_id=75&c_start=7360",
+"398","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=620",
+"399","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=640",
+"400","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=160",
+"401","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=170",
+"402","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=270",
+"403","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=1850",
+"404","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=1860",
+"405","6","SITEMAP","GET","HTTP/1.1","article_id=77&c_start=1870",
+"406","6","SITEMAP","GET","HTTP/1.1","article_id=24&c_start=70",
+"407","6","SITEMAP","GET","HTTP/1.1","article_id=69&c_start=120",
+"408","6","SITEMAP","GET","HTTP/1.1","article_id=60&c_start=90",
+"409","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=630",
+"410","6","SITEMAP","GET","HTTP/1.1","article_id=83&c_start=180",
+"411","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=250",
+"412","6","SITEMAP","GET","HTTP/1.1","article_id=82&c_start=260",
+"413","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=80",
+"414","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=100",
+"415","6","SITEMAP","GET","HTTP/1.1","article_id=62&c_start=70",
+"416","6","SITEMAP","GET","HTTP/1.1","article_id=76&c_start=90",
+"417","6","SITEMAP","GET","HTTP/1.1","article_id=22&c_start=60",
+"418","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=0",
+"419","6","SITEMAP","GET","HTTP/1.1","article_id=27&c_start=60",
+"420","6","SITEMAP","GET","HTTP/1.1","article_id=86&ce4dstart=0",
+"421","6","SITEMAP","GET","HTTP/1.1","article_id=58&c_start=50",
+"422","6","SITEMAP","GET","HTTP/1.1","article_id=83&ce4dstart=0",
+"423","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=50",
+"424","6","SITEMAP","GET","HTTP/1.1","article_id=82&ce4dstart=0",
+"425","6","SITEMAP","GET","HTTP/1.1","article_id=6&c_start=40",
+"426","6","SITEMAP","GET","HTTP/1.1","article_id=77&ce4dstart=0",
+"427","6","SITEMAP","GET","HTTP/1.1","article_id=5&c_start=40",
+"428","6","SITEMAP","GET","HTTP/1.1","article_id=76&ce4dstart=0",
+"429","6","SITEMAP","GET","HTTP/1.1","article_id=54&c_start=40",
+"430","6","SITEMAP","GET","HTTP/1.1","article_id=70&c_start=40",
+"431","6","SITEMAP","GET","HTTP/1.1","article_id=26&c_start=40",
+"432","6","SITEMAP","GET","HTTP/1.1","article_id=86&c_start=40",
+"433","7","SITEMAP","GET","HTTP/1.1",,
+"434","7","SITEMAP","GET","HTTP/1.1","cat_id=27",
+"435","7","SITEMAP","GET","HTTP/1.1","cat_id=26",
+"436","7","SITEMAP","GET","HTTP/1.1","cat_id=22",
+"437","7","SITEMAP","GET","HTTP/1.1","cat_id=23",
+"438","7","SITEMAP","POST","HTTP/1.1",,"shout_name=933808&shout_message=571537&sb_captcha_code=252107&post_shout=Odeslat"
+"439","7","SITEMAP","POST","HTTP/1.1","cat_id=26","voteoption=0&poll_id=1"
+"440","7","SITEMAP","POST","HTTP/1.1",,"shout_name=294201&shout_message=650132&sb_captcha_code=195365"
+"441","7","SITEMAP","POST","HTTP/1.1",,"shout_name=493268&shout_message=230422&sb_captcha_code=645431"
+"442","7","SITEMAP","POST","HTTP/1.1","cat_id=26","shout_name=955362&shout_message=408446&sb_captcha_code=674342&post_shout=Odeslat"
+"443","7","SITEMAP","POST","HTTP/1.1","cat_id=22","shout_name=360732&shout_message=284505&sb_captcha_code=949078&post_shout=Odeslat"
+"444","7","SITEMAP","POST","HTTP/1.1","cat_id=26","shout_name=155018&shout_message=762324&sb_captcha_code=114716"
+"445","7","SITEMAP","POST","HTTP/1.1","cat_id=26","shout_name=413772&shout_message=128675&sb_captcha_code=607433"
+"446","7","SITEMAP","POST","HTTP/1.1","cat_id=22","shout_name=232190&shout_message=718370&sb_captcha_code=944327"
+"447","7","SITEMAP","POST","HTTP/1.1","cat_id=22","shout_name=326309&shout_message=114525&sb_captcha_code=317823"
+"448","8","SITEMAP","GET","HTTP/1.1",,
+"449","8","SITEMAP","GET","HTTP/1.1","cat_id=3",
+"450","8","SITEMAP","GET","HTTP/1.1","cat_id=1",
+"451","8","SITEMAP","GET","HTTP/1.1","cat_id=4",
+"452","8","SITEMAP","GET","HTTP/1.1","cat_id=2",
+"453","8","SITEMAP","POST","HTTP/1.1",,"shout_name=294266&shout_message=240029&sb_captcha_code=109206&post_shout=Odeslat"
+"454","8","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"455","8","SITEMAP","POST","HTTP/1.1",,"shout_name=105892&shout_message=539764&sb_captcha_code=402883"
+"456","8","SITEMAP","POST","HTTP/1.1",,"shout_name=564094&shout_message=571082&sb_captcha_code=153365"
+"457","9","SITEMAP","GET","HTTP/1.1",,
+"458","9","SITEMAP","GET","HTTP/1.1","cat_id=1",
+"459","9","SITEMAP","GET","HTTP/1.1","cat_id=4",
+"460","9","SITEMAP","GET","HTTP/1.1","cat_id=2",
+"461","9","SITEMAP","POST","HTTP/1.1",,"shout_name=478626&shout_message=534320&sb_captcha_code=811563&post_shout=Odeslat"
+"462","9","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"463","9","SITEMAP","POST","HTTP/1.1",,"shout_name=969516&shout_message=930581&sb_captcha_code=338196"
+"464","9","SITEMAP","POST","HTTP/1.1",,"shout_name=701943&shout_message=536485&sb_captcha_code=976547"
+"465","10","SITEMAP","GET","HTTP/1.1",,
+"466","10","SITEMAP","GET","HTTP/1.1","album_id=1",
+"467","10","SITEMAP","GET","HTTP/1.1","album_id=2",
+"468","10","SITEMAP","POST","HTTP/1.1",,"shout_name=444658&shout_message=397354&sb_captcha_code=677059&post_shout=Odeslat"
+"469","10","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"470","10","SITEMAP","POST","HTTP/1.1",,"shout_name=668632&shout_message=718173&sb_captcha_code=441702"
+"471","10","SITEMAP","POST","HTTP/1.1",,"shout_name=739673&shout_message=793740&sb_captcha_code=129195"
+"472","11","SITEMAP","GET","HTTP/1.1",,
+"473","11","SITEMAP","GET","HTTP/1.1","cat_id=2",
+"474","11","SITEMAP","GET","HTTP/1.1","cat_id=3",
+"475","11","SITEMAP","POST","HTTP/1.1",,"shout_name=625397&shout_message=432489&sb_captcha_code=323897&post_shout=Odeslat"
+"476","11","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"477","11","SITEMAP","POST","HTTP/1.1",,"shout_name=164685&shout_message=488331&sb_captcha_code=575564"
+"478","11","SITEMAP","POST","HTTP/1.1",,"shout_name=648408&shout_message=139360&sb_captcha_code=833470"
+"479","12","SITEMAP","GET","HTTP/1.1",,
+"480","12","SITEMAP","POST","HTTP/1.1",,"mailname=565366&email=336131&subject=864726&message=597348&captcha_code=508122&sendmessage=Odeslat"
+"481","12","SITEMAP","POST","HTTP/1.1",,"shout_name=540436&shout_message=463692&sb_captcha_code=716862&post_shout=Odeslat"
+"482","12","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"483","12","SITEMAP","POST","HTTP/1.1",,"shout_name=692127&shout_message=760400&sb_captcha_code=209024"
+"484","12","SITEMAP","POST","HTTP/1.1",,"shout_name=871208&shout_message=865560&sb_captcha_code=786734"
+"485","13","SITEMAP","GET","HTTP/1.1",,
+"486","13","SITEMAP","GET","HTTP/1.1","stext=137058&search=Hledat&method=OR&stype=news&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50",
+"487","13","SITEMAP","POST","HTTP/1.1",,"shout_name=192403&shout_message=672409&sb_captcha_code=932197&post_shout=Odeslat"
+"488","13","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"489","13","SITEMAP","POST","HTTP/1.1",,"shout_name=826901&shout_message=524923&sb_captcha_code=917783"
+"490","13","SITEMAP","POST","HTTP/1.1",,"shout_name=307771&shout_message=429368&sb_captcha_code=352648"
+"491","13","SITEMAP","GET","HTTP/1.1","stext=304481&search=Hledat&method=OR&stype=news&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50",
+"492","13","SITEMAP","GET","HTTP/1.1","stext=988539&search=Hledat&method=OR&stype=news&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50",
+"493","14","SITEMAP","GET","HTTP/1.1","stype=l",
+"494","14","SITEMAP","GET","HTTP/1.1","stype=n",
+"495","14","SITEMAP","GET","HTTP/1.1","stype=a",
+"496","14","SITEMAP","GET","HTTP/1.1","stype=p",
+"497","15","SITEMAP","GET","HTTP/1.1",,
+"498","16","SITEMAP","GET","HTTP/1.1",,
+"499","16","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"500","16","SITEMAP","POST","HTTP/1.1",,"shout_name=903019&shout_message=904602&sb_captcha_code=874148"
+"501","16","SITEMAP","POST","HTTP/1.1",,"shout_name=578988&shout_message=501200&sb_captcha_code=849957"
+"502","17","SITEMAP","GET","HTTP/1.1",,
+"503","17","SITEMAP","GET","HTTP/1.1","rowstart=98560",
+"504","17","SITEMAP","GET","HTTP/1.1","rowstart=20",
+"505","17","SITEMAP","GET","HTTP/1.1","rowstart=40",
+"506","17","SITEMAP","GET","HTTP/1.1","rowstart=60",
+"507","17","SITEMAP","POST","HTTP/1.1",,"archive_shout_name=226085&archive_shout_message=352855&captcha_code=224543&post_archive_shout=Odeslat"
+"508","17","SITEMAP","POST","HTTP/1.1",,"shout_name=113396&shout_message=379460&sb_captcha_code=585718&post_shout=Odeslat"
+"509","17","SITEMAP","POST","HTTP/1.1",,"archive_shout_name=104236&archive_shout_message=437892&captcha_code=466212"
+"510","17","SITEMAP","POST","HTTP/1.1",,"archive_shout_name=584508&archive_shout_message=534300&captcha_code=172086"
+"511","17","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"512","17","SITEMAP","POST","HTTP/1.1",,"shout_name=953627&shout_message=282402&sb_captcha_code=260899"
+"513","17","SITEMAP","POST","HTTP/1.1",,"shout_name=746988&shout_message=358428&sb_captcha_code=792116"
+"514","17","SITEMAP","GET","HTTP/1.1","rowstart=98500",
+"515","17","SITEMAP","GET","HTTP/1.1","rowstart=98520",
+"516","17","SITEMAP","GET","HTTP/1.1","rowstart=98540",
+"517","17","SITEMAP","GET","HTTP/1.1","rowstart=120",
+"518","17","SITEMAP","GET","HTTP/1.1","rowstart=100",
+"519","17","SITEMAP","GET","HTTP/1.1","rowstart=0",
+"520","17","SITEMAP","GET","HTTP/1.1","rowstart=80",
+"521","18","SITEMAP","GET","HTTP/1.1",,
+"522","19","SITEMAP","GET","HTTP/1.1",,
+"523","19","SITEMAP","POST","HTTP/1.1",,"username=fZSeUSrE&password1=d9P%21w0l%21H0&password2=w9S%21f5s%21S1&email=QGjbqzjc@burpcollaborator.net&user_hide_email=1&captcha_code=cwtTujJE&user_aim=uiqIfnjq&user_icq=eyimtDAw&user_msn=HPFUfIye&user_yahoo=PdmhhLta&user_web=hUWaUyMP&user_location=HbYkKlSS&user_month=&user_day=&user_year=&user_theme=Default&user_sig=uAJInHCR&user_offset=-13&agreement=1"
+"524","19","SITEMAP","POST","HTTP/1.1",,"shout_name=127593&shout_message=962283&sb_captcha_code=681485&post_shout=Odeslat"
+"525","19","SITEMAP","POST","HTTP/1.1",,"username=vrNuiCCg&password1=t7Z%21i1d%21J9&password2=x2R%21b8m%21Y2&email=yDVBULzQ@burpcollaborator.net&user_hide_email=1&captcha_code=nqORhrtf&user_aim=FaVPyXpf&user_icq=SOlhlYgy&user_msn=djJLweoT&user_yahoo=KJTCnFzB&user_web=YOFIbRAM&user_location=biCyMaln&user_month=&user_day=&user_year=&user_theme=Default&user_sig=TZoURsQr&user_offset=-13&agreement=1"
+"526","19","SITEMAP","POST","HTTP/1.1",,"username=NcmZsTsx&password1=e9P%21w7c%21A3&password2=z5J%21u5y%21I2&email=YqjgHvml@burpcollaborator.net&user_hide_email=1&captcha_code=fYwglnwO&user_aim=oLQWCCOf&user_icq=PEEkHCon&user_msn=oSedLBYz&user_yahoo=hFCOhYaO&user_web=zvvYznvz&user_location=KtLlTaXl&user_month=&user_day=&user_year=&user_theme=Default&user_sig=PuFKlFOU&user_offset=-13&agreement=1"
+"527","19","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"528","19","SITEMAP","POST","HTTP/1.1",,"shout_name=875021&shout_message=144302&sb_captcha_code=144269"
+"529","19","SITEMAP","POST","HTTP/1.1",,"shout_name=108838&shout_message=855923&sb_captcha_code=234376"
+"530","20","SITEMAP","GET","HTTP/1.1","lookup=1",
+"531","20","SITEMAP","GET","HTTP/1.1","lookup=3",
+"532","20","SITEMAP","GET","HTTP/1.1","lookup=20",
+"533","20","SITEMAP","GET","HTTP/1.1","lookup=23",
+"534","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=58610",
+"535","20","SITEMAP","POST","HTTP/1.1","lookup=1","comment_name=564446&comment_message=234481&post_comment=Ulo%c5%beit"
+"536","20","SITEMAP","GET","HTTP/1.1","lookup=1&rstart=58610",
+"537","20","SITEMAP","GET","HTTP/1.1","lookup=12",
+"538","20","SITEMAP","GET","HTTP/1.1","lookup=13",
+"539","20","SITEMAP","GET","HTTP/1.1","lookup=14",
+"540","20","SITEMAP","GET","HTTP/1.1","lookup=16",
+"541","20","SITEMAP","GET","HTTP/1.1","lookup=17",
+"542","20","SITEMAP","GET","HTTP/1.1","lookup=15",
+"543","20","SITEMAP","GET","HTTP/1.1","lookup=5552",
+"544","20","SITEMAP","GET","HTTP/1.1","lookup=4348",
+"545","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=10",
+"546","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=20",
+"547","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=30",
+"548","20","SITEMAP","POST","HTTP/1.1","lookup=1","shout_name=962466&shout_message=979970&sb_captcha_code=694625&post_shout=Odeslat"
+"549","20","SITEMAP","POST","HTTP/1.1","lookup=1","comment_name=696028&comment_message=450913"
+"550","20","SITEMAP","POST","HTTP/1.1","lookup=1","comment_name=950324&comment_message=232204"
+"551","20","SITEMAP","POST","HTTP/1.1","lookup=1","voteoption=0&poll_id=1"
+"552","20","SITEMAP","POST","HTTP/1.1","lookup=1","shout_name=290233&shout_message=380973&sb_captcha_code=740816"
+"553","20","SITEMAP","POST","HTTP/1.1","lookup=1","shout_name=461669&shout_message=311649&sb_captcha_code=458813"
+"554","20","SITEMAP","GET","HTTP/1.1","lookup=18",
+"555","20","SITEMAP","GET","HTTP/1.1","lookup=39",
+"556","20","SITEMAP","GET","HTTP/1.1","lookup=38",
+"557","20","SITEMAP","GET","HTTP/1.1","lookup=359",
+"558","20","SITEMAP","GET","HTTP/1.1","lookup=356",
+"559","20","SITEMAP","GET","HTTP/1.1","lookup=5550",
+"560","20","SITEMAP","GET","HTTP/1.1","lookup=3&c_start=6660",
+"561","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=58580",
+"562","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=58590",
+"563","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=58600",
+"564","20","SITEMAP","POST","HTTP/1.1","lookup=3","comment_name=592724&comment_message=607278&post_comment=Ulo%c5%beit"
+"565","20","SITEMAP","GET","HTTP/1.1","lookup=3&rstart=6660",
+"566","20","SITEMAP","POST","HTTP/1.1","lookup=20","comment_name=406578&comment_message=300210&post_comment=Ulo%c5%beit"
+"567","20","SITEMAP","GET","HTTP/1.1","lookup=20&rstart=0",
+"568","20","SITEMAP","POST","HTTP/1.1","lookup=1","comment_name=182218&comment_message=352030&post_comment=Ulo%c5%beit"
+"569","20","SITEMAP","POST","HTTP/1.1","lookup=12","comment_name=436012&comment_message=342289&post_comment=Ulo%c5%beit"
+"570","20","SITEMAP","GET","HTTP/1.1","lookup=12&rstart=0",
+"571","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=60",
+"572","20","SITEMAP","POST","HTTP/1.1","lookup=13","comment_name=239200&comment_message=946659&post_comment=Ulo%c5%beit"
+"573","20","SITEMAP","GET","HTTP/1.1","lookup=13&rstart=-10",
+"574","20","SITEMAP","POST","HTTP/1.1","lookup=14","comment_name=366894&comment_message=528130&post_comment=Ulo%c5%beit"
+"575","20","SITEMAP","GET","HTTP/1.1","lookup=14&rstart=40",
+"576","20","SITEMAP","POST","HTTP/1.1","lookup=16","comment_name=985514&comment_message=321138&post_comment=Ulo%c5%beit"
+"577","20","SITEMAP","GET","HTTP/1.1","lookup=16&rstart=10",
+"578","20","SITEMAP","POST","HTTP/1.1","lookup=17","comment_name=806075&comment_message=130967&post_comment=Ulo%c5%beit"
+"579","20","SITEMAP","GET","HTTP/1.1","lookup=17&rstart=-10",
+"580","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=50",
+"581","20","SITEMAP","POST","HTTP/1.1","lookup=15","comment_name=826301&comment_message=276508&post_comment=Ulo%c5%beit"
+"582","20","SITEMAP","GET","HTTP/1.1","lookup=15&rstart=20",
+"583","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=0",
+"584","20","SITEMAP","POST","HTTP/1.1","lookup=5552","comment_name=364700&comment_message=918475&post_comment=Ulo%c5%beit"
+"585","20","SITEMAP","GET","HTTP/1.1","lookup=5552&rstart=-10",
+"586","20","SITEMAP","POST","HTTP/1.1","lookup=4348","comment_name=938914&comment_message=525734&post_comment=Ulo%c5%beit"
+"587","20","SITEMAP","GET","HTTP/1.1","lookup=4348&rstart=-10",
+"588","20","SITEMAP","GET","HTTP/1.1","lookup=1&ce4dstart=0",
+"589","20","SITEMAP","GET","HTTP/1.1","lookup=1&c_start=40",
+"590","20","SITEMAP","GET","HTTP/1.1","lookup=14&c_start=40",
+"591","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=84",
+"592","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=83",
+"593","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=82",
+"594","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=81",
+"595","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=80",
+"596","21","SITEMAP","GET","HTTP/1.1","type=T",
+"597","21","SITEMAP","GET","HTTP/1.1","type=A&item_id=86",
+"598","21","SITEMAP","GET","HTTP/1.1","type=A&item_id=83",
+"599","21","SITEMAP","GET","HTTP/1.1","type=A&item_id=82",
+"600","21","SITEMAP","GET","HTTP/1.1","type=A&item_id=77",
+"601","21","SITEMAP","GET","HTTP/1.1","type=A&item_id=76",
+"602","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=79",
+"603","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=78",
+"604","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=77",
+"605","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=76",
+"606","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=75",
+"607","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=74",
+"608","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=73",
+"609","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=72",
+"610","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=71",
+"611","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=70",
+"612","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=69",
+"613","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=68",
+"614","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=67",
+"615","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=66",
+"616","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=65",
+"617","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=5",
+"618","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=4",
+"619","21","SITEMAP","GET","HTTP/1.1","type=N&item_id=3",
+"620","22","SITEMAP","GET","HTTP/1.1",,
+"621","23","SITEMAP","GET","HTTP/1.1",,
+"622","24","SITEMAP","GET","HTTP/1.1",,
+"623","25","SITEMAP","GET","HTTP/1.1",,
+"624","26","SITEMAP","GET","HTTP/1.1","load=effects,builder",
+"625","27","SITEMAP","GET","HTTP/1.1",,
+"626","28","SITEMAP","GET","HTTP/1.1","error=3",
+"627","29","SITEMAP","GET","HTTP/1.1",,
+"628","29","SITEMAP","POST","HTTP/1.1",,"email=379933&send_password=Poslat+heslo"
+"629","29","SITEMAP","POST","HTTP/1.1",,"shout_name=148645&shout_message=155702&sb_captcha_code=976610&post_shout=Odeslat"
+"630","29","SITEMAP","POST","HTTP/1.1",,"voteoption=0&poll_id=1"
+"631","29","SITEMAP","POST","HTTP/1.1",,"shout_name=843757&shout_message=175458&sb_captcha_code=856655"
+"632","29","SITEMAP","POST","HTTP/1.1",,"shout_name=339957&shout_message=816018&sb_captcha_code=113685"
+"633","29","SITEMAP","POST","HTTP/1.1",,"email=981160&send_password=Poslat+heslo"
+"634","30","SITEMAP","GET","HTTP/1.1","msg_send=1",
+"635","31","SITEMAP","GET","HTTP/1.1",,
+"636","32","SITEMAP","GET","HTTP/1.1",,
+"637","33","SITEMAP","GET","HTTP/1.1",,
+"638","33","SITEMAP","GET","HTTP/1.1",,
+"639","4","ISSUE",,,,"GET /articles.php?article_id=62&c_start=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=62\r\nCookie: fusion_visited=yes\r\n\r\n"
+"640","4","ISSUE",,,,"GET /articles.php?article_id=77 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"641","4","ISSUE",,,,"GET /articles.php?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"642","5","ISSUE",,,,"POST /news.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"643","4","ISSUE",,,,"POST /profile.php?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=156494&comment_message=375606&post_comment=Ulo%c5%beit"
+"644","4","ISSUE",,,,"POST /profile.php?lookup=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=140032&comment_message=245273&post_comment=Ulo%c5%beit"
+"645","4","ISSUE",,,,"POST /news.php?readmore=73 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?readmore=73\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 110\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=135674&comment_message=836538&com_captcha_code=422944&post_comment=P%c5%99idat+koment%c3%a1%c5%99"
+"646","4","ISSUE",,,,"POST /profile.php?lookup=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=140032&comment_message=245273&post_comment=Ulo%c5%beit"
+"647","4","ISSUE",,,,"GET /news.php?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"648","4","ISSUE",,,,"GET /infusions/shoutbox_panel/shoutbox_archive.php?rowstart=120 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php?rowstart=60\r\nCookie: fusion_visited=yes\r\n\r\n"
+"649","5","ISSUE",,,,"POST /news.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"650","19","ISSUE",,,,"POST /register.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=685082&shout_message=310175&sb_captcha_code=226738&post_shout=Odeslat"
+"651","6","ISSUE",,,,"GET /articles.php?article_id=53 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?cat_id=13\r\nCookie: fusion_visited=yes\r\n\r\n"
+"652","3","ISSUE",,,,"GET /robots.txt HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\n\r\n"
+"653","4","ISSUE",,,,"GET /news.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nCookie: fusion_visited=yes; \r\n\r\n"
+"654","4","ISSUE",,,,"GET /news.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nCookie: fusion_visited=yes; \r\n\r\n"
+"655","19","ISSUE",,,,"GET /register.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"656","19","ISSUE",,,,"GET /register.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"657","5","ISSUE",,,,"GET /news.php?rowstart=70@@X_HIGHLIGHT@@tn8shu0k2t@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"658","6","ISSUE",,,,"GET /articles.php?article_id=86@@X_HIGHLIGHT@@xprvjs1tw3@@X_HIGHLIGHT@@&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"659","5","ISSUE",,,,"GET /news.php?readmore=21@@X_HIGHLIGHT@@11lt5griuf@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=60\r\nCookie: fusion_visited=yes\r\n\r\n"
+"660","5","ISSUE",,,,"GET /news.php?rowstart=70&@@X_HIGHLIGHT@@wa1gzy4sbv@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"661","17","ISSUE",,,,"GET /infusions/shoutbox_panel/shoutbox_archive.php?rowstart=120@@X_HIGHLIGHT@@wltyzsqn2f@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php?rowstart=60\r\nCookie: fusion_visited=yes\r\n\r\n"
+"662","5","ISSUE",,,,"GET /news.php?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@93794839' or 8927=8927-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"663","11","ISSUE",,,,"POST /faq.php?@@X_HIGHLIGHT@@l2as5jo3qb@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"664","20","ISSUE",,,,"GET /profile.php?lookup=14&rstart=40@@X_HIGHLIGHT@@1jbr87625u@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=14\r\nCookie: fusion_visited=yes\r\n\r\n"
+"665","11","ISSUE",,,,"POST /faq.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@42554114' or 6303=6303-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"666","5","ISSUE",,,,"GET /news.php?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"667","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news.old@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"668","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/njij.php@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"669","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news.bak@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"670","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/srlu.php@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"671","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news.tar@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"672","5","ISSUE",,,,"GET @@X_HIGHLIGHT@@/dmci.php@@X_HIGHLIGHT@@?rowstart=70 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=75\r\nCookie: fusion_visited=yes\r\n\r\n"
+"673","11","ISSUE",,,,"POST /faq.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"674","17","ISSUE",,,,"GET /infusions/shoutbox_panel/shoutbox_archive.php?rowstart=120&@@X_HIGHLIGHT@@2lhmlliawl@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php?rowstart=60\r\nCookie: fusion_visited=yes\r\n\r\n"
+"675","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/faq.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"676","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/qzin.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"677","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/faq.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"678","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/vgum.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"679","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/faq.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"680","11","ISSUE",,,,"POST @@X_HIGHLIGHT@@/tglo.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"681","17","ISSUE",,,,"GET /infusions/shoutbox_panel/shoutbox_archive.php?rowstart=120 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@88400305' or 3167=3167-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php?rowstart=60\r\nCookie: fusion_visited=yes\r\n\r\n"
+"682","6","ISSUE",,,,"GET /articles.php?article_id=86&c_start=620@@X_HIGHLIGHT@@lxk4c5bf1l@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"683","20","ISSUE",,,,"GET /profile.php?lookup=14&rstart=40 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@74271938' or 6643=6643-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=14\r\nCookie: fusion_visited=yes\r\n\r\n"
+"684","20","ISSUE",,,,"POST /profile.php?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"685","20","ISSUE",,,,"GET /profile.php?lookup=14&rstart=40&@@X_HIGHLIGHT@@4anzyeskxy@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=14\r\nCookie: fusion_visited=yes\r\n\r\n"
+"686","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/profile.old@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"687","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/tvjo.php@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"688","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/profile.bak@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"689","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/qdno.php@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"690","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/profile.tar@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"691","20","ISSUE",,,,"POST @@X_HIGHLIGHT@@/aesp.php@@X_HIGHLIGHT@@?lookup=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=15\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 67\r\nCookie: fusion_visited=yes\r\n\r\ncomment_name=898096&comment_message=978288&post_comment=Ulo%c5%beit"
+"692","6","ISSUE",,,,"GET /articles.php?article_id=86&c_start=620&@@X_HIGHLIGHT@@45md81vot8@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"693","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/articles.old@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"694","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/zndm.php@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"695","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/articles.bak@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"696","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/ozxj.php@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"697","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/articles.tar@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"698","6","ISSUE",,,,"GET @@X_HIGHLIGHT@@/rwyt.php@@X_HIGHLIGHT@@?article_id=86&c_start=620 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=650\r\nCookie: fusion_visited=yes\r\n\r\n"
+"699","8","ISSUE",,,,"GET /weblinks.php?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@98813738' or 3925=3925-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"700","8","ISSUE",,,,"GET /weblinks.php?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"701","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/register.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"702","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/lggi.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"703","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/register.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"704","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/lfdf.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"705","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/register.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"706","19","ISSUE",,,,"POST @@X_HIGHLIGHT@@/wfwj.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/register.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=524644&shout_message=715163&sb_captcha_code=923115&post_shout=Odeslat"
+"707","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/weblinks.old@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"708","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/crdj.php@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"709","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/weblinks.bak@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"710","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/bhpa.php@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"711","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/weblinks.tar@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"712","8","ISSUE",,,,"GET @@X_HIGHLIGHT@@/twkw.php@@X_HIGHLIGHT@@?cat_id=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"713","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/print.old@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"714","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/idrd.php@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"715","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/print.bak@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"716","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/joch.php@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"717","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/print.tar@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"718","21","ISSUE",,,,"GET @@X_HIGHLIGHT@@/kzuw.php@@X_HIGHLIGHT@@?type=N&item_id=68 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?rowstart=15\r\nCookie: fusion_visited=yes\r\n\r\n"
+"719","6","ISSUE",,,,"GET /articles.php?article_id=62 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?cat_id=13\r\nCookie: fusion_visited=yes\r\n\r\n"
+"720","6","ISSUE",,,,"POST /articles.php?cat_id=13@@X_HIGHLIGHT@@q0dpvzno88@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?cat_id=13\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=178233&shout_message=761705&sb_captcha_code=132987&post_shout=Odeslat"
+"721","29","ISSUE",,,,"POST /lostpassword.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"722","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/lostpassword.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"723","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/ewhm.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"724","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/lostpassword.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"725","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/nnyn.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"726","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/lostpassword.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"727","29","ISSUE",,,,"POST @@X_HIGHLIGHT@@/dtsx.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=355305&shout_message=917735&sb_captcha_code=683686&post_shout=Odeslat"
+"728","6","ISSUE",,,,"GET /articles.php?article_id=86@@X_HIGHLIGHT@@g29ggyyo08@@X_HIGHLIGHT@@&c_start=0 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=86&c_start=10\r\nCookie: fusion_visited=yes\r\n\r\n"
+"729","6","ISSUE",,,,"GET /articles.php?cat_id=15 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@37159826' or 9622=9622-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"730","5","ISSUE",,,,"GET /news.php?readmore=8&c_start=170@@X_HIGHLIGHT@@jjc361e0p3@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php?readmore=8\r\nCookie: fusion_visited=yes\r\n\r\n"
+"731","8","ISSUE",,,,"GET /weblinks.php?cat_id=2@@X_HIGHLIGHT@@hhzl7e92t4@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"732","8","ISSUE",,,,"GET /weblinks.php?cat_id=2&@@X_HIGHLIGHT@@plww13dguv@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"733","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/news.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"734","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/ndij.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"735","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/news.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"736","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/rzgj.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"737","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/news.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"738","31","ISSUE",,,,"GET @@X_HIGHLIGHT@@/web_feed/blkk.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/weblinks.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"739","20","ISSUE",,,,"GET /profile.php?lookup=1&c_start=20@@X_HIGHLIGHT@@c1f5st3c70@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/profile.php?lookup=1\r\nCookie: fusion_visited=yes\r\n\r\n"
+"740","14","ISSUE",,,,"GET /index.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@'@@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"741","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/index.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"742","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/rvms.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"743","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/index.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"744","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/iqep.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"745","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/index.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"746","15","ISSUE",,,,"GET @@X_HIGHLIGHT@@/zlra.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/submit.php?stype=a\r\nCookie: fusion_visited=yes\r\n\r\n"
+"747","17","ISSUE",,,,"POST /infusions/shoutbox_panel/shoutbox_archive.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"748","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/shoutbox_archive.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"749","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/toli.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"750","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/shoutbox_archive.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"751","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/igyv.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"752","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/shoutbox_archive.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"753","17","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/shoutbox_panel/ndss.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/shoutbox_panel/shoutbox_archive.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"754","6","ISSUE",,,,"GET /articles.php?article_id=76&ce4dstart=0@@X_HIGHLIGHT@@ugnh2q6ypu@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/articles.php?article_id=76&c_start=110\r\nCookie: fusion_visited=yes\r\n\r\n"
+"755","10","ISSUE",,,,"GET /photogallery.php?@@X_HIGHLIGHT@@46w9j35a2j@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"756","10","ISSUE",,,,"GET /photogallery.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@84426423' or 7103=7103-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"757","10","ISSUE",,,,"GET /photogallery.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"758","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/photogallery1.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"759","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/sajxgbeaanis1.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"760","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/photogallery.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"761","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/uwra.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"762","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/photogallery.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"763","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/utyj.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"764","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/photogallery.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"765","10","ISSUE",,,,"GET @@X_HIGHLIGHT@@/fbit.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"766","10","ISSUE",,,,"GET /photogallery.php?album_id=1@@X_HIGHLIGHT@@ls5vff5fce@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/photogallery.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"767","12","ISSUE",,,,"GET /contact.php?@@X_HIGHLIGHT@@n37bj6d2k1@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"768","12","ISSUE",,,,"GET /contact.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@17597987' or 9648=9648-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"769","12","ISSUE",,,,"GET /contact.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"770","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/contact.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"771","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/cdmu.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"772","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/contact.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"773","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/fgmd.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"774","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/contact.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"775","12","ISSUE",,,,"GET @@X_HIGHLIGHT@@/numu.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"802","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news_cats.tar@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"776","7","ISSUE",,,,"POST /news_cats.php?@@X_HIGHLIGHT@@ybrstc20j7@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news_cats.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=302839&shout_message=827325&sb_captcha_code=910157&post_shout=Odeslat"
+"777","16","ISSUE",,,,"POST /infusions/devLogs/index.php?@@X_HIGHLIGHT@@54tvca09pi@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"778","16","ISSUE",,,,"POST /infusions/devLogs/index.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@52802841' or 5307=5307-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"779","16","ISSUE",,,,"POST /infusions/devLogs/index.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"780","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/index.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"781","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/dseh.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"782","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/index.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"783","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/cmmz.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"784","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/index.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"785","16","ISSUE",,,,"POST @@X_HIGHLIGHT@@/infusions/devLogs/ybfn.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/infusions/devLogs/index.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=912944&shout_message=294612&sb_captcha_code=660567"
+"786","9","ISSUE",,,,"POST /downloads.php?@@X_HIGHLIGHT@@19bvzzfzmc@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"787","9","ISSUE",,,,"POST /downloads.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@'@@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"803","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/dvbr.php@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"788","9","ISSUE",,,,"POST /downloads.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"789","7","ISSUE",,,,"GET /news_cats.php?cat_id=27@@X_HIGHLIGHT@@5krnm1b5xa@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"790","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/downloads.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"791","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/svyy.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"792","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/downloads.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"793","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/josd.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"794","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/downloads.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"795","9","ISSUE",,,,"POST @@X_HIGHLIGHT@@/usfy.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"796","7","ISSUE",,,,"GET /news_cats.php?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@80610454' or 4428=4428-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"797","7","ISSUE",,,,"GET /news_cats.php?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"798","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news_cats.old@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"799","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/czke.php@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"800","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/news_cats.bak@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"801","7","ISSUE",,,,"GET @@X_HIGHLIGHT@@/ykrg.php@@X_HIGHLIGHT@@?cat_id=27 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"804","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/setuser.old@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"805","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/wqiy.php@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"806","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/setuser.bak@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"807","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/tjum.php@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"808","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/setuser.tar@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"809","28","ISSUE",,,,"GET @@X_HIGHLIGHT@@/kxjb.php@@X_HIGHLIGHT@@?error=3 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"810","29","ISSUE",,,,"POST /lostpassword.php?@@X_HIGHLIGHT@@jwq4li01p9@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"811","29","ISSUE",,,,"POST /lostpassword.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@61433269' or 1385=1385-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/lostpassword.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 22\r\nCookie: fusion_visited=yes\r\n\r\nvoteoption=0&poll_id=1"
+"812","9","ISSUE",,,,"GET /downloads.php?cat_id=2@@X_HIGHLIGHT@@r4ahnkq55b@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"813","9","ISSUE",,,,"POST /downloads.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@'@@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/downloads.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 80\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=544369&shout_message=714876&sb_captcha_code=174640&post_shout=Odeslat"
+"814","11","ISSUE",,,,"GET /faq.php?cat_id=3@@X_HIGHLIGHT@@d4kbdb5nq1@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/faq.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"815","13","ISSUE",,,,"POST /search.php?@@X_HIGHLIGHT@@2nzhvlbbtn@@X_HIGHLIGHT@@=1 HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"816","13","ISSUE",,,,"POST /search.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36@@X_HIGHLIGHT@@84084068' or 8618=8618-- @@X_HIGHLIGHT@@\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"817","13","ISSUE",,,,"POST /search.php HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"818","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/search.old@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"819","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/ghdg.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"820","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/search.bak@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"821","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/ampt.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"822","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/search.tar@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"823","13","ISSUE",,,,"POST @@X_HIGHLIGHT@@/evgr.php@@X_HIGHLIGHT@@ HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/search.php\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 61\r\nCookie: fusion_visited=yes\r\n\r\nshout_name=572609&shout_message=930822&sb_captcha_code=166864"
+"824","14","ISSUE",,,,"GET /submit.php?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"825","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/submit.old@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"826","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/nnlk.php@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"827","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/submit.bak@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"828","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/khzf.php@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"829","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/submit.tar@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
+"830","14","ISSUE",,,,"GET @@X_HIGHLIGHT@@/mdng.php@@X_HIGHLIGHT@@?stype=a HTTP/1.1\r\nHost: bratrstvi.company.com\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\r\nConnection: close\r\nCache-Control: max-age=0\r\nReferer: http://bratrstvi.company.com/news.php\r\nCookie: fusion_visited=yes\r\n\r\n"
