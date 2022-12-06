@@ -23,6 +23,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# pnpm
+.pnpm-store-docker
+**/.pnpm-store
+
 # local env files
 .env.local
 .env.development.local

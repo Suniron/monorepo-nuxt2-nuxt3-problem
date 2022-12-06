@@ -3,16 +3,18 @@ FROM node:14-alpine AS base
 WORKDIR /api
 
 COPY . .
-RUN npm ci
+
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
 
 EXPOSE 3001
 
 FROM base AS prod
 
-RUN npm cache clean --force
+RUN pnpm prune --prod
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
 
 FROM base AS dev
 
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev:docker"]

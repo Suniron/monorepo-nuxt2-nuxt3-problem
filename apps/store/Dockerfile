@@ -7,8 +7,10 @@ FROM node:16-alpine AS base
 # Create and move into /store folder
 WORKDIR /store
 
-# Copy package.json and yarn.lock to /store/ before installation
-COPY ./package.json ./yarn.lock /store/
+# Copy package.json and pnpm lock file to /store/ before installation
+COPY ./package.json ./pnpm-lock.yaml /store/
+
+RUN corepack enable
 
 EXPOSE 3002
 
@@ -23,9 +25,9 @@ ENV NODE_ENV=development
 COPY ./ /store/
 
 # Install all dependencies without change lockfile to avoid side effects
-RUN yarn install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
-RUN yarn build
+RUN pnpm build
 
 ##############
 # PROD STAGE # This stage is used is production
@@ -46,4 +48,4 @@ COPY --from=build /store/node_modules/.prisma/client/ /.prisma/client
 # Change user to "node" to improve security
 USER node
 
-CMD ["yarn", "start"]
+CMD ["pnpm", "start"]

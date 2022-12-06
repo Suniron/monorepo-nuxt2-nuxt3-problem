@@ -4,7 +4,8 @@
   "description": "Backend services for xrator_ui (frontend)",
   "main": "index.js",
   "scripts": {
-    "dev": "npm ci && nodemon",
+    "dev": "nodemon",
+    "dev:docker": "pnpm install --frozen-lockfile && nodemon",
     "start": "babel-node src/app.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint --ext .js . ",
@@ -62,5 +63,9 @@
   },
   "_moduleAliases": {
     "@": "src"
-  }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@7.14.2"
 }

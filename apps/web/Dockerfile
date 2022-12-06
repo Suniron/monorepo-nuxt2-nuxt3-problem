@@ -11,7 +11,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm ci
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
 
 FROM base AS prod
 
@@ -21,10 +22,10 @@ ARG BACKEND_BROWSER_BASE_URL
 ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
     BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL
 
-RUN npm cache clean --force
+RUN pnpm prune --prod
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
 
 FROM base AS dev
 
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev:docker"]

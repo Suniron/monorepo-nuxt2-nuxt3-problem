@@ -5,12 +5,13 @@
   "author": "Eli Linares",
   "private": true,
   "scripts": {
-    "dev": "npm ci && nuxt",
+    "dev": " nuxt",
+    "dev:docker": "pnpm install --frozen-lockfile&& nuxt",
     "spa": "nuxt --spa",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "prestart": "npm run generate",
+    "prestart": "pnpm generate",
     "lint": "eslint --ext .js,.vue . ",
     "lint:fix": "eslint --fix --ext .js,.vue . ",
     "test": "jest --passWithNoTests"
@@ -53,5 +54,9 @@
     "jest": "^24.1.0",
     "prettier": "^1.16.4",
     "vue-jest": "^4.0.0-rc.1"
-  }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@7.14.2"
 }
