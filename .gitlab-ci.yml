@@ -18,6 +18,7 @@ cache:
 .api_npm_clean_install:
   before_script:
     - cd apps/api
+    - ls -l
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - 'echo "App version: $VERSION"'
     - npm ci --cache .npm --prefer-offline
