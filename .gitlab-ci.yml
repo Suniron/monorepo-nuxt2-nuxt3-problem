@@ -3,11 +3,11 @@ stages: # List of stages for jobs, and their order of execution
 #   - create-image
 #   - deploy
 
-# # Cache modules in between jobs
-# cache:
-#   key: $CI_COMMIT_REF_SLUG
-#   paths:
-#     - .npm/
+# Cache modules in between jobs
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
 
 # # =========
 # # =========
