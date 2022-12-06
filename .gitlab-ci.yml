@@ -342,7 +342,7 @@ web-start-prerelease:
 store-unit-test-job:
   extends: 
   - .store_variables
-  - .store_store_
+  - .store_yarn_clean_install
   stage: test
   tags:
     - validation
@@ -361,7 +361,7 @@ store-unit-test-job:
 store-lint-test-job:
   extends: 
   - .store_variables
-  - .store_
+  - .store_yarn_clean_install
   stage: test
   tags:
     - validation
