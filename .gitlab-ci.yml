@@ -6,6 +6,7 @@ stages: # List of stages for jobs, and their order of execution
 # Cache modules in between jobs
 .pnpm-install:
   before_script:
+    - corepack enable
     - pnpm install --frozen-lockfile
   cache:
     key: $CI_COMMIT_REF_SLUG
