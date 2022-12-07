@@ -9,13 +9,14 @@
   "scripts": {
     "build": "turbo run build",
     "build:docker": "docker-compose -f docker-compose.prod.yml build",
-    "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
     "dev": "turbo run dev --parallel",
     "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
     "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
     "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",

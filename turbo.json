@@ -3,13 +3,18 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".out/**", ".nuxt/**"]
     },
     "lint": {
       "outputs": []
     },
     "dev": {
       "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
     }
-  }
+  },
+  "globalEnv": ["NODE_ENV"]
 }
