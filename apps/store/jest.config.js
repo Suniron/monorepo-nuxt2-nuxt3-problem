@@ -22,7 +22,4 @@ module.exports = {
   testTimeout: 30000,
   clearMocks: true,
   setupFilesAfterEnv: ['<rootDir>/test/utils/beforeAndAfterAll.js'],
-  transform: {
-    '\\.[jt]sx?$': 'babel-jest',
-  },
 }

@@ -109,7 +109,6 @@ importers:
       '@types/jest': ^28.1.4
       '@typescript-eslint/eslint-plugin': ^5.30.6
       '@typescript-eslint/parser': ^5.30.6
-      babel-jest: ^24.1.0
       body-parser: ^1.19.0
       celebrate: ^13.0.4
       compression: ^1.7.4
@@ -185,7 +184,6 @@ importers:
       '@types/jest': 28.1.8
       '@typescript-eslint/eslint-plugin': 5.45.1_yjegg5cyoezm3fzsmuszzhetym
       '@typescript-eslint/parser': 5.45.0_s5ps7njkmjlaqajutnox5ntcla
-      babel-jest: 24.9.0_@babel+core@7.20.5
       cross-env: 7.0.3
       eslint: 8.29.0
       eslint-config-prettier: 8.5.0_eslint@8.29.0
