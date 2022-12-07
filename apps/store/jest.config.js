@@ -2,7 +2,7 @@
  * @type {import('@jest/types').Config.InitialOptions}
  */
 module.exports = {
-  preset: [['@babel/preset-env', { targets: { node: 'current' } }]],
+  preset: '@babel/preset-env',
   modulePaths: ['<rootDir>/node_modules/', '<rootDir>/tests/__mocks__/'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
