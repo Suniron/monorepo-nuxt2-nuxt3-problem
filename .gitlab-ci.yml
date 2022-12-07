@@ -49,15 +49,14 @@ api-unit-test-job:
       - .gitlab-ci.yml
 
 api-lint-test-job:
-  extends:
+  extends: 
+    - .move-api
     - .get-versions
+    - .pnpm-install
   stage: test
   tags:
     - validation
   script:
-    - cd apps/api
-    - corepack enable
-    - pnpm install --frozen-lockfile
     - echo "Linting code..."
     - npm run lint
     - echo "Code lint finished"
