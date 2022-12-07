@@ -1,7 +1,7 @@
 stages: # List of stages for jobs, and their order of execution
   - test
-#   - create-image
-#   - deploy
+  - create-image
+  - deploy
 
 # Cache modules in between jobs
 .pnpm-install:
