@@ -1,3 +1,6 @@
+/**
+ * @type {import('@jest/types').Config.InitialOptions}
+ */
 module.exports = {
   modulePaths: ['<rootDir>/node_modules/', '<rootDir>/tests/__mocks__/'],
   moduleNameMapper: {
