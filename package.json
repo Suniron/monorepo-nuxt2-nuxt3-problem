@@ -1,6 +1,6 @@
 {
   "name": "xrator-operator",
-  "version": "0.0.0",
+  "version": "1.13.0",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:docker": "docker-compose -f docker-compose.prod.yml build",
+    "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
     "dev": "turbo run dev --parallel",
     "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
     "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
