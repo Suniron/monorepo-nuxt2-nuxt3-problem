@@ -34,7 +34,7 @@ stages:
   before_script:
     - cd apps/api
 
-api-unit-test-job:
+unit-test-job:
   extends: 
     - .get-versions
     - .pnpm-install
@@ -47,11 +47,8 @@ api-unit-test-job:
     - echo "Tests completed"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-    - changes:
-      - apps/api/**/*
-      - .gitlab-ci.yml
 
-api-lint-test-job:
+lint-test-job:
   extends: 
     - .get-versions
     - .pnpm-install
@@ -64,9 +61,6 @@ api-lint-test-job:
     - echo "Code lint finished"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-    - changes:
-      - apps/api/**/*
-      - .gitlab-ci.yml
 
 api-create-recette-image:
   extends: 
