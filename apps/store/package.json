@@ -1,5 +1,5 @@
 {
-  "name": "xrator_store",
+  "name": "@xrator-operator/store",
   "version": "1.13.0",
   "scripts": {
     "import-demo": "NODE_ENV=development node import_demo.js",
@@ -8,7 +8,7 @@
     "dev:docker": "pnpm install --frozen-lockfile && pnpm dev",
     "build": "node ./build.js && node ./build-seeds.js",
     "start": "node ./out/app.js",
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test JWT_REFRESH_LIFE_MS=123456789 jest --detectOpenHandles",
     "lint": "eslint --ext .js . ",
     "lint:fix": "eslint --fix --ext .js . ",
     "db:truncate": "babel-node prisma/truncateAllDatabase.js",

@@ -1,14 +1,14 @@
 {
-  "name": "xrator",
+  "name": "@xrator-operator/web",
   "version": "1.13.0",
   "description": "Xrator helps to manage all your company assets and audit their security vulnerabilities",
   "author": "Eli Linares",
   "private": true,
   "scripts": {
-    "dev": " nuxt",
-    "dev:docker": "pnpm install --frozen-lockfile&& nuxt",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt",
+    "dev:docker": "pnpm install --frozen-lockfile && nuxt",
     "spa": "nuxt --spa",
-    "build": "nuxt build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "prestart": "pnpm generate",
