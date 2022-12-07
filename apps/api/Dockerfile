@@ -11,8 +11,6 @@ EXPOSE 3001
 
 FROM base AS prod
 
-RUN pnpm prune --prod
-
 CMD ["pnpm", "start"]
 
 FROM base AS dev
