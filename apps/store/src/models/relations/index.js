@@ -106,9 +106,6 @@ export const createBulkRelationModel = async (params, loggedUserInfo = {}) => {
       })
     ).map((e) => e.id)
 
-    /**
-     * @type {import('@prisma/client').PrismaPromise<any>[]}
-     */
     const queries = []
 
     relationsToInsert.forEach((relation) => {
@@ -154,10 +151,9 @@ export const createBulkRelationModel = async (params, loggedUserInfo = {}) => {
  *
  * @param {*} id
  * @param {*} params
- * @param {import('@/types/user').LoggedUser} _loggedUserInfo
  * @returns
  */
-export const updateRelationModel = async (id, params, _loggedUserInfo) => {
+export const updateRelationModel = async (id, params) => {
   try {
     const { type } = params
     const relId = await knex.transaction(async (tx) => {
@@ -181,10 +177,10 @@ export const updateRelationModel = async (id, params, _loggedUserInfo) => {
 /**
  *
  * @param {*} id
- * @param {import('@/types/user').LoggedUser} _loggedUserInfo
  * @returns
  */
-export const deleteRelationModel = async (id, _loggedUserInfo) => {
+export const deleteRelationModel = async (id) => {
+  // TODO: check permissions
   try {
     await knex('relation').where('id', id).delete()
 
@@ -198,13 +194,10 @@ export const deleteRelationModel = async (id, _loggedUserInfo) => {
 /**
  *
  * @param {{fromAssetId: number, relationType: string, toAssetId: number}} params
- * @param {import('@/types/user').LoggedUser} _loggedUserInfo
  * @returns {Promise<{error?: string , count?: number}>}
  */
-export const deleteRelationByAssetsIdsModel = async (
-  params,
-  _loggedUserInfo
-) => {
+export const deleteRelationByAssetsIdsModel = async (params) => {
+  // TODO: check permissions
   try {
     const { fromAssetId, relationType, toAssetId } = params
     // As the relation table does not have a uniqueness constraint on "from_asset_id" & "to_asset_id" columns, you can't use delete function but deleteMany instead

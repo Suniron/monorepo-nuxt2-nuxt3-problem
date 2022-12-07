@@ -48,12 +48,10 @@ export const createBulkRelationController = async (req, res, next) => {
  * @param {import('express').NextFunction} next
  */
 export const updateRelationController = async (req, res, next) => {
+  // TODO: check permissions
+
   try {
-    const { error, id } = await updateRelationModel(
-      req.params?.relId,
-      req.body,
-      req.user
-    )
+    const { error, id } = await updateRelationModel(req.params?.relId, req.body)
 
     if (error) throwHTTPError(error)
 
@@ -90,14 +88,11 @@ export const deleteRelationController = async (req, res, next) => {
  */
 export const deleteRelationByAssetsIdsController = async (req, res, next) => {
   try {
-    const { error, count } = await deleteRelationByAssetsIdsModel(
-      {
-        fromAssetId: parseInt(req.params.fromAssetId),
-        relationType: req.params.relationType,
-        toAssetId: parseInt(req.params.toAssetId),
-      },
-      req.user
-    )
+    const { error, count } = await deleteRelationByAssetsIdsModel({
+      fromAssetId: parseInt(req.params.fromAssetId),
+      relationType: req.params.relationType,
+      toAssetId: parseInt(req.params.toAssetId),
+    })
 
     if (error) throwHTTPError(error)
 

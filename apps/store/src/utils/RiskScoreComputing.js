@@ -138,13 +138,12 @@ function inheritedRiskCalculation(
  * @param {{
  *  listUnvisited: lightAssetType[],
  *  relations: lightRelationType[],
- *  inherentScores: inherentRiskScores[],
  *  allAssets: lightAssetType[]
  * }} param1
  */
 function compoundRiskCalculation(
   risks,
-  { listUnvisited, relations, inherentScores, allAssets }
+  { listUnvisited, relations, allAssets }
 ) {
   listUnvisited.forEach(async (asset) => {
     const technicalAssetsInside = getAllTechnicalDescendantsAssets(

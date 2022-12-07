@@ -1,4 +1,6 @@
 // @ts-check
+/* eslint-disable no-import-assign */
+/* eslint-disable no-async-promise-executor */
 import { UNAUTHORIZED } from '@/common/constants'
 import Knex from 'knex'
 import * as knex from '@/common/db'
@@ -131,8 +133,9 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
+  // @ts-expect-error: TODO
   Knex.mockReturnValue(mKnex)
-  // eslint-disable-next-line no-import-assign
+  // @ts-expect-error: TODO
   knex.knex = knexMock
 
   return knexMock
@@ -141,7 +144,7 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
 /**
  * Mock the knex query builder with the given final values.
  * The last value of the list will be repeated as the return value of all subsequent calls
- * @param {any[]} finalValue The final values to return for each call in order
+ * @param {any[]} finalValues The final values to return for each call in order
  * @param {boolean} shouldReject If the query should be rejected
  */
 export function mockKnexWithFinalValues(finalValues, shouldReject = false) {
@@ -178,13 +181,16 @@ export function mockKnexWithFinalValues(finalValues, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
+  // @ts-expect-error: TODO
   Knex.mockReturnValue(mKnex)
+  // @ts-expect-error: TODO
   knex.knex = knexMock
 
   return knexMock
 }
 
 export function mockVerifyToken(user) {
+  // @ts-expect-error: TODO
   jwt.verifyToken = jest.fn(() => {
     if (user) {
       return { user }

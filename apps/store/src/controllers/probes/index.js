@@ -20,7 +20,7 @@ export const searchProbesController = async (req, res, next) => {
 
 export const updateProbeController = async (req, res, next) => {
   try {
-    const { error, status } = await updateProbeModel(
+    const { error } = await updateProbeModel(
       {
         ...(req.params || {}),
       },

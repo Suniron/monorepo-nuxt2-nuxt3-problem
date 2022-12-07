@@ -1,5 +1,4 @@
 import {
-  DUPLICATE,
   MODEL_ERROR,
   NOT_FOUND,
   SUCCESS,

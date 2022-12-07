@@ -13,10 +13,7 @@ exports.up = async (knex) => {
     WHERE start_date = '1970-01-01'::date;
   `)
 }
-/**
- *
- * @param {import('knex').Knex} knex
- */
-exports.down = async (knex) => {
+
+exports.down = async () => {
   // Nothing to rollback
 }

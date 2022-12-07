@@ -16,5 +16,5 @@
       "outputs": []
     }
   },
-  "globalEnv": ["NODE_ENV"]
+  "globalEnv": ["NODE_ENV", "POSTGRES_URI", "INSTANCE_NAME", "ELASTICSEARCH_URL"]
 }

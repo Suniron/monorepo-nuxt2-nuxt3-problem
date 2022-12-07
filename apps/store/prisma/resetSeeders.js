@@ -1,5 +1,4 @@
 // @ts-check
-import knex from 'knex'
 import { runSeeders } from './startSeed'
 import { resetDatabase } from './truncateAllDatabase'
 
