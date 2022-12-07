@@ -1,8 +1,10 @@
+// @ts-check
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 import probes from '../../example-values/probes.json'
-import { mockAdminUser, mockNonAdminUser } from '../../mocks'
+import { mockAdminUser } from '../../mocks'
+
 describe('/probes/:id', () => {
   describe('patch /', () => {
     beforeAll(() => {

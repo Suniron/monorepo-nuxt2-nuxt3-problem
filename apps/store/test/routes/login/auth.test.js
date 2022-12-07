@@ -103,7 +103,7 @@ describe('POST /refresh-token', () => {
       accessToken: mockedAccessToken,
       user: mockedUser,
     })
-    const Knex = mockKnexWithFinalValue([generateLogin()])
+    mockKnexWithFinalValue([generateLogin()])
 
     const req = await request(app)
       .post('/refresh-token')

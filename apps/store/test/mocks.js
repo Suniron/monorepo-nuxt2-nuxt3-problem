@@ -1,7 +1,4 @@
-/* eslint-disable no-import-assign */
-/* eslint-disable no-async-promise-executor */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+// @ts-check
 import { UNAUTHORIZED } from '@/common/constants'
 import Knex from 'knex'
 import * as knex from '@/common/db'
