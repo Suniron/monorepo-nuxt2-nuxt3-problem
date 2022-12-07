@@ -15,6 +15,7 @@
     "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
+    "start": "turbo run start",
     "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
     "test": "turbo run test"
   },
