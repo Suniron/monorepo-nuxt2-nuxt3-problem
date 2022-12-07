@@ -1,24 +1,25 @@
+// @ts-check
 import { MODEL_ERROR, SUCCESS } from '@/common/constants'
 import { format } from 'date-fns'
 import prismaClient from '@/prismaClient'
 import { getUserGroupIds } from '@/utils/user.utils'
+import { log } from '@/lib/logger'
 
 /**
  * Returns scans
  *
  * @param {object} provider
  * @param {object} params
- * @param {integer} params.page Number of the page to get
- * @param {integer} params.pageSize Number of scans returned by page
+ * @param {string} params.page Number of the page to get
+ * @param {string} params.pageSize Number of scans returned by page
  * @param {object} loggedUserInfo
- * @returns {Promise<{ error?: string, scans?: Object, total?: integer }>} scans: Data of the scans, total: number of scans
+ * @returns {Promise<{ error?: string, scans?: Object, total?: number }>} scans: Data of the scans, total: number of scans
  */
 export const searchScansModel = async (
   provider,
   params,
   loggedUserInfo = {}
 ) => {
-  const { logger } = provider
   const { companyId } = loggedUserInfo
   const { pageSize, page } = params
   try {
@@ -132,7 +133,7 @@ export const searchScansModel = async (
 
     return { error: MODEL_ERROR }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('searchScansModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -142,12 +143,12 @@ export const searchScansModel = async (
  *
  * @param {object} provider
  * @param {object} params
- * @param {integer} params.scanId Id of the scan to get
+ * @param {number} params.scanId Id of the scan to get
  * @param {object} loggedUserInfo
  * @returns {Promise<{ error?: string, scan?: Object }>} scan: Data of the scan
  */
 export const getScanModel = async (provider, params, loggedUserInfo = {}) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   const { companyId } = loggedUserInfo
   const { scanId } = params
   try {
@@ -158,7 +159,7 @@ export const getScanModel = async (provider, params, loggedUserInfo = {}) => {
       .andWhere('id', scanId)
     return { scan }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('searchAssetScanModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -171,7 +172,6 @@ export const getScanModel = async (provider, params, loggedUserInfo = {}) => {
  * @returns {Promise<{ error?: string, assets?: string }>} assets: list of ip address, url and network / netmask
  */
 export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
-  const { logger } = provider
   try {
     const { companyId, id: userId } = loggedUserInfo
     const userGroups = await getUserGroupIds(userId)
@@ -289,7 +289,7 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
       assets: ips.concat(urls, networks),
     }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('searchAssetScanModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -301,7 +301,7 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
  * @returns {Promise<{ error?: string, scenarios?: Object }>} scenarios: List of phishing scenarios
  */
 export const searchPhishingScenariosModel = async (provider) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   try {
     const scenarios = await knex
       .select('id', 'name', 'description', 'severity')
@@ -309,7 +309,7 @@ export const searchPhishingScenariosModel = async (provider) => {
 
     return { scenarios }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('searchPhishingScenariosModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -319,12 +319,12 @@ export const searchPhishingScenariosModel = async (provider) => {
  *
  * @param {object} provider
  * @param {object} params parameters of the query
- * @param {integer} params.scanId Id of the scan for which to get the report
+ * @param {number} params.scanId Id of the scan for which to get the report
  * @returns {Promise<{ error?: string, scanReport?: Object }>} scanReport: Data of the scan,
  * the vulnerabilities and assets identified by the scan
  */
 export const getScanReportModel = async (provider, params) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   const { scanId } = params
   try {
     const [scan] = await knex
@@ -382,7 +382,7 @@ export const getScanReportModel = async (provider, params) => {
       },
     }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('getScanReportModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -392,11 +392,9 @@ export const getScanReportModel = async (provider, params) => {
  *
  * @param {object} provider
  * @param {object} params parameters of the query, which are the scan asset data
- * @param {import('@/types/user').LoggedUser} loggedUserInfo
- * @returns {Promise<{ error?: string, id?: integer }>} status: SUCCESS
  */
 export const createScanAssetModel = async (provider, params) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   const {
     scan_id,
     asset_id,
@@ -426,7 +424,7 @@ export const createScanAssetModel = async (provider, params) => {
 
     return { status: SUCCESS }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('createScanAssetModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -444,7 +442,6 @@ export const createScanModel = async (
   params,
   loggedUserInfo = {}
 ) => {
-  const { logger } = provider
   const {
     type,
     name = '',
@@ -462,7 +459,7 @@ export const createScanModel = async (
     !Array.isArray(scanParams?.assets) &&
     !Array.isArray(scanParams?.userAssets)
   ) {
-    logger.error('Cannot create scan without corresponding assets')
+    log.error('Cannot create scan without corresponding assets')
     return { error: 'ValidationError' }
   }
 
@@ -519,7 +516,7 @@ export const createScanModel = async (
     }
     return { id: scanIds }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('createScanModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -528,14 +525,14 @@ export const createScanModel = async (
  * Update a scan
  *
  * @param {object} provider
- * @param {integer} id id of the scan to update
+ * @param {number} id id of the scan to update
  * @param {object} params parameters of the query
  * @param {object} params.status new status of the scan to update
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns {Promise<{ error?: string, status?: string}>} status: SUCCESS
  */
 export const updateScanModel = async (provider, id, params) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   const { status = null } = params
   try {
     await knex.transaction(async (tx) => {
@@ -543,7 +540,7 @@ export const updateScanModel = async (provider, id, params) => {
     })
     return { status: SUCCESS }
   } catch (error) {
-    logger.error(error)
+    log.withError(error).error('updateScanModel')
     return { error: MODEL_ERROR }
   }
 }
