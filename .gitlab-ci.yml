@@ -11,6 +11,7 @@ stages:
     - corepack enable
     - pnpm config set store-dir .pnpm-store
     - pnpm install --frozen-lockfile
+    - pnpm prisma generate
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
