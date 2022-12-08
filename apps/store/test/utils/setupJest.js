@@ -1,7 +1,6 @@
 // @ts-check
-import { TextEncoder, TextDecoder } from 'util'
+import { TextEncoder } from 'util'
 global.TextEncoder = TextEncoder
-// global.TextDecoder = TextDecoder
 
 import { mockVerifyToken } from '../mocks'
 import { generateUser } from '.'
