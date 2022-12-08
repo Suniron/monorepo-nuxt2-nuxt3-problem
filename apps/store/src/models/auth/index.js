@@ -153,7 +153,7 @@ export const isValidSessionRefreshToken = async (refreshToken, userId) => {
 
     return !!sessionFound
   } catch (error) {
-    log.error('[model>auth>index.js>isValidSessionRefreshToken()]', error)
+    log.withError(error).error('isValidSessionRefreshToken')
     throw new Error('Error while checking refresh token: ' + error)
   }
 }
