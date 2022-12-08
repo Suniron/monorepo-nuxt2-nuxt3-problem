@@ -2,7 +2,6 @@
  * @type {import('@jest/types').Config.InitialOptions}
  */
 module.exports = {
-  testEnvironment: 'jsdom',
   modulePaths: ['<rootDir>/node_modules/', '<rootDir>/tests/__mocks__/'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
@@ -22,5 +21,5 @@ module.exports = {
   coverageReporters: ['html'],
   testTimeout: 30000,
   clearMocks: true,
-  setupFilesAfterEnv: ['<rootDir>/test/utils/beforeAndAfterAll.js'],
+  setupFilesAfterEnv: ['<rootDir>/test/utils/setupJest.js'],
 }

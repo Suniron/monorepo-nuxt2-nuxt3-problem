@@ -1,5 +1,9 @@
 // @ts-check
-import { mockVerifyToken } from './../mocks'
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+// global.TextDecoder = TextDecoder
+
+import { mockVerifyToken } from '../mocks'
 import { generateUser } from '.'
 
 const customUser = generateUser({
