@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import csv from 'csvtojson'
 import {
@@ -7,9 +8,13 @@ import {
   mockVerifyToken,
 } from '../../mocks'
 import { generateUser } from '../../utils/index.js'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/project-p... Remove this comment to see the full error message
 import priorities from '../../example-values/project-priorities.json'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/remediati... Remove this comment to see the full error message
 import remediationProjectData from '../../example-values/remediation-projects.json'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/comments-... Remove this comment to see the full error message
 import commentsRemediationProjectData from '../../example-values/comments-remediation-projects.json'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { SUCCESS, UNAUTHORIZED } from '@/common/constants'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
@@ -31,48 +36,48 @@ import app from '../../utils/fakeApp'
 /**
  * @type {RemediationProjectItem[]}
  */
-let remediationProjects = []
+let remediationProjects: any = []
 
 /**
  * @type {import('@/types/remediationProject').RemediationProjectScope[]}
  */
-let remediationProjectScopeTable = []
+let remediationProjectScopeTable: any = []
 
 /**
  * @type {import('@/types/projectStatus').ProjectStatus[]}
  */
-let projectStatus = []
+let projectStatus: any = []
 
 /**
  * @type {import('@/types/projectStatusHistory').ProjectStatusHistory[]}
  */
-let projectStatusHistory = []
+let projectStatusHistory: any = []
 
 /**
  * @type {import('@/types/projectPriority').ProjectPriority[]}
  */
-let projectPriorities = []
+let projectPriorities: any = []
 
 /**
  * @type {import('@/types/remediationProject').RemediationProjectAssignee[]}
  */
-let remediationProjectAssignees = []
+let remediationProjectAssignees: any = []
 /**
  * @type {import('@/types/user').User[]}
  */
-let users = []
+let users: any = []
 /**
  * @type {import('@/types/vulnerability').VulnerabilityAssets[]}
  */
-let vulnerabilityAssets = []
+let vulnerabilityAssets: any = []
 /**
  * @type {import('@/types/vulnerability').Vulnerability[]}
  */
-let vulnerabilities = []
+let vulnerabilities: any = []
 /**
  * @type {import('@/types/asset').Asset[]}
  */
-let assets = []
+let assets: any = []
 
 const newProjectData = {
   name: 'New Project',
@@ -142,32 +147,40 @@ describe('/remediation-projects/summary', () => {
   describe('GET /', () => {
     describe('with the right auth token and same company id', () => {
       it('should return 200 with correct data', async () => {
+        // @ts-expect-error TS(7006): Parameter 'project' implicitly has an 'any' type.
         const remediationProjectList = remediationProjects.map((project) => {
           return {
             project_id: project.id,
             project_name: project.name,
             owner_id: project.fk_owner,
+            // @ts-expect-error TS(7006): Parameter 'user' implicitly has an 'any' type.
             owner_name: users.find((user) => user.id === project.fk_owner)
               ?.username,
             priority: projectPriorities.find(
+              // @ts-expect-error TS(7006): Parameter 'priority' implicitly has an 'any' type.
               (priority) => priority.id === project.fk_priority_id
             )?.name,
             priority_weight: projectPriorities.find(
+              // @ts-expect-error TS(7006): Parameter 'priority' implicitly has an 'any' type.
               (priority) => priority.id === project.fk_priority_id
             )?.weight,
             status: projectStatus.find(
+              // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
               (status) =>
                 status.id ===
                 projectStatusHistory.find(
+                  // @ts-expect-error TS(7006): Parameter 'statusHistory' implicitly has an 'any' ... Remove this comment to see the full error message
                   (statusHistory) =>
                     statusHistory.fk_project_id === project.id &&
                     statusHistory.end_date === null
                 )?.fk_status_id
             )?.name,
             status_weight: projectStatus.find(
+              // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
               (status) =>
                 status.id ===
                 projectStatusHistory.find(
+                  // @ts-expect-error TS(7006): Parameter 'statusHistory' implicitly has an 'any' ... Remove this comment to see the full error message
                   (statusHistory) =>
                     statusHistory.fk_project_id === project.id &&
                     statusHistory.end_date === null
@@ -241,50 +254,63 @@ describe('/remediation-projects/:id', () => {
       it('should return 200 with correct data', async () => {
         let projectId = 2
         const [remediationProjectDetails] = remediationProjects
+          // @ts-expect-error TS(7006): Parameter 'project' implicitly has an 'any' type.
           .filter((project) => project.id.toString() === projectId.toString())
+          // @ts-expect-error TS(7006): Parameter 'project' implicitly has an 'any' type.
           .map((project) => {
             return {
               project_id: project.id,
               project_name: project.name,
               project_description: project.description,
               owner_id: project.fk_owner,
+              // @ts-expect-error TS(7006): Parameter 'user' implicitly has an 'any' type.
               owner_name: users.find((user) => user.id === project.fk_owner)
                 ?.username,
               assignees: remediationProjectAssignees
+                // @ts-expect-error TS(7006): Parameter 'assignee' implicitly has an 'any' type.
                 .filter((assignee) => assignee.fk_project_id === project.id)
+                // @ts-expect-error TS(7006): Parameter 'assignee' implicitly has an 'any' type.
                 .map((assignee) => {
                   return {
                     user_id: assignee.fk_user_id,
                     username: users.find(
+                      // @ts-expect-error TS(7006): Parameter 'user' implicitly has an 'any' type.
                       (user) => user.id === assignee.fk_user_id
                     )?.username,
                   }
                 }),
               priority: projectPriorities.find(
+                // @ts-expect-error TS(7006): Parameter 'priority' implicitly has an 'any' type.
                 (priority) => priority.id === project.fk_priority_id
               )?.name,
               status: projectStatus.find(
+                // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
                 (status) =>
                   status.id ===
                   projectStatusHistory.find(
+                    // @ts-expect-error TS(7006): Parameter 'statusHistory' implicitly has an 'any' ... Remove this comment to see the full error message
                     (statusHistory) =>
                       statusHistory.fk_project_id === project.id &&
                       statusHistory.end_date === undefined
                   )?.fk_status_id
               )?.name,
               status_id: projectStatus.find(
+                // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
                 (status) =>
                   status.id ===
                   projectStatusHistory.find(
+                    // @ts-expect-error TS(7006): Parameter 'statusHistory' implicitly has an 'any' ... Remove this comment to see the full error message
                     (statusHistory) =>
                       statusHistory.fk_project_id === project.id &&
                       statusHistory.end_date === undefined
                   )?.fk_status_id
               )?.id,
               status_weight: projectStatus.find(
+                // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
                 (status) =>
                   status.id ===
                   projectStatusHistory.find(
+                    // @ts-expect-error TS(7006): Parameter 'statusHistory' implicitly has an 'any' ... Remove this comment to see the full error message
                     (statusHistory) =>
                       statusHistory.fk_project_id === project.id &&
                       statusHistory.end_date === undefined
@@ -301,6 +327,7 @@ describe('/remediation-projects/:id', () => {
           [
             Number(
               remediationProjects.find(
+                // @ts-expect-error TS(7006): Parameter 'project' implicitly has an 'any' type.
                 (project) => project.id.toString() === projectId.toString()
               )?.fk_company_id
             ),
@@ -588,47 +615,60 @@ describe('/remediation-projects/:id/scope', () => {
 
         const remediationProjectScope = remediationProjectScopeTable
           .filter(
+            // @ts-expect-error TS(7006): Parameter 'scope' implicitly has an 'any' type.
             (scope) => scope.fk_project_id.toString() === projectId.toString()
           )
+          // @ts-expect-error TS(7006): Parameter 'scope' implicitly has an 'any' type.
           .map((scope) => {
             return {
               project_id: scope.fk_project_id,
               project_scope_id: scope.id,
               vulnerability_asset_id: scope.fk_vulnerability_asset_id,
               asset_id: vulnerabilityAssets.find(
+                // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                 (vast) => vast.id === scope.fk_vulnerability_asset_id
               )?.asset_id,
               asset_type: assets.find(
+                // @ts-expect-error TS(7006): Parameter 'asset' implicitly has an 'any' type.
                 (asset) =>
                   asset.id ===
                   vulnerabilityAssets.find(
+                    // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                     (vast) => vast.id === scope.fk_vulnerability_asset_id
                   )?.asset_id
               )?.type,
               asset_name: assets.find(
+                // @ts-expect-error TS(7006): Parameter 'asset' implicitly has an 'any' type.
                 (asset) =>
                   asset.id ===
                   vulnerabilityAssets.find(
+                    // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                     (vast) => vast.id === scope.fk_vulnerability_asset_id
                   )?.asset_id
               )?.name,
               vulnerability_id: vulnerabilityAssets.find(
+                // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                 (vast) => vast.id === scope.fk_vulnerability_asset_id
               )?.vulnerability_id,
               vulnerability_name: vulnerabilities.find(
+                // @ts-expect-error TS(7006): Parameter 'vulnerability' implicitly has an 'any' ... Remove this comment to see the full error message
                 (vulnerability) =>
                   vulnerability.id ===
                   vulnerabilityAssets.find(
+                    // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                     (vast) => vast.id === scope.fk_vulnerability_asset_id
                   )?.vulnerability_id
               )?.name,
               severity: vulnerabilityAssets.find(
+                // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                 (vast) => vast.id === scope.fk_vulnerability_asset_id
               )?.severity,
               remediation: vulnerabilities.find(
+                // @ts-expect-error TS(7006): Parameter 'vulnerability' implicitly has an 'any' ... Remove this comment to see the full error message
                 (vulnerability) =>
                   vulnerability.id ===
                   vulnerabilityAssets.find(
+                    // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
                     (vast) => vast.id === scope.fk_vulnerability_asset_id
                   )?.vulnerability_id
               )?.remediation,
@@ -939,6 +979,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           ])
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
+            // @ts-expect-error TS(7006): Parameter 'rps' implicitly has an 'any' type.
             (rps) => rps.fk_project_id === remediationProjects[0].id
           )
 
@@ -977,6 +1018,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
             [],
             // Mock list of assignees witch includes the tested assignee:
             [
+              // @ts-expect-error TS(7006): Parameter 'rpa' implicitly has an 'any' type.
               ...remediationProjectAssignees.map((rpa) => ({
                 fk_user_id: rpa.fk_user_id,
               })),
@@ -989,6 +1031,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           ])
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
+            // @ts-expect-error TS(7006): Parameter 'rps' implicitly has an 'any' type.
             (rps) => rps.fk_project_id === remediationProjects[0].id
           )
 
@@ -1060,6 +1103,7 @@ describe('/remediation-projects/:id/status-history', () => {
 describe('/projects/priorities', () => {
   describe('GET /', () => {
     it('should return status 200 and list of priorities', async () => {
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.project_priority.findMany.mockResolvedValue(priorities)
 
       const result = await request(app)
@@ -1074,6 +1118,7 @@ describe('/projects/priorities', () => {
 
   describe('GET /:id', () => {
     it('should return status 200 and list of priorities', async () => {
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.project_priority.findUnique.mockResolvedValue(priorities[0])
 
       const result = await request(app)
@@ -1229,6 +1274,7 @@ describe('/posts/remediation-project/:id', () => {
           [{ fk_user_id: 'xrator_test_id' }],
           // Mock status_history_id doesn't match the right remediation project
           projectStatusHistory.filter(
+            // @ts-expect-error TS(7006): Parameter 'psh' implicitly has an 'any' type.
             (psh) =>
               psh.fk_project_id.toString() === projectId.toString() &&
               psh.id.toString() === projectStatusHistoryId.toString()

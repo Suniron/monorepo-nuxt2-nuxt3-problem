@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -33,7 +33,7 @@ exports.up = async (knex) => {
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async (knex) => {
+exports.down = async (knex: any) => {
   await Promise.all([
     knex.raw(
       `ALTER TABLE public.vulnerability_asset ALTER COLUMN cluster_id SET NOT NULL;`

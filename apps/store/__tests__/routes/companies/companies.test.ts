@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/image.utils' or its co... Remove this comment to see the full error message
 import { convertBase64ImageToBuffer } from '@/utils/image.utils'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
@@ -12,7 +14,7 @@ import assetRisk from '../../example-values/asset-risk-scores'
 /**
  * @type {import('@/types/company').Company[]}
  */
-let companies = []
+let companies: any = []
 
 beforeAll(async () => {
   // Get datas:
@@ -24,10 +26,11 @@ beforeAll(async () => {
 describe('/company', () => {
   describe('PATCH/', () => {
     it('should return a model error if the domain doesnt exists', async () => {
-      // @ts-ignore
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.company.findFirst.mockResolvedValue({
         id: 1,
       })
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue(null)
       const response = await request(app)
         .patch('/company')
@@ -35,7 +38,9 @@ describe('/company', () => {
       expect(response.status).toBe(500)
     })
     it('should return a model error if the company doesnt exists', async () => {
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.company.findFirst.mockResolvedValue(null)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
         id: 1,
         name: 'fauxdomaine.xrator',
@@ -46,8 +51,9 @@ describe('/company', () => {
       expect(response.status).toBe(500)
     })
     it('should update the data if the domain & company exists', async () => {
-      // @ts-ignore
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.company.findFirst.mockResolvedValue({ id: 1 })
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
         id: 1,
         name: 'fauxdomaine.xrator',
@@ -66,6 +72,7 @@ describe('/company/risk/', () => {
       const businessMissions = assetRisk.filter(
         (ast) => ast.asset_type === 'MISSION' && ast.compound_score !== null
       )
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.v_asset_risk_scores.findMany.mockResolvedValue(
         businessMissions
       )

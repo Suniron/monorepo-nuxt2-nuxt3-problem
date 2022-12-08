@@ -1,5 +1,7 @@
 import _knex from 'knex'
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 const knexConnection = _knex({
@@ -30,7 +32,7 @@ knexConnection.migrate.currentVersion().then((currentVersion) => {
     })
 })
 
-export const queryDB = (sql, params) => {
+export const queryDB = (sql: any, params: any) => {
   return knexConnection.raw(sql, params)
 }
 

@@ -1,9 +1,9 @@
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
   return knex.schema
-    .createTable('feared_event', function (table) {
+    .createTable('feared_event', function (table: any) {
       table.increments('id').primary()
       table.string('name')
     })
@@ -15,9 +15,9 @@ exports.up = (knex) => {
         { name: 'Traceability' },
         { name: 'Performance' },
       ])
-    })
+    });
 }
 
-exports.down = (knex) => {
+exports.down = (knex: any) => {
   return knex.schema.dropTable('feared_event')
 }

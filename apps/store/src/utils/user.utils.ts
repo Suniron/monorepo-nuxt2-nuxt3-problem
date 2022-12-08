@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /**
@@ -7,7 +8,7 @@ import prismaClient from '@/prismaClient'
  * @param {string} userId
  * @returns {Promise<number[]>}
  */
-export const getUserGroupIds = async (userId) => {
+export const getUserGroupIds = async (userId: any) => {
   const groups = await prismaClient.user_group
     .findMany({
       select: {
@@ -17,7 +18,7 @@ export const getUserGroupIds = async (userId) => {
         user_id: userId,
       },
     })
-    .then((grp) => grp.map((grp) => grp.group_id))
+    .then((grp: any) => grp.map((grp: any) => grp.group_id))
 
   return groups
 }

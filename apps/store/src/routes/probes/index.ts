@@ -2,6 +2,7 @@ import express from 'express'
 import {
   searchProbesController,
   updateProbeController,
+// @ts-expect-error TS(2307): Cannot find module '@/controllers/probes' or its c... Remove this comment to see the full error message
 } from '@/controllers/probes'
 import { celebrate, Segments, Joi } from 'celebrate'
 const router = express.Router()

@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
 
 /**
@@ -13,7 +15,7 @@ import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
  * @returns {Promise<Severity[] | Severity | {error: string}>}
  *
  */
-export const searchSeveritiesModel = async (params) => {
+export const searchSeveritiesModel = async (params: any) => {
   try {
     // == If user want all severities ==
     if (!params.id) {

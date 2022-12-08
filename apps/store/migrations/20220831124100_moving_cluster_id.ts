@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async function (knex) {
+exports.up = async function (knex: any) {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -19,7 +19,7 @@ exports.up = async function (knex) {
               vuln.remediation`)
 
   const updateQueries = remediationClusters.rows.reduce(
-    (queries, row, index) => {
+    (queries: any, row: any, index: any) => {
       const { vuln_ids } = row
       return (queries += `
     update vulnerability
@@ -62,7 +62,7 @@ exports.up = async function (knex) {
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async function (knex) {
+exports.down = async function (knex: any) {
   await knex.raw(
     `ALTER TABLE vulnerability_asset ADD COLUMN cluster_id integer;`
   )
@@ -75,7 +75,7 @@ exports.down = async function (knex) {
               vuln.remediation`)
 
   const updateQueries = remediationClusters.rows.reduce(
-    (queries, row, index) => {
+    (queries: any, row: any, index: any) => {
       const { vuln_ids } = row
       return (queries += `
     update vulnerability_asset

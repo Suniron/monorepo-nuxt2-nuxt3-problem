@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue } from '../../mocks'
@@ -7,11 +8,11 @@ import app from '../../utils/fakeApp'
 /**
  * @type {import('@/types/fearedEvent').FearedEvent[]}
  */
-let fearedEvents = []
+let fearedEvents: any = []
 /**
  * @type {import('@/types/severity').Severity[]}
  */
-let severities = []
+let severities: any = []
 
 beforeAll(async () => {
   // Get datas:
@@ -78,7 +79,9 @@ describe('/feared-events/:id', () => {
       const fearedEventId = fearedEvents[0].id
       const severityId = severities[0].id
 
+      // @ts-expect-error TS(7006): Parameter 's' implicitly has an 'any' type.
       mockKnexWithFinalValue([severities.find((s) => s.id === severityId)])
+      // @ts-expect-error TS(7006): Parameter 's' implicitly has an 'any' type.
       mockKnexWithFinalValue([fearedEvents.find((s) => s.id === fearedEventId)])
 
       const response = await request(app)

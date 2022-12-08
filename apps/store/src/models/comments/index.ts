@@ -1,9 +1,13 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 export const searchCommentsModel = async (loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
     const { roles, groups } = loggedUserInfo
 
     const query = knex.select('ast.id').from('asset as ast')

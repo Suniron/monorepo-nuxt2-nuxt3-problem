@@ -1,6 +1,8 @@
 // @ts-check
 import 'module-alias/register'
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
+// @ts-expect-error TS(2307): Cannot find module '@/server' or its corresponding... Remove this comment to see the full error message
 import initServer from '@/server'
 import https from 'https'
 import fs from 'fs'
@@ -34,8 +36,7 @@ async function startServer() {
     )
   }
   if (env.nodeEnv.isProduction && env.httpsEnabled) {
-    const readConfigFile = (filename) =>
-      fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
+    const readConfigFile = (filename: any) => fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
     const httpsOpts = {
       key: readConfigFile('server_key.pem'),
       cert: readConfigFile('server_cert.pem'),

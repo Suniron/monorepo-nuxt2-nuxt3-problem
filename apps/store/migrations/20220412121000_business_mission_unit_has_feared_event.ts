@@ -1,10 +1,10 @@
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
   return knex.schema.createTable(
     'business_mission_unit_has_feared_event ',
-    function (table) {
+    function (table: any) {
       table.increments('id').primary()
       table
         .integer('business_mission_unit_id ')
@@ -16,9 +16,9 @@ exports.up = (knex) => {
         .onDelete('cascade')
       table.integer('severity_id').references('severity.id')
     }
-  )
+  );
 }
 
-exports.down = (knex) => {
+exports.down = (knex: any) => {
   return knex.schema.dropTable('business_mission_unit_has_feared_event ')
 }

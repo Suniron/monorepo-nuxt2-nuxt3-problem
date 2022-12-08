@@ -5,6 +5,7 @@ import { MODEL_ERROR } from '../../src/common/constants'
 
 describe('isValidSessionRefreshToken', () => {
   it('should return false if no result found', async () => {
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.user_session.findFirst.mockResolvedValue(null)
 
     expect(
@@ -16,6 +17,7 @@ describe('isValidSessionRefreshToken', () => {
   })
 
   it.skip('should throw error if Prisma crash', () => {
+    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.user_session.findFirst.mockRejectedValue(
       new Error('Prisma error')
     )
@@ -29,6 +31,7 @@ describe('isValidSessionRefreshToken', () => {
   })
 
   it('should return true if a user session is found for given refresh token + user id', async () => {
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.user_session.findFirst.mockResolvedValue({
       id: '1',
       user_id: '1a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc',
@@ -49,6 +52,7 @@ describe('isValidSessionRefreshToken', () => {
 
 describe('refreshAccessToken', () => {
   it('should have model error if Prisma crash during transaction', async () => {
+    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.$transaction.mockRejectedValue(new Error('Prisma error'))
 
     expect(
@@ -57,6 +61,7 @@ describe('refreshAccessToken', () => {
   })
 
   it('should return "accessToken" and "user" if everything is ok', async () => {
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.$transaction.mockResolvedValue({
       accessToken: 'accessToken',
       user: {

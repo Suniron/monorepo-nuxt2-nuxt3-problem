@@ -5,15 +5,18 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /**
  * @param {any} params
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  */
-export const searchGroupsModel = async (params, loggedUserInfo) => {
+export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
   const { companyId } = loggedUserInfo
   const { id, sort = 'name' } = params
 
@@ -56,13 +59,12 @@ export const searchGroupsModel = async (params, loggedUserInfo) => {
     })
 
     // Rewrite result to match with current API usage ("user_groups" is used as "members" for example)
-    const restructuredGroups = groups.map((group) => {
+    const restructuredGroups = groups.map((group: any) => {
       const restructuredGroup = {
         ...group,
-        members: group.user_group.map((u) => u.user),
+        members: group.user_group.map((u: any) => u.user),
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       delete restructuredGroup.user_group
       return restructuredGroup
     })
@@ -84,19 +86,23 @@ export const searchGroupsModel = async (params, loggedUserInfo) => {
   }
 }
 
-export const createGroupModel = async (params, loggedUserInfo = {}) => {
+export const createGroupModel = async (params: any, loggedUserInfo = {}) => {
   try {
     const { name, memberIds } = params
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
 
-    const { id } = await knex.transaction(async (trx) => {
+    const { id } = await knex.transaction(async (trx: any) => {
       const [{ id }] = await trx('group')
         .insert({ name, company_id: companyId })
         .returning('id')
 
       if (memberIds.length) {
         await trx('user_group').insert(
-          memberIds.map((mId) => ({ user_id: mId, group_id: id }))
+          memberIds.map((mId: any) => ({
+            user_id: mId,
+            group_id: id
+          }))
         )
       }
 
@@ -118,8 +124,12 @@ export const createGroupModel = async (params, loggedUserInfo = {}) => {
  * string}>}
  */
 export const updateGroupModel = async (
-  { id, memberIds, name },
-  loggedUserInfo
+  {
+    id,
+    memberIds,
+    name
+  }: any,
+  loggedUserInfo: any
 ) => {
   // TODO: Check if id is a number
   const groupId = Number(id)
@@ -157,7 +167,10 @@ export const updateGroupModel = async (
       if (memberIds.length) {
         updateGroupMembersTransactions.push(
           prismaClient.user_group.createMany({
-            data: memberIds.map((mId) => ({ user_id: mId, group_id: groupId })),
+            data: memberIds.map((mId: any) => ({
+              user_id: mId,
+              group_id: groupId
+            })),
           })
         )
       }
@@ -171,7 +184,7 @@ export const updateGroupModel = async (
     return { error: MODEL_ERROR }
   }
 }
-export const deleteGroupModel = async (provider, id, loggedUserInfo) => {
+export const deleteGroupModel = async (provider: any, id: any, loggedUserInfo: any) => {
   const { knex, logger } = provider
   try {
     if (loggedUserInfo.roles.includes('admin')) {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'esbuild'.
 const esbuild = require('esbuild')
 
 esbuild
@@ -14,5 +15,5 @@ esbuild
     target: 'node16.16',
     external: ['./node_modules/*'],
   })
-  .then((result) => console.log('Files built with success:', result))
+  .then((result: any) => console.log('Files built with success:', result))
   .catch(() => process.exit(1))

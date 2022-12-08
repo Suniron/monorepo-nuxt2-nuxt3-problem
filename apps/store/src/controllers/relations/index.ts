@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
 import {
   createRelationModel,
@@ -6,6 +7,7 @@ import {
   updateRelationModel,
   deleteRelationModel,
   deleteRelationByAssetsIdsModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/relations' or its cor... Remove this comment to see the full error message
 } from '@/models/relations'
 
 /**
@@ -13,7 +15,7 @@ import {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createRelationController = async (req, res, next) => {
+export const createRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createRelationModel(req.body, req.user)
 
@@ -30,7 +32,7 @@ export const createRelationController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createBulkRelationController = async (req, res, next) => {
+export const createBulkRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, ids } = await createBulkRelationModel(req.body, req.user)
 
@@ -47,7 +49,7 @@ export const createBulkRelationController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateRelationController = async (req, res, next) => {
+export const updateRelationController = async (req: any, res: any, next: any) => {
   // TODO: check permissions
 
   try {
@@ -66,7 +68,7 @@ export const updateRelationController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const deleteRelationController = async (req, res, next) => {
+export const deleteRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await deleteRelationModel(
       req.params?.relId,
@@ -86,7 +88,7 @@ export const deleteRelationController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const deleteRelationByAssetsIdsController = async (req, res, next) => {
+export const deleteRelationByAssetsIdsController = async (req: any, res: any, next: any) => {
   try {
     const { error, count } = await deleteRelationByAssetsIdsModel({
       fromAssetId: parseInt(req.params.fromAssetId),

@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -362,7 +362,7 @@ exports.up = async (knex) => {
               vuln.remediation`)
 
   const updateQueries = remediationClusters.rows.reduce(
-    (queries, row, index) => {
+    (queries: any, row: any, index: any) => {
       const { vuln_ids } = row
       return (queries += `
     update vulnerability_asset
@@ -536,7 +536,7 @@ exports.up = async (knex) => {
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async (knex) => {
+exports.down = async (knex: any) => {
   // NEW TABLES
   await knex.raw('DROP TABLE IF EXISTS remediation_project CASCADE;')
   await knex.raw('DROP TABLE IF EXISTS remediation_project_assignee CASCADE;')

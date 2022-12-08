@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -106,7 +106,7 @@ LEFT JOIN (
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async (knex) => {
+exports.down = async (knex: any) => {
   await knex.raw(
     `CREATE OR REPLACE VIEW public.v_asset_risk_scores AS
     SELECT

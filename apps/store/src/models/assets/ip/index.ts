@@ -1,7 +1,9 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
 
-export const updateOrCreateIpModel = async (tx, assetId, params) => {
+export const updateOrCreateIpModel = async (tx: any, assetId: any, params: any) => {
   try {
     const [ipExist] = await tx
       .select()
@@ -17,7 +19,7 @@ export const updateOrCreateIpModel = async (tx, assetId, params) => {
   }
 }
 
-export const createIpModel = async (tx, assetId, params) => {
+export const createIpModel = async (tx: any, assetId: any, params: any) => {
   try {
     const { address, mac = '', iface = '', mask = '' } = params
     const [ipId] = (
@@ -28,7 +30,7 @@ export const createIpModel = async (tx, assetId, params) => {
         iface,
         mask,
       })
-    ).map((e) => e.id)
+    ).map((e: any) => e.id)
     return ipId
   } catch (error) {
     console.error(error)
@@ -36,7 +38,7 @@ export const createIpModel = async (tx, assetId, params) => {
   }
 }
 
-export const updateIpModel = async (tx, ipId, params) => {
+export const updateIpModel = async (tx: any, ipId: any, params: any) => {
   try {
     const [ipToUpdate] = await tx.select().from('ip').where('ip.id', ipId)
     if (!ipToUpdate) return { error: NOT_FOUND }
@@ -62,7 +64,7 @@ export const updateIpModel = async (tx, ipId, params) => {
   }
 }
 
-export const deleteIpModel = async (tx, ipId) => {
+export const deleteIpModel = async (tx: any, ipId: any) => {
   try {
     const [ipToUpdate] = await tx.select().from('ip').where('ip.id', ipId)
     if (!ipToUpdate) return { error: NOT_FOUND }
@@ -76,9 +78,9 @@ export const deleteIpModel = async (tx, ipId) => {
 }
 
 export const searchIpModel = async (
-  tx,
-  search,
-  companyId,
+  tx: any,
+  search: any,
+  companyId: any,
   strict = false,
   assetId = undefined
 ) => {
@@ -89,7 +91,7 @@ export const searchIpModel = async (
       .innerJoin('asset as ast', 'ast.id', 'ip.asset_server_id')
       .where('ast.company_id', companyId)
     if (search) {
-      query.where(function () {
+      query.where(function(this: any) {
         if (!strict) {
           this.where('address', 'like', knex.raw('?', `%${search}%`))
             .orWhere('mac', 'like', knex.raw('?', `%${search}%`))

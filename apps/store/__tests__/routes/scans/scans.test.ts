@@ -1,3 +1,4 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import scans, {
   generateScans,
@@ -12,25 +13,28 @@ describe('/scans', () => {
     it('GET / should return 401 if we fetch without token', () => {
       return request(app)
         .get('/scans')
-        .then((response) => {
+        .then((response: any) => {
           expect(response.statusCode).toBe(401)
-        })
+        });
     })
 
     it('GET / should return 200 if we fetch with token', () => {
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.scan.findMany.mockResolvedValue(scans)
 
       return request(app)
         .get('/scans')
         .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
         .expect(200)
-        .expect('Content-Type', /json/)
+        .expect('Content-Type', /json/);
     })
 
     it('GET / with pagination should return subset of values', async () => {
       const page = 1
       const pageSize = 5
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.scan.count.mockResolvedValue(pageSize)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.scan.findMany.mockResolvedValue(generateScans(5))
       const result = await request(app)
         .get(`/scans?page=${page}&pageSize=${pageSize}`)
@@ -41,9 +45,9 @@ describe('/scans', () => {
       expect(result.body.scans.length).toEqual(5)
       expect(result.body.total).toEqual(5)
       expect(result.body.scans[0]).toHaveProperty('assets')
-      result.body.scans.forEach((scan) => {
+      result.body.scans.forEach((scan: any) => {
         expect(
-          isSortedAlphabetically(scan.assets.map((ast) => ast.name))
+          isSortedAlphabetically(scan.assets.map((ast: any) => ast.name))
         ).toEqual(true)
       })
     })
@@ -51,7 +55,9 @@ describe('/scans', () => {
   describe('POST /', () => {
     it('should return a 200 with an array of one if we pass only one type', async () => {
       const numberOfScanTypePassed = 1
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(probe)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.scan.create.mockResolvedValue({ id: 66 })
       const response = await request(app)
         .post('/scans')
@@ -62,8 +68,11 @@ describe('/scans', () => {
     })
     it('should return an array with length of 2 if we passed two types', async () => {
       const numberOfScanTypePassed = 2
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(probe)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValueOnce' does not exist on... Remove this comment to see the full error message
       prismaMock.scan.create.mockResolvedValueOnce({ id: 66 })
+      // @ts-expect-error TS(2339): Property 'mockResolvedValueOnce' does not exist on... Remove this comment to see the full error message
       prismaMock.scan.create.mockResolvedValueOnce({ id: 67 })
       const response = await request(app)
         .post('/scans')
@@ -96,12 +105,14 @@ describe('/scans/assets', () => {
     it('GET / should return 401 if we fetch without token', () => {
       return request(app)
         .get('/scans/assets')
-        .then((response) => {
+        .then((response: any) => {
           expect(response.statusCode).toBe(401)
-        })
+        });
     })
     it('GET / should return 200', async () => {
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.user_group.findMany.mockResolvedValue([4])
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.$transaction.mockResolvedValue([
         [
           {
@@ -153,7 +164,7 @@ describe('/scans/assets', () => {
 
 describe('test the isSortedAlphabetically function', () => {
   it('should return true', () => {
-    let sortedArray = []
+    let sortedArray: any = []
     expect(isSortedAlphabetically(sortedArray)).toBe(true)
 
     sortedArray = ['a', 'à', 'A']
@@ -188,8 +199,8 @@ describe('test the isSortedAlphabetically function', () => {
  * @param {String[]} array
  * @returns True if array is correctly sorted, false if not
  */
-function isSortedAlphabetically(array) {
-  return array.reduce((prv, cur, idx) => {
+function isSortedAlphabetically(array: any) {
+  return array.reduce((prv: any, cur: any, idx: any) => {
     if (array.length <= 1) return true
     if (idx >= array.length - 1) {
       return (
@@ -206,5 +217,5 @@ function isSortedAlphabetically(array) {
     )
       return cur
     return false
-  }, true)
+  }, true);
 }

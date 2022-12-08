@@ -1,7 +1,9 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
+// @ts-expect-error TS(2307): Cannot find module '@/models/phishing-scenarios-do... Remove this comment to see the full error message
 import { getPhishingScenariosDomainsModel } from '@/models/phishing-scenarios-domains'
 
-export const getPhishingScenariosDomains = async (req, res, next) => {
+export const getPhishingScenariosDomains = async (req: any, res: any, next: any) => {
   try {
     const { data, error, message } = await getPhishingScenariosDomainsModel(
       req.user

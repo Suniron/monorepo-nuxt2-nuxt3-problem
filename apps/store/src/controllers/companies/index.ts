@@ -6,6 +6,7 @@
  * @typedef {import('express').NextFunction} NextFunction
  */
 
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
 import {
   createCompanyModel,
@@ -15,9 +16,10 @@ import {
   deleteCompanyLogoModel,
   updateCompanyModel,
   getCompanyRiskModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/companies' or its cor... Remove this comment to see the full error message
 } from '@/models/companies'
 
-export const searchCompanyController = async (req, res, next) => {
+export const searchCompanyController = async (req: any, res: any, next: any) => {
   try {
     const { error, company, companies, total } = await searchCompanyModel(
       {
@@ -35,7 +37,7 @@ export const searchCompanyController = async (req, res, next) => {
   }
 }
 
-export const createCompanyController = async (req, res, next) => {
+export const createCompanyController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createCompanyModel(req.body, req.user)
     if (error) throwHTTPError(error)
@@ -52,7 +54,7 @@ export const createCompanyController = async (req, res, next) => {
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchCompanyLogoController = async (req, res, next) => {
+export const searchCompanyLogoController = async (req: any, res: any, next: any) => {
   try {
     const { error, logo } = await searchCompanyLogoModel(req.user)
 
@@ -70,7 +72,7 @@ export const searchCompanyLogoController = async (req, res, next) => {
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const updateCompanyLogoController = async (req, res, next) => {
+export const updateCompanyLogoController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await updateCompanyLogoModel(
       req.user,
@@ -91,7 +93,7 @@ export const updateCompanyLogoController = async (req, res, next) => {
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const deleteCompanyLogoController = async (req, res, next) => {
+export const deleteCompanyLogoController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await deleteCompanyLogoModel(req.user)
     if (error) throwHTTPError(error)
@@ -102,7 +104,7 @@ export const deleteCompanyLogoController = async (req, res, next) => {
   }
 }
 
-export const updateCompanyController = async (req, res, next) => {
+export const updateCompanyController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await updateCompanyModel(req.user, req.body)
     if (error) throwHTTPError(error)
@@ -112,7 +114,7 @@ export const updateCompanyController = async (req, res, next) => {
   }
 }
 
-export const getCompanyRiskController = async (req, res, next) => {
+export const getCompanyRiskController = async (req: any, res: any, next: any) => {
   try {
     const result = await getCompanyRiskModel(req.user)
     if ('error' in result) throwHTTPError(result.error)

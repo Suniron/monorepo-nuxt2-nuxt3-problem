@@ -1,6 +1,8 @@
 /* eslint-disable no-unsafe-optional-chaining */
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 import { searchIpModel, createIpModel, updateOrCreateIpModel } from './ip'
 import { searchUriModel, createUriModel } from './uri'
@@ -17,14 +19,19 @@ import {
   NOT_FOUND,
   VALIDATION_ERROR,
   SUCCESS,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
 import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
   updateStatusModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
 } from '@/models/vulnerabilities'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
 import { getUserGroupIds } from '@/utils/user.utils'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/assets' or its corresp... Remove this comment to see the full error message
 import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '@/utils/assets'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 /**
@@ -41,8 +48,9 @@ import { log } from '@/lib/logger'
  * @param {Express.LoggedUser} loggedUserInfo
  * @returns
  */
-export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
+export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
     const query = knex
@@ -275,11 +283,11 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
             filteredSearch.toLowerCase(),
             companyId
           )
-          const assetIpIds = assetIps.reduce((res, ipId) => {
+          const assetIpIds = assetIps.reduce((res: any, ipId: any) => {
             res.push(ipId.ast_id)
             return res
           }, [])
-          query.where(function () {
+          query.where(function(this: any) {
             this.where(
               knex.raw('LOWER(ast.name)'),
               'like',
@@ -314,11 +322,11 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
             companyId,
             true
           )
-          const assetIpIds = assetIps.reduce((res, ipId) => {
+          const assetIpIds = assetIps.reduce((res: any, ipId: any) => {
             res.push(ipId.ast_id)
             return res
           }, [])
-          query.where(function () {
+          query.where(function(this: any) {
             this.where('ast.name', filteredSearch)
               .orWhere('asrv.os', filteredSearch)
               .orWhere('aweb.url', filteredSearch)
@@ -329,15 +337,16 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
         }
       }
       if (severities) {
-        const arrSeverities = severities.split(',').map((s) => s.toLowerCase())
+        const arrSeverities = severities.split(',').map((s: any) => s.toLowerCase())
         const SEVERITIES = {
           low: 'low',
           medium: 'medium',
           high: 'high',
           critical: 'critical',
         }
-        query.andWhere((builder) => {
-          arrSeverities.forEach((sev) => {
+        query.andWhere((builder: any) => {
+          arrSeverities.forEach((sev: any) => {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             if (SEVERITIES[sev]) {
               builder.orWhere(`agg_sev.${sev}`, '>', 0)
             }
@@ -356,20 +365,20 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
         if (groups) {
           groupsSubquery.whereIn('gast.group_id', groups)
         }
-        query.andWhere(function () {
+        query.andWhere(function(this: any) {
           this.whereNotNull('agg_group.groups')
         })
       }
       if (tagIds) {
         const arrTagIds = tagIds.split(',')
-        tagsSubquery.whereIn('atg.asset_id', function () {
+        tagsSubquery.whereIn('atg.asset_id', function(this: any) {
           this.select('asset_id').from('tag_asset').whereIn('tag_id', arrTagIds)
         })
       }
 
       if (groupIds) {
         const arrGroupIds = groupIds.split(',')
-        groupsSubquery.whereIn('gast.asset_id', function () {
+        groupsSubquery.whereIn('gast.asset_id', function(this: any) {
           this.select('asset_id')
             .from('group_asset')
             .whereIn('group_id', arrGroupIds)
@@ -393,9 +402,9 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
     const result = await query
     for (const elem of result) {
       if (elem.parents?.length > 0) {
-        elem.parents = elem.parents.filter((e) => e.id !== null)
+        elem.parents = elem.parents.filter((e: any) => e.id !== null)
         elem.parents = await Promise.all(
-          elem.parents.map(async (parent) => {
+          elem.parents.map(async (parent: any) => {
             const [{ name, type }] = await knex
               .select('name', 'type')
               .from('asset')
@@ -409,9 +418,9 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
         )
       }
       if (elem.children?.length > 0) {
-        elem.children = elem.children.filter((e) => e.id !== null)
+        elem.children = elem.children.filter((e: any) => e.id !== null)
         elem.children = await Promise.all(
-          elem.children.map(async (child) => {
+          elem.children.map(async (child: any) => {
             const [{ name, type }] = await knex
               .select('name', 'type')
               .from('asset')
@@ -432,23 +441,22 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
       switch (keyword) {
         case 'port': // fall-through to 'ports'
         case 'ports':
-          result_filtered = result_filtered.filter((asset) => {
-            return asset.ports.some((port) => {
+          result_filtered = result_filtered.filter((asset: any) => {
+            return asset.ports.some((port: any) => {
               return port.number === parseInt(value)
-            })
+            });
           })
           break
         case 'id':
           result_filtered = result_filtered.filter(
-            (asset) => asset.id === parseInt(value)
+            (asset: any) => asset.id === parseInt(value)
           )
           break
 
         default:
           result_filtered = result_filtered.filter(
-            (asset) =>
-              typeof asset[keyword] === 'string' &&
-              asset[keyword].toLowerCase().includes(value)
+            (asset: any) => typeof asset[keyword] === 'string' &&
+            asset[keyword].toLowerCase().includes(value)
           )
           break
       }
@@ -496,10 +504,11 @@ export const searchAssetsModel = async (params, loggedUserInfo = {}) => {
  * @param {Express.LoggedUser} loggedUserInfo
  */
 export const searchAssetsBelongingModel = async (
-  params,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, roles, id: userId } = loggedUserInfo
     const { parents_ids: parentsIds, children_ids: childrenIds } = params
     const groups = await getUserGroupIds(userId)
@@ -516,10 +525,9 @@ export const searchAssetsBelongingModel = async (
     }
 
     if (parentsIds?.length && childrenIds?.length) {
-      query = query.andWhere((builder) =>
-        builder
-          .whereIn('parent_id', parentsIds.split(','))
-          .orWhereIn('child_id', childrenIds.split(','))
+      query = query.andWhere((builder: any) => builder
+        .whereIn('parent_id', parentsIds.split(','))
+        .orWhereIn('child_id', childrenIds.split(','))
       )
     } else if (parentsIds?.length) {
       query = query.whereIn('parent_id', parentsIds.split(','))
@@ -551,7 +559,7 @@ export const searchAssetsBelongingModel = async (
      *  risk?: {}
      * }[]}
      */
-    const formattedResults = []
+    const formattedResults: any = []
 
     for (const relation of result) {
       const {
@@ -563,7 +571,9 @@ export const searchAssetsBelongingModel = async (
         child_type,
       } = relation
 
+      // @ts-expect-error TS(7006): Parameter 'p' implicitly has an 'any' type.
       const parent = formattedResults.find((p) => p.id === parent_id)
+      // @ts-expect-error TS(7006): Parameter 'c' implicitly has an 'any' type.
       const child = formattedResults.find((c) => c.id === child_id)
 
       if (!parent) {
@@ -607,11 +617,12 @@ export const searchAssetsBelongingModel = async (
   }
 }
 
-export const createAssetModel = async (params, loggedUserInfo = {}) => {
+export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    const createdAssetId = await knex.transaction(async (tx) => {
+    const createdAssetId = await knex.transaction(async (tx: any) => {
       const { name: inputName, type, assetData = {} } = params
       let name = inputName
+      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
       const { companyId, userId } = loggedUserInfo
 
       // Resolving homonyms (appending / increasing a number at the end of the name)
@@ -646,7 +657,7 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
           owner: userId,
           company_id: companyId,
         })
-      ).map((e) => e.id)
+      ).map((e: any) => e.id)
 
       /**
        * @type {{
@@ -692,6 +703,7 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
             to_asset_id: assetId,
           })
           .returning('id')
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         addedRelations.children[child.id] = relationId
       }
 
@@ -703,18 +715,20 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
             to_asset_id: parent.id,
           })
           .returning('id')
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         addedRelations.parents[parent.id] = relationId
       }
 
       if (type === 'UNIT') {
         const parentsMissions = relations.parents.filter(
-          (parent) => parent.type === 'MISSION'
+          (parent: any) => parent.type === 'MISSION'
         )
         if (parentsMissions.length > 0) {
           const listOfFearedEvents = await knex
             .select('id')
             .from('feared_event')
           for (const mission of parentsMissions) {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             const missionUnitRelationId = addedRelations.parents[mission.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -730,7 +744,7 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
       }
       if (type === 'MISSION') {
         const childrenUnits = relations.children.filter(
-          (child) => child.type === 'UNIT'
+          (child: any) => child.type === 'UNIT'
         )
         await tx('asset_mission').insert({
           id: assetId,
@@ -742,6 +756,7 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
             .select('id')
             .from('feared_event')
           for (const unit of childrenUnits) {
+            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             const missionUnitRelationId = addedRelations.children[unit.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -865,10 +880,11 @@ export const createAssetModel = async (params, loggedUserInfo = {}) => {
   }
 }
 
-export const deleteAssetModel = async (id, loggedUserInfo = {}) => {
+export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
   try {
     if (!id) return { error: VALIDATION_ERROR }
 
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const [assetToDelete] = await knex.select().from({ ast: 'asset' }).where({
       'ast.id': id,
@@ -897,14 +913,15 @@ export const deleteAssetModel = async (id, loggedUserInfo = {}) => {
  * @param {number} params.groupId Group linked to the asset
  * @returns {Promise<{ error?: string, status?: string }>} Whether if the update was successful or not
  */
-export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
+export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}) => {
   try {
     if (!id) return { error: VALIDATION_ERROR }
     if (!params || !Object.entries(params).length) return { status: SUCCESS } // nothing to update
 
-    const { error, status } = await knex.transaction(async (tx) => {
+    const { error, status } = await knex.transaction(async (tx: any) => {
       const { name, assetData = {}, tagIds, groupIds, x, y } = params
       // Verify if asset exist
+      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
       const { companyId } = loggedUserInfo
       const [assetExist] = await tx
         .select()
@@ -947,16 +964,16 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
       assetData.parents ??= relations.parents.slice()
       assetData.children ??= relations.children.slice()
 
-      const deletedChildren = relations.children.filter((childId) => {
+      const deletedChildren = relations.children.filter((childId: any) => {
         return !assetData.children.includes(childId)
       })
-      const addedChildren = assetData.children.filter((childId) => {
+      const addedChildren = assetData.children.filter((childId: any) => {
         return !relations.children.includes(childId)
       })
-      const deletedParents = relations.parents.filter((parentId) => {
+      const deletedParents = relations.parents.filter((parentId: any) => {
         return !assetData.parents.includes(parentId)
       })
-      const addedParents = assetData.parents.filter((parentId) => {
+      const addedParents = assetData.parents.filter((parentId: any) => {
         return !relations.parents.includes(parentId)
       })
 
@@ -985,7 +1002,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         )
       }
       await Promise.all(
-        addedChildren.map(async (childId) => {
+        addedChildren.map(async (childId: any) => {
           const [{ id: relationId }] = await tx('relation')
             .insert({
               from_asset_id: childId,
@@ -993,6 +1010,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               to_asset_id: id,
             })
             .returning('id')
+          // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
           newRelationIds.children.push(relationId)
         })
       )
@@ -1011,7 +1029,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         )
       }
       await Promise.all(
-        addedParents.map(async (parentId) => {
+        addedParents.map(async (parentId: any) => {
           const [{ id: relationId }] = await tx('relation')
             .insert({
               from_asset_id: id,
@@ -1019,6 +1037,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               to_asset_id: parentId,
             })
             .returning('id')
+          // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
           newRelationIds.parents.push(relationId)
         })
       )
@@ -1208,7 +1227,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         })
         for (let i = 0; i < assetData.OWN_BY.length; i++) {
           const idToDel = owners.findIndex(
-            (item) => item.to_asset_id === assetData.OWN_BY[i]
+            (item: any) => item.to_asset_id === assetData.OWN_BY[i]
           )
 
           idToDel === -1
@@ -1221,8 +1240,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               )
             : owners.splice(idToDel, 1)
         }
-        owners.forEach((elt) =>
-          updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        owners.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
         )
       }
       if (assetData?.MAINTAINED_BY) {
@@ -1232,7 +1250,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         })
         for (let i = 0; i < assetData.MAINTAINED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item) => item.to_asset_id === assetData.MAINTAINED_BY[i]
+            (item: any) => item.to_asset_id === assetData.MAINTAINED_BY[i]
           )
 
           idToDel === -1
@@ -1245,8 +1263,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt) =>
-          updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
         )
       }
       if (assetData?.REVIEWED_BY) {
@@ -1256,7 +1273,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         })
         for (let i = 0; i < assetData.REVIEWED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item) => item.to_asset_id === assetData.REVIEWED_BY[i]
+            (item: any) => item.to_asset_id === assetData.REVIEWED_BY[i]
           )
 
           idToDel === -1
@@ -1269,8 +1286,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt) =>
-          updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
         )
       }
       if (assetData?.APPROVED_BY) {
@@ -1280,7 +1296,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         })
         for (let i = 0; i < assetData.APPROVED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item) => item.to_asset_id === assetData.APPROVED_BY[i]
+            (item: any) => item.to_asset_id === assetData.APPROVED_BY[i]
           )
 
           idToDel === -1
@@ -1293,8 +1309,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt) =>
-          updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
         )
       }
       if (assetData?.REFERRED_TO) {
@@ -1304,7 +1319,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
         })
         for (let i = 0; i < assetData.REFERRED_TO.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item) => item.to_asset_id === assetData.REFERRED_TO[i]
+            (item: any) => item.to_asset_id === assetData.REFERRED_TO[i]
           )
 
           idToDel === -1
@@ -1317,8 +1332,7 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
               )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt) =>
-          updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
         )
       }
       if (assetData?.LOCATED_TO) {
@@ -1387,11 +1401,12 @@ export const updateAssetModel = async (id, params, loggedUserInfo = {}) => {
  * }>} List of vulnerabilities if successful. Error if failed.
  */
 export const searchAssetRevisions = async (
-  assetId,
-  params,
+  assetId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
@@ -1447,7 +1462,7 @@ export const searchAssetRevisions = async (
  *  }
  * }>}
  */
-export const getAssetsSummary = async (loggedUserInfo) => {
+export const getAssetsSummary = async (loggedUserInfo: any) => {
   try {
     const { companyId } = loggedUserInfo
 
@@ -1462,12 +1477,11 @@ export const getAssetsSummary = async (loggedUserInfo) => {
     })
 
     const counts = Object.fromEntries(
-      countsResult.map((count) => [count.type, count._count])
+      countsResult.map((count: any) => [count.type, count._count])
     )
 
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       summary: {
         ...counts,
         superAssets: Object.keys(counts)
@@ -1485,12 +1499,13 @@ export const getAssetsSummary = async (loggedUserInfo) => {
 }
 
 export const searchAssetVulnerabilityModel = async (
-  assetId,
-  vulnId,
-  params,
+  assetId: any,
+  vulnId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const { ipId, portId, uriId } = params
 
@@ -1515,9 +1530,9 @@ export const searchAssetVulnerabilityModel = async (
 }
 
 export const createAssetVulnerabilityModel = async (
-  assetId,
-  vulnId,
-  params
+  assetId: any,
+  vulnId: any,
+  params: any
 ) => {
   try {
     const {
@@ -1545,7 +1560,7 @@ export const createAssetVulnerabilityModel = async (
       custom_remediation = null,
     } = params
 
-    const astVulnId = await knex.transaction(async (tx) => {
+    const astVulnId = await knex.transaction(async (tx: any) => {
       const cvssId = await createCvssModel(tx, { code, score, version })
       const id = (
         await tx('vulnerability_asset').returning('id').insert({
@@ -1572,7 +1587,7 @@ export const createAssetVulnerabilityModel = async (
           custom_description,
           custom_remediation,
         })
-      ).map((e) => e.id)
+      ).map((e: any) => e.id)
       return id
     })
     return astVulnId
@@ -1583,11 +1598,12 @@ export const createAssetVulnerabilityModel = async (
 }
 
 export const updateAssetVulnerabilityModel = async (
-  astVulnId,
-  params,
+  astVulnId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
 
     const [astVulnToUpdate] = await knex
@@ -1621,7 +1637,7 @@ export const updateAssetVulnerabilityModel = async (
       status = astVulnToUpdate.status,
       statusComment = '',
     } = params
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await updateCvssModel(tx, cvss_id, { score, version, code })
       await tx('vulnerability_asset').where('id', astVulnId).update({
         cvss_id,
@@ -1659,8 +1675,9 @@ export const updateAssetVulnerabilityModel = async (
   }
 }
 
-export const fetchAssetPortsModel = async (assetId, loggedUserInfo = {}) => {
+export const fetchAssetPortsModel = async (assetId: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const res = []
     const ips = await searchIpModel(knex, undefined, companyId, false, assetId)
@@ -1681,10 +1698,10 @@ export const fetchAssetPortsModel = async (assetId, loggedUserInfo = {}) => {
   }
 }
 
-export const createIpPortsModel = async (assetId, params) => {
+export const createIpPortsModel = async (assetId: any, params: any) => {
   try {
     const { ip_id = null, ports = [] } = params
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       if (!ip_id) {
         params.ip_id = await createIpModel(tx, assetId, params)
       }
@@ -1705,11 +1722,12 @@ export const createIpPortsModel = async (assetId, params) => {
   }
 }
 
-export const createUrisModel = async (assetId, params, loggedUserInfo = {}) => {
+export const createUrisModel = async (assetId: any, params: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const { address } = params
-    const uri_id = await knex.transaction(async (tx) => {
+    const uri_id = await knex.transaction(async (tx: any) => {
       let [uri_id] = await searchUriModel(tx, address, companyId, true, assetId)
       if (!uri_id) {
         let uri_id = await createUriModel(tx, assetId, params)
@@ -1835,7 +1853,7 @@ export const createAssetVulnerabilityModel = async (
  * @param {import('@prisma/client').company['id']} companyId
  * @param {import('@prisma/client').asset['id']} assetId
  */
-export const getAssetScores = async (companyId, assetId) => {
+export const getAssetScores = async (companyId: any, assetId: any) => {
   try {
     const scores = await prismaClient.v_asset_risk_scores.findFirst({
       where: {
@@ -1859,7 +1877,7 @@ export const getAssetScores = async (companyId, assetId) => {
  * @param {import('@prisma/client').company['id']} companyId
  * @param {import('@prisma/client').asset['id']} assetId
  */
-export const getAssetRiskModel = async (companyId, assetId) => {
+export const getAssetRiskModel = async (companyId: any, assetId: any) => {
   try {
     const { scores, error: scoreError } = await getAssetScores(
       companyId,

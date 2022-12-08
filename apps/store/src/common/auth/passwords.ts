@@ -8,7 +8,7 @@
  * @param {string} pass Password to be hashed
  * @returns The password hashed and the salt used to hash the password
  */
-export const createPasswordHash = (provider, pass) => {
+export const createPasswordHash = (provider: any, pass: any) => {
   const { hashSync, genSaltSync } = provider
   const salt = genSaltSync()
   const hash = hashSync(pass, salt)
@@ -25,7 +25,7 @@ export const createPasswordHash = (provider, pass) => {
  * @param {string} salt Saved salt used to hash the saved password
  * @returns {boolean} True if passwords' hashes match. False otherwise
  */
-export const passwordsMatch = (provider, password, hash, salt) => {
+export const passwordsMatch = (provider: any, password: any, hash: any, salt: any) => {
   const { hashSync } = provider
   const passwordHashToTest = hashSync(password, salt)
 

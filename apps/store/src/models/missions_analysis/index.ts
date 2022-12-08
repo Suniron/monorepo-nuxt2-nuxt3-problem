@@ -1,5 +1,7 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
 
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, SUCCESS } from '@/common/constants'
 
 /**
@@ -8,7 +10,7 @@ import { MODEL_ERROR, SUCCESS } from '@/common/constants'
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const searchMissionAnalysis = async (params) => {
+export const searchMissionAnalysis = async (params: any) => {
   try {
     const { id } = params
     const unitsSubQueryTest = knex
@@ -35,7 +37,7 @@ export const searchMissionAnalysis = async (params) => {
       .from({ ast: 'asset' })
       .where({ 'ast.id': id })
       .leftJoin(...unitJoinParamsTest)
-    mission.units = mission.units.filter((unit) => unit.id !== null)
+    mission.units = mission.units.filter((unit: any) => unit.id !== null)
     for (const unit of mission.units) {
       unit.fearedEvents = await knex
         .select({
@@ -100,8 +102,8 @@ export const searchBusinessImpact = async () => {
  * @returns
  */
 export const updateBusinessImpactIntoUnitModel = async (
-  businessImpactLinkedIntoUnit,
-  params
+  businessImpactLinkedIntoUnit: any,
+  params: any
 ) => {
   try {
     const { fearedEventId } = params

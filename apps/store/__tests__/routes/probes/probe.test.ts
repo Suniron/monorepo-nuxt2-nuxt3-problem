@@ -1,7 +1,9 @@
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/probes.js... Remove this comment to see the full error message
 import probes from '../../example-values/probes.json'
 import { mockAdminUser } from '../../mocks'
 
@@ -15,8 +17,10 @@ describe('/probes/:id', () => {
       const id = 1
       const body = { name: 'testProbeName' }
 
-      const result = probes.find((e) => e.id === id)
+      const result = probes.find((e: any) => e.id === id)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(result)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch('/probes/' + id)
@@ -30,8 +34,10 @@ describe('/probes/:id', () => {
       const id = 2
       const body = {}
 
-      const result = probes.find((e) => e.id === id)
+      const result = probes.find((e: any) => e.id === id)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(result)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch('/probes/' + id)
@@ -44,8 +50,10 @@ describe('/probes/:id', () => {
       const id = 2
       const body = { name: 'testProbeName', fakeProperty: 'fakeData' }
 
-      const result = probes.find((e) => e.id === id)
+      const result = probes.find((e: any) => e.id === id)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(result)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch('/probes/' + id)
@@ -58,8 +66,10 @@ describe('/probes/:id', () => {
       const id = 10
       const body = { name: 'testProbeName' }
 
-      const result = probes.find((e) => e.id === id)
+      const result = probes.find((e: any) => e.id === id)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.findFirst.mockResolvedValue(result)
+      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch('/probes/' + id)

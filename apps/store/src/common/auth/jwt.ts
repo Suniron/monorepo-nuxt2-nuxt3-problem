@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken'
 import { UNAUTHORIZED } from '../constants'
 
@@ -27,7 +29,7 @@ export const TOKEN_TYPE = Object.freeze({
  * @param {any} payload
  * @returns {string} JWT token
  */
-export const generateJWTToken = (jwtSign, config, payload) => {
+export const generateJWTToken = (jwtSign: any, config: any, payload: any) => {
   const { secret, expiresIn, audience, issuer, type } = config
 
   const token = jwtSign({ ...payload, typ: type }, secret, {
@@ -52,7 +54,7 @@ export const generateJWTToken = (jwtSign, config, payload) => {
  * @param {any} refreshPayload Payload to be included in a refresh token
  * @returns
  */
-export const generateTokens = (provider, accessPayload, refreshPayload) => {
+export const generateTokens = (provider: any, accessPayload: any, refreshPayload: any) => {
   const { jwtSign, accessConfig, refreshConfig } = provider
 
   const accessToken = generateJWTToken(jwtSign, accessConfig, accessPayload)
@@ -76,7 +78,7 @@ export const generateTokens = (provider, accessPayload, refreshPayload) => {
  * }} payload
  * @returns
  */
-export const generateAccessToken = (payload) => {
+export const generateAccessToken = (payload: any) => {
   const { access } = env.jwt
 
   return generateJWTToken(
@@ -160,7 +162,7 @@ export const generateAccessToken = (payload) => {
  * @param {string} token JWT token to be verified
  * @param {string} type Type of JWT token. Can be either "access" or "refresh"
  */
-export const verifyToken = async (provider, token, type) => {
+export const verifyToken = async (provider: any, token: any, type: any) => {
   const { verifyJWTToken, env, logger, getTokenSessionModel } = provider
   try {
     const tokenConfig =

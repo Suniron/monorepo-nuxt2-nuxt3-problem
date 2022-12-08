@@ -5,12 +5,12 @@
  * @param {import("knex").Knex} knex
  * @returns
  */
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   // If already setup, ignore
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
-  return knex.schema.alterTable('asset_server', (table) => {
+  return knex.schema.alterTable('asset_server', (table: any) => {
     table.string('os_build')
     table.string('o365_id')
     table.string('aad_device_id')
@@ -25,7 +25,7 @@ exports.up = (knex) => {
     table.string('onboarding_status')
     table.string('managed_by')
     table.string('managed_by_status')
-  })
+  });
 }
 
 /**
@@ -33,8 +33,8 @@ exports.up = (knex) => {
  * @param {import("knex").Knex} knex
  * @returns
  */
-exports.down = (knex) => {
-  return knex.schema.table('asset_server', (table) => {
+exports.down = (knex: any) => {
+  return knex.schema.table('asset_server', (table: any) => {
     table.dropColumn('os_build')
     table.dropColumn('o365_id')
     table.dropColumn('aad_device_id')
@@ -49,5 +49,5 @@ exports.down = (knex) => {
     table.dropColumn('onboarding_status')
     table.dropColumn('managed_by')
     table.dropColumn('managed_by_status')
-  })
+  });
 }

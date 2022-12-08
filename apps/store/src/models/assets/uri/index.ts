@@ -1,7 +1,9 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
 
-export const updateOrCreateUriModel = async (tx, assetId, params) => {
+export const updateOrCreateUriModel = async (tx: any, assetId: any, params: any) => {
   try {
     const [uriExist] = await tx
       .select()
@@ -17,7 +19,7 @@ export const updateOrCreateUriModel = async (tx, assetId, params) => {
   }
 }
 
-export const createUriModel = async (tx, assetId, params) => {
+export const createUriModel = async (tx: any, assetId: any, params: any) => {
   try {
     const { address } = params
     const [uriId] = (
@@ -25,7 +27,7 @@ export const createUriModel = async (tx, assetId, params) => {
         asset_web_id: assetId,
         uri: address,
       })
-    ).map((e) => e.id)
+    ).map((e: any) => e.id)
     return uriId
   } catch (error) {
     console.error(error)
@@ -33,7 +35,7 @@ export const createUriModel = async (tx, assetId, params) => {
   }
 }
 
-export const updateUriModel = async (tx, uriId, params) => {
+export const updateUriModel = async (tx: any, uriId: any, params: any) => {
   try {
     const [uriToUpdate] = await tx.select().from('uri').where('uri.id', uriId)
     if (!uriToUpdate) return { error: NOT_FOUND }
@@ -51,7 +53,7 @@ export const updateUriModel = async (tx, uriId, params) => {
   }
 }
 
-export const deleteUriModel = async (tx, uriId) => {
+export const deleteUriModel = async (tx: any, uriId: any) => {
   try {
     const [uriToUpdate] = await tx.select().from('uri').where('uri.id', uriId)
     if (!uriToUpdate) return { error: NOT_FOUND }
@@ -65,9 +67,9 @@ export const deleteUriModel = async (tx, uriId) => {
 }
 
 export const searchUriModel = async (
-  tx,
-  search,
-  companyId,
+  tx: any,
+  search: any,
+  companyId: any,
   strict = false,
   assetId = undefined
 ) => {
@@ -78,7 +80,7 @@ export const searchUriModel = async (
       .innerJoin('asset as ast', 'ast.id', 'uri.asset_web_id')
       .where('ast.company_id', companyId)
     if (search) {
-      query.where(function () {
+      query.where(function(this: any) {
         if (!strict) {
           this.where('uri', 'like', knex.raw('?', `%${search}%`))
         } else {

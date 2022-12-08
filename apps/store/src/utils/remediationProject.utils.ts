@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { NOT_FOUND } from '@/common/constants'
 
 /**
@@ -10,8 +12,8 @@ import { NOT_FOUND } from '@/common/constants'
  * @returns {Promise<boolean>}
  */
 export const isOwnerOfRemediationProject = async (
-  remediationProjectId,
-  userId
+  remediationProjectId: any,
+  userId: any
 ) => {
   // Check if owner:
   if (
@@ -35,8 +37,8 @@ export const isOwnerOfRemediationProject = async (
  * @returns {Promise<boolean>}
  */
 export const isAssigneeOfRemediationProject = async (
-  remediationProjectId,
-  userId
+  remediationProjectId: any,
+  userId: any
 ) => {
   // Check if in assignees:
   const assigneeIds = (
@@ -44,7 +46,7 @@ export const isAssigneeOfRemediationProject = async (
       .select('fk_user_id')
       .from('remediation_project_assignee')
       .where('fk_project_id', remediationProjectId)
-  ).map((result) => result.fk_user_id)
+  ).map((result: any) => result.fk_user_id)
 
   if (assigneeIds.includes(userId)) {
     return true
@@ -60,8 +62,8 @@ export const isAssigneeOfRemediationProject = async (
  * @returns {Promise<boolean>}
  */
 export const isOwnerOrAssigneeOfRemediationProject = async (
-  remediationProjectId,
-  userId
+  remediationProjectId: any,
+  userId: any
 ) => {
   // Check if owner or assignee:
   if (
@@ -81,8 +83,8 @@ export const isOwnerOrAssigneeOfRemediationProject = async (
  * @returns {Promise<boolean>}
  */
 export const isScopeOfRemediationProject = async (
-  remediationProjectId,
-  projectScopeId
+  remediationProjectId: any,
+  projectScopeId: any
 ) => {
   return !!(
     await knex
@@ -98,7 +100,7 @@ export const isScopeOfRemediationProject = async (
  * @param {string|number} remediationProjectId
  * @returns {Promise<number>}
  */
-export const getRemediationProjectCompanyId = async (remediationProjectId) => {
+export const getRemediationProjectCompanyId = async (remediationProjectId: any) => {
   const companyId = await knex
     .select('fk_company_id')
     .from('remediation_project')
@@ -116,8 +118,8 @@ export const getRemediationProjectCompanyId = async (remediationProjectId) => {
  * @returns {Promise<{ error: string} | {}>}
  */
 export const checkRemediationProjectExistsOrIsAuthorised = async (
-  remediationProjectId,
-  companyId
+  remediationProjectId: any,
+  companyId: any
 ) => {
   const [projectCompanyId] = await knex
     .select('fk_company_id')

@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /**
@@ -12,7 +14,7 @@ import prismaClient from '@/prismaClient'
  * @param {{id?: number}} params Search paramswith optionnal ID of an asset
  * @returns {Promise<{data?: ProjectPriority[] | ProjectPriority, error?: string}>}
  */
-export const searchProjectPrioritiesModel = async (params) => {
+export const searchProjectPrioritiesModel = async (params: any) => {
   try {
     // == If user want all severities ==
     if (!params.id) {

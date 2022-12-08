@@ -1,9 +1,9 @@
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
   return knex.schema
-    .createTable('business_impact', function (table) {
+    .createTable('business_impact', function (table: any) {
       table.increments('id').primary()
       table.string('business_impact_name')
     })
@@ -20,9 +20,9 @@ exports.up = (knex) => {
         { business_impact_name: 'Legal' },
         { business_impact_name: 'Trust & Image' },
       ])
-    })
+    });
 }
 
-exports.down = (knex) => {
+exports.down = (knex: any) => {
   return knex.schema.dropTable('business_impact')
 }

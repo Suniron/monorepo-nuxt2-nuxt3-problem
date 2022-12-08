@@ -8,6 +8,7 @@ import {
   searchPhishingScenariosController,
   updateScanController,
   getScanReportController,
+// @ts-expect-error TS(2307): Cannot find module '@/controllers/scans/crud-contr... Remove this comment to see the full error message
 } from '@/controllers/scans/crud-controller'
 
 const router = express.Router()

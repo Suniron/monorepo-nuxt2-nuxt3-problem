@@ -1,16 +1,19 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
 /**
  * @typedef {{errorType?: string, message?: string}} ErrorParam
  */
 
 export class HTTPError extends Error {
+  code: any;
+  errorType: any;
   /**
    *
    * @param {number} code http error code (like 2xx, 3xx, 4xx, 5xx)
    * @param {{errorType?: string, message?: string}} param1
    */
-  constructor(code, { errorType = '', message = '' } = {}) {
+  constructor(code: any, { errorType = '', message = '' } = {}) {
     super(message)
     this.code = code
     this.message = `[${this.getDefaultMessage()}]${message && ' ' + message}`
@@ -73,54 +76,78 @@ export class HTTPError extends Error {
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getBadRequestError = ({ errorType, message } = {}) =>
+export const getBadRequestError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(400, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getUnauthorizedError = ({ errorType, message } = {}) =>
+export const getUnauthorizedError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(401, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getForbiddenError = ({ errorType, message } = {}) =>
+export const getForbiddenError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(403, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getNotFoundError = ({ errorType, message } = {}) =>
+export const getNotFoundError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(404, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getNotAcceptableError = ({ errorType, message } = {}) =>
+export const getNotAcceptableError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(406, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getConflictError = ({ errorType, message } = {}) =>
+export const getConflictError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(409, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getGoneError = ({ errorType, message } = {}) =>
+export const getGoneError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(410, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getInternalServerError = ({ errorType, message } = {}) =>
+export const getInternalServerError = ({
+  errorType,
+  message
+}: any = {}) =>
   new HTTPError(500, { errorType, message })

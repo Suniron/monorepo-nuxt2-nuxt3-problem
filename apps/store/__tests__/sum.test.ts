@@ -1,4 +1,4 @@
-function sum(a, b) {
+function sum(a: any, b: any) {
   return a + b
 }
 test('adds 1 + 2 to equal 3', () => {

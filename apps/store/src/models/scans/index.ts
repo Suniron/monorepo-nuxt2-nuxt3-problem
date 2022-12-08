@@ -1,8 +1,12 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, SUCCESS } from '@/common/constants'
 import { format } from 'date-fns'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
 import { getUserGroupIds } from '@/utils/user.utils'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 /**
@@ -16,10 +20,11 @@ import { log } from '@/lib/logger'
  * @returns {Promise<{ error?: string, scans?: Object, total?: number }>} scans: Data of the scans, total: number of scans
  */
 export const searchScansModel = async (
-  provider,
-  params,
+  provider: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
+  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
   const { companyId } = loggedUserInfo
   const { pageSize, page } = params
   try {
@@ -80,48 +85,47 @@ export const searchScansModel = async (
         take: take,
         skip: skip,
       })
-      .then((scans) =>
-        scans.map((scan) => {
-          const { probe, v_scan_severity_count, v_scan_asset_details } = scan
+      .then((scans: any) => scans.map((scan: any) => {
+      const { probe, v_scan_severity_count, v_scan_asset_details } = scan
+      return {
+        id: scan.id,
+        name: scan.name,
+        cdate: scan.cdate,
+        sdate: scan.sdate,
+        fdate: scan.fdate,
+        startDate: scan.start_date
+          ? format(new Date(scan.start_date), 'yyyy-MM-dd')
+          : null,
+        endDate: scan.end_date
+          ? format(new Date(scan.end_date), 'yyyy-MM-dd')
+          : null,
+        startTime: scan.start_time
+          ? format(new Date(scan.start_time), 'HH:mm:ss')
+          : null,
+        endTime: scan.end_time
+          ? format(new Date(scan.end_time), 'HH:mm:ss')
+          : null,
+        status: scan.status,
+        probeName: probe?.name,
+        info: v_scan_severity_count[0]?.info,
+        low: v_scan_severity_count[0]?.low,
+        medium: v_scan_severity_count[0]?.medium,
+        high: v_scan_severity_count[0]?.high,
+        crit: v_scan_severity_count[0]?.critical,
+        assets: v_scan_asset_details.map((asset: any) => {
           return {
-            id: scan.id,
-            name: scan.name,
-            cdate: scan.cdate,
-            sdate: scan.sdate,
-            fdate: scan.fdate,
-            startDate: scan.start_date
-              ? format(new Date(scan.start_date), 'yyyy-MM-dd')
-              : null,
-            endDate: scan.end_date
-              ? format(new Date(scan.end_date), 'yyyy-MM-dd')
-              : null,
-            startTime: scan.start_time
-              ? format(new Date(scan.start_time), 'HH:mm:ss')
-              : null,
-            endTime: scan.end_time
-              ? format(new Date(scan.end_time), 'HH:mm:ss')
-              : null,
-            status: scan.status,
-            probeName: probe?.name,
-            info: v_scan_severity_count[0]?.info,
-            low: v_scan_severity_count[0]?.low,
-            medium: v_scan_severity_count[0]?.medium,
-            high: v_scan_severity_count[0]?.high,
-            crit: v_scan_severity_count[0]?.critical,
-            assets: v_scan_asset_details.map((asset) => {
-              return {
-                id: asset.asset_id,
-                name: asset.name,
-                os: asset.os,
-                hostname: asset.hostname,
-                ips: asset.ip_address,
-                language: asset.language,
-                url: asset.url,
-                mail: asset.mail,
-              }
-            }),
+            id: asset.asset_id,
+            name: asset.name,
+            os: asset.os,
+            hostname: asset.hostname,
+            ips: asset.ip_address,
+            language: asset.language,
+            url: asset.url,
+            mail: asset.mail,
           }
-        })
+        }),
+      };
+    })
       )
 
     if (Array.isArray(scans)) {
@@ -147,8 +151,9 @@ export const searchScansModel = async (
  * @param {object} loggedUserInfo
  * @returns {Promise<{ error?: string, scan?: Object }>} scan: Data of the scan
  */
-export const getScanModel = async (provider, params, loggedUserInfo = {}) => {
+export const getScanModel = async (provider: any, params: any, loggedUserInfo = {}) => {
   const { knex } = provider
+  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
   const { companyId } = loggedUserInfo
   const { scanId } = params
   try {
@@ -171,14 +176,16 @@ export const getScanModel = async (provider, params, loggedUserInfo = {}) => {
  * @param {object} loggedUserInfo
  * @returns {Promise<{ error?: string, assets?: string }>} assets: list of ip address, url and network / netmask
  */
-export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
+export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, id: userId } = loggedUserInfo
     const userGroups = await getUserGroupIds(userId)
     const ipsRequest = prismaClient.asset_server.findMany({
       where: {
         asset: {
           company_id: companyId,
+          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -214,6 +221,7 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
       where: {
         asset: {
           company_id: companyId,
+          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -240,6 +248,7 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
       where: {
         asset: {
           company_id: companyId,
+          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -268,19 +277,31 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
       networksRequest,
     ])
 
-    ips = ips.flatMap(({ ip }) =>
-      ip.map(({ address, asset_server_id }) => ({
+    ips = ips.flatMap(({
+      ip
+    }: any) =>
+      ip.map(({
+        address,
+        asset_server_id
+      }: any) => ({
         id: asset_server_id,
         address,
       }))
     )
 
-    urls = urls.map(({ id, url }) => ({
+    urls = urls.map(({
+      id,
+      url
+    }: any) => ({
       id,
       address: url,
     }))
 
-    networks = networks.map(({ id, network, netmask }) => ({
+    networks = networks.map(({
+      id,
+      network,
+      netmask
+    }: any) => ({
       id,
       address: `${network}/${netmask}`,
     }))
@@ -300,7 +321,7 @@ export const searchAssetScanModel = async (provider, loggedUserInfo = {}) => {
  * @param {object} provider
  * @returns {Promise<{ error?: string, scenarios?: Object }>} scenarios: List of phishing scenarios
  */
-export const searchPhishingScenariosModel = async (provider) => {
+export const searchPhishingScenariosModel = async (provider: any) => {
   const { knex } = provider
   try {
     const scenarios = await knex
@@ -323,7 +344,7 @@ export const searchPhishingScenariosModel = async (provider) => {
  * @returns {Promise<{ error?: string, scanReport?: Object }>} scanReport: Data of the scan,
  * the vulnerabilities and assets identified by the scan
  */
-export const getScanReportModel = async (provider, params) => {
+export const getScanReportModel = async (provider: any, params: any) => {
   const { knex } = provider
   const { scanId } = params
   try {
@@ -393,7 +414,7 @@ export const getScanReportModel = async (provider, params) => {
  * @param {object} provider
  * @param {object} params parameters of the query, which are the scan asset data
  */
-export const createScanAssetModel = async (provider, params) => {
+export const createScanAssetModel = async (provider: any, params: any) => {
   const { knex } = provider
   const {
     scan_id,
@@ -408,7 +429,7 @@ export const createScanAssetModel = async (provider, params) => {
   } = params
 
   try {
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await tx('scan_asset').insert({
         scan_id,
         asset_id,
@@ -438,8 +459,8 @@ export const createScanAssetModel = async (provider, params) => {
  * @returns {Promise<{ error?: string, status?: string }>} id: id of the new created scan
  */
 export const createScanModel = async (
-  provider,
-  params,
+  provider: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   const {
@@ -469,6 +490,7 @@ export const createScanModel = async (
         probe_type: 'SERVER',
       },
     })
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const SCHEDULED_STATUS = status || 'New'
     const scanIds = []
@@ -482,12 +504,14 @@ export const createScanModel = async (
     To fix it, we had to rebuild an actual date, which is converted by Prisma afterward.
     */
     const fullStartTime = startTime
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       ? new Date(parsedStartDate.setHours(...startTime.split(':')))
       : null
     // We always have a startDate, so we just check if we've got a start time and build the dataTime
 
     const fullEndTime = endTime // if we dont get a endDate, we will put endTime to null by default.
       ? new Date(
+          // @ts-expect-error TS(2531): Object is possibly 'null'.
           parsedStartDate.setHours(...endTime.split(':'))
         ) /* the new Date is just about building the request, so it should be based on a sure value
       it will only register in dataBase the hour, the date doesn't really matters. */
@@ -531,11 +555,11 @@ export const createScanModel = async (
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns {Promise<{ error?: string, status?: string}>} status: SUCCESS
  */
-export const updateScanModel = async (provider, id, params) => {
+export const updateScanModel = async (provider: any, id: any, params: any) => {
   const { knex } = provider
   const { status = null } = params
   try {
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await tx('scan').update({ status }).where('scan.id', id)
     })
     return { status: SUCCESS }

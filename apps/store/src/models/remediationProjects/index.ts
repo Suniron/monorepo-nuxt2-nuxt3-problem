@@ -8,13 +8,16 @@ import {
   VALIDATION_ERROR,
   SUCCESS,
   UNAUTHORIZED,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
 import {
   isOwnerOfRemediationProject,
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
   checkRemediationProjectExistsOrIsAuthorised,
+// @ts-expect-error TS(2307): Cannot find module '@/utils/remediationProject.uti... Remove this comment to see the full error message
 } from '@/utils/remediationProject.utils'
 
 /**
@@ -31,8 +34,8 @@ import {
  * @returns {Promise<{ error: string} | RemediationProjectDetails>}
  */
 export const getRemediationProjectsModel = async (
-  remediationProjectId,
-  loggedUserInfo
+  remediationProjectId: any,
+  loggedUserInfo: any
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -68,8 +71,8 @@ export const getRemediationProjectsModel = async (
  * @returns {Promise<{ error: string} | {remediationProjects: RemediationProjectSummary[], total: number }>}
  */
 export const getRemediationProjectsSummaryModel = async (
-  _params,
-  loggedUserInfo
+  _params: any,
+  loggedUserInfo: any
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -99,8 +102,8 @@ export const getRemediationProjectsSummaryModel = async (
  * @returns {Promise<{ error: string} | RemediationProjectScopeItem[] >}
  */
 export const getRemediationProjectsScopeModel = async (
-  remediationProjectId,
-  loggedUserInfo
+  remediationProjectId: any,
+  loggedUserInfo: any
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -135,8 +138,8 @@ export const getRemediationProjectsScopeModel = async (
  * @returns {Promise<{ error: string} | RemediationProjectHistory[]>}
  */
 export const getRemediationProjectStatusHistoryModel = async (
-  remediationProjectId,
-  loggedUserInfo
+  remediationProjectId: any,
+  loggedUserInfo: any
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {
@@ -170,11 +173,12 @@ export const getRemediationProjectStatusHistoryModel = async (
  * @returns {Promise<{status: string, data?: {status_history_id: number | null}} | {error: string}>}
  */
 export const updateRemediationProjectsModel = async (
-  remediationProjectId,
-  params,
+  remediationProjectId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
@@ -200,12 +204,14 @@ export const updateRemediationProjectsModel = async (
       .where('fk_project_id', remediationProjectId)
       .pluck('fk_user_id')
 
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
     const isUserProjectOwner = projectOwnerId === loggedUserInfo.id
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
     const isUserProjectAssignee = projectAssignees.includes(loggedUserInfo.id)
 
     if (isUserProjectOwner || isUserProjectAssignee) {
       // Create a knex transaction and update each fields if they exist in the params
-      await knex.transaction(async (trx) => {
+      await knex.transaction(async (trx: any) => {
         // If the user is the project owner, edit all fields from the params:
         if (isUserProjectOwner) {
           await Promise.all(
@@ -250,9 +256,9 @@ export const updateRemediationProjectsModel = async (
               .delete()
 
             await trx('remediation_project_assignee').insert(
-              params.assignees.map((userId) => ({
+              params.assignees.map((userId: any) => ({
                 fk_user_id: userId,
-                fk_project_id: remediationProjectId,
+                fk_project_id: remediationProjectId
               }))
             )
           }
@@ -318,6 +324,7 @@ export const updateRemediationProjectsModel = async (
               .insert({
                 fk_project_id: remediationProjectId,
                 fk_status_id: params.status_id,
+                // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
                 fk_user_id: loggedUserInfo.id,
                 start_date: now,
               })
@@ -363,9 +370,9 @@ export const updateRemediationProjectsModel = async (
  * @returns {Promise<{status?: string, data?: {deleted: number, inserted: number}} | {error: string}>}
  */
 export const updateRemediationProjectScopeModel = async (
-  remediationProjectId,
-  params,
-  loggedUserInfo
+  remediationProjectId: any,
+  params: any,
+  loggedUserInfo: any
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -403,13 +410,12 @@ export const updateRemediationProjectScopeModel = async (
       .pluck('fk_vulnerability_asset_id')
     const rowsToInsert = project_scope
       .filter(
-        (asset_vulnerability_id) =>
-          !existedRows.includes(asset_vulnerability_id)
+        (asset_vulnerability_id: any) => !existedRows.includes(asset_vulnerability_id)
       )
-      .map((asset_vulnerability_id) => ({
-        fk_project_id: remediationProjectId,
-        fk_vulnerability_asset_id: asset_vulnerability_id,
-      }))
+      .map((asset_vulnerability_id: any) => ({
+      fk_project_id: remediationProjectId,
+      fk_vulnerability_asset_id: asset_vulnerability_id
+    }))
     if (rowsToInsert.length) {
       const insertedRows = await knex('remediation_project_scope')
         .insert(rowsToInsert)
@@ -440,10 +446,10 @@ export const updateRemediationProjectScopeModel = async (
  * @returns {Promise<{status: string} | {error: string}>}
  */
 export const updateRemediationProjectScopeItemModel = async (
-  remediationProjectId,
-  scopeItemId,
-  params,
-  loggedUserInfo
+  remediationProjectId: any,
+  scopeItemId: any,
+  params: any,
+  loggedUserInfo: any
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -500,7 +506,7 @@ export const updateRemediationProjectScopeItemModel = async (
  * @param {Express.LoggedUser} loggedUserInfo
  * @returns {Promise<{id: number} | {error: string}>}
  */
-export const createRemediationProjectsModel = async (body, loggedUserInfo) => {
+export const createRemediationProjectsModel = async (body: any, loggedUserInfo: any) => {
   const {
     name,
     description,
@@ -530,18 +536,18 @@ export const createRemediationProjectsModel = async (body, loggedUserInfo) => {
     await Promise.all([
       knex
         .insert(
-          assignees.map((assigneeUUID) => ({
+          assignees.map((assigneeUUID: any) => ({
             fk_project_id: id,
-            fk_user_id: assigneeUUID,
+            fk_user_id: assigneeUUID
           }))
         )
         .into('remediation_project_assignee'),
 
       knex
         .insert(
-          project_scope.map((assetVulnId) => ({
+          project_scope.map((assetVulnId: any) => ({
             fk_project_id: id,
-            fk_vulnerability_asset_id: assetVulnId,
+            fk_vulnerability_asset_id: assetVulnId
           }))
         )
         .into('remediation_project_scope'),
@@ -571,8 +577,8 @@ export const createRemediationProjectsModel = async (body, loggedUserInfo) => {
  * @returns {Promise<{ error: string } | RemediationProjectComment[]>}
  */
 export const getRemediationProjectCommentsModel = async (
-  remediationProjectId,
-  loggedUserInfo
+  remediationProjectId: any,
+  loggedUserInfo: any
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {

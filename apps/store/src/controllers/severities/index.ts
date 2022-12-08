@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors/index.js' or i... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors/index.js'
+// @ts-expect-error TS(2307): Cannot find module '@/models/severities' or its co... Remove this comment to see the full error message
 import { searchSeveritiesModel } from '@/models/severities'
 
 /**
@@ -14,7 +16,7 @@ import { searchSeveritiesModel } from '@/models/severities'
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchSeveritiesController = async (req, res, next) => {
+export const searchSeveritiesController = async (req: any, res: any, next: any) => {
   try {
     const results = await searchSeveritiesModel({
       ...(req.params || {}),

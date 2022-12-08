@@ -6,7 +6,9 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /**
@@ -16,7 +18,7 @@ import prismaClient from '@/prismaClient'
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const searchUsersModel = async (provider, params, loggedUserInfo) => {
+export const searchUsersModel = async (provider: any, params: any, loggedUserInfo: any) => {
   const { logger } = provider
   try {
     const { companyId } = loggedUserInfo
@@ -38,7 +40,7 @@ export const searchUsersModel = async (provider, params, loggedUserInfo) => {
           select: { id: true },
           where: { user_group: { some: { user_id: loggedUserInfo.id } } },
         })
-      ).map((g) => g.id)
+      ).map((g: any) => g.id)
     }
 
     const users = await prismaClient.user.findMany({
@@ -66,11 +68,11 @@ export const searchUsersModel = async (provider, params, loggedUserInfo) => {
     })
 
     // Reformat data because current API is used like that:
-    const restructuredUsers = users.map((u) => {
+    const restructuredUsers = users.map((u: any) => {
       /**
        * @type {{id: string, username: string|null, first_name: string|null, last_name: string|null, email: string|null, roles: string[], user_group?: {group: {id: number, name: string|null}}[], groups: {id: number, name: string|null}[]}}
        */
-      const formattedUser = { ...u, groups: u.user_group.map((ug) => ug.group) }
+      const formattedUser = { ...u, groups: u.user_group.map((ug: any) => ug.group) }
       delete formattedUser.user_group
       return formattedUser
     })
@@ -102,7 +104,7 @@ export const searchUsersModel = async (provider, params, loggedUserInfo) => {
  * @param {object} loggedUserInfo Info of logged in user retrieved from JWT access token
  * @returns
  */
-export const createUser = async (provider, params, loggedUserInfo = {}) => {
+export const createUser = async (provider: any, params: any, loggedUserInfo = {}) => {
   const { knex, logger, createPasswordHash } = provider
   try {
     const {
@@ -113,6 +115,7 @@ export const createUser = async (provider, params, loggedUserInfo = {}) => {
       email,
       roles = ['member'],
     } = params
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, roles: loggedUserRoles } = loggedUserInfo
 
     if (
@@ -157,12 +160,13 @@ export const createUser = async (provider, params, loggedUserInfo = {}) => {
           roles,
         })
         .returning('id')
-    ).map((e) => e.id)
+    ).map((e: any) => e.id)
 
     return { id: userId }
   } catch (error) {
     logger.error(error)
 
+    // @ts-expect-error TS(2339): Property 'constraint' does not exist on type 'unkn... Remove this comment to see the full error message
     const { constraint } = error
     if (constraint === 'user_email_key') return { error: DUPLICATE.MAIL }
 
@@ -177,7 +181,7 @@ export const createUser = async (provider, params, loggedUserInfo = {}) => {
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns {Promise<{error?: string, message?: string}>}
  */
-export const updateUserModel = async (provider, params, loggedUserInfo) => {
+export const updateUserModel = async (provider: any, params: any, loggedUserInfo: any) => {
   const { knex, logger, createPasswordHash, passwordsMatch } = provider
   try {
     const {
@@ -224,14 +228,14 @@ export const updateUserModel = async (provider, params, loggedUserInfo) => {
         return { error: UNAUTHORIZED, message: 'Incorrect password' }
       }
     }
-    await knex.transaction(async (trx) => {
+    await knex.transaction(async (trx: any) => {
       if (roles) {
         let rolesTmp = roles
         if (!loggedUserInfo.roles.includes('admin'))
-          rolesTmp = roles.filter((e) => e !== 'admin')
+          rolesTmp = roles.filter((e: any) => e !== 'admin')
         await trx('user')
           .where('id', id)
-          .update({ roles: rolesTmp.map((r) => r.toLowerCase()) })
+          .update({ roles: rolesTmp.map((r: any) => r.toLowerCase()) })
       }
 
       if (groupIds) {
@@ -242,7 +246,10 @@ export const updateUserModel = async (provider, params, loggedUserInfo) => {
         if (groupIds.length > 0) {
           // Then repopulate with new groups
           await trx('user_group').insert(
-            groupIds.map((gId) => ({ user_id: id, group_id: gId }))
+            groupIds.map((gId: any) => ({
+              user_id: id,
+              group_id: gId
+            }))
           )
         }
       }
@@ -277,9 +284,10 @@ export const updateUserModel = async (provider, params, loggedUserInfo) => {
   }
 }
 
-export const deleteUserModel = async (provider, id, loggedUserInfo = {}) => {
+export const deleteUserModel = async (provider: any, id: any, loggedUserInfo = {}) => {
   const { knex, logger } = provider
   try {
+    // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
     if (loggedUserInfo.roles.includes('admin')) {
       await knex('user').where('id', id).delete()
       return { status: SUCCESS }

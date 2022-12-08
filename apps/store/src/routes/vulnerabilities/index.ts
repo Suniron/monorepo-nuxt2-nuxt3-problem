@@ -4,6 +4,7 @@ import {
   searchVulnerabilitiesController,
   searchVulnerabilitiesWithTheirAssetsController,
   createVulnerabilityController,
+// @ts-expect-error TS(2307): Cannot find module '@/controllers/vulnerabilities'... Remove this comment to see the full error message
 } from '@/controllers/vulnerabilities'
 
 const router = express.Router()

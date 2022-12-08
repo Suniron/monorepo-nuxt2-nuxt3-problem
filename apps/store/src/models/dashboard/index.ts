@@ -1,7 +1,11 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, SUCCESS } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /* Chart Queries */
@@ -28,7 +32,7 @@ import prismaClient from '@/prismaClient'
  *  critical: number,
  * }>} Total amout of vulnerabilities found in a company
  */
-const fetchSeveritiesSummary = async (params) => {
+const fetchSeveritiesSummary = async (params: any) => {
   if (!params.companyId)
     throw new Error(
       'Param "companyId" required to fetch company severities summary'
@@ -55,7 +59,7 @@ const fetchSeveritiesSummary = async (params) => {
     .innerJoin({ cp: 'company' }, { 'cp.id': 'ast.company_id' })
     .leftJoin('cvss', { 'cvss.id': 'vast.cvss_id' })
     .where('cp.id', companyId)
-    .andWhere(function () {
+    .andWhere(function(this: any) {
       this.where('vast.status', 'open').orWhere('vast.status', null)
     })
 
@@ -87,7 +91,7 @@ const fetchGlobalRating = async () => {
  * @param {ChartParams} params Params to retrieve chart data
  * @returns {Promise<{ topVulnerabilities: object[] }>}
  */
-const fetchTopNVulnerabilities = async (params) => {
+const fetchTopNVulnerabilities = async (params: any) => {
   if (!params.companyId)
     throw new Error(
       'Param "companyId" required to fetch company top vulnerabilities'
@@ -108,7 +112,7 @@ const fetchTopNVulnerabilities = async (params) => {
         .innerJoin({ ast: 'asset' }, { 'ast.id': 'vast.asset_id' })
         .innerJoin({ cp: 'company' }, { 'cp.id': 'ast.company_id' })
         .where('cp.id', companyId)
-        .andWhere(function () {
+        .andWhere(function(this: any) {
           this.where(knex.raw('LOWER(vast.status)'), 'open').orWhere(
             'vast.status',
             null
@@ -121,17 +125,17 @@ const fetchTopNVulnerabilities = async (params) => {
 
   const vulnerabilities = await query
   const totalVulns = vulnerabilities.reduce(
-    (total, vuln) => total + Number(vuln.ocurrences),
+    (total: any, vuln: any) => total + Number(vuln.ocurrences),
     0
   )
 
   return {
-    topVulnerabilities: vulnerabilities.slice(0, numVulns).map((v) => ({
+    topVulnerabilities: vulnerabilities.slice(0, numVulns).map((v: any) => ({
       ...v,
       ocurrences: Number(v.ocurrences),
-      percent: Math.round((Number(v.ocurrences) / totalVulns) * 100),
+      percent: Math.round((Number(v.ocurrences) / totalVulns) * 100)
     })),
-  }
+  };
 }
 
 /**
@@ -158,7 +162,7 @@ const fetchTopNVulnerabilities = async (params) => {
  *   }
  * }>}
  */
-export const fetchVulnerabilityLikelihoods = async (params) => {
+export const fetchVulnerabilityLikelihoods = async (params: any) => {
   if (!params.companyId)
     throw new Error(
       'Param "companyId" required to fetch vulnerability likelihoods'
@@ -236,7 +240,7 @@ export const fetchVulnerabilityLikelihoods = async (params) => {
     .innerJoin('vulnerability as vuln', 'vuln.id', 'vast.vulnerability_id')
     .where('ast.company_id', companyId)
     .andWhere('vuln.type', 'vulnerability')
-    .andWhere(function () {
+    .andWhere(function(this: any) {
       this.whereRaw(`status is NULL`).orWhereRaw(`LOWER(status) = 'open'`)
     })
   // .groupBy('asset_id')
@@ -351,7 +355,7 @@ export const fetchVulnerabilityLikelihoods = async (params) => {
   return { likelihoods }
 }
 
-const fetchScanHistory = async (params) => {
+const fetchScanHistory = async (params: any) => {
   const { companyId } = params
   try {
     const query = knex //knex('scan')
@@ -397,8 +401,9 @@ const fetchScanHistory = async (params) => {
   }
 }
 
-export const fetchProjectAssignement = async (params, loggedUserInfo = {}) => {
+export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, id } = loggedUserInfo
 
     const projects = await prismaClient.v_remediation_project_summary_list.findMany(
@@ -425,8 +430,8 @@ export const fetchProjectAssignement = async (params, loggedUserInfo = {}) => {
     )
 
     const assignments = {
-      owner: projects.filter((p) => p.owner_id === id),
-      assignee: projects.filter((p) => p.owner_id !== id),
+      owner: projects.filter((p: any) => p.owner_id === id),
+      assignee: projects.filter((p: any) => p.owner_id !== id),
     }
 
     return { projectAssignement: assignments }
@@ -436,7 +441,7 @@ export const fetchProjectAssignement = async (params, loggedUserInfo = {}) => {
   }
 }
 
-export const fetchRiskPerAsset = async (params) => {
+export const fetchRiskPerAsset = async (params: any) => {
   if (!params.companyId)
     throw new Error(
       'Param "companyId" required to fetch company top vulnerabilities'
@@ -497,10 +502,12 @@ const chartQueries = {
  * @param {Express.LoggedUser} loggedUserInfo Params for fetching single chart data
  * @returns {Promise<object>} Data of a chart
  */
-const fetchSingleChartData = async (params, loggedUserInfo) => {
+const fetchSingleChartData = async (params: any, loggedUserInfo: any) => {
   const { cid } = params
 
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   if (!chartQueries[cid]) throw new Error(`Invalid chart id: "${cid}"`)
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   return await chartQueries[cid](params, loggedUserInfo)
 }
 
@@ -510,15 +517,16 @@ const fetchSingleChartData = async (params, loggedUserInfo) => {
  * @param {ChartParams} params Params to fetch multiple charts data
  * @returns {Promise<object>} Multiple charts data
  */
-const fetchMultipleChartsData = async (params, loggedUserInfo) => {
+const fetchMultipleChartsData = async (params: any, loggedUserInfo: any) => {
   const { charts } = params
   let allChartsDataArr = []
   if (charts) {
     const chartIds = charts.split(',')
     allChartsDataArr = await Promise.all(
       chartIds
-        .map((id) => chartQueries[id]?.(params))
-        .filter((query) => !!query)
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        .map((id: any) => chartQueries[id]?.(params))
+        .filter((query: any) => !!query)
     )
   } else {
     allChartsDataArr = await Promise.all(
@@ -543,8 +551,9 @@ const fetchMultipleChartsData = async (params, loggedUserInfo) => {
  * @param {ChartParams} params Params to fetch one or multiple dashboard charts data
  * @returns {Promise<{error: string}|object>}
  */
-export const chartsDataModel = async (params, loggedUserInfo = {}) => {
+export const chartsDataModel = async (params: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, groups, roles } = loggedUserInfo
     const { cid } = params
     const chartParams = {
@@ -570,7 +579,7 @@ export const chartsDataModel = async (params, loggedUserInfo = {}) => {
  *
  * @param {string} userId
  */
-export const fetchDashboard = async (userId) => {
+export const fetchDashboard = async (userId: any) => {
   try {
     // 1) Fetch breakpoints & items
     const breakpoints = await prismaClient.dashboard_item.groupBy({
@@ -598,7 +607,7 @@ export const fetchDashboard = async (userId) => {
     })
 
     // 2) Re-format items to match with old model
-    const formattedDashboardItems = dashboardItems.map((item) => {
+    const formattedDashboardItems = dashboardItems.map((item: any) => {
       const formatted = {
         id: item.id,
         breakpointWidth: item.breakpointwidth,
@@ -628,7 +637,7 @@ export const fetchDashboard = async (userId) => {
     // 3) Save items in thei respective breakpoints
     for (const bp of breakpoints) {
       bp['items'] = formattedDashboardItems.filter(
-        (item) => item.breakpoint === bp.breakpoint
+        (item: any) => item.breakpoint === bp.breakpoint
       )
     }
 
@@ -640,11 +649,12 @@ export const fetchDashboard = async (userId) => {
 }
 
 export const updateDashboardUserModel = async (
-  dashId,
-  params,
+  dashId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
     const { id } = loggedUserInfo
     const {
       x = null,
@@ -657,7 +667,7 @@ export const updateDashboardUserModel = async (
       .select('*')
       .from('dashboard_user as d')
       .where({ 'd.user_id': id, 'd.dashboard_item_id': dashId })
-    knex.transaction(async (tx) => {
+    knex.transaction(async (tx: any) => {
       if (userDashItem) {
         await tx('dashboard_user')
           .update({

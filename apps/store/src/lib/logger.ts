@@ -7,7 +7,9 @@ import {
   ELASTICSEARCH_URL,
   INSTANCE_NAME,
   isProd,
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 } from '@/config/env'
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'pino... Remove this comment to see the full error message
 import pinosEs from 'pino-elasticsearch'
 
 /**
@@ -47,6 +49,7 @@ const p = pino(
       'req.headers.cookie',
     ],
   },
+  // @ts-expect-error TS(2345): Argument of type '{ level: string; stream: PrettyS... Remove this comment to see the full error message
   pino.multistream(streams)
 )
 

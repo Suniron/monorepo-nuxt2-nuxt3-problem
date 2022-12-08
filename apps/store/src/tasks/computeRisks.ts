@@ -1,10 +1,13 @@
 // @ts-check
 import 'module-alias/register'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/RiskScoreComputing' or... Remove this comment to see the full error message
 import { riskScoreComputing } from '@/utils/RiskScoreComputing'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
-async function calculateCompanyRisk(companyId) {
+async function calculateCompanyRisk(companyId: any) {
   const startDate = new Date()
   const today = new Date()
 
@@ -35,12 +38,11 @@ async function calculateCompanyRisk(companyId) {
   // Ignoring TS error because there is not enum for the asset type and the string cannot match the values specified in the function's definition
   const inheritedRisks = riskScoreComputing(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     listUnvisited,
     relations,
-    inherentScores.map((inherentScore) => ({
+    inherentScores.map((inherentScore: any) => ({
       asset_id: inherentScore.asset_id,
-      inherentRisk: inherentScore.inherent_score,
+      inherentRisk: inherentScore.inherent_score
     }))
   )
 
@@ -105,10 +107,10 @@ export async function computeRiskForAllCompanies() {
   const date = new Date()
   const companies = await prismaClient.company.findMany()
   const results = await Promise.all(
-    companies.map((company) => calculateCompanyRisk(company.id))
+    companies.map((company: any) => calculateCompanyRisk(company.id))
   )
   log.info(`Fetched companies in ${new Date().getTime() - date.getTime()}ms`)
-  results.forEach((timings, index) => {
+  results.forEach((timings: any, index: any) => {
     log.info(
       `Risk computed for company ${index + 1} in ${
         timings.queryTime + timings.computeTime + timings.upsertTime

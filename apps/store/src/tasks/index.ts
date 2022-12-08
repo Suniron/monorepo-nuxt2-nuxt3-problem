@@ -1,6 +1,8 @@
 // @ts-check
 
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'cron... Remove this comment to see the full error message
 import { CronJob } from 'cron'
 import { computeRiskForAllCompanies } from './computeRisks'
 
@@ -32,6 +34,7 @@ export const initCronTasks = () => {
   // Creating and starting cron jobs
   tasks.forEach((task) => {
     task.job = new CronJob(task.cronPattern, task.onTick)
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     task.job.start()
   })
 

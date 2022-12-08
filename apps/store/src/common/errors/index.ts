@@ -6,6 +6,7 @@ import {
   getInternalServerError,
   getNotFoundError,
   getUnauthorizedError,
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors/http' or its c... Remove this comment to see the full error message
 } from '@/common/errors/http'
 import {
   DUPLICATE,
@@ -14,6 +15,7 @@ import {
   NOT_FOUND,
   UNAUTHORIZED,
   VALIDATION_ERROR,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
 
 /* 400 Errors */
@@ -37,7 +39,9 @@ export const throwValidationError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwBadRequestError = ({ message } = {}) => {
+export const throwBadRequestError = ({
+  message
+}: any = {}) => {
   throw getBadRequestError({ message })
 }
 
@@ -47,7 +51,9 @@ export const throwBadRequestError = ({ message } = {}) => {
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwUnauthorizedError = ({ message } = {}) => {
+export const throwUnauthorizedError = ({
+  message
+}: any = {}) => {
   throw getUnauthorizedError({ message })
 }
 
@@ -57,7 +63,9 @@ export const throwUnauthorizedError = ({ message } = {}) => {
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwForbiddenError = ({ message } = {}) => {
+export const throwForbiddenError = ({
+  message
+}: any = {}) => {
   throw getForbiddenError({ message })
 }
 
@@ -67,7 +75,9 @@ export const throwForbiddenError = ({ message } = {}) => {
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwNotFoundError = ({ message } = {}) => {
+export const throwNotFoundError = ({
+  message
+}: any = {}) => {
   throw getNotFoundError({ message })
 }
 
@@ -77,7 +87,9 @@ export const throwNotFoundError = ({ message } = {}) => {
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwDuplicateError = ({ message } = {}) => {
+export const throwDuplicateError = ({
+  message
+}: any = {}) => {
   throw getConflictError({ message: message ?? 'Duplicate' })
 }
 
@@ -87,7 +99,9 @@ export const throwDuplicateError = ({ message } = {}) => {
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwInternalServerError = ({ message } = {}) => {
+export const throwInternalServerError = ({
+  message
+}: any = {}) => {
   throw getInternalServerError({ message })
 }
 
@@ -98,7 +112,7 @@ export const throwInternalServerError = ({ message } = {}) => {
  * @param {string=} message Custom error message
  * @throws
  */
-export const throwHTTPError = (error, message) => {
+export const throwHTTPError = (error: any, message: any) => {
   switch (error) {
     case MODEL_ERROR:
       return throwInternalServerError({ message })

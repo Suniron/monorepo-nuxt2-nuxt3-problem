@@ -1,9 +1,12 @@
 // @ts-check
 /* eslint-disable no-import-assign */
 /* eslint-disable no-async-promise-executor */
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { UNAUTHORIZED } from '@/common/constants'
 import Knex from 'knex'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import * as knex from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
 import * as jwt from '@/common/auth/jwt'
 import { getAdminUser, getNonAdminUser } from './utils'
 
@@ -106,14 +109,15 @@ const knexFunctions = [
   'toSQL',
 ]
 
-export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
+export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
+  // @ts-expect-error TS(7022): 'knexMock' implicitly has type 'any' because it do... Remove this comment to see the full error message
   const knexMock = jest.fn(() => {
     return knexMock
   })
 
   knexFunctions.forEach((fct) => {
-    function impl(param) {
-      this.then = (resolve, reject) =>
+    function impl(this: any, param: any) {
+      this.then = (resolve: any, reject: any) =>
         shouldReject ? reject(finalValue) : resolve(finalValue)
 
       if (typeof param === 'function') {
@@ -133,9 +137,8 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-  // @ts-expect-error: TODO
+  // @ts-expect-error TS(2339): Property 'mockReturnValue' does not exist on type ... Remove this comment to see the full error message
   Knex.mockReturnValue(mKnex)
-  // @ts-expect-error: TODO
   knex.knex = knexMock
 
   return knexMock
@@ -147,15 +150,16 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
  * @param {any[]} finalValues The final values to return for each call in order
  * @param {boolean} shouldReject If the query should be rejected
  */
-export function mockKnexWithFinalValues(finalValues, shouldReject = false) {
+export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) {
   let returnCount = 0
+  // @ts-expect-error TS(7022): 'knexMock' implicitly has type 'any' because it do... Remove this comment to see the full error message
   const knexMock = jest.fn(() => {
     return knexMock
   })
 
   knexFunctions.forEach((fct) => {
-    function impl(param) {
-      this.then = (resolve, reject) => {
+    function impl(this: any, param: any) {
+      this.then = (resolve: any, reject: any) => {
         const returnValue = shouldReject
           ? reject(finalValues[returnCount])
           : resolve(finalValues[returnCount])
@@ -181,16 +185,14 @@ export function mockKnexWithFinalValues(finalValues, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-  // @ts-expect-error: TODO
+  // @ts-expect-error TS(2339): Property 'mockReturnValue' does not exist on type ... Remove this comment to see the full error message
   Knex.mockReturnValue(mKnex)
-  // @ts-expect-error: TODO
   knex.knex = knexMock
 
   return knexMock
 }
 
-export function mockVerifyToken(user) {
-  // @ts-expect-error: TODO
+export function mockVerifyToken(user: any) {
   jwt.verifyToken = jest.fn(() => {
     if (user) {
       return { user }
@@ -205,13 +207,11 @@ export function mockVerifyToken(user) {
  *
  * @param {import('@/types/user').OptionnalUserInfos?} userInfos
  */
-export const mockAdminUser = (userInfos) =>
-  mockVerifyToken(getAdminUser(userInfos))
+export const mockAdminUser = (userInfos: any) => mockVerifyToken(getAdminUser(userInfos))
 
 /**
  * Mock non admin user token
  *
  * @param {import('@/types/user').OptionnalUserInfos?} userInfos
  */
-export const mockNonAdminUser = (userInfos) =>
-  mockVerifyToken(getNonAdminUser(userInfos))
+export const mockNonAdminUser = (userInfos: any) => mockVerifyToken(getNonAdminUser(userInfos))

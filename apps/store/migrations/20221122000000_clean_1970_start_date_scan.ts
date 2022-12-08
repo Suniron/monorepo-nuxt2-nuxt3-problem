@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }

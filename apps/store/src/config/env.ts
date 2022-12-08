@@ -11,6 +11,7 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+// @ts-expect-error TS(2732): Cannot find module '../../package.json'. Consider ... Remove this comment to see the full error message
 import { version } from '../../package.json'
 
 dotenv.config()
@@ -22,38 +23,37 @@ const httpsEnabled =
 /**
  * Environmental variables
  */
-export const buildEnvObj = (env) =>
-  Object.freeze({
-    port: env.PORT || '3002',
-    httpsEnabled,
-    nodeEnv: Object.freeze({
-      value: env.NODE_ENV || 'development',
-      isProduction: env.NODE_ENV === 'production',
-      isDevelopment: env.NODE_ENV === 'development',
-      isTest: env.NODE_ENV === 'test',
+export const buildEnvObj = (env: any) => Object.freeze({
+  port: env.PORT || '3002',
+  httpsEnabled,
+  nodeEnv: Object.freeze({
+    value: env.NODE_ENV || 'development',
+    isProduction: env.NODE_ENV === 'production',
+    isDevelopment: env.NODE_ENV === 'development',
+    isTest: env.NODE_ENV === 'test',
+  }),
+  jwt: Object.freeze({
+    access: Object.freeze({
+      secret: env.JWT_ACCESS_SECRET,
+      life: env.JWT_ACCESS_LIFE,
+      type: env.JWT_ACCESS_TYPE,
+      audience: env.JWT_ACCESS_AUD,
+      issuer: env.JWT_ACCESS_ISS,
     }),
-    jwt: Object.freeze({
-      access: Object.freeze({
-        secret: env.JWT_ACCESS_SECRET,
-        life: env.JWT_ACCESS_LIFE,
-        type: env.JWT_ACCESS_TYPE,
-        audience: env.JWT_ACCESS_AUD,
-        issuer: env.JWT_ACCESS_ISS,
-      }),
-      refresh: Object.freeze({
-        secret: env.JWT_REFRESH_SECRET,
-        life: env.JWT_REFRESH_LIFE,
-        lifeInMs: Number(env.JWT_REFRESH_LIFE_MS),
-        type: env.JWT_REFRESH_TYPE,
-        audience: env.JWT_REFRESH_AUD,
-        issuer: env.JWT_REFRESH_ISS,
-        domain: env.JWT_REFRESH_DOMAIN,
-      }),
+    refresh: Object.freeze({
+      secret: env.JWT_REFRESH_SECRET,
+      life: env.JWT_REFRESH_LIFE,
+      lifeInMs: Number(env.JWT_REFRESH_LIFE_MS),
+      type: env.JWT_REFRESH_TYPE,
+      audience: env.JWT_REFRESH_AUD,
+      issuer: env.JWT_REFRESH_ISS,
+      domain: env.JWT_REFRESH_DOMAIN,
     }),
-    postgres: Object.freeze({
-      URI: env.POSTGRES_URI || '',
-    }),
-  })
+  }),
+  postgres: Object.freeze({
+    URI: env.POSTGRES_URI || '',
+  }),
+})
 
 export const appVersion = version
 

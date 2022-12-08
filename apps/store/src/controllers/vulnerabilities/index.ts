@@ -1,3 +1,4 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
 import {
   getAssetVulnerabilitiesModel,
@@ -9,9 +10,10 @@ import {
   createVulnerabilityModel,
   UpdateVulnerabilitiesModel,
   DeleteVulnerabilitiesModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
 } from '@/models/vulnerabilities'
 
-export const assetVulnerabilitiesController = async (req, res, next) => {
+export const assetVulnerabilitiesController = async (req: any, res: any, next: any) => {
   try {
     const {
       error,
@@ -25,7 +27,7 @@ export const assetVulnerabilitiesController = async (req, res, next) => {
     next(error)
   }
 }
-export const updateVulnerabilitiesAssetController = async (req, res, next) => {
+export const updateVulnerabilitiesAssetController = async (req: any, res: any, next: any) => {
   try {
     const response = await UpdateVulnerabilitiesModel(req.body)
     if (response) {
@@ -36,7 +38,7 @@ export const updateVulnerabilitiesAssetController = async (req, res, next) => {
     next(error)
   }
 }
-export const deleteVulnerabilitiesAssetController = async (req, res, next) => {
+export const deleteVulnerabilitiesAssetController = async (req: any, res: any, next: any) => {
   try {
     const response = await DeleteVulnerabilitiesModel(req.body)
     if (response) {
@@ -48,7 +50,7 @@ export const deleteVulnerabilitiesAssetController = async (req, res, next) => {
   }
 }
 
-export const searchVulnerabilitiesController = async (req, res, next) => {
+export const searchVulnerabilitiesController = async (req: any, res: any, next: any) => {
   try {
     const {
       error,
@@ -69,9 +71,9 @@ export const searchVulnerabilitiesController = async (req, res, next) => {
 }
 
 export const searchVulnerabilitiesWithTheirAssetsController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const {
@@ -95,7 +97,7 @@ export const searchVulnerabilitiesWithTheirAssetsController = async (
   }
 }
 
-export const updateStatusController = async (req, res, next) => {
+export const updateStatusController = async (req: any, res: any, next: any) => {
   try {
     const { error } = await updateStatusModel(
       req.params?.aid,
@@ -111,7 +113,7 @@ export const updateStatusController = async (req, res, next) => {
   }
 }
 
-export const addPostAssetVulnerabilityController = async (req, res, next) => {
+export const addPostAssetVulnerabilityController = async (req: any, res: any, next: any) => {
   try {
     const { error } = await addPostAssetVulnerabilityModel(
       req.params?.aid,
@@ -128,9 +130,9 @@ export const addPostAssetVulnerabilityController = async (req, res, next) => {
 }
 
 export const searchPostAssetVulnerabilityController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const { error, comments, total } = await searchPostAssetVulnerabilityModel(
@@ -146,7 +148,7 @@ export const searchPostAssetVulnerabilityController = async (
   }
 }
 
-export const createVulnerabilityController = async (req, res, next) => {
+export const createVulnerabilityController = async (req: any, res: any, next: any) => {
   try {
     const vulnId = await createVulnerabilityModel(req.body, req.user)
     res.send({ id: vulnId })

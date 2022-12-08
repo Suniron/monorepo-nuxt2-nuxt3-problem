@@ -1,6 +1,8 @@
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import { mockKnexWithFinalValue } from '../../mocks'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/grouped-r... Remove this comment to see the full error message
 import groupedRemediations from '../../example-values/grouped-remediations.json'
 import app from '../../utils/fakeApp'
 

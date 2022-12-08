@@ -1,7 +1,9 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
 
-export const deleteIpModel = async (ipId) => {
+export const deleteIpModel = async (ipId: any) => {
   try {
     const [ipToUpdate] = await knex.select('id').from('ip').where('ip.id', ipId)
     if (!ipToUpdate) return { error: NOT_FOUND }
@@ -13,7 +15,7 @@ export const deleteIpModel = async (ipId) => {
     return { error: MODEL_ERROR }
   }
 }
-export const updateIpModel = async (ip, id) => {
+export const updateIpModel = async (ip: any, id: any) => {
   try {
     const [ipToUpdate] = await knex.select('id').from('ip').where('ip.id', id)
     if (!ipToUpdate) return { error: NOT_FOUND }
@@ -32,7 +34,7 @@ export const updateIpModel = async (ip, id) => {
   }
 }
 
-export const createIpModel = async (assetId, params) => {
+export const createIpModel = async (assetId: any, params: any) => {
   try {
     const { address, mac, iface, mask } = params
     const [ipId] = await knex('ip').returning('id').insert({

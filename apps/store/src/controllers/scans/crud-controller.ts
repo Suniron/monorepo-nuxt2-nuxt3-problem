@@ -7,11 +7,13 @@ import {
   createScanAssetModel,
   updateScanModel,
   getScanReportModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/scans' or its corresp... Remove this comment to see the full error message
 } from '@/models/scans'
 import {
   searchVulnerabilitiesModel,
   createVulnerabilityModel,
   updateVulnerabilityModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
 } from '@/models/vulnerabilities'
 import {
   createAssetModel,
@@ -20,14 +22,20 @@ import {
   searchAssetVulnerabilityModel,
   createAssetVulnerabilityModel,
   updateAssetVulnerabilityModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/assets' or its corres... Remove this comment to see the full error message
 } from '@/models/assets'
 import {
   createCartographyModel,
   addCartographyElementModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/cartography' or its c... Remove this comment to see the full error message
 } from '@/models/cartography'
+// @ts-expect-error TS(2307): Cannot find module '@/models/relations' or its cor... Remove this comment to see the full error message
 import { createRelationModel } from '@/models/relations'
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwBadRequestError } from '@/common/errors'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { SUCCESS } from '@/common/constants'
 
 /**
@@ -36,7 +44,7 @@ import { SUCCESS } from '@/common/constants'
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchScans = async (req, res, next) => {
+export const searchScans = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -63,7 +71,7 @@ export const searchScans = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getScanController = async (req, res, next) => {
+export const getScanController = async (req: any, res: any, next: any) => {
   const provider = {
     knex,
     logger: console,
@@ -86,7 +94,7 @@ export const getScanController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateScanController = async (req, res, next) => {
+export const updateScanController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -106,7 +114,7 @@ export const updateScanController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetScanController = async (req, res, next) => {
+export const searchAssetScanController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -129,7 +137,7 @@ export const searchAssetScanController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchPhishingScenariosController = async (req, res, next) => {
+export const searchPhishingScenariosController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -152,7 +160,7 @@ export const searchPhishingScenariosController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getScanReportController = async (req, res, next) => {
+export const getScanReportController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -175,7 +183,7 @@ export const getScanReportController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createScan = async (req, res, next) => {
+export const createScan = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -198,7 +206,7 @@ export const createScan = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const parseScanResultController = async (req, res, next) => {
+export const parseScanResultController = async (req: any, res: any, next: any) => {
   try {
     const { hosts, vulns, name, addToCy = null, cyId = null } = req.body
     const provider = {
@@ -222,7 +230,7 @@ export const parseScanResultController = async (req, res, next) => {
       req.user
     )
     const scanId = restTmp.id[0]
-    const registeredPorts = []
+    const registeredPorts: any = []
     for (let element in vulns) {
       const { vulnerabilities, total } = await searchVulnerabilitiesModel(
         { search: element },
@@ -335,7 +343,7 @@ export const parseScanResultController = async (req, res, next) => {
           req.user
         )
         registeredPorts.push(portId)
-        oldVulns = oldVulns.filter((e) => e.id !== assetVuln)
+        oldVulns = oldVulns.filter((e: any) => e.id !== assetVuln)
       }
       if (scanWithVuln) {
         for (let oidx in oldVulns) {

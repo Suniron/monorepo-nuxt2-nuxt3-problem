@@ -4,6 +4,7 @@ import {
   searchMissionAnalysisController,
   searchBusinessImpactController,
   updateBusinessImpactIntoUnit,
+// @ts-expect-error TS(2307): Cannot find module '@/controllers/missions_analysi... Remove this comment to see the full error message
 } from '@/controllers/missions_analysis'
 
 const router = express.Router()

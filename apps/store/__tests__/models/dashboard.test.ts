@@ -1,6 +1,8 @@
 // @ts-check
 import { prismaMock } from '../mockPrisma'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/models/dashboard' or its cor... Remove this comment to see the full error message
 import { fetchDashboard } from '@/models/dashboard'
 
 describe('fetchDashboard', () => {
@@ -582,8 +584,9 @@ describe('fetchDashboard', () => {
   ]
 
   it('should return error if Prisma crash on fetching dashboard items', async () => {
-    // @ts-expect-error: mock implementation
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.dashboard_item.groupBy.mockResolvedValue(mockFetchedBreakpoints)
+    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.dashboard_item.findMany.mockRejectedValue(
       new Error('Prisma error')
     )
@@ -592,6 +595,7 @@ describe('fetchDashboard', () => {
   })
 
   it('should return error if Prisma crash on fetching dashboard breakpoints', async () => {
+    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.dashboard_item.groupBy.mockRejectedValue(
       new Error('Prisma error')
     )
@@ -600,8 +604,9 @@ describe('fetchDashboard', () => {
   })
 
   it('should return dashboard items by breakpoints if everything is ok', async () => {
-    // @ts-expect-error: mock implementation
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.dashboard_item.groupBy.mockResolvedValue(mockFetchedBreakpoints)
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.dashboard_item.findMany.mockResolvedValue(
       mockFetchedDashboardItems
     )

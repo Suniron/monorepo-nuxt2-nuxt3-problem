@@ -3,12 +3,12 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   // If already setup, ignore
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
-  await knex.schema.createTable('phishing_scenario_domain', (table) => {
+  await knex.schema.createTable('phishing_scenario_domain', (table: any) => {
     table.increments('id').primary()
     table.string('name')
   })
@@ -19,6 +19,6 @@ exports.up = async (knex) => {
  * @param {import("knex").Knex} knex
  * @returns
  */
-exports.down = async (knex) => {
+exports.down = async (knex: any) => {
   await knex.schema.dropTable('phishing_scenario_domain')
 }

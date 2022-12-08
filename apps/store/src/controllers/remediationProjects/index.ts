@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors/index.js' or i... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors/index.js'
 import {
   getRemediationProjectsModel,
@@ -10,6 +11,7 @@ import {
   createRemediationProjectsModel,
   getRemediationProjectStatusHistoryModel,
   getRemediationProjectCommentsModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/remediationProjects' ... Remove this comment to see the full error message
 } from '@/models/remediationProjects'
 
 /**
@@ -17,7 +19,7 @@ import {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getRemediationProjectsController = async (req, res, next) => {
+export const getRemediationProjectsController = async (req: any, res: any, next: any) => {
   try {
     const result = await getRemediationProjectsModel(
       Number(req.params.id),
@@ -38,9 +40,9 @@ export const getRemediationProjectsController = async (req, res, next) => {
  * @param {import('express').NextFunction} next
  */
 export const getRemediationProjectsSummaryController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const result = await getRemediationProjectsSummaryModel(
@@ -64,7 +66,7 @@ export const getRemediationProjectsSummaryController = async (
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getRemediationProjectsScopeController = async (req, res, next) => {
+export const getRemediationProjectsScopeController = async (req: any, res: any, next: any) => {
   try {
     const result = await getRemediationProjectsScopeModel(
       Number(req.params.id),
@@ -85,9 +87,9 @@ export const getRemediationProjectsScopeController = async (req, res, next) => {
  * @param {import('express').NextFunction} next
  */
 export const getRemediationProjectStatusHistoryController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const result = await getRemediationProjectStatusHistoryModel(
@@ -108,7 +110,7 @@ export const getRemediationProjectStatusHistoryController = async (
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateRemediationProjectsController = async (req, res, next) => {
+export const updateRemediationProjectsController = async (req: any, res: any, next: any) => {
   try {
     const result = await updateRemediationProjectsModel(
       Number(req.params.id),
@@ -129,7 +131,7 @@ export const updateRemediationProjectsController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createRemediationProjectsController = async (req, res, next) => {
+export const createRemediationProjectsController = async (req: any, res: any, next: any) => {
   try {
     const result = await createRemediationProjectsModel(req.body, req.user)
 
@@ -147,9 +149,9 @@ export const createRemediationProjectsController = async (req, res, next) => {
  * @param {import('express').NextFunction} next
  */
 export const updateRemediationProjectScopeController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const result = await updateRemediationProjectScopeModel(
@@ -172,9 +174,9 @@ export const updateRemediationProjectScopeController = async (
  * @param {import('express').NextFunction} next
  */
 export const updateRemediationProjectScopeItemController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const result = await updateRemediationProjectScopeItemModel(
@@ -198,9 +200,9 @@ export const updateRemediationProjectScopeItemController = async (
  * @param {import('express').NextFunction} next
  */
 export const getRemediationProjectCommentsController = async (
-  req,
-  res,
-  next
+  req: any,
+  res: any,
+  next: any
 ) => {
   try {
     const result = await getRemediationProjectCommentsModel(

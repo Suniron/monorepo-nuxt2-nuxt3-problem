@@ -1,4 +1,5 @@
 import 'module-alias/register'
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
 import _knex from 'knex'
 
@@ -29,6 +30,7 @@ async function waitForDatabase(connectionsCount = 1) {
         setTimeout(async () => {
           connection.destroy()
           await waitForDatabase(connectionsCount)
+          // @ts-expect-error TS(2794): Expected 1 arguments, but got 0. Did you forget to... Remove this comment to see the full error message
           resolve()
         }, 1e3)
       })

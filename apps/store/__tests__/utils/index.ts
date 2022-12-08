@@ -1,4 +1,6 @@
+// @ts-expect-error TS(2732): Cannot find module '../example-values/user.json'. ... Remove this comment to see the full error message
 import * as userData from '../example-values/user.json'
+// @ts-expect-error TS(2732): Cannot find module '../example-values/login.json'.... Remove this comment to see the full error message
 import * as loginData from '../example-values/login.json'
 
 /**
@@ -14,8 +16,7 @@ export const generateUser = (item = {}) => Object.assign({}, userData, item)
  *
  * @param {import('@/types/user').OptionnalUserInfos?} userInfos
  */
-export const getAdminUser = (userInfos) =>
-  Object.assign({}, userData, { ...userInfos, roles: ['admin'] })
+export const getAdminUser = (userInfos: any) => Object.assign({}, userData, { ...userInfos, roles: ['admin'] })
 
 /**
  * Get an xrator app non admin user
@@ -24,8 +25,7 @@ export const getAdminUser = (userInfos) =>
  *
  * @param {import('@/types/user').OptionnalUserInfos?} userInfos
  */
-export const getNonAdminUser = (userInfos) =>
-  Object.assign({}, userData, { ...userInfos, roles: ['member'] })
+export const getNonAdminUser = (userInfos: any) => Object.assign({}, userData, { ...userInfos, roles: ['member'] })
 
 /**
  * @param {import('@/types/user').OptionnalUserInfos} item

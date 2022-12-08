@@ -1,8 +1,11 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, SUCCESS } from '@/common/constants'
 
 export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const cartographies = await knex
       .select({
@@ -20,10 +23,11 @@ export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
 }
 
 export const fetchCartographyElementsModel = async (
-  id,
+  id: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const elements = await knex
       .select({
@@ -48,7 +52,7 @@ export const fetchCartographyElementsModel = async (
       .leftJoin('asset_server as asrv', 'asrv.id', 'ast.id')
       .leftJoin('asset_web as aweb', 'aweb.id', 'ast.id')
       .where({ 'cart.company_id': companyId, 'cart.id': id })
-      .union(function () {
+      .union(function(this: any) {
         this.select({
           elementId: 'elt.id',
           group: 'elt.cygroup',
@@ -93,14 +97,15 @@ export const fetchCartographyElementsModel = async (
 }
 
 export const updateCartographyModel = async (
-  id,
-  params,
+  id: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const { name = null } = params
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await tx('cartography')
         .update({
           name,
@@ -114,11 +119,12 @@ export const updateCartographyModel = async (
   }
 }
 
-export const createCartographyModel = async (params, loggedUserInfo = {}) => {
+export const createCartographyModel = async (params: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const { name = null } = params
-    const cyId = await knex.transaction(async (tx) => {
+    const cyId = await knex.transaction(async (tx: any) => {
       const [{ id }] = await tx('cartography').returning('id').insert({
         company_id: companyId,
         name,
@@ -132,8 +138,9 @@ export const createCartographyModel = async (params, loggedUserInfo = {}) => {
   }
 }
 
-export const deleteCartographyModel = async (id, loggedUserInfo = {}) => {
+export const deleteCartographyModel = async (id: any, loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     await knex('cartography').where({ id: id, company_id: companyId }).delete()
     await knex('cartography_element').where('cartography_id', id).delete()
@@ -144,7 +151,7 @@ export const deleteCartographyModel = async (id, loggedUserInfo = {}) => {
   }
 }
 
-export const deleteCartographyElementModel = async (id, eid) => {
+export const deleteCartographyElementModel = async (id: any, eid: any) => {
   try {
     await knex('cartography_element')
       .where({ cartography_id: id, id: eid })
@@ -157,11 +164,12 @@ export const deleteCartographyElementModel = async (id, eid) => {
 }
 
 export const addCartographyElementModel = async (
-  id,
-  params,
+  id: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const {
       asset_id = null,
@@ -177,13 +185,13 @@ export const addCartographyElementModel = async (
       .innerJoin('cartography as cy', 'cy.id', 'cyelt.cartography_id')
       .where('cy.company_id', companyId)
       .andWhere('cy.id', id)
-      .andWhere(function () {
+      .andWhere(function(this: any) {
         if (asset_id) this.where('cyelt.asset_id', asset_id)
         else this.where('cyelt.relation_id', relation_id)
       })
     let cid
     if (!elt) {
-      cid = await knex.transaction(async (tx) => {
+      cid = await knex.transaction(async (tx: any) => {
         const [ceId] = (
           await tx('cartography_element').returning('id').insert({
             cartography_id: id,
@@ -194,7 +202,7 @@ export const addCartographyElementModel = async (
             x,
             y,
           })
-        ).map((e) => e.id)
+        ).map((e: any) => e.id)
         return ceId
       })
     } else cid = elt.id
@@ -205,14 +213,14 @@ export const addCartographyElementModel = async (
   }
 }
 
-export const updateCartographyElementModel = async (id, eid, params) => {
+export const updateCartographyElementModel = async (id: any, eid: any, params: any) => {
   try {
     const { parent = null, x = null, y = null } = params
     const [eltToUpdate] = await knex
       .select()
       .from('cartography_element')
       .where({ cartography_id: id, id: eid })
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await tx('cartography_element')
         .update({
           parent: parent === null ? eltToUpdate.parent : parent,

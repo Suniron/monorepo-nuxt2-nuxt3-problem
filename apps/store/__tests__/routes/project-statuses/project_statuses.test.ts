@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
@@ -8,11 +9,11 @@ import app from '../../utils/fakeApp'
 /**
  * @type {import('@/types/projectStatus').ProjectStatus[]}
  */
-let projectStatuses = []
+let projectStatuses: any = []
 /**
  * @type {import('@/types/projectStatus').ProjectStatusWorkflow[]}
  */
-let projectStatusWorkflows = []
+let projectStatusWorkflows: any = []
 
 const customUser = generateUser({
   firstName: 'xrator-test',
@@ -33,16 +34,19 @@ beforeAll(async () => {
 describe('/projects/available-transitions', () => {
   describe('GET / with the right auth token', () => {
     it('GET / should return 200 with correct data', async () => {
+      // @ts-expect-error TS(7006): Parameter 'transition' implicitly has an 'any' typ... Remove this comment to see the full error message
       const availableTransitions = projectStatusWorkflows.map((transition) => {
         return {
           project_status_workflow_id: transition.id,
           transition: transition.transition,
           from_status_id: transition.fk_from_status_id,
           from_status_name: projectStatuses.find(
+            // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
             (status) => status.id === transition.fk_from_status_id
           )?.name,
           to_status_id: transition.fk_to_status_id,
           to_status_name: projectStatuses.find(
+            // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
             (status) => status.id === transition.fk_to_status_id
           )?.name,
         }
@@ -66,19 +70,23 @@ describe('/projects/available-transitions/:statusId', () => {
       const status = 3
       const availableTransitions = projectStatusWorkflows
         .filter(
+          // @ts-expect-error TS(7006): Parameter 'transition' implicitly has an 'any' typ... Remove this comment to see the full error message
           (transition) =>
             transition.fk_from_status_id.toString() === status.toString()
         )
+        // @ts-expect-error TS(7006): Parameter 'transition' implicitly has an 'any' typ... Remove this comment to see the full error message
         .map((transition) => {
           return {
             project_status_workflow_id: transition.id,
             transition: transition.transition,
             from_status_id: transition.fk_from_status_id,
             from_status_name: projectStatuses.find(
+              // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
               (status) => status.id === transition.fk_from_status_id
             )?.name,
             to_status_id: transition.fk_to_status_id,
             to_status_name: projectStatuses.find(
+              // @ts-expect-error TS(7006): Parameter 'status' implicitly has an 'any' type.
               (status) => status.id === transition.fk_to_status_id
             )?.name,
           }

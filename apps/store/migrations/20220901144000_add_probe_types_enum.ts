@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async function (knex) {
+exports.up = async function (knex: any) {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -23,7 +23,7 @@ exports.up = async function (knex) {
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async function (knex) {
+exports.down = async function (knex: any) {
   await knex.raw(
     `ALTER TABLE public.probe ALTER COLUMN probe_type TYPE varchar;`
   )

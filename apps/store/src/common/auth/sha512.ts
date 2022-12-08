@@ -2,7 +2,7 @@
 const unixcrypt = require('unixcrypt')
 const crypto = require('crypto')
 
-export const genSaltSync = (rounds) => {
+export const genSaltSync = (rounds: any) => {
   if (rounds >= 15) {
     throw new Error(`${rounds} is greater than 15,Must be less that 15`)
   }
@@ -20,7 +20,7 @@ export const genSaltSync = (rounds) => {
   )
 }
 
-export const hashSync = (password, salt) => {
+export const hashSync = (password: any, salt: any) => {
   const value = unixcrypt.encrypt(password, salt)
   return value
 }

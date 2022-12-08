@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
+// @ts-expect-error TS(2307): Cannot find module '@/models/file' or its correspo... Remove this comment to see the full error message
 import { uploadFilesModel, downloadFile } from '@/models/file'
 
 /**
@@ -8,7 +10,7 @@ import { uploadFilesModel, downloadFile } from '@/models/file'
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const uploadFilesController = async (req, res, next) => {
+export const uploadFilesController = async (req: any, res: any, next: any) => {
   try {
     const { error, uuid } = await uploadFilesModel(req.body, req.user)
 
@@ -26,7 +28,7 @@ export const uploadFilesController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const downloadFileController = async (req, res, next) => {
+export const downloadFileController = async (req: any, res: any, next: any) => {
   try {
     const { error, data } = await downloadFile(
       req.user.companyId,
@@ -46,7 +48,7 @@ export const downloadFileController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const processCSVController = async (req, res, next) => {
+export const processCSVController = async (req: any, res: any, next: any) => {
   try {
     res.status(201).send({ isAuthorized: true })
   } catch (error) {

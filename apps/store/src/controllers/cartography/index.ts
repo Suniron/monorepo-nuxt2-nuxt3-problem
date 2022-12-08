@@ -1,3 +1,4 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
 import {
   fetchCartographiesModel,
@@ -8,9 +9,10 @@ import {
   addCartographyElementModel,
   updateCartographyElementModel,
   deleteCartographyElementModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/cartography' or its c... Remove this comment to see the full error message
 } from '@/models/cartography'
 
-export const fetchCartographiesController = async (req, res, next) => {
+export const fetchCartographiesController = async (req: any, res: any, next: any) => {
   try {
     const { cartographies } = await fetchCartographiesModel(req.user)
     res.send({ cartographies: cartographies })
@@ -19,7 +21,7 @@ export const fetchCartographiesController = async (req, res, next) => {
   }
 }
 
-export const fetchCartographyElementsController = async (req, res, next) => {
+export const fetchCartographyElementsController = async (req: any, res: any, next: any) => {
   try {
     const { elements } = await fetchCartographyElementsModel(
       req.params.cartoId,
@@ -31,7 +33,7 @@ export const fetchCartographyElementsController = async (req, res, next) => {
   }
 }
 
-export const updateCartographyController = async (req, res, next) => {
+export const updateCartographyController = async (req: any, res: any, next: any) => {
   try {
     await updateCartographyModel(req.params.cartoId, req.body, req.user)
     res.send()
@@ -40,7 +42,7 @@ export const updateCartographyController = async (req, res, next) => {
   }
 }
 
-export const createCartographyController = async (req, res, next) => {
+export const createCartographyController = async (req: any, res: any, next: any) => {
   try {
     const id = await createCartographyModel(req.body, req.user)
     if (id.error) throwHTTPError(id.error)
@@ -50,7 +52,7 @@ export const createCartographyController = async (req, res, next) => {
   }
 }
 
-export const deleteCartographyController = async (req, res, next) => {
+export const deleteCartographyController = async (req: any, res: any, next: any) => {
   try {
     await deleteCartographyModel(req.params.cartoId, req.user)
     res.send()
@@ -59,7 +61,7 @@ export const deleteCartographyController = async (req, res, next) => {
   }
 }
 
-export const addCartographyElementController = async (req, res, next) => {
+export const addCartographyElementController = async (req: any, res: any, next: any) => {
   try {
     const id = await addCartographyElementModel(
       req.params.cartoId,
@@ -73,7 +75,7 @@ export const addCartographyElementController = async (req, res, next) => {
   }
 }
 
-export const updateCartographyElementController = async (req, res, next) => {
+export const updateCartographyElementController = async (req: any, res: any, next: any) => {
   try {
     await updateCartographyElementModel(
       req.params.cartoId,
@@ -87,7 +89,7 @@ export const updateCartographyElementController = async (req, res, next) => {
   }
 }
 
-export const deleteCartographyElementController = async (req, res, next) => {
+export const deleteCartographyElementController = async (req: any, res: any, next: any) => {
   try {
     await deleteCartographyElementModel(
       req.params.cartoId,

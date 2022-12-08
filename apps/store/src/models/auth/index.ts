@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-check
 
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
 import { generateAccessToken } from '@/common/auth/jwt'
 import {
   FORBIDDEN,
@@ -9,13 +10,17 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 import crypto from 'crypto'
 
-export const getTokenSessionModel = async (provider, token, type) => {
+export const getTokenSessionModel = async (provider: any, token: any, type: any) => {
   const { knex, logger } = provider
 
   try {
@@ -40,7 +45,7 @@ export const getTokenSessionModel = async (provider, token, type) => {
  * @param {*} params
  * @returns {Promise<{error?: string, message?: string, accessToken?: string, refreshToken?: string, userInfo?: import('@/types/user').LoggedUser}>}
  */
-export const loginModel = async (provider, params) => {
+export const loginModel = async (provider: any, params: any) => {
   const {
     knex,
     logger,
@@ -75,7 +80,7 @@ export const loginModel = async (provider, params) => {
       )
       .from('user as usr')
       .innerJoin('company as cmp', 'usr.company_id', 'cmp.id')
-      .where(function () {
+      .where(function(this: any) {
         this.where('usr.username', username).orWhere('usr.email', username)
       })
     if (!user) {
@@ -91,7 +96,7 @@ export const loginModel = async (provider, params) => {
 
     // Proceed to create new session
     const { accessToken, refreshToken, userInfo } = await knex.transaction(
-      async (trx) => {
+      async (trx: any) => {
         // Kill any existing session
         await trx('user_session')
           .where('user_id', user.id)
@@ -140,7 +145,7 @@ export const loginModel = async (provider, params) => {
  * @param {import("@prisma/client").user_session["token"]} refreshToken
  * @param {import("@prisma/client").user_session["user_id"]} userId
  */
-export const isValidSessionRefreshToken = async (refreshToken, userId) => {
+export const isValidSessionRefreshToken = async (refreshToken: any, userId: any) => {
   try {
     const sessionFound = await prismaClient.user_session.findFirst({
       where: {
@@ -162,10 +167,10 @@ export const isValidSessionRefreshToken = async (refreshToken, userId) => {
  *
  * @param {import("@prisma/client").user["id"]} userId
  */
-export const refreshAccessToken = async (userId) => {
+export const refreshAccessToken = async (userId: any) => {
   try {
     const { accessToken, user } = await prismaClient.$transaction(
-      async (tx) => {
+      async (tx: any) => {
         // 1) Retrieve user info
         const user = await tx.user.findFirst({
           select: {
@@ -203,7 +208,7 @@ export const refreshAccessToken = async (userId) => {
           roles: user.roles,
           companyId: user.company.id,
           companyName: user.company.name,
-          groups: user.user_group.map((ug) => ug.group_id),
+          groups: user.user_group.map((ug: any) => ug.group_id),
         }
 
         // 2) Disable any existing session
@@ -238,7 +243,7 @@ export const refreshAccessToken = async (userId) => {
   }
 }
 
-export const logoutModel = async (provider, userInfo) => {
+export const logoutModel = async (provider: any, userInfo: any) => {
   const { logger, knex } = provider
   try {
     if (!userInfo.id) {
@@ -279,6 +284,7 @@ export const verifyAssetPermissionModel = async (
   cartoId = null
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, groups, roles } = loggedUserInfo
     if (
       roles.includes('admin') ||
@@ -301,9 +307,8 @@ export const verifyAssetPermissionModel = async (
       if (assetExist) return { status: SUCCESS }
       else return { status: UNAUTHORIZED }
     } else if (assets) {
-      // @ts-ignore
       const assetsExist = await query.whereIn({ 'ast.id': assets })
-      // @ts-ignore
+      // @ts-expect-error TS(2339): Property 'length' does not exist on type 'never'.
       if (assetsExist.length === assets.length) return { status: SUCCESS }
       else return { status: UNAUTHORIZED }
     } else if (relId) {
@@ -339,14 +344,14 @@ export const verifyAssetPermissionModel = async (
   }
 }
 
-export const getResetPasswordToken = async (provider, params) => {
+export const getResetPasswordToken = async (provider: any, params: any) => {
   const { knex, logger } = provider
   try {
     const { username } = params
     const [user] = await knex
       .select('usr.id', 'usr.email')
       .from('user as usr')
-      .where(function () {
+      .where(function(this: any) {
         this.where('usr.username', username).orWhere('usr.email', username)
       })
     if (user) {
@@ -370,7 +375,7 @@ export const getResetPasswordToken = async (provider, params) => {
     return { error: MODEL_ERROR }
   }
 }
-export const updateResetPasswordUsingToken = async (provider, params) => {
+export const updateResetPasswordUsingToken = async (provider: any, params: any) => {
   const { knex, logger, createPasswordHash } = provider
   try {
     const { password, token } = params
@@ -380,7 +385,7 @@ export const updateResetPasswordUsingToken = async (provider, params) => {
     const [user] = await knex
       .select('usr.id', 'usr.reset_token', 'usr.token_expires_at')
       .from('user as usr')
-      .where(function () {
+      .where(function(this: any) {
         this.where('usr.reset_token', token)
       })
     if (user) {

@@ -30,9 +30,9 @@ import _ from 'lodash'
  * @param {compliance[]} compliances
  * @returns {{chapter: string, chapter_small: string, completion: number, maturity: number}[]}
  */
-export const computeComplianceStatistics = (compliances) => {
-  const results = []
-  compliances.forEach((section) => {
+export const computeComplianceStatistics = (compliances: any) => {
+  const results: any = []
+  compliances.forEach((section: any) => {
     let completion = 0
     let maturity = 0
     if (section.status !== null) {
@@ -50,6 +50,7 @@ export const computeComplianceStatistics = (compliances) => {
       }
     }
     let i = results.findIndex(
+      // @ts-expect-error TS(7006): Parameter 'chapter' implicitly has an 'any' type.
       (chapter) => chapter.chapter_small === section.chapter_small
     )
     if (i > -1) {
@@ -64,6 +65,7 @@ export const computeComplianceStatistics = (compliances) => {
       })
     }
   })
+  // @ts-expect-error TS(7006): Parameter 'chapter' implicitly has an 'any' type.
   return results.map((chapter) => {
     chapter.completion =
       Math.round(

@@ -1,6 +1,7 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
 
-export const createCvssModel = async (tx, params) => {
+export const createCvssModel = async (tx: any, params: any) => {
   try {
     const { code = '', score = 0, version = 0 } = params
     const [cvssId] = (
@@ -9,7 +10,7 @@ export const createCvssModel = async (tx, params) => {
         score,
         version,
       })
-    ).map((e) => e.id)
+    ).map((e: any) => e.id)
     return cvssId
   } catch (error) {
     console.error(error)
@@ -17,7 +18,7 @@ export const createCvssModel = async (tx, params) => {
   }
 }
 
-export const updateCvssModel = async (tx, cvssId, params) => {
+export const updateCvssModel = async (tx: any, cvssId: any, params: any) => {
   try {
     const [cvssToUpdate] = await tx
       .select()
@@ -49,7 +50,7 @@ export const updateCvssModel = async (tx, cvssId, params) => {
   }
 }
 
-export const deleteCvssModel = async (tx, cvssId) => {
+export const deleteCvssModel = async (tx: any, cvssId: any) => {
   try {
     const [cvssToUpdate] = await tx
       .select()

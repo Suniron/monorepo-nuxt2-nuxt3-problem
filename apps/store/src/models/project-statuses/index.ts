@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
 
 /**
@@ -13,7 +15,7 @@ import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
  * @param {{statusId?: number}} params Search params with optionnal ID of a status
  * @returns {Promise<AvailableTransition[] | {error?: string}>}
  */
-export const getAvailableTransitionsModel = async (params) => {
+export const getAvailableTransitionsModel = async (params: any) => {
   try {
     // == There is no status id ==
     if (!params.statusId) {

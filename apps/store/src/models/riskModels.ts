@@ -1,5 +1,6 @@
 // @ts-check
 
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 /**
@@ -8,7 +9,7 @@ import { log } from '@/lib/logger'
  * @param {Boolean} scanned
  * @returns {"A" | "B" | "C" | "D" | "E" | "F"}
  */
-export function riskScoreLetter(score, hasVuln = false, scanned = false) {
+export function riskScoreLetter(score: any, hasVuln = false, scanned = false) {
   // [0]: GOOD or A
   // ]0; 4[: LOW or B
   // [4; 7[: MEDIUM or C

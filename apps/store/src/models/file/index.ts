@@ -1,6 +1,9 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
 
 /**
@@ -9,19 +12,19 @@ import prismaClient from '@/prismaClient'
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const uploadFilesModel = async (params) => {
+export const uploadFilesModel = async (params: any) => {
   try {
     const { name, size, md5, mimetype } = params
     let uuid
     uuid = await knex.select('id').from('store').where({ md5: md5 })
     if (uuid.length === 0) {
       // eslint-disable-next-line prettier/prettier
-      [uuid] = await knex.transaction(async (tx) => {
+      [uuid] = await knex.transaction(async (tx: any) => {
         const uuid = (
           await tx('store')
             .returning('id')
             .insert({ name: name, size: size, md5: md5, type: mimetype })
-        ).map((e) => e.id)
+        ).map((e: any) => e.id)
         return uuid
       })
     } else uuid = uuid[0].id
@@ -36,7 +39,7 @@ export const uploadFilesModel = async (params) => {
  * @param {import('@prisma/client').company['id']} companyId
  * @param {import('@prisma/client').store['id']} storeId
  */
-export const downloadFile = async (companyId, storeId) => {
+export const downloadFile = async (companyId: any, storeId: any) => {
   try {
     const data = await prismaClient.store.findFirst({
       select: {

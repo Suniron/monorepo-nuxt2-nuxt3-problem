@@ -1,5 +1,7 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import { mockKnexWithFinalValue } from '../../mocks'
+// @ts-expect-error TS(2732): Cannot find module '../../example-values/ip.json'.... Remove this comment to see the full error message
 import ip from '../../example-values/ip.json'
 import app from '../../utils/fakeApp'
 

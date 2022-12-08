@@ -1,19 +1,24 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
 import {
   MODEL_ERROR,
   VALIDATION_ERROR,
   SUCCESS,
   UNAUTHORIZED,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
 import {
   isOwnerOrAssigneeOfRemediationProject,
   checkRemediationProjectExistsOrIsAuthorised,
+// @ts-expect-error TS(2307): Cannot find module '@/utils/remediationProject.uti... Remove this comment to see the full error message
 } from '@/utils/remediationProject.utils'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 export const fetchPostsModel = async (loggedUserInfo = {}) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, groups, roles } = loggedUserInfo
     const query = knex('vulnerability_asset')
       .distinctOn('vast.id')
@@ -62,9 +67,9 @@ export const fetchPostsModel = async (loggedUserInfo = {}) => {
  * @param {Express.LoggedUser} loggedUserInfo
  */
 export const createRemediationProjectPostsModel = async (
-  remediationProjectId,
-  body,
-  loggedUserInfo
+  remediationProjectId: any,
+  body: any,
+  loggedUserInfo: any
 ) => {
   const {
     comment,

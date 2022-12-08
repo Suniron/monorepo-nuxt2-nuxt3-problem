@@ -1,9 +1,9 @@
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
   return knex.schema
-    .createTable('severity', function (table) {
+    .createTable('severity', function (table: any) {
       table.increments('id').primary()
       table.string('name')
     })
@@ -15,9 +15,9 @@ exports.up = (knex) => {
         { name: 'C4' },
         { name: 'C5' },
       ])
-    })
+    });
 }
 
-exports.down = (knex) => {
+exports.down = (knex: any) => {
   return knex.schema.dropTable('severity')
 }

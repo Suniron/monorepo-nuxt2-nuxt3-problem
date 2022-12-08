@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
 
 /**
@@ -6,17 +7,16 @@ import { log } from '@/lib/logger'
  *
  * @param {import('express').Application} app Express app
  */
-export default async function loadLogger(app) {
+export default async function loadLogger(app: any) {
   app.use(
     /**
      * @param {import('express').Request} req
      * @param {import('express').Response} res
      * @param {import('express').NextFunction} next
      */
-    (req, res, next) => {
+    (req: any, res: any, next: any) => {
       const startHrTime = process.hrtime()
 
-      // @ts-expect-error: define the logger
       req.log = log.child().withContext({
         // generate a random request id to improve tracing
         reqId: Math.floor(Math.random() * 100000).toString(10),

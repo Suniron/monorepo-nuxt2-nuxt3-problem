@@ -6,6 +6,7 @@ import {
   HTTPError,
   getInternalServerError,
   getBadRequestError,
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors/http' or its c... Remove this comment to see the full error message
 } from '@/common/errors/http'
 import { isCelebrateError } from 'celebrate'
 
@@ -17,7 +18,7 @@ import { isCelebrateError } from 'celebrate'
  * @param {import('express').NextFunction} _next
  * @returns
  */
-export const errorHandler = (err, req, res, _next) => {
+export const errorHandler = (err: any, req: any, res: any, _next: any) => {
   let httpError = getInternalServerError()
 
   if (err instanceof HTTPError) {
@@ -44,6 +45,6 @@ export const errorHandler = (err, req, res, _next) => {
   return res.status(httpError.code).send(httpError.toJSON())
 }
 
-export default async function loadErrorHandler(app) {
+export default async function loadErrorHandler(app: any) {
   app.use(errorHandler)
 }

@@ -5,10 +5,15 @@ import {
   NOT_FOUND,
   UNAUTHORIZED,
   VALIDATION_ERROR,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
 import { log } from '@/lib/logger'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
+// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
 import { getUserGroupIds } from '@/utils/user.utils'
 
 /**
@@ -27,7 +32,7 @@ const SEVERITY = {
  * @param {number} score
  * @returns {string|null} the corresponding severity level
  */
-const getSeverityLevel = (score) => {
+const getSeverityLevel = (score: any) => {
   if (score) {
     let severity = SEVERITY.CRITICAL
     if (score === 0) severity = SEVERITY.INFO
@@ -44,8 +49,8 @@ const getSeverityLevel = (score) => {
  * @param {object} vulnerability
  * @returns {object} Return the same vulnerability object with new property severity level
  */
-const fillVulnerabilityData = (vulnerability) => {
-  vulnerability.details?.forEach(function (elt) {
+const fillVulnerabilityData = (vulnerability: any) => {
+  vulnerability.details?.forEach(function (elt: any) {
     if (!elt.severity && elt.cvss_score !== null) {
       const score = elt.cvss_score
 
@@ -69,12 +74,13 @@ const fillVulnerabilityData = (vulnerability) => {
  * }>} List of vulnerabilities if successful. Error if failed.
  */
 export const getAssetVulnerabilitiesModel = async (
-  assetId,
-  params,
+  assetId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
     const { type = 'vulnerability' } = params
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
@@ -145,13 +151,13 @@ export const getAssetVulnerabilitiesModel = async (
       }
       const arrSeverities = severities
         .split(',')
-        .map((sev) => sev.toLowerCase())
+        .map((sev: any) => sev.toLowerCase())
       const arrSevRanges = arrSeverities
-        .map((sev) => SEVERITY_RANGES[sev])
-        .filter((sevRange) => !!sevRange) // If not valid severity level, need to filter undefined ranges
+        .map((sev: any) => SEVERITY_RANGES[sev])
+        .filter((sevRange: any) => !!sevRange) // If not valid severity level, need to filter undefined ranges
 
-      query.where((qb) => {
-        arrSevRanges.forEach((sevRange) => {
+      query.where((qb: any) => {
+        arrSevRanges.forEach((sevRange: any) => {
           qb.orWhereBetween('cvss.score', sevRange)
         })
       })
@@ -181,8 +187,11 @@ export const getAssetVulnerabilitiesModel = async (
  *
  * @returns True if transaction worked
  */
-export const UpdateVulnerabilitiesModel = async (body) => {
-  let { ipId, portId } = {}
+export const UpdateVulnerabilitiesModel = async (body: any) => {
+  let {
+    ipId,
+    portId
+  }: any = {}
   const result = await knex
     .select({ ipId: 'ip.id', portId: 'port.id' })
     .from('port')
@@ -206,7 +215,7 @@ export const UpdateVulnerabilitiesModel = async (body) => {
         details: body.vuln.details,
       })
       .returning('cvss_id')
-  ).map((e) => e.cvss_id)
+  ).map((e: any) => e.cvss_id)
   if (info !== undefined) {
     const isGood = await knex('cvss').where('id', Number(info[0])).update({
       code: body.vuln.code,
@@ -231,17 +240,18 @@ export const DeleteVulnerabilitiesModel = async () => {
   return true
 }
 export const updateStatusModel = async (
-  assetId,
-  vulnId,
-  params,
+  assetId: any,
+  vulnId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
     if (!assetId || !vulnId) return { error: VALIDATION_ERROR }
     if (!params || !Object.entries(params).length) return { status: SUCCESS } // nothing to update
 
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId } = loggedUserInfo
-    const { error, status } = await knex.transaction(async (tx) => {
+    const { error, status } = await knex.transaction(async (tx: any) => {
       const { updated, comment } = params
       const vipToUpdate = await tx
         .select({ vulnerability_id: 'vip.id', status: 'vip.status' })
@@ -281,11 +291,12 @@ export const updateStatusModel = async (
 }
 
 export const addPostAssetVulnerabilityModel = async (
-  assetId,
-  vulnId,
-  params,
+  assetId: any,
+  vulnId: any,
+  params: any,
   loggedUserInfo = {}
 ) => {
+  // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
   const { id } = loggedUserInfo
   const { comment } = params
 
@@ -295,7 +306,7 @@ export const addPostAssetVulnerabilityModel = async (
     .where({ 'vast.id': vulnId, 'vast.asset_id': assetId })
   if (!assetExist) return { status: UNAUTHORIZED }
 
-  const { error, status } = await knex.transaction(async (tx) => {
+  const { error, status } = await knex.transaction(async (tx: any) => {
     const query = tx('comment').insert({
       vulnerability_asset_id: vulnId,
       user_id: id,
@@ -309,10 +320,11 @@ export const addPostAssetVulnerabilityModel = async (
 }
 
 export const searchPostAssetVulnerabilityModel = async (
-  assetId,
-  vulnId,
+  assetId: any,
+  vulnId: any,
   loggedUserInfo = {}
 ) => {
+  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
   const { companyId } = loggedUserInfo
 
   const query = knex
@@ -357,7 +369,7 @@ export const searchPostAssetVulnerabilityModel = async (
  *  { vulnerability: object }
  * >} Single vulnerability object if params.vid provided. List of vulnerabilities otherwise. Error if failed.
  */
-export const searchVulnerabilitiesModel = async (params) => {
+export const searchVulnerabilitiesModel = async (params: any) => {
   try {
     const { vid, search } = params
     const query = knex.select().from('vulnerability as vul')
@@ -365,7 +377,7 @@ export const searchVulnerabilitiesModel = async (params) => {
     if (vid) {
       query.where('vul.id', vid)
     } else if (search) {
-      query.where(function () {
+      query.where(function(this: any) {
         this.where(
           knex.raw('LOWER(vul.name)'),
           'like',
@@ -413,16 +425,17 @@ export const searchVulnerabilitiesModel = async (params) => {
  * >} Single vulnerability object if params.vid provided. List of vulnerabilities otherwise. Error if failed.
  */
 export const searchVulnerabilitiesWithTheirAssetsModel = async (
-  params,
+  params: any,
   loggedUserInfo = {}
 ) => {
   try {
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
-    const assetsIds = params.assets_ids?.split(',').map((id) => parseInt(id))
+    const assetsIds = params.assets_ids?.split(',').map((id: any) => parseInt(id))
     const clustersIds = params.clusters_ids
       ?.split(',')
-      .map((id) => parseInt(id))
+      .map((id: any) => parseInt(id))
     const page = parseInt(params.page) || 1
     const pageSize = parseInt(params.page_size) || undefined
     // Where conditions
@@ -553,29 +566,28 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
             }
           : { id: 'asc' },
       })
-      .then((vulnerabilities) =>
-        vulnerabilities.map((vuln) => {
-          const { vulnerability_asset, ...vulnerability } = vuln
+      .then((vulnerabilities: any) => vulnerabilities.map((vuln: any) => {
+      const { vulnerability_asset, ...vulnerability } = vuln
+      return {
+        ...vulnerability,
+        affectedAssets: vulnerability_asset.map((vast: any) => {
           return {
-            ...vulnerability,
-            affectedAssets: vulnerability_asset.map((vast) => {
-              return {
-                vastId: vast.id,
-                id: vast.asset?.id,
-                name: vast.asset?.name,
-                assetType: vast.asset?.type,
-                cvssScore: vast.cvss?.score,
-                status: vast.status,
-                severity: vast.cvss?.score
-                  ? getSeverityLevel(vast.cvss?.score)
-                  : vast.severity,
-                projects: vast.remediation_project_scope.map(
-                  (scope) => scope.remediation_project
-                ),
-              }
-            }),
-          }
-        })
+            vastId: vast.id,
+            id: vast.asset?.id,
+            name: vast.asset?.name,
+            assetType: vast.asset?.type,
+            cvssScore: vast.cvss?.score,
+            status: vast.status,
+            severity: vast.cvss?.score
+              ? getSeverityLevel(vast.cvss?.score)
+              : vast.severity,
+            projects: vast.remediation_project_scope.map(
+              (scope: any) => scope.remediation_project
+            ),
+          };
+        }),
+      };
+    })
       )
 
     if (Array.isArray(vulnerabilities)) {
@@ -608,7 +620,7 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const createVulnerabilityModel = async (params) => {
+export const createVulnerabilityModel = async (params: any) => {
   try {
     const {
       oid = null,
@@ -622,7 +634,7 @@ export const createVulnerabilityModel = async (params) => {
       vulndetect = '',
       refs = [],
     } = params
-    const vulnId = await knex.transaction(async (tx) => {
+    const vulnId = await knex.transaction(async (tx: any) => {
       const [{ id }] = await tx('vulnerability').returning('id').insert({
         oid,
         name,
@@ -654,7 +666,7 @@ export const createVulnerabilityModel = async (params) => {
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const updateVulnerabilityModel = async (vulnId, params) => {
+export const updateVulnerabilityModel = async (vulnId: any, params: any) => {
   try {
     const [vulnExist] = await knex
       .select()
@@ -669,7 +681,7 @@ export const updateVulnerabilityModel = async (vulnId, params) => {
       affected = vulnExist.affected,
       vulndetect = vulnExist.vulndetect,
     } = params
-    await knex.transaction(async (tx) => {
+    await knex.transaction(async (tx: any) => {
       await tx('vulnerability')
         .update({
           name,
@@ -694,8 +706,8 @@ export const updateVulnerabilityModel = async (vulnId, params) => {
  * @param {import('@prisma/client').asset['id']} assetId
  */
 export const getAssetVulnerabilitiesCountBySeverity = async (
-  companyId,
-  assetId
+  companyId: any,
+  assetId: any
 ) => {
   try {
     const vulnerabilitiesCount = {
@@ -716,7 +728,7 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
       }
     )
 
-    vulnerabilitiesAssets.forEach((va) => {
+    vulnerabilitiesAssets.forEach((va: any) => {
       switch (true) {
         case va.severity === 'low' || (va.cvss?.score && va.cvss.score <= 3.9):
           vulnerabilitiesCount.low++
@@ -749,7 +761,7 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
  *
  * @param {{low: number, medium: number, high: number, critical: number}} vulnerabilities
  */
-export const hasVulnerability = (vulnerabilities) => {
+export const hasVulnerability = (vulnerabilities: any) => {
   for (const severity of Object.keys(vulnerabilities)) {
     if (vulnerabilities[severity] > 0) return true
   }

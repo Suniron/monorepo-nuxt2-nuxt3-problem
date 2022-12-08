@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -30,7 +30,7 @@ exports.up = async (knex) => {
  *
  * @param {import('knex').Knex} knex
  */
-exports.down = async (knex) => {
+exports.down = async (knex: any) => {
   await knex.raw(
     `
       ALTER TABLE public.asset_building drop CONSTRAINT IF EXISTS "asset_building_asset_id_fkey";

@@ -8,6 +8,7 @@ export const resetDatabase = async () => {
    */
   const tablenames = await prismaClient.$queryRaw`SELECT tablename FROM pg_tables WHERE schemaname='public'`
 
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
   for (const { tablename } of tablenames) {
     // Ignore prisma & knex migrations tables
     if (

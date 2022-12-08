@@ -1,6 +1,8 @@
 // @ts-check
 
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { DUPLICATE, SUCCESS } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError } from '@/common/errors'
 import {
   searchAssetsModel,
@@ -15,7 +17,9 @@ import {
   createUrisModel,
   searchAssetsBelongingModel,
   getAssetRiskModel,
+// @ts-expect-error TS(2307): Cannot find module '@/models/assets' or its corres... Remove this comment to see the full error message
 } from '@/models/assets'
+// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
 import { createVulnerabilityModel } from '@/models/vulnerabilities'
 
 /**
@@ -24,7 +28,7 @@ import { createVulnerabilityModel } from '@/models/vulnerabilities'
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetsController = async (req, res, next) => {
+export const searchAssetsController = async (req: any, res: any, next: any) => {
   try {
     const { error, asset, assets, total } = await searchAssetsModel(
       {
@@ -49,7 +53,7 @@ export const searchAssetsController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetsBelongingController = async (req, res, next) => {
+export const searchAssetsBelongingController = async (req: any, res: any, next: any) => {
   try {
     const { error, assets, total } = await searchAssetsBelongingModel(
       {
@@ -74,7 +78,7 @@ export const searchAssetsBelongingController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createAssetController = async (req, res, next) => {
+export const createAssetController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createAssetModel(req.body, req.user)
     if (error === 'DuplicateError') {
@@ -95,7 +99,7 @@ export const createAssetController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const deleteAssetController = async (req, res, next) => {
+export const deleteAssetController = async (req: any, res: any, next: any) => {
   try {
     const { error } = await deleteAssetModel(req.params?.id, req.user)
 
@@ -114,7 +118,7 @@ export const deleteAssetController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateAssetController = async (req, res, next) => {
+export const updateAssetController = async (req: any, res: any, next: any) => {
   try {
     const { error } = await updateAssetModel(req.params?.id, req.body, req.user)
     if (error === 'DuplicateError') {
@@ -137,7 +141,7 @@ export const updateAssetController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateAssetsBulkController = async (req, res, next) => {
+export const updateAssetsBulkController = async (req: any, res: any, next: any) => {
   try {
     const { name, type, assets, assetData, tagIds, groupIds } = req.body
     if (assets.length === 0) throwHTTPError()
@@ -170,7 +174,7 @@ export const updateAssetsBulkController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const deleteAssetsBulkController = async (req, res, next) => {
+export const deleteAssetsBulkController = async (req: any, res: any, next: any) => {
   try {
     const { assets } = req.body
     if (assets.length === 0) throwHTTPError()
@@ -192,7 +196,7 @@ export const deleteAssetsBulkController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetRevisionsController = async (req, res, next) => {
+export const searchAssetRevisionsController = async (req: any, res: any, next: any) => {
   try {
     const { error, revisions, total } = await searchAssetRevisions(
       req.params?.id,
@@ -214,7 +218,7 @@ export const searchAssetRevisionsController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getAssetsSummaryController = async (req, res, next) => {
+export const getAssetsSummaryController = async (req: any, res: any, next: any) => {
   try {
     const { error, summary } = await getAssetsSummary(req.user)
     if (error) throwHTTPError(error)
@@ -232,7 +236,7 @@ export const getAssetsSummaryController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const importCSVController = async (req, res, next) => {
+export const importCSVController = async (req: any, res: any, next: any) => {
   try {
     const { assets, relations } = req.body
     const failed = []
@@ -249,7 +253,7 @@ export const importCSVController = async (req, res, next) => {
       error = undefined
     }
 
-    const fetchIdFromRelation = async (elt) => {
+    const fetchIdFromRelation = async (elt: any) => {
       let res
       if (
         typeof elt === 'string' &&
@@ -272,7 +276,7 @@ export const importCSVController = async (req, res, next) => {
       for (let j = 0; j < keys.length; j++) {
         if (typeof relations[i][keys[j]] === 'object') {
           relations[i][keys[j]] = await Promise.all(
-            relations[i][keys[j]].map(async (e) => {
+            relations[i][keys[j]].map(async (e: any) => {
               return await fetchIdFromRelation(e)
             })
           )
@@ -304,7 +308,7 @@ export const importCSVController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const fetchAssetPortsController = async (req, res, next) => {
+export const fetchAssetPortsController = async (req: any, res: any, next: any) => {
   try {
     const { error, details } = await fetchAssetPortsModel(
       req.params.id,
@@ -326,7 +330,7 @@ export const fetchAssetPortsController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createAssetVulnerabilityController = async (req, res, next) => {
+export const createAssetVulnerabilityController = async (req: any, res: any, next: any) => {
   req.body.custom_description = req.body.description
   req.body.custom_remediation = req.body.remediation
 
@@ -407,7 +411,7 @@ export const createAssetVulnerabilityController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getAssetRiskController = async (req, res, next) => {
+export const getAssetRiskController = async (req: any, res: any, next: any) => {
   try {
     const companyId = req.user.companyId
     const assetId = parseInt(req.params.id)

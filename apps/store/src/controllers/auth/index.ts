@@ -1,13 +1,22 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
 import { throwHTTPError, throwUnauthorizedError } from '@/common/errors'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { UNAUTHORIZED } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/passwords' or it... Remove this comment to see the full error message
 import { passwordsMatch } from '@/common/auth/passwords'
 
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/sha512' or its c... Remove this comment to see the full error message
 import { hashSync, genSaltSync } from '@/common/auth/sha512'
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/passwords' or it... Remove this comment to see the full error message
 import { createPasswordHash } from '@/common/auth/passwords'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
 import { generateJWTToken, verifyToken, TOKEN_TYPE } from '@/common/auth/jwt'
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken'
+// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
 import env from '@/config/env'
 import {
   loginModel,
@@ -18,6 +27,7 @@ import {
   updateResetPasswordUsingToken,
   isValidSessionRefreshToken,
   refreshAccessToken,
+// @ts-expect-error TS(2307): Cannot find module '@/models/auth' or its correspo... Remove this comment to see the full error message
 } from '@/models/auth'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
@@ -31,12 +41,12 @@ const createJwtProvider = () => {
     verifyJWTToken: jwt.verify,
     env,
     logger: console,
-    getTokenSessionModel: (token, type) =>
+    getTokenSessionModel: (token: any, type: any) =>
       getTokenSessionModel(dbProvider, token, type),
-  }
+  };
 }
 
-export const jwtVerify = async (req, _res, next) => {
+export const jwtVerify = async (req: any, _res: any, next: any) => {
   try {
     const authHeader = req.headers['authorization']
     if (!authHeader) {
@@ -68,7 +78,7 @@ export const jwtVerify = async (req, _res, next) => {
 const createLoginModelProvider = () => {
   const { access, refresh } = env.jwt
 
-  const passMatches = (password, hash, salt) =>
+  const passMatches = (password: any, hash: any, salt: any) =>
     passwordsMatch(
       {
         hashSync,
@@ -77,30 +87,28 @@ const createLoginModelProvider = () => {
       hash,
       salt
     )
-  const generateAccessToken = (payload) =>
-    generateJWTToken(
-      jwt.sign,
-      {
-        secret: access.secret,
-        expiresIn: access.life,
-        audience: access.audience,
-        issuer: access.issuer,
-        type: access.type,
-      },
-      payload
-    )
-  const generateRefreshToken = (payload) =>
-    generateJWTToken(
-      jwt.sign,
-      {
-        secret: refresh.secret,
-        expiresIn: refresh.life,
-        audience: refresh.audience,
-        issuer: refresh.issuer,
-        type: refresh.type,
-      },
-      payload
-    )
+  const generateAccessToken = (payload: any) => generateJWTToken(
+    jwt.sign,
+    {
+      secret: access.secret,
+      expiresIn: access.life,
+      audience: access.audience,
+      issuer: access.issuer,
+      type: access.type,
+    },
+    payload
+  )
+  const generateRefreshToken = (payload: any) => generateJWTToken(
+    jwt.sign,
+    {
+      secret: refresh.secret,
+      expiresIn: refresh.life,
+      audience: refresh.audience,
+      issuer: refresh.issuer,
+      type: refresh.type,
+    },
+    payload
+  )
   return {
     knex,
     logger: console,
@@ -111,7 +119,7 @@ const createLoginModelProvider = () => {
   }
 }
 
-export const loginController = async (req, res, next) => {
+export const loginController = async (req: any, res: any, next: any) => {
   try {
     const provider = createLoginModelProvider()
     const {
@@ -142,7 +150,7 @@ export const loginController = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const refreshAccessTokenController = async (req, res, next) => {
+export const refreshAccessTokenController = async (req: any, res: any, next: any) => {
   try {
     /**
      * @type {string | undefined}
@@ -188,7 +196,7 @@ export const refreshAccessTokenController = async (req, res, next) => {
   }
 }
 
-export const logoutController = async (req, res, next) => {
+export const logoutController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
       knex,
@@ -204,7 +212,7 @@ export const logoutController = async (req, res, next) => {
   }
 }
 
-export const verifyAssetPermissionController = async (req, res, next) => {
+export const verifyAssetPermissionController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await verifyAssetPermissionModel(
       req.user,
@@ -221,40 +229,38 @@ export const verifyAssetPermissionController = async (req, res, next) => {
     next(error)
   }
 }
-export const sendResetMailPassword = async (req, res) => {
+export const sendResetMailPassword = async (req: any, res: any) => {
   if (!req.body.username) res.sendStatus(401)
   else {
     const dbProvider = {
       knex,
       logger: console,
-      createPasswordHash: (password) =>
-        createPasswordHash(
-          {
-            genSaltSync,
-            hashSync,
-          },
-          password
-        ),
+      createPasswordHash: (password: any) => createPasswordHash(
+        {
+          genSaltSync,
+          hashSync,
+        },
+        password
+      ),
     }
     const response = await getResetPasswordToken(dbProvider, req.body)
     res.send(response)
   }
 }
-export const updateResetPasswordByToken = async (req, res) => {
+export const updateResetPasswordByToken = async (req: any, res: any) => {
   if (!req.body.password || !req.body.token) res.sendStatus(401)
   else {
     const dbProvider = {
       knex,
       logger: console,
-      createPasswordHash: (password) =>
-        createPasswordHash(
-          {
-            genSaltSync,
-            hashSync,
-          },
-          password
-        ),
-      passwordsMatch: (password, hash, salt) =>
+      createPasswordHash: (password: any) => createPasswordHash(
+        {
+          genSaltSync,
+          hashSync,
+        },
+        password
+      ),
+      passwordsMatch: (password: any, hash: any, salt: any) =>
         passwordsMatch(
           {
             hashSync,
@@ -270,7 +276,7 @@ export const updateResetPasswordByToken = async (req, res) => {
   }
 }
 
-export const isAuthorizedController = async (req, res, next) => {
+export const isAuthorizedController = async (req: any, res: any, next: any) => {
   try {
     res.status(201).send({ isAuthorized: true })
   } catch (error) {

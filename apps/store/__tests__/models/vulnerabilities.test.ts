@@ -4,11 +4,14 @@ import { prismaMock } from '../mockPrisma'
 import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
+// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
 } from '@/models/vulnerabilities'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR } from '@/common/constants'
 
 describe('getAssetVulnerabilitiesCountBySeverity', () => {
   it('Should return model error if prisma throw error', async () => {
+    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.vulnerability_asset.findMany.mockRejectedValue(
       new Error('error')
     )
@@ -18,6 +21,7 @@ describe('getAssetVulnerabilitiesCountBySeverity', () => {
   })
 
   it('should return the count of vulnerabilties by severity in vulnerabilitiesCount property', async () => {
+    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
     prismaMock.vulnerability_asset.findMany.mockResolvedValue([
       { cvss: { score: 5 }, severity: null },
       { cvss: { score: 5.4 }, severity: null },

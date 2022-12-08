@@ -1,5 +1,7 @@
 // @ts-check
+// @ts-expect-error TS(2307): Cannot find module '__tests__/mockPrisma' or its c... Remove this comment to see the full error message
 import { prismaMock } from '__tests__/mockPrisma'
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
 import request from 'supertest'
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
@@ -129,16 +131,16 @@ describe('/reset-password', () => {
       .send({
         username: 'test@x-rator.com',
       })
-      .then((response) => {
+      .then((response: any) => {
         expect(response.statusCode).toBe(200)
-      })
+      });
   })
   it(' POST / without email should return 401', () => {
     return request(app)
       .post('/reset-password')
-      .then((response) => {
+      .then((response: any) => {
         expect(response.statusCode).toBe(401)
-      })
+      });
   })
   it(' PATCH / should return 200', async () => {
     mockKnexWithFinalValue([
@@ -153,8 +155,8 @@ describe('/reset-password', () => {
   it(' PATCH / without email and token should return 401', () => {
     return request(app)
       .patch('/reset-password')
-      .then((response) => {
+      .then((response: any) => {
         expect(response.statusCode).toBe(401)
-      })
+      });
   })
 })

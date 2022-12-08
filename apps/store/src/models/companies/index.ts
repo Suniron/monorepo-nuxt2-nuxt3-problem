@@ -5,16 +5,20 @@ import {
   NOT_FOUND,
   SUCCESS,
   VALIDATION_ERROR,
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 } from '@/common/constants'
+// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
 import prismaClient from '@/prismaClient'
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
 import {
   convertBase64ImageToBuffer,
   convertBufferToBase64Image,
   isValidBase64Image,
+// @ts-expect-error TS(2307): Cannot find module '@/utils/image.utils' or its co... Remove this comment to see the full error message
 } from '@/utils/image.utils'
 
-export const searchCompanyModel = async (params) => {
+export const searchCompanyModel = async (params: any) => {
   try {
     const query = knex.select('id', 'name').from('company')
 
@@ -46,7 +50,7 @@ export const searchCompanyModel = async (params) => {
   }
 }
 
-export const createCompanyModel = async (params) => {
+export const createCompanyModel = async (params: any) => {
   try {
     const { name } = params
     const [{ id }] = await knex('company').insert({ name }).returning('id')
@@ -65,7 +69,9 @@ export const createCompanyModel = async (params) => {
  */
 export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
   if (
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     !loggedUserInfo.companyId ||
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     typeof loggedUserInfo.companyId !== 'number'
   ) {
     return { error: MODEL_ERROR }
@@ -75,6 +81,7 @@ export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
     const [{ base64_logo }] = await knex
       .select('base64_logo')
       .from('company')
+      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
       .where('id', loggedUserInfo.companyId)
 
     return base64_logo
@@ -93,7 +100,7 @@ export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
  * @returns {Promise<{error?: string, status?: string}>}
  */
 
-export const updateCompanyLogoModel = async (loggedUserInfo, logo) => {
+export const updateCompanyLogoModel = async (loggedUserInfo: any, logo: any) => {
   if (
     !loggedUserInfo.companyId ||
     typeof loggedUserInfo.companyId !== 'number'
@@ -132,7 +139,9 @@ export const updateCompanyLogoModel = async (loggedUserInfo, logo) => {
  */
 export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
   if (
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     !loggedUserInfo.companyId ||
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     typeof loggedUserInfo.companyId !== 'number'
   ) {
     return { error: MODEL_ERROR }
@@ -141,6 +150,7 @@ export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
   try {
     await knex('company')
       .update('base64_logo', null)
+      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
       .where('id', loggedUserInfo.companyId)
     return { status: SUCCESS }
   } catch (error) {
@@ -158,9 +168,10 @@ export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
    @returns {Promise<{error?: string, status?: string}>}
 */
 
-export const updateCompanyModel = async (loggedUserInfo = {}, content) => {
+export const updateCompanyModel = async (loggedUserInfo = {}, content: any) => {
   try {
     const { selectedDomain } = content
+    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
     const { companyId = null } = loggedUserInfo
     // looking if the company ID really exists.
     const isCompanyFound = await prismaClient.company.findFirst({
@@ -203,7 +214,7 @@ export const updateCompanyModel = async (loggedUserInfo = {}, content) => {
  * @param {Express.LoggedUser} loggedUserInfo
  * @returns {Promise<{error: string} | {globalScore: number | null}>}
  */
-export const getCompanyRiskModel = async (loggedUserInfo) => {
+export const getCompanyRiskModel = async (loggedUserInfo: any) => {
   try {
     const { companyId } = loggedUserInfo
 
@@ -230,9 +241,10 @@ export const getCompanyRiskModel = async (loggedUserInfo) => {
       globalScore: null,
     }
     if (businessMissionsScores) {
+      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       data.globalScore =
         businessMissionsScores.reduce(
-          (acc, score) => acc + (score.compound_score ?? 0),
+          (acc: any, score: any) => acc + (score.compound_score ?? 0),
           0
         ) / businessMissionsScores.length
     }

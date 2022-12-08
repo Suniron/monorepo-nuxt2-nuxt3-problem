@@ -1,7 +1,9 @@
+// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
 import { knex } from '@/common/db'
+// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
 
-export const updateOrCreatePortModel = async (tx, ipId, params) => {
+export const updateOrCreatePortModel = async (tx: any, ipId: any, params: any) => {
   try {
     const [portExist] = await tx
       .select()
@@ -21,7 +23,7 @@ export const updateOrCreatePortModel = async (tx, ipId, params) => {
   }
 }
 
-export const createPortModel = async (tx, ipId, params) => {
+export const createPortModel = async (tx: any, ipId: any, params: any) => {
   try {
     const {
       cpe_id = knex.raw('NULL'),
@@ -45,7 +47,7 @@ export const createPortModel = async (tx, ipId, params) => {
           detail,
           status,
         })
-    ).map((e) => e.id)
+    ).map((e: any) => e.id)
     return portId
   } catch (error) {
     console.error(error)
@@ -53,7 +55,7 @@ export const createPortModel = async (tx, ipId, params) => {
   }
 }
 
-export const updatePortModel = async (tx, portId, params) => {
+export const updatePortModel = async (tx: any, portId: any, params: any) => {
   try {
     const [portToUpdate] = await tx
       .select()
@@ -88,7 +90,7 @@ export const updatePortModel = async (tx, portId, params) => {
   }
 }
 
-export const deletePortModel = async (tx, portId) => {
+export const deletePortModel = async (tx: any, portId: any) => {
   try {
     const [portToUpdate] = await tx
       .select()
@@ -104,7 +106,7 @@ export const deletePortModel = async (tx, portId) => {
   }
 }
 
-export const searchPortModel = async (tx, params) => {
+export const searchPortModel = async (tx: any, params: any) => {
   try {
     const { ipId, companyId } = params
     const query = tx

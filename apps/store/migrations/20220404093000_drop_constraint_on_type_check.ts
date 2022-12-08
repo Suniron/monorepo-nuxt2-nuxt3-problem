@@ -1,4 +1,4 @@
-exports.up = (knex) => {
+exports.up = (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }

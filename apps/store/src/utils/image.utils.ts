@@ -11,18 +11,17 @@ const BASE64_IMAGE_VALIDATION_REGEX = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)
  * @param {string} base64Image
  * @returns {Buffer}
  */
-export const convertBase64ImageToBuffer = (base64Image) =>
-  Buffer.from(
-    base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, ''),
-    'base64'
-  )
+export const convertBase64ImageToBuffer = (base64Image: any) => Buffer.from(
+  base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, ''),
+  'base64'
+)
 
 /**
  * Return base64 image from buffer, ready to put in HTML img tag (for example).
  * @param {Buffer} buffer
  * @returns {string}
  */
-export const convertBufferToBase64Image = (buffer) => {
+export const convertBufferToBase64Image = (buffer: any) => {
   const base64Image = buffer.toString('base64')
 
   if (base64Image.startsWith(BASE64_PREFIX)) {
@@ -45,7 +44,7 @@ export const convertBufferToBase64Image = (buffer) => {
  * @param {string} base64Image
  * @returns {boolean}
  */
-export const isValidBase64Image = (base64Image) => {
+export const isValidBase64Image = (base64Image: any) => {
   return BASE64_IMAGE_VALIDATION_REGEX.test(
     base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, '')
   )
@@ -59,7 +58,7 @@ export const isValidBase64Image = (base64Image) => {
  * @param {string} base64Image
  * @returns {SupportedImageMimeType}
  */
-function getImageMimeType(base64Image) {
+function getImageMimeType(base64Image: any) {
   /**
    * @type {{[key in SupportedImageMimeType]: string[]}}
    */
@@ -74,8 +73,9 @@ function getImageMimeType(base64Image) {
   const hex = getImageAsHex(base64Image)
 
   for (const mimeType in imageMimeTypes) {
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const fileHeaders = imageMimeTypes[mimeType]
-    const doesTypeMatch = fileHeaders.find((header) => {
+    const doesTypeMatch = fileHeaders.find((header: any) => {
       return hex.toLowerCase().startsWith(header.toLowerCase())
     })
     if (doesTypeMatch) {
@@ -88,6 +88,6 @@ function getImageMimeType(base64Image) {
  * @param {string} base64Image
  * @returns {string}
  */
-function getImageAsHex(base64Image) {
+function getImageAsHex(base64Image: any) {
   return Buffer.from(base64Image, 'base64').toString('hex')
 }

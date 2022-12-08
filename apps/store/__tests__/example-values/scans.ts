@@ -330,7 +330,7 @@ export const probe = {
   url: null,
   info: null,
 }
-export function createScanContent(howManyType) {
+export function createScanContent(howManyType: any) {
   let typeBasedOnArg = []
   for (let i = 0; i < howManyType; i++) {
     typeBasedOnArg.push(`test${i}`)

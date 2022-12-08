@@ -3,7 +3,7 @@
  *
  * @param {import('knex').Knex} knex
  */
-exports.up = async (knex) => {
+exports.up = async (knex: any) => {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
@@ -26,6 +26,7 @@ exports.up = async (knex) => {
  *
  * @param {import('knex').Knex} knex
  */
+// @ts-expect-error TS(7006): Parameter 'knex' implicitly has an 'any' type.
 exports.down = async (knex) => {
   // NEW TABLES
   await knex.raw('DROP TABLE IF EXISTS scan_label CASCADE;')
