@@ -80,7 +80,7 @@ api-create-recette-image:
     - docker push $DOCKER_REGISTRY/test-xrator_api:rec # Push Docker image to "rec" tag
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
-    - changes:
+      changes:
       - apps/api/**/*
       - .gitlab-ci.yml
 
@@ -98,7 +98,7 @@ api-create-prerelease-image:
     - docker push $DOCKER_REGISTRY/test-xrator_api:pre # Push Docker image to "pre" tag
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-    - changes:
+      changes:
       - apps/api/**/*
       - .gitlab-ci.yml
 
@@ -115,7 +115,7 @@ api-create-prod-image:
     - docker push $DOCKER_REGISTRY/test-xrator_api # Push Docker image to "latest" tag
   rules:
     - if: $CI_COMMIT_TAG
-    - changes:
+      changes:
       - apps/api/**/*
       - .gitlab-ci.yml
 
@@ -136,7 +136,7 @@ api-start-job:
   rules:
     # Should be run after push on develop
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-    - changes:
+      changes:
       - apps/api/**/*
       - .gitlab-ci.yml
 
@@ -156,7 +156,7 @@ api-start-prerelease:
   rules:
     # Should be run after push on develop
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-    - changes:
+      changes:
       - apps/api/**/*
       - .gitlab-ci.yml
 
@@ -194,7 +194,7 @@ api-start-prerelease:
 #     - echo "Tests completed"
 #   rules:
 #     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -211,7 +211,7 @@ api-start-prerelease:
 #     - echo "Code lint finished"
 #   rules:
 #     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -229,7 +229,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_ui:rec # Push Docker image to "rec" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -247,7 +247,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_ui:pre # Push Docker image to "pre" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -264,7 +264,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_ui # Push Docker image to "latest" tag
 #   rules:
 #     - if: $CI_COMMIT_TAG
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -285,7 +285,7 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
        
@@ -305,7 +305,7 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/web/**/*
 #       - .gitlab-ci.yml
 
@@ -349,7 +349,7 @@ api-start-prerelease:
 #     - echo "Tests completed"
 #   rules:
 #     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -367,7 +367,7 @@ api-start-prerelease:
 #     - echo "Code lint finished"
 #   rules:
 #     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -386,7 +386,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_store:rec # Push Docker image to "rec" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -405,7 +405,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_store:pre # Push Docker image to "pre" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -423,7 +423,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_store # Push Docker image to "latest" tag
 #   rules:
 #     - if: $CI_COMMIT_TAG
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -446,7 +446,7 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -471,7 +471,7 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/store/**/*
 #       - .gitlab-ci.yml
 
@@ -495,7 +495,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_db:rec # Push Docker image to "rec" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/db/**/*
 #       - .gitlab-ci.yml
 
@@ -512,7 +512,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_db:pre # Push Docker image to "pre" tag
 #   rules:
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/db/**/*
 #       - .gitlab-ci.yml
 
@@ -528,7 +528,7 @@ api-start-prerelease:
 #     - docker push $DOCKER_REGISTRY/test-xrator_db # Push Docker image to "latest" tag
 #   rules:
 #     - if: $CI_COMMIT_TAG
-#     - changes:
+#       changes:
 #       - apps/db/**/*
 #       - .gitlab-ci.yml
 
@@ -549,7 +549,7 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#     - changes:
+#       changes:
 #       - apps/db/**/*
 #       - .gitlab-ci.yml
 
@@ -572,6 +572,6 @@ api-start-prerelease:
 #   rules:
 #     # Should be run after push on develop
 #     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#     - changes:
+#       changes:
 #       - apps/db/**/*
 #       - .gitlab-ci.yml
