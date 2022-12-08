@@ -19,6 +19,7 @@
     "prisma:generate": "prisma generate",
     "start": "turbo run start",
     "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
+    "start:docker:db": "docker compose -f docker-compose.dev.yml up -d xrator_db",
     "test": "turbo run test"
   },
   "devDependencies": {
