@@ -4,11 +4,12 @@
   "scripts": {
     "import-demo": "NODE_ENV=development node import_demo.js",
     "prestart": "node ./out/prepare.js",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf out",
     "dev": "babel-node src/prepare.js && nodemon",
     "dev:docker": "pnpm install --frozen-lockfile && pnpm dev",
     "build": "node ./build.js && node ./build-seeds.js",
     "start": "node ./out/app.js",
-    "test": "cross-env NODE_ENV=test JWT_REFRESH_LIFE_MS=123456789 jest --detectOpenHandles",
+    "test": "NODE_ENV=test JWT_REFRESH_LIFE_MS=123456789 jest -i",
     "lint": "eslint --ext .js . ",
     "lint:fix": "eslint --fix --ext .js . ",
     "db:truncate": "babel-node prisma/truncateAllDatabase.js",
@@ -64,20 +65,18 @@
     "@babel/eslint-parser": "^7.17.0",
     "@babel/node": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
-    "@types/jest": "^28.1.4",
-    "@typescript-eslint/eslint-plugin": "^5.30.6",
-    "@typescript-eslint/parser": "^5.30.6",
-    "cross-env": "^7.0.3",
+    "@types/jest": "^29.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "eslint": "^8.20.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "jest": "^28.1.2",
-    "jest-html-reporter": "^3.4.2",
-    "jest-mock-extended": "^2.0.4",
+    "eslint-config-custom": "workspace:*",
+    "jest-presets": "*",
+    "jest": "^29.3.1",
+    "jest-mock-extended": "^3.0.1",
     "nodemon": "^2.0.7",
     "prettier": "2.2.1",
     "prisma": "^4.1.0",
-    "supertest": "^6.2.2",
+    "supertest": "^6.3.3",
     "typescript": "^4.7.4"
   },
   "_moduleAliases": {
@@ -86,5 +85,8 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "packageManager": "pnpm@7.14.2"
+  "packageManager": "pnpm@7.14.2",
+  "jest": {
+    "preset": "jest-presets/jest/node"
+  }
 }

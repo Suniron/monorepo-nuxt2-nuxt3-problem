@@ -5,11 +5,14 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".out/**", ".nuxt/**"]
     },
-    "lint": {
-      "outputs": []
+    "clean": {
+      "cache": false
     },
     "dev": {
       "cache": false
+    },
+    "lint": {
+      "outputs": []
     },
     "test": {
       "dependsOn": ["^build"],

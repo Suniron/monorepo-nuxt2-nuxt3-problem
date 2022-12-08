@@ -1,5 +1,5 @@
 // @ts-check
-import { prismaMock } from '@/../test/mockPrisma'
+import { prismaMock } from '__tests__/mockPrisma'
 import request from 'supertest'
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
