@@ -11,7 +11,7 @@ stages:
     - corepack enable
     - pnpm config set store-dir .pnpm-store
     - pnpm install --frozen-lockfile
-    - pnpm prisma generate
+    - npx prisma generate
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
@@ -24,16 +24,13 @@ stages:
     - 'echo "App version: $VERSION"'
     - node -v
     - pnpm -v
-    
-# # =========
-# # =========
-# # == API ==
-# # =========
-# # =========
 
-.move-api:
-  before_script:
-    - cd apps/api
+
+# # ============
+# # ============
+# # == COMMON ==
+# # ============
+# # ============
 
 unit-test-job:
   extends: 
@@ -43,9 +40,7 @@ unit-test-job:
   tags:
     - validation
   script:
-    - echo "Running unit tests..."
     - pnpm test
-    - echo "Tests completed"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
 
@@ -57,11 +52,20 @@ lint-test-job:
   tags:
     - validation
   script:
-    - echo "Linting code..."
-    - npm run lint
-    - echo "Code lint finished"
+    - pnpm lint
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' # Should only be run in Merge Requests
+
+
+# # =========
+# # =========
+# # == API ==
+# # =========
+# # =========
+
+.move-api:
+  before_script:
+    - cd apps/api
 
 api-create-recette-image:
   extends: 
