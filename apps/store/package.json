@@ -19,6 +19,7 @@
     "prisma:pull": "prisma db pull",
     "prisma:generate": "prisma generate",
     "prisma:update-schema": "prisma db pull && prisma generate",
+    "postinstall": "prisma generate",
     "seed:reset": "babel-node prisma/resetSeeders.js",
     "compute-risks": "babel-node src/tasks/ComputeRisks.js"
   },
