@@ -1,3 +1,4 @@
+import type { NextFunction, Request, Response } from 'express'
 import { throwHTTPError } from '../../common/errors/'
 import {
   createRemediationProjectsModel,
@@ -12,12 +13,8 @@ import {
 
 } from '../../models/remediationProjects'
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-export const getRemediationProjectsController = async (req: any, res: any, next: any) => {
+
+export const getRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getRemediationProjectsModel(
       Number(req.params.id),
@@ -34,11 +31,7 @@ export const getRemediationProjectsController = async (req: any, res: any, next:
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const getRemediationProjectsSummaryController = async (
   req: any,
   res: any,
@@ -63,12 +56,8 @@ export const getRemediationProjectsSummaryController = async (
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-export const getRemediationProjectsScopeController = async (req: any, res: any, next: any) => {
+
+export const getRemediationProjectsScopeController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getRemediationProjectsScopeModel(
       Number(req.params.id),
@@ -85,11 +74,7 @@ export const getRemediationProjectsScopeController = async (req: any, res: any, 
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const getRemediationProjectStatusHistoryController = async (
   req: any,
   res: any,
@@ -111,12 +96,8 @@ export const getRemediationProjectStatusHistoryController = async (
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-export const updateRemediationProjectsController = async (req: any, res: any, next: any) => {
+
+export const updateRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await updateRemediationProjectsModel(
       Number(req.params.id),
@@ -126,7 +107,7 @@ export const updateRemediationProjectsController = async (req: any, res: any, ne
 
     if ('error' in result)
       throwHTTPError(result.error)
-
+      
     res.send(result)
   }
   catch (error) {
@@ -134,12 +115,8 @@ export const updateRemediationProjectsController = async (req: any, res: any, ne
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-export const createRemediationProjectsController = async (req: any, res: any, next: any) => {
+
+export const createRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await createRemediationProjectsModel(req.body, req.user)
 
@@ -153,11 +130,7 @@ export const createRemediationProjectsController = async (req: any, res: any, ne
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const updateRemediationProjectScopeController = async (
   req: any,
   res: any,
@@ -180,11 +153,7 @@ export const updateRemediationProjectScopeController = async (
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const updateRemediationProjectScopeItemController = async (
   req: any,
   res: any,
@@ -208,11 +177,7 @@ export const updateRemediationProjectScopeItemController = async (
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const getRemediationProjectCommentsController = async (
   req: any,
   res: any,

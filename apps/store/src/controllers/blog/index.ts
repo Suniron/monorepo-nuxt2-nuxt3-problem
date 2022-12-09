@@ -5,11 +5,7 @@ import {
 
 } from '../../models/blog'
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const fetchPostsController = async (req: any, res: any, next: any) => {
   try {
     const { error, posts, total } = await fetchPostsModel(req.user)
@@ -22,11 +18,7 @@ export const fetchPostsController = async (req: any, res: any, next: any) => {
   }
 }
 
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 export const createRemediationProjectPostsController = async (
   req: any,
   res: any,

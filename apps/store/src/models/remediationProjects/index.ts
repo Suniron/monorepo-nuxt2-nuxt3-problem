@@ -2,6 +2,7 @@
  * @typedef {import('knex').Knex} Knex
  */
 
+import type { remediation_project } from '@prisma/client'
 import {
   MODEL_ERROR,
   SUCCESS,
@@ -18,6 +19,7 @@ import {
   isScopeOfRemediationProject,
 
 } from '../../../src/utils/remediationProject.utils'
+import type { RemediationProjectEdit } from '../../types/remediationProject'
 
 /**
  * @typedef {import('@/types/remediationProject').RemediationProjectSummary} RemediationProjectSummary
@@ -169,19 +171,12 @@ export const getRemediationProjectStatusHistoryModel = async (
   }
 }
 
-/**
- * @param {number} remediationProjectId
- * @param {import('@/types/remediationProject').RemediationProjectEdit} params
- * @param {*} loggedUserInfo
- * @returns {Promise<{status: string, data?: {status_history_id: number | null}} | {error: string}>}
- */
 export const updateRemediationProjectsModel = async (
-  remediationProjectId: any,
-  params: any,
-  loggedUserInfo = {},
+  remediationProjectId: remediation_project['id'],
+  params: RemediationProjectEdit,
+  { companyId: userCompanyId, id: userId }: { companyId: number; id: number },
 ) => {
   try {
-    const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
@@ -206,139 +201,143 @@ export const updateRemediationProjectsModel = async (
       .where('fk_project_id', remediationProjectId)
       .pluck('fk_user_id')
 
-    const isUserProjectOwner = projectOwnerId === loggedUserInfo.id
+    const isUserProjectOwner = projectOwnerId === userId
+    const isUserProjectAssignee = projectAssignees.includes(userId)
 
-    const isUserProjectAssignee = projectAssignees.includes(loggedUserInfo.id)
+    if (!isUserProjectOwner && !isUserProjectAssignee) {
+      return {
+        status: UNAUTHORIZED,
+      }
+    }
 
-    if (isUserProjectOwner || isUserProjectAssignee) {
-      // Create a knex transaction and update each fields if they exist in the params
-      await knex.transaction(async (trx: any) => {
-        // If the user is the project owner, edit all fields from the params:
-        if (isUserProjectOwner) {
-          await Promise.all(
-            [
-              {
-                fieldName: 'name',
-                paramName: 'project_name',
-              },
-              {
-                fieldName: 'description',
-                paramName: 'project_description',
-              },
-              {
-                fieldName: 'due_date',
-                paramName: 'due_date',
-              },
-              {
-                fieldName: 'fk_priority_id',
-                paramName: 'priority_id',
-              },
-              {
-                fieldName: 'fk_owner',
-                paramName: 'owner_id',
-              },
-            ].map((field) => {
-              if (
-                params[field.paramName] !== undefined
+    // Create a knex transaction and update each fields if they exist in the params
+    await knex.transaction(async (trx) => {
+      // If the user is the project owner, edit all fields from the params:
+      if (isUserProjectOwner) {
+        await Promise.all(
+          [
+            {
+              fieldName: 'name',
+              paramName: 'project_name',
+            },
+            {
+              fieldName: 'description',
+              paramName: 'project_description',
+            },
+            {
+              fieldName: 'due_date',
+              paramName: 'due_date',
+            },
+            {
+              fieldName: 'fk_priority_id',
+              paramName: 'priority_id',
+            },
+            {
+              fieldName: 'fk_owner',
+              paramName: 'owner_id',
+            },
+          ].map((field) => {
+            if (
+              params[field.paramName] !== undefined
                 && params[field.paramName] !== null
-              ) {
-                return trx
-                  .update(field.fieldName, params[field.paramName])
-                  .from('remediation_project')
-                  .where({ id: remediationProjectId })
-              }
-            }),
+            ) {
+              return trx
+                .update(field.fieldName, params[field.paramName])
+                .from('remediation_project')
+                .where({ id: remediationProjectId })
+            }
+          }),
+        )
+
+        // Update project assignees, if necessary
+        if (params.assignees) {
+          await trx('remediation_project_assignee')
+            .where('fk_project_id', remediationProjectId)
+            .delete()
+
+          await trx('remediation_project_assignee').insert(
+            params.assignees.map((userId: any) => ({
+              fk_project_id: remediationProjectId,
+              fk_user_id: userId,
+            })),
           )
-
-          // Update project assignees, if necessary
-          if (params.assignees) {
-            await trx('remediation_project_assignee')
-              .where('fk_project_id', remediationProjectId)
-              .delete()
-
-            await trx('remediation_project_assignee').insert(
-              params.assignees.map((userId: any) => ({
-                fk_project_id: remediationProjectId,
-                fk_user_id: userId,
-              })),
-            )
-          }
         }
+      }
 
-        /**
+      /**
          * Whether or not the user is a project owner or assignee, check if the params contain the status_id field
          */
-        if (params.status_id !== undefined && params.status_id !== null) {
-          /**
+      if (params.status_id !== undefined && params.status_id !== null) {
+        /**
            * @type {{
            *  transitionName: import('@/types/projectStatusWorkflow').TransitionNames
            * }}
            */
-          const transitionResult = await knex
-            .select({
-              transitionName: 'psw.transition',
-            })
-            .from('remediation_project_status_history')
-            .innerJoin(
-              { psw: 'project_status_workflow' },
-              'psw.fk_from_status_id',
-              'remediation_project_status_history.fk_status_id',
-            )
+        const transitionResult = await knex
+          .select({
+            transitionName: 'psw.transition',
+          })
+          .from('remediation_project_status_history')
+          .innerJoin(
+            { psw: 'project_status_workflow' },
+            'psw.fk_from_status_id',
+            'remediation_project_status_history.fk_status_id',
+          )
+          .where('fk_project_id', remediationProjectId)
+          .andWhere('end_date', null)
+          .andWhere('psw.fk_to_status_id', params.status_id)
+          .first()
+
+        if (!transitionResult) {
+          result = MODEL_ERROR
+          return
+        }
+
+        const { transitionName } = transitionResult
+
+        let isUserAllowedToChangeStatus = isUserProjectOwner
+
+        // Using a switch is case (haha) we get more complex permission rules
+        switch (transitionName) {
+          case 'start':
+          case 'send_for_review':
+            isUserAllowedToChangeStatus ||= isUserProjectAssignee
+            break
+
+          default:
+            break
+        }
+
+        const now = new Date()
+
+        if (isUserAllowedToChangeStatus) {
+          await trx('remediation_project_status_history')
             .where('fk_project_id', remediationProjectId)
             .andWhere('end_date', null)
-            .andWhere('psw.fk_to_status_id', params.status_id)
-            .first()
+            .update({
+              end_date: now,
+            })
 
-          if (!transitionResult) {
-            result = MODEL_ERROR
-            return
-          }
+          const [{ id: statusHistoryId }] = await trx(
+            'remediation_project_status_history',
+          )
+            .insert({
+              fk_project_id: remediationProjectId,
+              fk_status_id: params.status_id,
 
-          const { transitionName } = transitionResult
+              fk_user_id: userId,
+              start_date: now,
+            })
+            .returning('id')
 
-          let isUserAllowedToChangeStatus = isUserProjectOwner
-
-          // Using a switch is case (haha) we get more complex permission rules
-          switch (transitionName) {
-            case 'start':
-            case 'send_for_review':
-              isUserAllowedToChangeStatus ||= isUserProjectAssignee
-              break
-
-            default:
-              break
-          }
-
-          const now = new Date()
-
-          if (isUserAllowedToChangeStatus) {
-            await trx('remediation_project_status_history')
-              .where('fk_project_id', remediationProjectId)
-              .andWhere('end_date', null)
-              .update({
-                end_date: now,
-              })
-
-            const [{ id: statusHistoryId }] = await trx(
-              'remediation_project_status_history',
-            )
-              .insert({
-                fk_project_id: remediationProjectId,
-                fk_status_id: params.status_id,
-
-                fk_user_id: loggedUserInfo.id,
-                start_date: now,
-              })
-              .returning('id')
-
-            returnValue.status_history_id = statusHistoryId
-          }
-          else {
-            result = UNAUTHORIZED
-          }
+          returnValue.status_history_id = statusHistoryId
         }
-        else if (
-          !isUserProjectOwner
+        else {
+          result = UNAUTHORIZED
+        }
+      }
+      else if (
+        !isUserProjectOwner
           /**
            * If the params do not contain the status_id field but contains any other field, send the unauthorized error
            */
@@ -348,19 +347,12 @@ export const updateRemediationProjectsModel = async (
             || params.priority_id
             || params.project_description
             || params.project_name)
-        ) {
-          result = UNAUTHORIZED
-        }
-      })
-    }
-    else {
-      result = UNAUTHORIZED
-    }
+      ) {
+        result = UNAUTHORIZED
+      }
+    })
 
-    if (result === SUCCESS)
-      return { data: returnValue, status: result }
-
-    return { status: result }
+    return { data: returnValue, status: result }
   }
   catch (error) {
     console.error(error)
