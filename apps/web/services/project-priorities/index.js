@@ -7,7 +7,7 @@
  */
 export const searchProjectPrioritiesService = async (axios) => {
   const {
-    data: { data }
+    data: { data },
   } = await axios.get('/projects/priorities/')
 
   return data

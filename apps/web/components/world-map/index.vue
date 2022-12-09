@@ -1,3 +1,45 @@
+<script>
+// @ts-check
+import { LMap, LTileLayer } from 'vue2-leaflet'
+import Buildings from './Buildings.vue'
+import AssetEditDrawer from '~/components/assets/asset-edit-drawer.vue'
+
+export default {
+  components: {
+    AssetEditDrawer,
+    Buildings,
+    LMap,
+    LTileLayer,
+  },
+  computed: {
+    /**
+     * @returns {boolean}
+     */
+    isAssetSelected() {
+      return this.selectedAssetId !== -1
+    }
+  },
+  data() {
+    return {
+      center: [30, 0],
+      mapLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      mapLayerAttribution:
+        '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      zoom: 3,
+      selectedAssetId: -1
+    }
+  },
+  methods: {
+    /**
+     * @param {number} assetId
+     */
+    updateSelectedAssetId(assetId) {
+      this.selectedAssetId = assetId
+    },
+  },
+}
+</script>
+
 <template>
   <v-card>
     <v-card-title>
@@ -28,48 +70,6 @@
     />
   </v-card>
 </template>
-
-<script>
-// @ts-check
-import { LMap, LTileLayer } from 'vue2-leaflet'
-import Buildings from './Buildings.vue'
-import AssetEditDrawer from '~/components/assets/asset-edit-drawer.vue'
-
-export default {
-  components: {
-    AssetEditDrawer,
-    LMap,
-    LTileLayer,
-    Buildings
-  },
-  data() {
-    return {
-      center: [30, 0],
-      mapLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      mapLayerAttribution:
-        '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      zoom: 3,
-      selectedAssetId: -1
-    }
-  },
-  computed: {
-    /**
-     * @returns {boolean}
-     */
-    isAssetSelected() {
-      return this.selectedAssetId !== -1
-    }
-  },
-  methods: {
-    /**
-     * @param {number} assetId
-     */
-    updateSelectedAssetId(assetId) {
-      this.selectedAssetId = assetId
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 #map {

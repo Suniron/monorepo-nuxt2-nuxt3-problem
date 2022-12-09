@@ -1,42 +1,7 @@
-<template>
-  <v-btn
-    @click="handleClick"
-    :title="businessImpact.name"
-    style="min-width: 0px"
-    class="p-1"
-    text
-  >
-    <div class="business-impact-btn-content">
-      <v-icon :color="iconColor">{{ iconName }}</v-icon>
-      <span v-if="!withoutText" class="text-capitalize">{{
-        businessImpact.name
-      }}</span>
-    </div>
-  </v-btn>
-</template>
-
 <script>
 /** @typedef {import("~/types/businessImpactAnalysis").BusinessImpact} BusinessImpact */
 
 export default {
-  props: {
-    /** @type {import('vue').PropOptions<BusinessImpact>} */
-    businessImpact: {
-      type: Object,
-      required: true
-    },
-    isSelected: {
-      type: Boolean,
-      required: true
-    },
-    /**
-     * If **true**, icon only will be shown
-     */
-    withoutText: {
-      type: Boolean,
-      default: false
-    }
-  },
   computed: {
     /**
      * Return icon name for this business impact
@@ -80,6 +45,24 @@ export default {
       return this.isSelected ? 'red' : 'grey'
     }
   },
+  props: {
+    /** @type {import('vue').PropOptions<BusinessImpact>} */
+    businessImpact: {
+      type: Object,
+      required: true
+    },
+    isSelected: {
+      type: Boolean,
+      required: true
+    },
+    /**
+     * If **true**, icon only will be shown
+     */
+    withoutText: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
     /**
      * Send an event to parent with Business Impact infos on click.
@@ -87,12 +70,31 @@ export default {
     handleClick() {
       this.$emit('impact-clicked', {
         ...this.businessImpact,
-        name: this.businessImpact.name
+        name: this.businessImpact.name,
       })
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-btn
+    :title="businessImpact.name"
+    style="min-width: 0px"
+    class="p-1"
+    text
+    @click="handleClick"
+  >
+    <div class="business-impact-btn-content">
+      <v-icon :color="iconColor">
+        {{ iconName }}
+      </v-icon>
+      <span v-if="!withoutText" class="text-capitalize">{{
+        businessImpact.name
+      }}</span>
+    </div>
+  </v-btn>
+</template>
 
 <style lang="scss" scoped>
 .v-btn {

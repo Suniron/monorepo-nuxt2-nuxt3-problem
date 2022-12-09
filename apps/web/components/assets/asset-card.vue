@@ -1,11 +1,50 @@
+<script>
+import AssetIcon from '~/components/assets/AssetIcon.vue'
+import SaveAssetModal from '~/components/assets/save-asset-modal'
+import RemoveAssetModal from '~/components/assets/remove-asset-modal'
+import AssetInfo from '~/components/assets/type/AssetInfo.vue'
+
+export default {
+  components: {
+    AssetIcon,
+    SaveAssetModal,
+    RemoveAssetModal,
+    AssetInfo
+  },
+  name: 'AssetCard',
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      isRemoveModalOpen: false,
+      isSaveModalOpen: false
+    }
+  },
+  methods: {
+    handleCardClicked() {
+      this.$router.push(
+        this.localePath({
+          name: 'assets-id',
+          params: { id: this.asset.id },
+        }),
+      )
+    },
+  },
+}
+</script>
+
 <template>
   <v-card
-    @click.exact="handleCardClicked"
+    v-test="`asset-list-card-${asset.id}`"
     class="asset-card"
-    v-test="'asset-list-card-' + asset.id"
+    @click.exact="handleCardClicked"
   >
     <v-dialog v-model="isSaveModalOpen" width="500">
-      <template #activator="{ on, attrs}">
+      <template #activator="{ on, attrs }">
         <v-btn class="edit-asset-btn" small icon v-bind="attrs" v-on="on">
           <v-icon>mdi-pen</v-icon>
         </v-btn>
@@ -22,7 +61,7 @@
     </v-dialog>
 
     <v-dialog v-model="isRemoveModalOpen" width="500">
-      <template #activator="{ on, attrs}">
+      <template #activator="{ on, attrs }">
         <v-btn class="remove-asset-btn" small icon v-bind="attrs" v-on="on">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -47,45 +86,6 @@
     </div>
   </v-card>
 </template>
-
-<script>
-import AssetIcon from '~/components/assets/AssetIcon.vue'
-import SaveAssetModal from '~/components/assets/save-asset-modal'
-import RemoveAssetModal from '~/components/assets/remove-asset-modal'
-import AssetInfo from '~/components/assets/type/AssetInfo.vue'
-
-export default {
-  name: 'AssetCard',
-  components: {
-    AssetIcon,
-    SaveAssetModal,
-    RemoveAssetModal,
-    AssetInfo
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isSaveModalOpen: false,
-      isRemoveModalOpen: false
-    }
-  },
-  methods: {
-    handleCardClicked() {
-      this.$router.push(
-        this.localePath({
-          name: 'assets-id',
-          params: { id: this.asset.id }
-        })
-      )
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .asset-card {

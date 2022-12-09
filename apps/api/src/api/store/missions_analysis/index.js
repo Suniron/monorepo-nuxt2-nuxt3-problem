@@ -1,9 +1,9 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
+import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 export const requestMissionAnalysisService = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -13,12 +13,13 @@ export const requestMissionAnalysisService = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data, error } = await axios.get('/missions_analysis/' + id, {
+    const { data, error } = await axios.get(`/missions_analysis/${id}`, {
       ...reqConfig,
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -26,7 +27,7 @@ export const requestMissionAnalysisService = async (
 export const requestBusinessImpactService = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -40,7 +41,8 @@ export const requestBusinessImpactService = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -50,7 +52,7 @@ export const requestUpdateBusinessImpactServiceIntoUnit = async (
   provider,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   const { fearedEventId } = query
@@ -64,10 +66,11 @@ export const requestUpdateBusinessImpactServiceIntoUnit = async (
     const { data } = await axios.patch(
       `/missions_analysis/${Number(fearedEventId)}/business_impact`,
       body,
-      reqConfig
+      reqConfig,
     )
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -76,7 +79,7 @@ export const requestUpdateBusinessImpactServiceIntoUnit = async (
 export const requestSeveritiesService = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -90,7 +93,8 @@ export const requestSeveritiesService = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -100,7 +104,7 @@ export const requestUpdateFearedEventSeverityService = async (
   provider,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   const { id } = query
@@ -114,10 +118,11 @@ export const requestUpdateFearedEventSeverityService = async (
     const { data } = await axios.patch(
       `/feared-events/${Number(id)}`,
       body,
-      reqConfig
+      reqConfig,
     )
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

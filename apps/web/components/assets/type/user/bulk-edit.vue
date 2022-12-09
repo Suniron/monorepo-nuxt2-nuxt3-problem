@@ -1,66 +1,6 @@
-<template>
-  <v-data-table
-    :headers="tableHeaders"
-    :items="details"
-    v-model="formData.selected"
-    class="elevation-1"
-    disable-pagination
-    hide-default-footer
-    show-select
-    @input="changed"
-  >
-    <template #[`body.prepend`]="{ headers }">
-      <tr>
-        <td v-for="(elt, i) in headers" :key="i">
-          <component
-            :is="elt.component"
-            v-model="formData[elt.vmodel]"
-            :items="eval(elt.items)"
-            :item-value="elt.itemValue"
-            :item-text="elt.itemText"
-            :creatable="elt.creatable"
-            :multiple="elt.multiple"
-            :rules="elt.rules"
-            chips
-            :placeholder="elt.placeHolder"
-            deletable-chips
-            @input="changed"
-          ></component>
-        </td>
-      </tr>
-    </template>
-    <template #[`item.groups`]="{ item }">
-      <v-chip
-        v-for="(elt, i) in item.groups"
-        :key="i"
-        style="margin: 2px;"
-        small
-        >{{ elt.name }}</v-chip
-      >
-    </template>
-    <template #[`item.tags`]="{ item }">
-      <v-chip
-        v-for="(elt, i) in item.tags"
-        :key="i"
-        style="margin: 2px;"
-        small
-        :color="elt.color"
-        >{{ elt.name }}</v-chip
-      >
-    </template>
-    <template #[`item.location`]="{ item }">
-      <v-chip
-        v-if="(elt = fetchRelations(item.relations, 'LOCATED_TO', false))"
-        style="margin: 2px;"
-        small
-        >{{ elt }}</v-chip
-      >
-    </template>
-  </v-data-table>
-</template>
 <script>
 /* eslint no-eval: 0 */
-import { VTextField, VSelect } from 'vuetify/lib'
+import { VSelect, VTextField } from 'vuetify/lib'
 import TagsMultiselect from '~/components/controls/tags-multiselect.vue'
 import GroupsMultiselect from '~/components/controls/groups-multiselect'
 
@@ -68,22 +8,10 @@ import { searchAssetsService } from '~/services/assets'
 
 export default {
   components: {
-    TagsMultiselect,
     GroupsMultiselect,
+    TagsMultiselect,
+    VSelect,
     VTextField,
-    VSelect
-  },
-  props: {
-    asset: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    details: {
-      type: Array,
-      required: true
-    }
   },
   data() {
     return {
@@ -176,10 +104,36 @@ export default {
       LOCATED_TO: []
     }
   },
+  props: {
+    asset: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    details: {
+      type: Array,
+      required: true
+    }
+  },
   created() {
     this.fetchAssetsRelation()
   },
   methods: {
+    changed() {
+      if (
+        this.isValidEmail(this.formData.mail) === true
+        && this.isValidPhone(this.formData.tel) === true
+      )
+        this.formData.isValid = true
+      else
+        this.formData.isValid = false
+
+      this.$emit('change', this.formData)
+    },
+    eval(str) {
+      return eval(str)
+    },
     async fetchAssetsRelation() {
       const serviceParams = {}
       serviceParams.types = ['BUILDING']
@@ -188,54 +142,106 @@ export default {
       this.assetsRelation = assets
       this.LOCATED_TO = this.selectAssets(['BUILDING'])
     },
-    selectAssets(types) {
-      const res = this.assetsRelation.filter((elt) => types.includes(elt.type))
-      return res
-    },
-    isValidPhone(phone) {
-      if (
-        !/^\+(\d){1,3} (\d){4,12}$/.test(phone) &&
-        phone !== null &&
-        phone !== ''
-      ) {
-        return 'Phone number must be valid.'
-      }
-      return true
-    },
-    isValidEmail(email) {
-      if (
-        !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          email
-        ) &&
-        email !== '' &&
-        email !== null
-      ) {
-        return 'E-mail must be valid.'
-      }
-      return true
-    },
     fetchRelations(relations, rel, multiple) {
       const result = relations.filter((elt) => {
         return elt.type === rel
       })
-      if (multiple && result.length > 0) return result
-      else if (!multiple && result.length === 1) return result[0].name
+      if (multiple && result.length > 0)
+        return result
+      else if (!multiple && result.length === 1)
+        return result[0].name
       else return multiple ? [] : null
     },
-    eval(str) {
-      return eval(str)
-    },
-    changed() {
+    isValidEmail(email) {
       if (
-        this.isValidEmail(this.formData.mail) === true &&
-        this.isValidPhone(this.formData.tel) === true
-      ) {
-        this.formData.isValid = true
-      } else {
-        this.formData.isValid = false
-      }
-      this.$emit('change', this.formData)
-    }
-  }
+        !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          email,
+        )
+        && email !== ''
+        && email !== null
+      )
+        return 'E-mail must be valid.'
+
+      return true
+    },
+    isValidPhone(phone) {
+      if (
+        !/^\+(\d){1,3} (\d){4,12}$/.test(phone)
+        && phone !== null
+        && phone !== ''
+      )
+        return 'Phone number must be valid.'
+
+      return true
+    },
+    selectAssets(types) {
+      const res = this.assetsRelation.filter(elt => types.includes(elt.type))
+      return res
+    },
+  },
 }
 </script>
+
+<template>
+  <v-data-table
+    v-model="formData.selected"
+    :headers="tableHeaders"
+    :items="details"
+    class="elevation-1"
+    disable-pagination
+    hide-default-footer
+    show-select
+    @input="changed"
+  >
+    <template #[`body.prepend`]="{ headers }">
+      <tr>
+        <td v-for="(elt, i) in headers" :key="i">
+          <component
+            :is="elt.component"
+            v-model="formData[elt.vmodel]"
+            :items="eval(elt.items)"
+            :item-value="elt.itemValue"
+            :item-text="elt.itemText"
+            :creatable="elt.creatable"
+            :multiple="elt.multiple"
+            :rules="elt.rules"
+            chips
+            :placeholder="elt.placeHolder"
+            deletable-chips
+            @input="changed"
+          />
+        </td>
+      </tr>
+    </template>
+    <template #[`item.groups`]="{ item }">
+      <v-chip
+        v-for="(elt, i) in item.groups"
+        :key="i"
+        style="margin: 2px;"
+        small
+      >
+        {{ elt.name }}
+      </v-chip>
+    </template>
+    <template #[`item.tags`]="{ item }">
+      <v-chip
+        v-for="(elt, i) in item.tags"
+        :key="i"
+        style="margin: 2px;"
+        small
+        :color="elt.color"
+      >
+        {{ elt.name }}
+      </v-chip>
+    </template>
+    <template #[`item.location`]="{ item }">
+      <v-chip
+        v-if="(elt = fetchRelations(item.relations, 'LOCATED_TO', false))"
+        style="margin: 2px;"
+        small
+      >
+        {{ elt }}
+      </v-chip>
+    </template>
+  </v-data-table>
+</template>

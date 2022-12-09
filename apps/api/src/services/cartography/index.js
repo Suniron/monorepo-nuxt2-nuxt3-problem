@@ -6,7 +6,8 @@ export const fetchCartographiesService = async (accessToken = '') => {
   try {
     const cy = await cartographiesAPIs.fetchCartographies(accessToken)
     return cy
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -15,31 +16,32 @@ export const fetchCartographyElementsService = async (id, accessToken = '') => {
   try {
     const formElts = (elt) => {
       const res = {
-        group: elt.group,
         data: {
           id: elt.elementId,
           name: elt.name,
         },
+        group: elt.group,
       }
       if (elt.group === 'nodes') {
         res.data = {
           ...res.data,
-          type:
-            elt.os?.toLowerCase() ||
-            elt.language?.toLowerCase() ||
-            elt.type.toLowerCase(),
-          parent: elt.parent,
           asset_id: elt.assetId,
+          parent: elt.parent,
+          type:
+            elt.os?.toLowerCase()
+            || elt.language?.toLowerCase()
+            || elt.type.toLowerCase(),
         }
         res.position = {
           x: elt.x || undefined,
           y: elt.y || undefined,
         }
-        res.classes =
-          elt.os?.toLowerCase() ||
-          elt.language?.toLowerCase() ||
-          elt.type.toLowerCase()
-      } else if (elt.group === 'edges') {
+        res.classes
+          = elt.os?.toLowerCase()
+          || elt.language?.toLowerCase()
+          || elt.type.toLowerCase()
+      }
+      else if (elt.group === 'edges') {
         res.data = {
           ...res.data,
           relation_id: elt.relationId,
@@ -52,10 +54,11 @@ export const fetchCartographyElementsService = async (id, accessToken = '') => {
     }
     const elts = await cartographiesAPIs.fetchCartographyElements(
       id,
-      accessToken
+      accessToken,
     )
     return { elements: elts.elements.map(formElts) }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('fetchCartographyElementsService')
     return createServiceError(error)
   }
@@ -64,11 +67,12 @@ export const fetchCartographyElementsService = async (id, accessToken = '') => {
 export const updateCartographyService = async (
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   try {
     return await cartographiesAPIs.updateCartography(id, params, accessToken)
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -77,7 +81,8 @@ export const createCartographyService = async (params, accessToken = '') => {
   try {
     const id = await cartographiesAPIs.createCartography(params, accessToken)
     return id
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -85,7 +90,8 @@ export const createCartographyService = async (params, accessToken = '') => {
 export const deleteCartographyService = async (id, accessToken = '') => {
   try {
     return await cartographiesAPIs.deleteCartography(id, accessToken)
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -93,15 +99,16 @@ export const deleteCartographyService = async (id, accessToken = '') => {
 export const deleteCartographyElementService = async (
   id,
   eid,
-  accessToken = ''
+  accessToken = '',
 ) => {
   try {
     return await cartographiesAPIs.deleteCartographyElement(
       id,
       eid,
-      accessToken
+      accessToken,
     )
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -109,16 +116,17 @@ export const deleteCartographyElementService = async (
 export const addCartographyElementService = async (
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   try {
     const cid = await cartographiesAPIs.addCartographyElement(
       id,
       params,
-      accessToken
+      accessToken,
     )
     return cid
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }
@@ -127,16 +135,17 @@ export const updateCartographyElementService = async (
   id,
   eid,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   try {
     return await cartographiesAPIs.updateCartographyElement(
       id,
       eid,
       params,
-      accessToken
+      accessToken,
     )
-  } catch (error) {
+  }
+  catch (error) {
     return createServiceError(error)
   }
 }

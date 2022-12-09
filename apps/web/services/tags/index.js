@@ -1,4 +1,4 @@
-const getEndpoint = (id) => (id ? '/tags/' + id : '/tags')
+const getEndpoint = id => (id ? `/tags/${id}` : '/tags')
 
 /**
  * @typedef Tag
@@ -42,9 +42,10 @@ export const searchTagByIdService = async (axios, id) => {
  */
 export const createTagService = async (axios, params) => {
   const { name, color } = params
-  if (!name) throw new Error('Param "name" required to create tag')
+  if (!name)
+    throw new Error('Param "name" required to create tag')
 
-  const bodyPayload = { name, color }
+  const bodyPayload = { color, name }
   const { data } = await axios.post(getEndpoint(), bodyPayload)
   return data.id
 }
@@ -57,8 +58,9 @@ export const createTagService = async (axios, params) => {
  * @returns {Promise<void>} Resolved promise if successful. Rejected promise if not.
  */
 export const patchTagService = async (axios, id, tagData) => {
-  if (!id) throw new Error('Param "id" required to delete tag')
-  const bodyPayload = { name: tagData.name, color: tagData.color }
+  if (!id)
+    throw new Error('Param "id" required to delete tag')
+  const bodyPayload = { color: tagData.color, name: tagData.name }
 
   await axios.patch(getEndpoint(id), bodyPayload)
 }
@@ -71,7 +73,8 @@ export const patchTagService = async (axios, id, tagData) => {
  * @returns {Promise<AxiosResponse<any>>} Resolved promise if successful. Rejected promise if not.
  */
 export const deleteTagService = async (axios, id) => {
-  if (!id) throw new Error('Param "id" required to delete tag')
+  if (!id)
+    throw new Error('Param "id" required to delete tag')
 
   return await axios.delete(getEndpoint(id))
 }

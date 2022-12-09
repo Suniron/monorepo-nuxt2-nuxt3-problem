@@ -15,9 +15,10 @@ export const searchCompaniesService = async (params, accessToken = '') => {
     total,
   } = await companiesAPIs.searchCompanies(params, accessToken)
 
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
 
-  const formatCompany = (cp) => ({
+  const formatCompany = cp => ({
     id: cp.id,
     name: cp.name,
   })
@@ -39,7 +40,8 @@ export const searchCompaniesService = async (params, accessToken = '') => {
  */
 export const createCompanyService = async (params, accessToken = '') => {
   const { error, id } = await companiesAPIs.createCompany(params, accessToken)
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
   return { id }
 }
 
@@ -52,9 +54,10 @@ export const createCompanyService = async (params, accessToken = '') => {
 export const searchCompanyLogoService = async (params, accessToken = '') => {
   const { error, logo } = await companiesAPIs.searchCompanyLogo(
     params,
-    accessToken
+    accessToken,
   )
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
   return { logo }
 }
 
@@ -67,9 +70,10 @@ export const searchCompanyLogoService = async (params, accessToken = '') => {
 export const updateCompanyLogoService = async (params, accessToken = '') => {
   const { error, status } = await companiesAPIs.updateCompanyLogo(
     params,
-    accessToken
+    accessToken,
   )
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
   return { status }
 }
 
@@ -82,17 +86,19 @@ export const updateCompanyLogoService = async (params, accessToken = '') => {
 export const deleteCompanyLogoService = async (params, accessToken = '') => {
   const { error, status } = await companiesAPIs.deleteCompanyLogo(
     params,
-    accessToken
+    accessToken,
   )
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
   return { status }
 }
 export const updateCompanyService = async (params, accessToken = '') => {
   const { error, status } = await companiesAPIs.updateCompany(
     params,
-    accessToken
+    accessToken,
   )
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
   return { status }
 }
 

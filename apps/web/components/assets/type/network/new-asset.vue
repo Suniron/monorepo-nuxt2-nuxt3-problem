@@ -1,3 +1,35 @@
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        network: this.asset?.network || null,
+        netmask: this.asset?.netmask || null,
+        gateway: this.asset?.gateway || null
+      }
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    },
+    quickedit: {
+      type: Boolean,
+      required: false
+    }
+  },
+  created() {
+    this.$emit('change', this.formData)
+  },
+  methods: {
+    changed() {
+      this.$emit('change', this.formData)
+    },
+  },
+}
+</script>
+
 <template>
   <div style="width: 100%;">
     <v-col cols="12">
@@ -29,34 +61,3 @@
     </v-col>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    quickedit: {
-      type: Boolean,
-      required: false
-    }
-  },
-  data() {
-    return {
-      formData: {
-        network: this.asset?.network || null,
-        netmask: this.asset?.netmask || null,
-        gateway: this.asset?.gateway || null
-      }
-    }
-  },
-  created() {
-    this.$emit('change', this.formData)
-  },
-  methods: {
-    changed() {
-      this.$emit('change', this.formData)
-    }
-  }
-}
-</script>

@@ -1,8 +1,8 @@
 import { throwHTTPError } from '@/common/errors'
 import {
-  searchTagsService,
   createTagService,
   deleteTagService,
+  searchTagsService,
 } from '@/services/tags'
 
 export const searchTagsController = async (req, res, next) => {
@@ -12,13 +12,15 @@ export const searchTagsController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send(tag || { tags, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -27,10 +29,12 @@ export const createTagController = async (req, res, next) => {
   try {
     const { error, id } = await createTagService(req.body, req.accessToken)
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(201).send({ id })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -39,13 +43,15 @@ export const deleteTagController = async (req, res, next) => {
   try {
     const { error, status } = await deleteTagService(
       req.params?.id,
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

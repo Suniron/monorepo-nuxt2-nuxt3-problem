@@ -1,8 +1,8 @@
 import express from 'express'
 import {
-  searchTagsController,
   createTagController,
   deleteTagController,
+  searchTagsController,
 } from '@/controllers/tags'
 import { passThroughController } from '@/controllers'
 

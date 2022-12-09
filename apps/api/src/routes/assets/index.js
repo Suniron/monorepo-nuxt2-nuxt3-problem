@@ -1,27 +1,27 @@
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  searchAssets,
   createAssetController,
+  createAssetVulnerabilityController,
   deleteAssetController,
-  updateAssetController,
-  searchAssetRevisionsController,
-  importCsvController,
-  updateAssetsBulkController,
   deleteAssetsBulkController,
   fetchAssetPortsController,
-  createAssetVulnerabilityController,
-  searchAssetsBelongingController,
   getAssetRiskController,
+  importCsvController,
+  searchAssetRevisionsController,
+  searchAssets,
+  searchAssetsBelongingController,
+  updateAssetController,
+  updateAssetsBulkController,
 } from '@/controllers/assets'
 import {
-  assetVulnerabilitiesController,
-  updateStatusController,
   addPostVulnerabilityAssetController,
+  assetVulnerabilitiesController,
+  deleteVulnerabilities,
   searchPostVulnerabilityAssetController,
   updatePortInVulnerabilities,
-  deleteVulnerabilities,
+  updateStatusController,
 } from '@/controllers/vulnerabilities'
-import { celebrate, Segments, Joi } from 'celebrate'
 import { passThroughController } from '@/controllers'
 
 const assetIdValidation = celebrate({
@@ -50,11 +50,11 @@ router.patch('/:id/vulnerabilities', createAssetVulnerabilityController)
 router.post('/:aid/vulnerabilities/:vid', updateStatusController)
 router.get(
   '/:aid/vulnerabilities/:vid/post',
-  searchPostVulnerabilityAssetController
+  searchPostVulnerabilityAssetController,
 )
 router.post(
   '/:aid/vulnerabilities/:vid/post',
-  addPostVulnerabilityAssetController
+  addPostVulnerabilityAssetController,
 )
 router.patch('/vulnerabilities_asset/:vastId', updatePortInVulnerabilities)
 

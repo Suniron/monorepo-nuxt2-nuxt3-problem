@@ -1,4 +1,4 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
+import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestSearchAssets = async (provider, params, accessToken) => {
@@ -22,25 +22,27 @@ export const requestSearchAssets = async (provider, params, accessToken) => {
     }
 
     // Asset by id
-    if (id) return { asset: (await axios.get('/assets/' + id, reqConfig)).data }
+    if (id)
+      return { asset: (await axios.get(`/assets/${id}`, reqConfig)).data }
 
     // Search assets
     const queryParams = {
+      groupIds,
       ids,
+      page,
+      pageSize,
       search,
       severities,
       tagIds,
-      groupIds,
       types,
-      page,
-      pageSize,
     }
     const { data } = await axios.get('/assets', {
       ...reqConfig,
       params: queryParams,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -51,14 +53,15 @@ export const requestCreateAsset = async (provider, params, accessToken) => {
 
   try {
     const { name, type, assetData } = params
-    const bodyPayload = { name, type, assetData }
+    const bodyPayload = { assetData, name, type }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
     return (await axios.post('/assets', bodyPayload, reqConfig)).data
-  } catch (error) {
+  }
+  catch (error) {
     if (error.response.data.error === 'DuplicateError')
       return error.response.data
     logger.error(error)
@@ -70,16 +73,18 @@ export const requestDeleteAsset = async (provider, id, accessToken) => {
   const { axios, logger } = provider
 
   try {
-    if (!id) return { error: VALIDATION_ERROR }
+    if (!id)
+      return { error: VALIDATION_ERROR }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
 
-    await axios.delete('/assets/' + id, reqConfig)
+    await axios.delete(`/assets/${id}`, reqConfig)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -91,17 +96,20 @@ export const requestUpdateAsset = async (provider, id, params, accessToken) => {
 
   try {
     const status = SUCCESS
-    if (!id) return { error: VALIDATION_ERROR }
-    if (!params || !Object.keys(params).length) return { status }
+    if (!id)
+      return { error: VALIDATION_ERROR }
+    if (!params || !Object.keys(params).length)
+      return { status }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
 
-    await axios.patch('/assets/' + id, params, reqConfig)
+    await axios.patch(`/assets/${id}`, params, reqConfig)
     return { status }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -112,21 +120,23 @@ export const requestCreateAssetVulnerability = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
     const status = SUCCESS
-    if (!id) return { error: VALIDATION_ERROR }
+    if (!id)
+      return { error: VALIDATION_ERROR }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
 
-    await axios.patch('/assets/' + id + '/vulnerabilities', params, reqConfig)
+    await axios.patch(`/assets/${id}/vulnerabilities`, params, reqConfig)
     return { status }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -136,13 +146,14 @@ export const requestCreateAssetVulnerability = async (
 export const requestUpdateAssetsBulk = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
 
   try {
     const status = SUCCESS
-    if (!params || !Object.keys(params).length) return { status }
+    if (!params || !Object.keys(params).length)
+      return { status }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -151,7 +162,8 @@ export const requestUpdateAssetsBulk = async (
 
     const { data } = await axios.patch('/assets/', params, reqConfig)
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -161,13 +173,14 @@ export const requestUpdateAssetsBulk = async (
 export const requestDeleteAssetsBulk = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
 
   try {
     const status = SUCCESS
-    if (!params || !Object.keys(params).length) return { status }
+    if (!params || !Object.keys(params).length)
+      return { status }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -175,7 +188,8 @@ export const requestDeleteAssetsBulk = async (
     }
     await axios.delete('/assets/', { ...reqConfig, data: params })
     return { status }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -186,14 +200,14 @@ export const requestSearchAssetVulnerabilities = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
     const queryParams = {
       search: params.search || undefined,
-      type: params.type || undefined,
       severities: params.severities || undefined,
+      type: params.type || undefined,
     }
     const reqConfig = {
       ...(accessToken && {
@@ -205,8 +219,9 @@ export const requestSearchAssetVulnerabilities = async (
       params: queryParams,
     })
     const { vulnerabilities, total } = data
-    return { vulnerabilities, total }
-  } catch (error) {
+    return { total, vulnerabilities }
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -217,14 +232,16 @@ export const requestUpdateStatus = async (
   aid,
   vid,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
 
   try {
     const status = SUCCESS
-    if (!aid || !vid) return { error: VALIDATION_ERROR }
-    if (!params || !Object.keys(params).length) return { status }
+    if (!aid || !vid)
+      return { error: VALIDATION_ERROR }
+    if (!params || !Object.keys(params).length)
+      return { status }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -232,12 +249,13 @@ export const requestUpdateStatus = async (
     }
 
     await axios.post(
-      '/assets/' + aid + '/vulnerabilities/' + vid,
+      `/assets/${aid}/vulnerabilities/${vid}`,
       params,
-      reqConfig
+      reqConfig,
     )
     return { status }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -249,14 +267,16 @@ export const requestAddPostVulnerabilityAsset = async (
   aid,
   vid,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
 
   try {
     const status = SUCCESS
-    if (!aid || !vid) return { error: VALIDATION_ERROR }
-    if (!params || !Object.keys(params).length) return { status }
+    if (!aid || !vid)
+      return { error: VALIDATION_ERROR }
+    if (!params || !Object.keys(params).length)
+      return { status }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -264,12 +284,13 @@ export const requestAddPostVulnerabilityAsset = async (
     }
 
     await axios.post(
-      '/assets/' + aid + '/vulnerabilities/' + vid + '/post',
+      `/assets/${aid}/vulnerabilities/${vid}/post`,
       params,
-      reqConfig
+      reqConfig,
     )
     return { status }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -280,13 +301,14 @@ export const requestSearchPostVulnerabilityAsset = async (
   provider,
   aid,
   vid,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
 
   try {
     const status = SUCCESS
-    if (!aid || !vid) return { error: VALIDATION_ERROR }
+    if (!aid || !vid)
+      return { error: VALIDATION_ERROR }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -294,12 +316,13 @@ export const requestSearchPostVulnerabilityAsset = async (
     }
 
     const { data } = await axios.get(
-      '/assets/' + aid + '/vulnerabilities/' + vid + '/post',
-      reqConfig
+      `/assets/${aid}/vulnerabilities/${vid}/post`,
+      reqConfig,
     )
     const { comments, total } = data
     return { comments, total }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -310,7 +333,7 @@ export const requestSearchAssetRevisions = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -322,13 +345,14 @@ export const requestSearchAssetRevisions = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data } = await axios.get('/assets/' + id + '/revisions', {
+    const { data } = await axios.get(`/assets/${id}/revisions`, {
       ...reqConfig,
       params: queryParams,
     })
     const { revisions, total } = data
     return { revisions, total }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -343,8 +367,9 @@ export const requestImportCsv = async (provider, params, accessToken) => {
       }),
     }
     const { data } = await axios.post('/assets/importCSV', params, reqConfig)
-    return { pass: data.pass, failed: data.failed }
-  } catch (error) {
+    return { failed: data.failed, pass: data.pass }
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -353,7 +378,7 @@ export const requestImportCsv = async (provider, params, accessToken) => {
 export const requestFetchAssetPorts = async (
   provider,
   assetId,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -362,9 +387,10 @@ export const requestFetchAssetPorts = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data } = await axios.get('/assets/' + assetId + '/ports', reqConfig)
+    const { data } = await axios.get(`/assets/${assetId}/ports`, reqConfig)
     return data.details
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -373,7 +399,7 @@ export const requestFetchAssetPorts = async (
 export const requestSearchAssetsBelonging = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -388,7 +414,8 @@ export const requestSearchAssetsBelonging = async (
     })
     const { assets, total } = data
     return { assets, total }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -405,7 +432,8 @@ export const requestGetAssetRisk = async (provider, assetId, accessToken) => {
     const { data } = await axios.get(`/assets/${assetId}/risk`, reqConfig)
 
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

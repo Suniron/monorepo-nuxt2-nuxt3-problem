@@ -1,4 +1,4 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
+import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const deleteIpStore = async (provider, params, accessToken) => {
@@ -10,10 +10,12 @@ export const deleteIpStore = async (provider, params, accessToken) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    if (!id) return createAPIError(error)
-    const res = await axios.delete('/ips/' + id, { ...reqConfig })
+    if (!id)
+      return createAPIError(error)
+    const res = await axios.delete(`/ips/${id}`, { ...reqConfig })
     return res.status === 204 ? { SUCCESS } : createAPIError(error)
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -27,10 +29,12 @@ export const updateIpStore = async (provider, body, accessToken, id) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    if (!id) return createAPIError(error)
-    const res = await axios.patch('/ips/' + id, body, reqConfig)
+    if (!id)
+      return createAPIError(error)
+    const res = await axios.patch(`/ips/${id}`, body, reqConfig)
     return res.status === 204 ? { SUCCESS } : createAPIError(error)
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -44,11 +48,13 @@ export const createIpStore = async (provider, body, accessToken, assetId) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    if (!assetId) return createAPIError(error)
-    const res = await axios.post('/ips/' + assetId, body, reqConfig)
+    if (!assetId)
+      return createAPIError(error)
+    const res = await axios.post(`/ips/${assetId}`, body, reqConfig)
     const ipId = res.data.ipId
     return res.status === 201 ? { ipId } : createAPIError(error)
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

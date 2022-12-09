@@ -1,30 +1,10 @@
-<template>
-  <div class="risk-score-bar d-flex justify-space-between px-1">
-    <p :style="getExtraLetterStyle('A')">A</p>
-    <p :style="getExtraLetterStyle('B')">B</p>
-    <p :style="getExtraLetterStyle('C')">C</p>
-    <p :style="getExtraLetterStyle('D')">D</p>
-    <p :style="getExtraLetterStyle('E')">E</p>
-    <p :style="getExtraLetterStyle('F')">F</p>
-  </div>
-</template>
-
 <script>
 // @ts-check
 
 // IMPORTANT NOTE: for now, it's only for super asset, not for server, web, user, ...
-import { riskScoreLetter, riskScoreColor, roundScore } from '~/utils/risk.utils'
+import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
 
 export default {
-  props: {
-    /**
-     * @type {import('vue').PropOptions<(import('~/types/asset').BelongedAsset)>}
-     */
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
   computed: {
     /**
      * @returns {number}
@@ -97,21 +77,52 @@ export default {
       )
     }
   },
+  props: {
+    /**
+     * @type {import('vue').PropOptions<(import('~/types/asset').BelongedAsset)>}
+     */
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
     /**
      * @param {"A" | "B" | "C" | "D" | "E" | "F"} letter
      * @returns {string}
      */
     getExtraLetterStyle(letter) {
-      if (letter !== this.riskScoreLetter) {
+      if (letter !== this.riskScoreLetter)
         return
-      }
 
       return `background-color: ${this.riskScoreColor}`
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="risk-score-bar d-flex justify-space-between px-1">
+    <p :style="getExtraLetterStyle('A')">
+      A
+    </p>
+    <p :style="getExtraLetterStyle('B')">
+      B
+    </p>
+    <p :style="getExtraLetterStyle('C')">
+      C
+    </p>
+    <p :style="getExtraLetterStyle('D')">
+      D
+    </p>
+    <p :style="getExtraLetterStyle('E')">
+      E
+    </p>
+    <p :style="getExtraLetterStyle('F')">
+      F
+    </p>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .risk-score-bar {

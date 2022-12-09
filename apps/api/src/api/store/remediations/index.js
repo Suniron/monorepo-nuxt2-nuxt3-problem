@@ -1,9 +1,9 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
+import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestGroupedRemediationsService = async (
   provider,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -16,7 +16,8 @@ export const requestGroupedRemediationsService = async (
       ...reqConfig,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

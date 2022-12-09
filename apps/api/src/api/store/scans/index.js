@@ -3,12 +3,12 @@ import { createAPIError } from '@/common/errors/api'
 export const searchScansStoreAPI = async (
   provider = {},
   params = {},
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
     const { sort = '-createdAt', page, pageSize } = params
-    const payload = { sort, page, pageSize }
+    const payload = { page, pageSize, sort }
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -22,7 +22,8 @@ export const searchScansStoreAPI = async (
 
     const { scans, total } = data
     return { scans, total }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -31,7 +32,7 @@ export const searchScansStoreAPI = async (
 export const scheduleWebScanStoreAPI = async (
   provider = {},
   params = {},
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -48,16 +49,17 @@ export const scheduleWebScanStoreAPI = async (
     // Guards
     if (!Array.isArray(assets))
       throw new Error('Param "assets" should be an array')
-    if (!assets.length) return { id: null }
+    if (!assets.length)
+      return { id: null }
 
     const payload = {
       assets,
-      hasInternal,
-      type,
-      startDate,
       endDate,
-      startTime,
       endTime,
+      hasInternal,
+      startDate,
+      startTime,
+      type,
     }
 
     const reqConfig = {
@@ -70,7 +72,8 @@ export const scheduleWebScanStoreAPI = async (
     } = await axios.post('scans', payload, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -79,7 +82,7 @@ export const scheduleWebScanStoreAPI = async (
 export const scheduleNetworkScanStoreAPI = async (
   provider = {},
   params = {},
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -95,20 +98,22 @@ export const scheduleNetworkScanStoreAPI = async (
     } = params
 
     // Guards
-    if (!Array.isArray(ips)) throw new Error('Param "ips" should be an array')
+    if (!Array.isArray(ips))
+      throw new Error('Param "ips" should be an array')
     if (!Array.isArray(credentials))
       throw new Error('Param "credentials" should be an array')
-    if (!ips.length) return { id: null }
+    if (!ips.length)
+      return { id: null }
 
     const payload = {
-      ips,
       credentials,
-      hasInternal,
-      type,
-      startDate,
       endDate,
-      startTime,
       endTime,
+      hasInternal,
+      ips,
+      startDate,
+      startTime,
+      type,
     }
     const reqConfig = {
       ...(accessToken && {
@@ -120,7 +125,8 @@ export const scheduleNetworkScanStoreAPI = async (
     } = await axios.post('scans', payload, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -129,7 +135,7 @@ export const scheduleNetworkScanStoreAPI = async (
 export const scheduleScanStoreAPI = async (
   provider = {},
   params = {},
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -158,15 +164,15 @@ export const scheduleScanStoreAPI = async (
       return { id: null }
 
     const payload = {
-      hasInternal,
-      type,
-      startDate,
       endDate,
-      startTime,
       endTime,
+      hasInternal,
       name,
       probe,
       scanParams,
+      startDate,
+      startTime,
+      type,
     }
     const reqConfig = {
       ...(accessToken && {
@@ -178,7 +184,8 @@ export const scheduleScanStoreAPI = async (
     } = await axios.post('scans', payload, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -194,7 +201,8 @@ export const requestSearchScanAssets = async (provider, accessToken = '') => {
     }
     const { data } = await axios.get('/scans/assets', reqConfig)
     return data.assets
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -202,7 +210,7 @@ export const requestSearchScanAssets = async (provider, accessToken = '') => {
 
 export const requestSearchPhishingScenarios = async (
   provider,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -213,7 +221,8 @@ export const requestSearchPhishingScenarios = async (
     }
     const { data } = await axios.get('/scans/phishing-scenarios', reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -222,7 +231,7 @@ export const requestSearchPhishingScenarios = async (
 export const requestParseScanResult = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -233,7 +242,8 @@ export const requestParseScanResult = async (
     }
     const { data } = await axios.post('/scans/result', params, reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -243,7 +253,7 @@ export const requestUpdateScan = async (
   provider,
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -252,8 +262,9 @@ export const requestUpdateScan = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    await axios.patch('/scans/' + id, params, reqConfig)
-  } catch (error) {
+    await axios.patch(`/scans/${id}`, params, reqConfig)
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -269,7 +280,8 @@ export const requestScanReport = async (provider, id, accessToken = '') => {
     }
     const { data } = await axios.get(`/scans/${id}/report`, reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

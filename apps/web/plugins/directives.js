@@ -15,27 +15,27 @@ Vue.directive('test', {
    * }} binding
    */
   bind(el, binding) {
-    if (dict[binding.name] === undefined) {
+    if (dict[binding.name] === undefined)
       dict[binding.name] = {}
-    }
+
     // Test if the useragent contains "tests" or if environment is development
     if (
-      window.navigator.userAgent.includes('tests') ||
-      process.env.NODE_ENV === 'development'
+      window.navigator.userAgent.includes('tests')
+      || process.env.NODE_ENV === 'development'
     ) {
       el.setAttribute('data-test', binding.value.toLowerCase())
       if (
-        binding.value.toLowerCase() in dict[binding.name] &&
-        document.querySelector(`[data-test="${binding.value.toLowerCase()}"]`)
+        binding.value.toLowerCase() in dict[binding.name]
+        && document.querySelector(`[data-test="${binding.value.toLowerCase()}"]`)
       ) {
         console.error(
           '[Vue]',
           'Duplicate test name:',
-          binding.value.toLowerCase()
+          binding.value.toLowerCase(),
         )
         return
       }
       dict[binding.name][binding.value.toLowerCase()] = el
     }
-  }
+  },
 })

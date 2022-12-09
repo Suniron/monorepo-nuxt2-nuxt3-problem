@@ -8,7 +8,6 @@ import {
 
 } from '../../models/relations'
 
-
 export const createRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createRelationModel(req.body, req.user)
@@ -23,7 +22,6 @@ export const createRelationController = async (req: any, res: any, next: any) =>
   }
 }
 
-
 export const createBulkRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, ids } = await createBulkRelationModel(req.body, req.user)
@@ -37,7 +35,6 @@ export const createBulkRelationController = async (req: any, res: any, next: any
     next(error)
   }
 }
-
 
 export const updateRelationController = async (req: any, res: any, next: any) => {
   // TODO: check permissions
@@ -55,7 +52,6 @@ export const updateRelationController = async (req: any, res: any, next: any) =>
   }
 }
 
-
 export const deleteRelationController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await deleteRelationModel(
@@ -72,7 +68,6 @@ export const deleteRelationController = async (req: any, res: any, next: any) =>
     next(error)
   }
 }
-
 
 export const deleteRelationByAssetsIdsController = async (req: any, res: any, next: any) => {
   try {

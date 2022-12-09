@@ -1,3 +1,29 @@
+<script>
+// @ts-check
+/**
+ * @typedef {import('@/types/remediationProject').SpecificRemediationProject} SpecificRemediationProject
+ */
+import { mapState } from 'vuex'
+import ActionButtons from './action-buttons/index.vue'
+import ScopeTable from './ScopeTable.vue'
+
+export default {
+  components: { ActionButtons, ScopeTable },
+  computed: {
+    ...mapState({
+      projectDetailsInfo: state =>
+        state.remediationProject.projectDetails?.info,
+    }),
+    /**
+     * @returns {string}
+     */
+    projectDescription() {
+      return this.projectDetailsInfo?.project_description ?? 'No description'
+    },
+  },
+}
+</script>
+
 <template>
   <v-row justify="center">
     <v-col cols="8">
@@ -19,29 +45,3 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-// @ts-check
-/**
- * @typedef {import('@/types/remediationProject').SpecificRemediationProject} SpecificRemediationProject
- */
-import { mapState } from 'vuex'
-import ActionButtons from './action-buttons/index.vue'
-import ScopeTable from './ScopeTable.vue'
-
-export default {
-  components: { ActionButtons, ScopeTable },
-  computed: {
-    ...mapState({
-      projectDetailsInfo: (state) =>
-        state.remediationProject.projectDetails?.info
-    }),
-    /**
-     * @returns {string}
-     */
-    projectDescription() {
-      return this.projectDetailsInfo?.project_description ?? 'No description'
-    }
-  }
-}
-</script>

@@ -1,65 +1,8 @@
-<template>
-  <div :id="id" class="line-chart"></div>
-</template>
 <script>
 import 'billboard.js/dist/billboard.css'
 import 'billboard.js/dist/theme/insight.css'
 
 export default {
-  name: 'LineChart',
-  props: {
-    /**
-     * ID used to bind the chart element
-     */
-    id: {
-      type: String,
-      required: true
-    },
-    /**
-     * Data that will be rendered in the pie chart.
-     * It should have the following structure:
-     *
-     * {
-     *   data1: {
-     *     value: number, // Value at pie chart
-     *     color: string? // Optional. Hexadecimal color i.e. '#b0c2d1'
-     *   },
-     *   data2: {},
-     *   data3: {}
-     * }
-     */
-    data: {
-      type: Object,
-      required: true,
-      validator(chartData) {
-        // All data points should have a numeric value or an array of numeric values
-        return Object.entries(chartData).every(
-          ([name, dataObj]) =>
-            (name === 'x' &&
-              Array.isArray(dataObj.value) &&
-              dataObj.value.every((val) => typeof val === 'string')) ||
-            (Array.isArray(dataObj.value) &&
-              dataObj.value.every((val) => !isNaN(val)))
-        )
-      }
-    },
-    /**
-     * Configuration object that overrides certain default configurations
-     * of this chart
-     */
-    config: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.reloadChartData()
-      }
-    }
-  },
   created() {
     // Non-reactive data
     this.chart = null
@@ -71,6 +14,7 @@ export default {
       green: '#60B044'
     }
   },
+  name: 'LineChart',
   mounted() {
     // Import billboard here, so it's only imported in client-side
     const { bb, line, zoom } = require('billboard.js')
@@ -80,15 +24,7 @@ export default {
     const chartConfig = {
       // Overridable configuration
       ...self.config,
-      // Non-overridable configuration
-      data: {
-        ...data,
-        type: line(),
-        groups: [Object.keys(self.data).filter((key) => key !== 'x')],
-        onclick(data, el) {
-          self.$emit('click', { data, el })
-        }
-      },
+      
       axis: {
         x: {
           type: 'timeseries',
@@ -104,19 +40,28 @@ export default {
           }
         }
       },
+      // Non-overridable configuration
+data: {
+        ...data,
+        type: line(),
+        groups: [Object.keys(self.data).filter((key) => key !== 'x')],
+        onclick(data, el) {
+          self.$emit('click', { data, el })
+        }
+      },
+      bindto: `#${this.id}`,
       zoom: {
         enabled: zoom(),
         type: 'drag'
-      },
-      bindto: `#${this.id}`
+      }
     }
 
-    if (this.config && this.config.data && this.config.data.order) {
+    if (this.config && this.config.data && this.config.data.order) 
       chartConfig.data.order = this.config.data.order
-    }
-    if (this.config && this.config.data && this.config.data.x) {
+    
+    if (this.config && this.config.data && this.config.data.x) 
       chartConfig.data.x = this.config.data.x
-    }
+    
 
     this.chart = bb.generate(chartConfig)
     console.dir(this.chart)
@@ -128,20 +73,21 @@ export default {
       for (const name in data) {
         if (data.hasOwnProperty(name)) {
           if (
-            (name === 'x' &&
-              Array.isArray(data[name].value) &&
-              data[name].value.every((val) => typeof val === 'string')) ||
-            (Array.isArray(data[name].value) &&
-              data[name].value.every((val) => !isNaN(val)))
+            (name === 'x'
+              && Array.isArray(data[name].value)
+              && data[name].value.every(val => typeof val === 'string'))
+            || (Array.isArray(data[name].value)
+              && data[name].value.every(val => !isNaN(val)))
           ) {
-            const col =
-              name === 'x'
+            const col
+              = name === 'x'
                 ? [name, ...data[name].value]
-                : [name, ...data[name].value.map((d) => Number(d))]
+                : [name, ...data[name].value.map(d => Number(d))]
             columns.push(col)
-          } else if (isNaN(data[name].value)) {
+          }
+ else if (isNaN(data[name].value)) {
             throw new TypeError(
-              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`
+              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`,
             )
           }
         }
@@ -150,24 +96,24 @@ export default {
       // Colors
       let colors
       // If a color is defined for any of the data points
-      if (Object.values(data).some((config) => !!config.color)) {
+      if (Object.values(data).some(config => !!config.color)) {
         colors = {}
 
         for (const name in data) {
           if (data.hasOwnProperty(name)) {
             const config = data[name]
 
-            if (config.color) {
+            if (config.color) 
               colors[name] = config.color
-            }
+            
           }
         }
       }
 
-      const chartData = { columns, colors }
-      if (data.order) {
+      const chartData = { colors, columns }
+      if (data.order) 
         chartData.order = data.order
-      }
+      
 
       return chartData
     },
@@ -180,12 +126,72 @@ export default {
           columns,
           done() {
             self.$emit('loaded')
-          }
+          },
         })
       }
-    }
-  }
+    },
+  },
+  props: {
+
+    /**
+     * Configuration object that overrides certain default configurations
+     * of this chart
+     */
+    config: {
+      default: () => ({}),
+      type: Object,
+    },
+
+    /**
+     * Data that will be rendered in the pie chart.
+     * It should have the following structure:
+     *
+     * {
+     *   data1: {
+     *     value: number, // Value at pie chart
+     *     color: string? // Optional. Hexadecimal color i.e. '#b0c2d1'
+     *   },
+     *   data2: {},
+     *   data3: {}
+     * }
+     */
+    data: {
+      required: true,
+      type: Object,
+      validator(chartData) {
+        // All data points should have a numeric value or an array of numeric values
+        return Object.entries(chartData).every(
+          ([name, dataObj]) =>
+            (name === 'x'
+              && Array.isArray(dataObj.value)
+              && dataObj.value.every(val => typeof val === 'string'))
+            || (Array.isArray(dataObj.value)
+              && dataObj.value.every(val => !isNaN(val))),
+        )
+      },
+    },
+
+    /**
+     * ID used to bind the chart element
+     */
+    id: {
+      required: true,
+      type: String,
+    },
+  },
+  watch: {
+    data: {
+      deep: true,
+      handler() {
+        this.reloadChartData()
+      },
+    },
+  },
 }
 </script>
+
+<template>
+  <div :id="id" class="line-chart" />
+</template>
 
 <style lang="scss"></style>

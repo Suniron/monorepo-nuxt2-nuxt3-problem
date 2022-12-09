@@ -4,7 +4,7 @@
  * @typedef {import("@nuxtjs/axios").NuxtAxiosInstance} Axios
  */
 
-const getEndpoint = (id) => (id ? '/relations/' + id : '/relations')
+const getEndpoint = id => (id ? `/relations/${id}` : '/relations')
 
 export const createRelationService = async (axios, params) => {
   const { data } = await axios.post(getEndpoint(), params)
@@ -43,7 +43,7 @@ export const deleteRelationByAssetsIdsService = async (axios, params) => {
    * @type {{ data: { count: number } }}
    */
   const { data } = await axios.delete(
-    getEndpoint() + `/${fromAssetId}/${relationType}/${toAssetId}`
+    `${getEndpoint()}/${fromAssetId}/${relationType}/${toAssetId}`,
   )
   return data
 }

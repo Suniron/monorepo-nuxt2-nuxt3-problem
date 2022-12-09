@@ -1,67 +1,12 @@
-<template>
-  <v-data-table
-    :headers="headers"
-    :items="tagsWithAssets"
-    :items-per-page="15"
-    class="tags-list-table"
-  >
-    <template #[`footer.page-text`]="items">
-      {{ items.pageStart }}-{{ items.pageStop }} of
-      {{ items.itemsLength }} results
-    </template>
-    <template #[`item.name`]="{ item }">
-      <v-chip :color="item.color">
-        {{ item.name }}
-      </v-chip>
-    </template>
-    <template #[`item.assets`]="{ item }">
-      {{ item.assets.length }}
-    </template>
-    <template #[`item.edit`]="{ item: itemEdit }">
-      <v-dialog width="500" persistent :retain-focus="false">
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-pencil</v-icon
-          >
-        </template>
-        <template #default="dialog">
-          <create-edit-tag-modal
-            :tag="itemEdit"
-            :tags="tags"
-            @created="$emit('update')"
-            @close="dialog.value = false"
-          />
-        </template>
-      </v-dialog>
-      <v-dialog width="500" persistent :retain-focus="false">
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-delete</v-icon
-          >
-        </template>
-        <template #default="dialog">
-          <delete-modal
-            style="background-color:white"
-            :item="itemEdit"
-            whatis-deleting="Tag"
-            @close="dialog.value = false"
-            @delete="removeTag"
-          />
-        </template>
-      </v-dialog>
-    </template>
-  </v-data-table>
-</template>
-
 <script>
 // Service
 import CreateEditTagModal from './create-edit-tags-modal.vue'
-import { updateTagService, deleteTagService } from '~/services/tags'
+import { deleteTagService, updateTagService } from '~/services/tags'
 import DeleteModal from '~/components/settings/delete-modal.vue'
 import { searchAssetsService } from '~/services/assets'
 export default {
-  name: 'TagsList',
   components: { CreateEditTagModal, DeleteModal },
+  name: 'TagsList',
   props: {
     tags: {
       type: Array,
@@ -70,6 +15,7 @@ export default {
   },
   data() {
     return {
+      assetsWithTags: [],
       headers: [
         {
           text: 'Name',
@@ -90,8 +36,7 @@ export default {
           sortable: false
         }
       ],
-      assetsWithTags: [],
-      isTagsLoading: false
+      isTagsLoading: false,
     }
   },
   computed: {
@@ -99,21 +44,13 @@ export default {
      * @returns {Array} - Array of tags with assets count
      */
     tagsWithAssets() {
-      return this.tags.map((tag) => ({
+      return this.tags.map(tag => ({
         ...tag,
-        assets: this.assetsWithTags.filter((asset) =>
-          asset.tags.some((assetTag) => assetTag.id === tag.id)
-        )
+        assets: this.assetsWithTags.filter(asset =>
+          asset.tags.some(assetTag => assetTag.id === tag.id),
+        ),
       }))
-    }
-  },
-  async mounted() {
-    const assets = (
-      await searchAssetsService(this.$axios, {
-        tagIds: this.tags.map((tag) => tag.id)
-      })
-    ).assets
-    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
+    },
   },
   methods: {
     async changeTagColor(tagId, color) {
@@ -139,9 +76,72 @@ export default {
         this.$emit('update')
       }
     }
+  },
+  async mounted() {
+    const assets = (
+      await searchAssetsService(this.$axios, {
+        tagIds: this.tags.map((tag) => tag.id)
+      })
+    ).assets
+    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
   }
 }
 </script>
+
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="tagsWithAssets"
+    :items-per-page="15"
+    class="tags-list-table"
+  >
+    <template #[`footer.page-text`]="items">
+      {{ items.pageStart }}-{{ items.pageStop }} of
+      {{ items.itemsLength }} results
+    </template>
+    <template #[`item.name`]="{ item }">
+      <v-chip :color="item.color">
+        {{ item.name }}
+      </v-chip>
+    </template>
+    <template #[`item.assets`]="{ item }">
+      {{ item.assets.length }}
+    </template>
+    <template #[`item.edit`]="{ item: itemEdit }">
+      <v-dialog width="500" persistent :retain-focus="false">
+        <template #activator="{ on, attrs }">
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-pencil
+          </v-icon>
+        </template>
+        <template #default="dialog">
+          <CreateEditTagModal
+            :tag="itemEdit"
+            :tags="tags"
+            @created="$emit('update')"
+            @close="dialog.value = false"
+          />
+        </template>
+      </v-dialog>
+      <v-dialog width="500" persistent :retain-focus="false">
+        <template #activator="{ on, attrs }">
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-delete
+          </v-icon>
+        </template>
+        <template #default="dialog">
+          <DeleteModal
+            style="background-color:white"
+            :item="itemEdit"
+            whatis-deleting="Tag"
+            @close="dialog.value = false"
+            @delete="removeTag"
+          />
+        </template>
+      </v-dialog>
+    </template>
+  </v-data-table>
+</template>
 
 <style lang="scss">
 .tags-list-table {

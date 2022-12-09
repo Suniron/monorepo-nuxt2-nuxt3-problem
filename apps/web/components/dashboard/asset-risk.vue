@@ -1,24 +1,12 @@
-<template>
-  <v-card class="d-flex flex-column">
-    <v-card-title
-      >Asset Security Level Summary<v-spacer></v-spacer
-      ><v-icon @click="$emit('close')">mdi-close</v-icon></v-card-title
-    >
-    <v-card-text class="dash-text d-flex overflow-y-auto">
-      <pie-chart id="assetrisk" :data="chartData" :config="chartConfig" />
-    </v-card-text>
-  </v-card>
-</template>
-
 <script>
 import PieChart from '~/components/charts/pie-chart'
 import { severityColor } from '~/utils/color.utils'
 
 export default {
-  name: 'RiskAssetSummary',
   components: {
     PieChart
   },
+  name: 'RiskAssetSummary',
   props: {
     data: {
       type: Object,
@@ -34,32 +22,27 @@ export default {
   data: () => ({
     chartData: {
       emergency: {
-        value: 1,
-        color: severityColor('CRITICAL')
+        color: severityColor('CRITICAL'),
+        value: 1
       },
       high: {
-        value: 1,
-        color: severityColor('HIGH')
-      },
-      medium: {
-        value: 1,
-        color: severityColor('MEDIUM')
+        color: severityColor('HIGH'),
+        value: 1
       },
       low: {
         value: 1,
         color: severityColor('LOW')
       },
-      stateOfTheArt: {
+      medium: {
         value: 1,
-        color: severityColor('STATE_OF_THE_ART')
-      }
+        color: severityColor('MEDIUM')
+      },
+      stateOfTheArt: {
+        color: severityColor('STATE_OF_THE_ART'),
+        value: 1
+      },
     }
   }),
-  watch: {
-    data(newSeverities) {
-      this.populateChartData(newSeverities)
-    }
-  },
   created() {
     // Non-reactive data
     this.chartConfig = {
@@ -84,6 +67,11 @@ export default {
 
     this.populateChartData(this.data)
   },
+  watch: {
+    data(newSeverities) {
+      this.populateChartData(newSeverities)
+    },
+  },
   methods: {
     /* handleChartClicked({ data }) {
       this.$router.push({
@@ -99,9 +87,22 @@ export default {
       this.chartData.high.value = risks.high
       this.chartData.emergency.value = risks.emergency
       this.chartData.stateOfTheArt.value = risks.stateOfTheArt
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-card class="d-flex flex-column">
+    <v-card-title>
+      Asset Security Level Summary<v-spacer /><v-icon @click="$emit('close')">
+        mdi-close
+      </v-icon>
+    </v-card-title>
+    <v-card-text class="dash-text d-flex overflow-y-auto">
+      <PieChart id="assetrisk" :data="chartData" :config="chartConfig" />
+    </v-card-text>
+  </v-card>
+</template>
 
 <style></style>

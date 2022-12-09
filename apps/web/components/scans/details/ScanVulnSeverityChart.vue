@@ -1,27 +1,10 @@
-<template>
-  <v-card height="100%">
-    <v-card-text
-      class="text-center text-body-1"
-      v-if="assetVulnerabilities.length === 0"
-      >There is no vulnerabilities</v-card-text
-    >
-    <pie-chart v-else id="status" :data="chartData" :config="chartConfig" />
-  </v-card>
-</template>
-
 <script>
 import PieChart from '~/components/charts/pie-chart.vue'
 import { severityColor } from '~/utils/color.utils'
 
 export default {
   components: {
-    PieChart
-  },
-  props: {
-    assetVulnerabilities: {
-      type: Array,
-      required: true
-    }
+    PieChart,
   },
   data: () => {
     return {
@@ -35,6 +18,12 @@ export default {
       }
     }
   },
+  props: {
+    assetVulnerabilities: {
+      type: Array,
+      required: true
+    }
+  },
   computed: {
     chartData() {
       return Object.fromEntries(
@@ -42,25 +31,37 @@ export default {
           return [
             severity,
             {
+              color: severityColor(severity.toUpperCase()),
               value: this.assetVulnerabilities.filter((av) => {
-                if (av.severity) {
+                if (av.severity)
                   return av.severity === severity
-                }
+
                 if (this.severityEquivalentScore[severity]) {
                   return (
-                    av.cvss_score >=
-                      this.severityEquivalentScore[severity][0] &&
-                    av.cvss_score < this.severityEquivalentScore[severity][1]
+                    av.cvss_score
+                      >= this.severityEquivalentScore[severity][0]
+                    && av.cvss_score < this.severityEquivalentScore[severity][1]
                   )
                 }
                 return av.cvss_score === null
               }).length,
-              color: severityColor(severity.toUpperCase())
-            }
+            },
           ]
-        })
+        }),
       )
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-card height="100%">
+    <v-card-text
+      v-if="assetVulnerabilities.length === 0"
+      class="text-center text-body-1"
+    >
+      There is no vulnerabilities
+    </v-card-text>
+    <PieChart v-else id="status" :data="chartData" :config="chartConfig" />
+  </v-card>
+</template>

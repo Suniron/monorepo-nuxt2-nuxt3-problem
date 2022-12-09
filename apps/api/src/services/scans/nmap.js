@@ -1,40 +1,40 @@
 // Handful patterns
-//-- IP regex
-const p_ip_elementary =
-  '(?:[\\d]{1,3})\\.(?:[\\d]{1,3})\\.(?:[\\d]{1,3})\\.(?:[\\d]{1,3})'
+// -- IP regex
+const p_ip_elementary
+  = '(?:[\\d]{1,3})\\.(?:[\\d]{1,3})\\.(?:[\\d]{1,3})\\.(?:[\\d]{1,3})'
 const p_mac_elementary = '[0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F]'
 
 // Nmap Normal Output patterns
 // -- Target
-const p_ip_nmap5 =
-  'Interesting.*on\\s(?:(?<fqdn_nmap5>.*) (?=\\((?<ip_nmap5>' +
-  p_ip_elementary +
-  ')\\)))|Interesting.*on\\s(?<ip_only_nmap5>.*)\\:'
-const p_ip_nmap6 =
-  'Nmap.*for\\s(?:(?<fqdn_nmap6>.*) (?=\\((?<ip_nmap6>' +
-  p_ip_elementary +
-  ')\\)))|Nmap.*for\\s(?<ip_only_nmap6>' +
-  p_ip_elementary +
-  ')'
+const p_ip_nmap5
+  = `Interesting.*on\\s(?:(?<fqdn_nmap5>.*) (?=\\((?<ip_nmap5>${
+   p_ip_elementary
+   })\\)))|Interesting.*on\\s(?<ip_only_nmap5>.*)\\:`
+const p_ip_nmap6
+  = `Nmap.*for\\s(?:(?<fqdn_nmap6>.*) (?=\\((?<ip_nmap6>${
+   p_ip_elementary
+   })\\)))|Nmap.*for\\s(?<ip_only_nmap6>${
+   p_ip_elementary
+   })`
 
-const p_ip = new RegExp(p_ip_nmap5 + '|' + p_ip_nmap6)
+const p_ip = new RegExp(`${p_ip_nmap5}|${p_ip_nmap6}`)
 
 // -- rDNS
 const p_rdns = new RegExp(
-  'rDNS record for (?<ip>' + p_ip_elementary + '):\\s(?<rdns>.*)'
+  `rDNS record for (?<ip>${p_ip_elementary}):\\s(?<rdns>.*)`,
 )
 
 // -- Port header
 const p_port_header = new RegExp(
-  '^(?<port>PORT)\\s+(?<state>STATE)\\s+(?<service>SERVICE)\\s+(?<reason>REASON\\s*)?(?<version>VERSION$)?'
+  '^(?<port>PORT)\\s+(?<state>STATE)\\s+(?<service>SERVICE)\\s+(?<reason>REASON\\s*)?(?<version>VERSION$)?',
 )
 
 // -- Port finding
 const p_port_without_reason = new RegExp(
-  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)(?:\\s*(?<version>.*))?$'
+  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)(?:\\s*(?<version>.*))?$',
 )
 const p_port_with_reason = new RegExp(
-  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)\\s+(?<reason>.* ttl [\\d]+)\\s*(?:\\s*(?<version>.*))$'
+  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)\\s+(?<reason>.* ttl [\\d]+)\\s*(?:\\s*(?<version>.*))$',
 )
 
 // -- Script output finding
@@ -42,19 +42,19 @@ const p_script = new RegExp('^\\|[\\s|\\_](?<script>.*)$')
 
 // -- MAC address
 const p_mac = new RegExp(
-  'MAC Address:\\s(?<mac_addr>(' +
-    p_mac_elementary +
-    '))\\s\\((?<mac_vendor>.*)\\)'
+  `MAC Address:\\s(?<mac_addr>(${
+    p_mac_elementary
+    }))\\s\\((?<mac_vendor>.*)\\)`,
 )
 
 // -- OS detection (pattern order is important, the latter position the more precise and reliable the information is)
 const p_os = new RegExp(
-  '(?:^Service Info: OS|^OS|\\s+OS|^OS details|smb-os-discovery|\\|):\\s(?<os>[^;]+)'
+  '(?:^Service Info: OS|^OS|\\s+OS|^OS details|smb-os-discovery|\\|):\\s(?<os>[^;]+)',
 )
 
 // -- Network distance
 const p_network_dist = new RegExp(
-  'Network Distance:\\s(?<hop_number>\\d+)\\shops?'
+  'Network Distance:\\s(?<hop_number>\\d+)\\shops?',
 )
 
 // Nmap Grepable output
@@ -63,24 +63,24 @@ const p_grepable = new RegExp('(?<whole_line>^Host:\\s.*)')
 
 // Traceroute output
 // -- traceroute normal line
-const t_line =
-  '^\\d+\\s+\\d+\\.\\d+\\sms\\s+((?<fqdn>.*)\\s\\((?<ipv4_1>' +
-  p_ip_elementary +
-  ')\\)|(?<ipv4_2>' +
-  p_ip_elementary +
-  '))'
+const t_line
+  = `^\\d+\\s+\\d+\\.\\d+\\sms\\s+((?<fqdn>.*)\\s\\((?<ipv4_1>${
+   p_ip_elementary
+   })\\)|(?<ipv4_2>${
+   p_ip_elementary
+   }))`
 
 // -- traceroute unknown hop
 const t_unknown = '^(?<dummy>\\d)\\s+\\.\\.\\.'
 
 // -- traceroute same as
-const t_same_as =
-  '^Hop (?<start>\\d)(-(?<end>\\d)|)\\sis\\sthe\\ssame\\sas\\sfor\\s(?<orig>' +
-  p_ip_elementary +
-  ')'
+const t_same_as
+  = `^Hop (?<start>\\d)(-(?<end>\\d)|)\\sis\\sthe\\ssame\\sas\\sfor\\s(?<orig>${
+   p_ip_elementary
+   })`
 
 // -- traceroute reg
-const t_reg = new RegExp('(' + t_line + '|' + t_unknown + '|' + t_same_as + ')')
+const t_reg = new RegExp(`(${t_line}|${t_unknown}|${t_same_as})`)
 
 // Handful functions
 const dottedquad_to_num = (ip) => {
@@ -92,10 +92,10 @@ const dottedquad_to_num = (ip) => {
 }
 
 const num_to_dottedquad = (num) => {
-  var d = num % 256
+  let d = num % 256
   for (let i = 3; i > 0; i--) {
     num = Math.floor(num / 256)
-    d = (num % 256) + '.' + d
+    d = `${num % 256}.${d}`
   }
   return d
 }
@@ -107,9 +107,11 @@ const num_to_dottedquad = (num) => {
  **/
 const unique_match_from_list = (list) => {
   let result = ''
-  for (let item in list) {
-    if (list[item] !== undefined) result = list[item].toString()
+  for (const item in list) {
+    if (list[item] !== undefined)
+      result = list[item].toString()
   }
+
   return result
 }
 
@@ -122,7 +124,7 @@ const unique_match_from_list = (list) => {
  */
 const extract_matching_pattern = (regex, group_name, unfiltered_list) => {
   let result = ''
-  const filtered_list = unfiltered_list.filter((e) => e.match(regex))
+  const filtered_list = unfiltered_list.filter(e => e.match(regex))
 
   if (filtered_list.length === 1) {
     filtered_string = filtered_list.join('')
@@ -147,7 +149,7 @@ class Host {
   }
 
   add_port(port) {
-    this.ports[port.number + '/' + port.protocol] = port
+    this.ports[`${port.number}/${port.protocol}`] = port
   }
 
   // Getters
@@ -172,59 +174,55 @@ class Host {
   }
 
   get get_port_number_list() {
-    if (!this.get_port_list) return ['']
+    if (!this.get_port_list) { return [''] }
     else {
       const result = []
       const ports = this.get_port_list
-      for (port in ports) {
+      for (port in ports)
         result.push(port.get_number)
-      }
     }
     return result
   }
 
   get get_port_protocol_list() {
-    if (!this.get_port_list) return ['']
+    if (!this.get_port_list) { return [''] }
     else {
       const result = []
       const ports = this.get_port_list
-      for (let port in ports) {
+      for (const port in ports)
         result.push(port.get_protocol)
-      }
     }
     return result
   }
 
   get get_port_service_list() {
-    if (!this.get_port_list) return ['']
+    if (!this.get_port_list) { return [''] }
     else {
       const result = []
       const ports = this.get_port_list
-      for (let port in ports) result.push(port.get_service)
+      for (const port in ports) result.push(port.get_service)
     }
     return result
   }
 
   get get_port_version_list() {
-    if (!this.get_port_list) return ['']
+    if (!this.get_port_list) { return [''] }
     else {
       const result = []
       const ports = this.get_port_list
-      for (let port in ports) {
+      for (const port in ports)
         result.push(port.get_version)
-      }
     }
     return result
   }
 
   get get_port_script_list() {
-    if (!this.get_port_list) return ['']
+    if (!this.get_port_list) { return [''] }
     else {
       const result = []
       const ports = this.get_port_list
-      for (let port in ports) {
+      for (const port in ports)
         result.push(port.get_script)
-      }
     }
     return result
   }
@@ -286,7 +284,7 @@ class Port {
     protocol,
     service = undefined,
     version = undefined,
-    script = undefined
+    script = undefined,
   ) {
     this.number = number
     this.protocol = protocol
@@ -338,7 +336,7 @@ const split_grepable_match = (raw_string) => {
 
   // Patterns
   const p_host = new RegExp(
-    'Host:\\s(?<ip>' + p_ip_elementary + +')\\s+\\((?<fqdn>|.*)\\)'
+    `Host:\\s(?<ip>${p_ip_elementary}${+')\\s+\\((?<fqdn>|.*)\\)'}`,
   )
   const p_ports = new RegExp('Ports:\\s+(?<ports>.*)/')
   const p_os = new RegExp('OS:\\s(?<os>.*)')
@@ -360,13 +358,13 @@ const split_grepable_match = (raw_string) => {
     return p.includes('/open/')
   })
 
-  for (let idx in open_ports_list) {
+  for (const idx in open_ports_list) {
     const open_port = open_ports_list[idx]
     // Extract each field from the format [port number / state / protocol / owner / service / rpc info / version info]
     // -- Thanks to http://www.unspecific.com/nmap-oG-output/
     const [number, state, protocol, owner, service, version] = open_port.split(
       '/',
-      5
+      5,
     )
 
     // remove potential leading and trailing slashes on version
@@ -384,12 +382,12 @@ const split_grepable_match = (raw_string) => {
  */
 export const parseNmap = (lines) => {
   const IPs = {}
-  let last_host = undefined
+  let last_host
   let p_port = p_port_without_reason
   let in_script_line = false
   let script = ''
   let count = 0
-  for (let i in lines) {
+  for (const i in lines) {
     const line = lines[i].trim()
     // 1st case:     Nmap Normal Output
     // -- 1st action: Grab the IP
@@ -409,7 +407,8 @@ export const parseNmap = (lines) => {
       if (Object.keys(IPs).includes(IP_str)) {
         last_host = IPs[IP_str]
         last_host.add_fqdn(FQDN_str)
-      } else {
+      }
+      else {
         const new_host = new Host(IP_str, FQDN_str)
         IPs[new_host.get_ip_dotted_format] = new_host
         last_host = new_host
@@ -428,7 +427,8 @@ export const parseNmap = (lines) => {
     // -- 3rd action: Check the port header, to know if there is a reason column
     const port_header = line.match(p_port_header)?.groups || null
     if (port_header) {
-      if (port_header.reason) p_port = p_port_with_reason
+      if (port_header.reason)
+        p_port = p_port_with_reason
       else p_port = p_port_without_reason
     }
     // 1st case:     Nmap Normal Output
@@ -436,13 +436,15 @@ export const parseNmap = (lines) => {
     const script_line = line.match(p_script)?.groups || null
     if (script_line) {
       in_script_line = true
-      script = script + script_line.script + '\n'
-    } else {
+      script = `${script + script_line.script}\n`
+    }
+    else {
       // We were in a script output section, now it's finished
       if (in_script_line) {
-        let tmp = Object.keys(last_host.get_port_list)
-        let last_port = last_host.get_port_list[tmp[tmp.length - 1]]
-        if (last_port) last_port.set_script(script)
+        const tmp = Object.keys(last_host.get_port_list)
+        const last_port = last_host.get_port_list[tmp[tmp.length - 1]]
+        if (last_port)
+          last_port.set_script(script)
 
         // reseting trackers
         in_script_line = false
@@ -469,7 +471,8 @@ export const parseNmap = (lines) => {
     // 1st case:     Nmap Normal Output
     // -- 7th action: Grab the OS detection
     const os = line.match(p_os)?.groups || null
-    if (os) last_host.set_os(os.os.toString())
+    if (os)
+      last_host.set_os(os.os.toString())
 
     // 1st case:     Nmap Normal Output
     // -- 8th action: Grab the network distance
@@ -483,15 +486,17 @@ export const parseNmap = (lines) => {
     if (trace) {
       if (trace.ipv4_1 || trace.ipv4_2) {
         last_host.set_trace(trace?.ipv4_1 || trace.ipv4_2)
-      } else if (trace.start) {
+      }
+      else if (trace.start) {
         const orig_trace = IPs[trace.orig].get_trace()
         let subSet
         if (trace.end) {
           subSet = orig_trace.slice(
             parseInt(trace.start) - 1,
-            parseInt(trace.end)
+            parseInt(trace.end),
           )
-        } else subSet = orig_trace[parseInt(trace.start)]
+        }
+        else { subSet = orig_trace[parseInt(trace.start)] }
         last_host.set_trace(subSet)
       }
     }

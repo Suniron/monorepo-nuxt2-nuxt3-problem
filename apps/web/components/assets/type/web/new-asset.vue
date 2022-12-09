@@ -1,25 +1,13 @@
-<template>
-  <div style="width: 100%;">
-    <v-col cols="12">
-      <v-text-field
-        v-model="formData.url"
-        label="URL"
-        @change="changed"
-        :disabled="!quickedit"
-      />
-    </v-col>
-    <v-col cols="12">
-      <v-text-field
-        v-model="formData.language"
-        label="Source code language"
-        @change="changed"
-        :disabled="!quickedit"
-      />
-    </v-col>
-  </div>
-</template>
 <script>
 export default {
+  data() {
+    return {
+      formData: {
+        url: this.asset?.url || null,
+        language: this.asset?.language || null
+      }
+    }
+  },
   props: {
     asset: {
       type: Object,
@@ -30,29 +18,42 @@ export default {
       required: false
     }
   },
-  data() {
-    return {
-      formData: {
-        url: this.asset?.url || null,
-        language: this.asset?.language || null
-      }
-    }
-  },
   created() {
     this.$root.$on('canceledSaves', this.canceledSaves)
     this.$emit('change', this.formData)
   },
   methods: {
+    canceledSaves() {
+      this.formData = {
+        language: this.asset?.language || null,
+        url: this.asset?.url || null,
+      }
+      this.changed()
+    },
     changed() {
       this.$emit('change', this.formData)
     },
-    canceledSaves() {
-      this.formData = {
-        url: this.asset?.url || null,
-        language: this.asset?.language || null
-      }
-      this.changed()
-    }
-  }
+  },
 }
 </script>
+
+<template>
+  <div style="width: 100%;">
+    <v-col cols="12">
+      <v-text-field
+        v-model="formData.url"
+        label="URL"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+    <v-col cols="12">
+      <v-text-field
+        v-model="formData.language"
+        label="Source code language"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+  </div>
+</template>

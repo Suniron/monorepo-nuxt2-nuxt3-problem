@@ -4,15 +4,16 @@ import { log } from '@/lib/logger'
 
 export const getPhishingScenariosDomainsService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   try {
     const data = await getPhishingScenariosDomainsAPIs.getDomains(
       params,
-      accessToken
+      accessToken,
     )
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getPhishingScenariosDomainsService')
     return createServiceError(error)
   }

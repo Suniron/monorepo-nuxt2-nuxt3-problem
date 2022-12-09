@@ -3,12 +3,12 @@
  * @param {File} file
  * @returns {Promise<string>}
  */
-export const getBase64FromFile = (file) =>
+export const getBase64FromFile = file =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => resolve(reader.result.toString())
-    reader.onerror = (error) => reject(error)
+    reader.onerror = error => reject(error)
   })
 
 /**
@@ -22,9 +22,9 @@ export const getInfosFromBase64 = (base64) => {
   return new Promise((resolve, reject) => {
     image.onload = () => {
       const { width, height } = image
-      resolve({ width, height })
+      resolve({ height, width })
     }
-    image.onerror = (error) => reject(error)
+    image.onerror = error => reject(error)
   })
 }
 
@@ -38,5 +38,5 @@ export const extractDataFromImage = async (imageFile) => {
 
   const { width, height } = await getInfosFromBase64(base64)
 
-  return { base64, width, height }
+  return { base64, height, width }
 }

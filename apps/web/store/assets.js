@@ -2,75 +2,69 @@ import _ from 'lodash'
 import { getAssetSummary } from '~/services/assets'
 
 const initialState = () => ({
-  assets: [],
   assetSummary: {
-    USER: 0,
-    SERVER: 0,
-    WEB: 0,
     BUILDING: 0,
-    NETWORK: 0,
-    UNIT: 0,
-    MISSION: 0,
-    USERGROUP: 0,
-    POLICY: 0,
     COMPLIANCE: 0,
+    MISSION: 0,
+    NETWORK: 0,
+    POLICY: 0,
     PROCEDURE: 0,
+    SERVER: 0,
+    UNIT: 0,
+    USER: 0,
+    USERGROUP: 0,
+    WEB: 0,
     superAssets: 0,
-    technicalAssets: 0
-  }
+    technicalAssets: 0,
+  },
+  assets: [],
 })
 
 const createAssetObject = () => ({
-  id: 0,
-  name: '',
-  ip: '',
-  os: '',
-  group: null,
-  tags: [],
   details: [],
+  group: null,
+  id: 0,
+  ip: '',
+  name: '',
+  os: '',
   risks: {
     critical: 0,
     high: 0,
+    low: 0,
     medium: 0,
-    low: 0
   },
-  sitemap: null
+  sitemap: null,
+  tags: [],
 })
 
 export const state = initialState
 
 export const getters = {
-  assetNamesIds: (state) =>
+  assetNamesIds: state =>
     state.assets.map((asset) => {
       return { id: asset.id, name: asset.name }
     }),
-  webAssets: (state) =>
+  networkAssets: state =>
     state.assets.filter((asset) => {
       const parts = asset.name.split('.')
-      return parts.length !== 4 || parts.some((part) => isNaN(part))
-    }),
-  webAssetsNames: (_state, getters) =>
-    getters.webAssets.map((asset) => asset.name),
-  networkAssets: (state) =>
-    state.assets.filter((asset) => {
-      const parts = asset.name.split('.')
-      return parts.length === 4 && parts.every((part) => !isNaN(part))
+      return parts.length === 4 && parts.every(part => !isNaN(part))
     }),
   networkAssetsIPs: (_state, getters) =>
-    getters.networkAssets.map((asset) => asset.ip),
+    getters.networkAssets.map(asset => asset.ip),
   vulnerabilities: (state) => {
     const hashVulnerabilities = state.assets.reduce((hash, asset) => {
       asset.details.forEach((vulnerability) => {
         const assetDetails = {
+          affectedAssetId: asset.id,
           affectedAssetName: asset.name,
-          affectedAssetId: asset.id
         }
         if (hash[vulnerability.Name]) {
           hash[vulnerability.Name].affectedAssets.add(assetDetails)
-        } else {
+        }
+        else {
           hash[vulnerability.Name] = {
             ...vulnerability,
-            affectedAssets: new Set([assetDetails])
+            affectedAssets: new Set([assetDetails]),
           }
         }
       })
@@ -78,16 +72,23 @@ export const getters = {
     }, {})
 
     return hashVulnerabilities
-  }
+  },
+  webAssets: state =>
+    state.assets.filter((asset) => {
+      const parts = asset.name.split('.')
+      return parts.length !== 4 || parts.some(part => isNaN(part))
+    }),
+  webAssetsNames: (_state, getters) =>
+    getters.webAssets.map(asset => asset.name),
 }
 
 const types = {
-  SET_ASSETS: 'SET_ASSETS',
   CHANGE_ASSET_PROP: 'CHANGE_ASSET_PROP',
-  EDIT_ASSET: 'EDIT_ASSET',
   CREATE_ASSET: 'CREATE_ASSET',
+  EDIT_ASSET: 'EDIT_ASSET',
   REMOVE_ASSET: 'REMOVE_ASSET',
-  UPDATE_ASSET_SUMMARY: 'UPDATE_ASSET_SUMMARY'
+  SET_ASSETS: 'SET_ASSETS',
+  UPDATE_ASSET_SUMMARY: 'UPDATE_ASSET_SUMMARY',
 }
 
 export const mutations = {
@@ -96,14 +97,14 @@ export const mutations = {
   },
   [types.CHANGE_ASSET_PROP](state, { assetName, propName, value, id }) {
     const newAssets = [...state.assets]
-    const assetToChange = newAssets.find((asset) => asset.id === id)
+    const assetToChange = newAssets.find(asset => asset.id === id)
     assetToChange[propName] = value
 
     state.assets = newAssets
   },
   [types.EDIT_ASSET](state, { originalName, newName, ip, os, id }) {
     const newAssets = [...state.assets]
-    const assetToChange = newAssets.find((asset) => asset.id === id)
+    const assetToChange = newAssets.find(asset => asset.id === id)
 
     assetToChange.name = newName
     assetToChange.ip = ip
@@ -119,7 +120,7 @@ export const mutations = {
     asset.name = name
     asset.ip = ip
     asset.os = os
-    asset.id = Math.max(...newAssets.map((asset) => asset.id)) + 1
+    asset.id = Math.max(...newAssets.map(asset => asset.id)) + 1
 
     newAssets.push(asset)
     state.assets = newAssets
@@ -127,7 +128,7 @@ export const mutations = {
   [types.REMOVE_ASSET](state, { id }) {
     const newAssets = [...state.assets]
 
-    const assetToRemove = newAssets.find((asset) => asset.id === id)
+    const assetToRemove = newAssets.find(asset => asset.id === id)
     const assetIndex = newAssets.indexOf(assetToRemove)
 
     newAssets.splice(assetIndex, 1)
@@ -139,37 +140,40 @@ export const mutations = {
       // Generating initialState to set a 0 count to missing asset types
       Object.assign(state.assetSummary, initialState().assetSummary, summary)
     }
-  }
+  },
 }
 
 export const actions = {
-  setAssets({ commit }, { assets = [] } = {}) {
-    commit(types.SET_ASSETS, [...assets])
-  },
   changeAssetProp({ state, commit }, { assetName, propName, value, id }) {
-    if (!state.assets.find((asset) => asset.id === id)) return
+    if (!state.assets.find(asset => asset.id === id))
+      return
 
-    commit(types.CHANGE_ASSET_PROP, { assetName, propName, value, id })
-  },
-  editAsset({ state, commit }, payload) {
-    if (!state.assets.find((asset) => asset.id === payload.id)) return
-
-    commit(types.EDIT_ASSET, payload)
+    commit(types.CHANGE_ASSET_PROP, { assetName, id, propName, value })
   },
   createAsset({ state, commit }, payload) {
-    if (state.assets.find((asset) => asset.id === payload.id)) return
+    if (state.assets.find(asset => asset.id === payload.id))
+      return
 
     commit(types.CREATE_ASSET, payload)
   },
+  editAsset({ state, commit }, payload) {
+    if (!state.assets.find(asset => asset.id === payload.id))
+      return
+
+    commit(types.EDIT_ASSET, payload)
+  },
   removeAsset({ state, commit }, payload) {
-    if (!state.assets.find((asset) => asset.id === payload.id)) return
+    if (!state.assets.find(asset => asset.id === payload.id))
+      return
 
     commit(types.REMOVE_ASSET, payload)
   },
+  setAssets({ commit }, { assets = [] } = {}) {
+    commit(types.SET_ASSETS, [...assets])
+  },
   async updateAssetSummary({ commit }, axios) {
     const result = await getAssetSummary(axios)
-    if (result.data) {
+    if (result.data)
       commit(types.UPDATE_ASSET_SUMMARY, result.data.summary)
-    }
-  }
+  },
 }

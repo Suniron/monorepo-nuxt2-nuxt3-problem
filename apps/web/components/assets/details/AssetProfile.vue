@@ -1,3 +1,19 @@
+<script>
+import AssetIcon from '~/components/assets/AssetIcon.vue'
+import AssetInfo from '~/components/assets/type/AssetInfo.vue'
+
+export default {
+  components: { AssetIcon, AssetInfo },
+  name: 'AssetProfile',
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <v-row>
     <v-col cols="12" :lg="asset.topRecommendation ? 6 : 12">
@@ -21,22 +37,6 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-import AssetIcon from '~/components/assets/AssetIcon.vue'
-import AssetInfo from '~/components/assets/type/AssetInfo.vue'
-
-export default {
-  name: 'AssetProfile',
-  components: { AssetIcon, AssetInfo },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .asset-profile {

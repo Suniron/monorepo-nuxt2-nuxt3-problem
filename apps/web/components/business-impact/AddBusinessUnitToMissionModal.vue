@@ -1,55 +1,8 @@
-<template>
-  <div class="text-center">
-    <v-dialog v-model="show" width="500">
-      <template #activator="{ on, attrs }">
-        <v-btn color="success" class="mt-3" v-bind="attrs" v-on="on">
-          <v-icon class="mr-1">mdi-plus-circle-outline</v-icon> Add Business
-          Unit
-        </v-btn>
-      </template>
-
-      <v-card>
-        <v-card-title class="text-h5 grey lighten-2">
-          Add Business Unit
-        </v-card-title>
-
-        <v-card-text class="py-0">
-          <v-autocomplete
-            class="mt-3"
-            v-model="selectedBusinessUnit"
-            :items="availableBusinessUnitNames"
-            :search-input.sync="searchedBusinessUnit"
-            label="Create or search an existing Business Unit"
-            placeholder="Start typing to search (or create)"
-            auto-select-first
-            hide-no-data
-            filled
-            chips
-          >
-          </v-autocomplete>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="show = false">
-            cancel
-          </v-btn>
-          <v-btn color="success" :disabled="!isInputValid" @click="handleSave">
-            add
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
-</template>
-
 <script>
 import {
   createAssetService,
   searchAssetsService,
-  updateAssetService
+  updateAssetService,
 } from '~/services/assets'
 
 /**
@@ -60,12 +13,6 @@ import {
 const CREATE_PREFIX = 'Create '
 
 export default {
-  props: {
-    mission: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       show: false,
@@ -79,18 +26,23 @@ export default {
       selectedBusinessUnit: ''
     }
   },
+  props: {
+    mission: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     /**
      * Get all available business units names listed in dropdown
      * @returns {string[]} available business units names
      */
     availableBusinessUnitNames() {
-      const names = this.availableUnits.map((unit) => unit.name)
+      const names = this.availableUnits.map(unit => unit.name)
 
       // If no user search
-      if (!this.searchedBusinessUnit || this.searchedBusinessUnit === '') {
+      if (!this.searchedBusinessUnit || this.searchedBusinessUnit === '')
         return names
-      }
 
       return [...names, CREATE_PREFIX + this.searchedBusinessUnit]
     },
@@ -99,35 +51,11 @@ export default {
      * @returns {boolean} true if business unit need to be created
      */
     isBusinessUnitNeedCreation() {
-      if (!this.selectedBusinessUnit) {
+      if (!this.selectedBusinessUnit)
         return false
-      }
+
       return this.selectedBusinessUnit.startsWith(CREATE_PREFIX)
-    }
-  },
-  watch: {
-    /**
-     * This watcher is used to check input validity
-     *
-     * @param {string} newVal new user input
-     */
-    selectedBusinessUnit(newInput) {
-      this.isInputValid = this.availableBusinessUnitNames.includes(newInput)
     },
-    /**
-     * This watcher is used to fetch datas on open and reset it on close.
-     * @param {boolean} switchToOpen new show state
-     */
-    show(switchToOpen) {
-      // On open:
-      if (switchToOpen) {
-        // Get all available business units:
-        this.getBusinessUnitsWithoutThisMission()
-        return
-      }
-      // On close, reset datas:
-      Object.assign(this.$data, this.$options.data())
-    }
   },
   methods: {
     /**
@@ -175,6 +103,78 @@ export default {
 
       this.show = false // close modal
     }
+  },
+  watch: {
+    /**
+     * This watcher is used to check input validity
+     *
+     * @param {string} newVal new user input
+     */
+    selectedBusinessUnit(newInput) {
+      this.isInputValid = this.availableBusinessUnitNames.includes(newInput)
+    },
+    /**
+     * This watcher is used to fetch datas on open and reset it on close.
+     * @param {boolean} switchToOpen new show state
+     */
+    show(switchToOpen) {
+      // On open:
+      if (switchToOpen) {
+        // Get all available business units:
+        this.getBusinessUnitsWithoutThisMission()
+        return
+      }
+      // On close, reset datas:
+      Object.assign(this.$data, this.$options.data())
+    }
   }
 }
 </script>
+
+<template>
+  <div class="text-center">
+    <v-dialog v-model="show" width="500">
+      <template #activator="{ on, attrs }">
+        <v-btn color="success" class="mt-3" v-bind="attrs" v-on="on">
+          <v-icon class="mr-1">
+            mdi-plus-circle-outline
+          </v-icon> Add Business
+          Unit
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Add Business Unit
+        </v-card-title>
+
+        <v-card-text class="py-0">
+          <v-autocomplete
+            v-model="selectedBusinessUnit"
+            v-model:search-input="searchedBusinessUnit"
+            class="mt-3"
+            :items="availableBusinessUnitNames"
+            label="Create or search an existing Business Unit"
+            placeholder="Start typing to search (or create)"
+            auto-select-first
+            hide-no-data
+            filled
+            chips
+          />
+        </v-card-text>
+
+        <v-divider />
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="show = false">
+            cancel
+          </v-btn>
+          <v-btn color="success" :disabled="!isInputValid" @click="handleSave">
+            add
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>

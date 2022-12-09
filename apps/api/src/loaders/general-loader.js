@@ -4,8 +4,8 @@ import compression from 'compression'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import env from '@/config/env'
 import fileUpload from 'express-fileupload'
+import env from '@/config/env'
 
 export default async function loadGeneral(app) {
   // adding Helmet to enhance your API's security
@@ -25,23 +25,21 @@ export default async function loadGeneral(app) {
   const corsSafelist = [env.ui.origin, 'http://localhost:3000']
 
   // If is not production, cors allow all (usefull for postman for example)
-  if (!env.nodeEnv.isProduction) {
+  if (!env.nodeEnv.isProduction)
     corsSafelist.push('*')
-  }
 
   /**
    * @type {import('cors').CorsOptions}
    */
   const corsOptions = {
-    origin: (origin, callback) => {
-      if (!origin || corsSafelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('CORS error'))
-      }
-    },
     credentials: true,
     exposedHeaders: ['Content-Disposition'],
+    origin: (origin, callback) => {
+      if (!origin || corsSafelist.includes(origin))
+        callback(null, true)
+      else
+        callback(new Error('CORS error'))
+    },
   }
 
   app.use(cors(corsOptions))

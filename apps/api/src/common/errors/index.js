@@ -7,10 +7,10 @@ import {
   getUnauthorizedError,
 } from '@/common/errors/http'
 import {
-  SERVICE_ERROR,
   NOT_FOUND,
-  VALIDATION_ERROR,
+  SERVICE_ERROR,
   UNAUTHORIZED,
+  VALIDATION_ERROR,
 } from '@/common/constants'
 
 /**

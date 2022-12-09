@@ -8,23 +8,23 @@
  */
 
 import {
+  getRemediationProjectsSummaryService,
   searchRemediationProjectPostsService,
   searchRemediationProjectScopeService,
-  getRemediationProjectsSummaryService,
   searchRemediationProjectStatusHistoryService,
-  searchSpecificRemediationProjectService
+  searchSpecificRemediationProjectService,
 } from '~/services/remediation-projects'
 
 export const types = {
   UPDATE_REMEDIATION_PROJECT_DETAILS_INFO:
     'UPDATE_REMEDIATION_PROJECT_DETAILS_INFO',
-  UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE:
-    'UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE',
   UPDATE_REMEDIATION_PROJECT_DETAILS_POSTS:
     'UPDATE_REMEDIATION_PROJECT_DETAILS_POSTS',
+  UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE:
+    'UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE',
   UPDATE_REMEDIATION_PROJECT_DETAILS_STATUS_HISTORY:
     'UPDATE_REMEDIATION_PROJECT_DETAILS_STATUS_HISTORY',
-  UPDATE_REMEDIATION_PROJECT_LIST: ' UPDATE_REMEDIATION_PROJECT_LIST'
+  UPDATE_REMEDIATION_PROJECT_LIST: ' UPDATE_REMEDIATION_PROJECT_LIST',
 }
 
 // == STATE ==
@@ -32,27 +32,13 @@ export const types = {
  * @returns {RemediationProjectState}
  */
 export const state = () => ({
-  projectDetails: { info: null, scope: null, posts: null, statusHistory: null },
+  projectDetails: { info: null, posts: null, scope: null, statusHistory: null },
   remediationProjectIdPrefix: 'PATCH-',
-  remediationProjects: []
+  remediationProjects: [],
 })
 
 // == GETTERS ==
 export const getters = {
-  /**
-   * Returns the number of different vulnerabilities for the specific project (remove duplicates)
-   * @param {RemediationProjectState} state
-   * @returns {number} Vulnerabilitys count
-   */
-  getProjectDetailsVulnerabilityCount: (state) => {
-    if (!state.projectDetails.scope) {
-      return 0
-    }
-
-    return [
-      ...new Set(state.projectDetails.scope.map((c) => c.vulnerability_id))
-    ].length
-  },
 
   /**
    * Returns the number of different assets for the project (remove duplicates)
@@ -60,11 +46,10 @@ export const getters = {
    * @returns {number} Assets count
    */
   getProjectDetailsAssetCount: (state) => {
-    if (!state.projectDetails.scope) {
+    if (!state.projectDetails.scope)
       return 0
-    }
 
-    return [...new Set(state.projectDetails.scope.map((c) => c.asset_id))]
+    return [...new Set(state.projectDetails.scope.map(c => c.asset_id))]
       .length
   },
 
@@ -73,15 +58,55 @@ export const getters = {
    * @returns {import('~/types/remediationProject').RemediationProjectStatusHistory[]} Messages sorted recent to older
    */
   getProjectDetailsStatusHistorySortedByDate: (state) => {
-    if (!state.projectDetails?.statusHistory) {
+    if (!state.projectDetails?.statusHistory)
       return []
-    }
 
     return [...state.projectDetails.statusHistory].sort(
       (a, b) =>
-        new Date(b.from_date).getTime() - new Date(a.from_date).getTime()
+        new Date(b.from_date).getTime() - new Date(a.from_date).getTime(),
     )
   },
+
+  /**
+   * Returns the number of different vulnerabilities for the specific project (remove duplicates)
+   * @param {RemediationProjectState} state
+   * @returns {number} Vulnerabilitys count
+   */
+  getProjectDetailsVulnerabilityCount: (state) => {
+    if (!state.projectDetails.scope)
+      return 0
+
+    return [
+      ...new Set(state.projectDetails.scope.map(c => c.vulnerability_id)),
+    ].length
+  },
+
+  /**
+   * Return **true** if connected user is a collaborator (owner or assignee) of selected remediation project
+   * @param {any} getters
+   * @returns {boolean}
+   */
+  isReadOnlyMode(_state, getters) {
+    return !getters.isUserOwner && !getters.isUserAssignee
+  },
+
+  /**
+   * Return **true** if connected user is an assignee of selected remediation project
+   * @param {RemediationProjectState} state
+   * @param {import('~/types/store/state').State} rootState
+   * @returns {boolean}
+   */
+  isUserAssignee(state, _getters, rootState) {
+    const assigneeIds = state.projectDetails?.info?.assignees.map(
+      assignee => assignee?.user_id,
+    )
+
+    if (!assigneeIds)
+      return false
+
+    return assigneeIds.includes(rootState?.user?.id)
+  },
+
   /**
    * Return **true** if connected user is the owner of selected remediation project
    * @param {RemediationProjectState} state
@@ -91,31 +116,6 @@ export const getters = {
   isUserOwner(state, _getters, rootState) {
     return rootState?.user?.id === state.projectDetails?.info?.owner_id
   },
-  /**
-   * Return **true** if connected user is an assignee of selected remediation project
-   * @param {RemediationProjectState} state
-   * @param {import('~/types/store/state').State} rootState
-   * @returns {boolean}
-   */
-  isUserAssignee(state, _getters, rootState) {
-    const assigneeIds = state.projectDetails?.info?.assignees.map(
-      (assignee) => assignee?.user_id
-    )
-
-    if (!assigneeIds) {
-      return false
-    }
-
-    return assigneeIds.includes(rootState?.user?.id)
-  },
-  /**
-   * Return **true** if connected user is a collaborator (owner or assignee) of selected remediation project
-   * @param {any} getters
-   * @returns {boolean}
-   */
-  isReadOnlyMode(_state, getters) {
-    return !getters.isUserOwner && !getters.isUserAssignee
-  }
 }
 
 // == MUTATIONS ==
@@ -127,7 +127,7 @@ export const mutations = {
    */
   [types.UPDATE_REMEDIATION_PROJECT_DETAILS_INFO](
     state,
-    { newRemediationProjectDetailsInfo }
+    { newRemediationProjectDetailsInfo },
   ) {
     state.projectDetails.info = newRemediationProjectDetailsInfo
   },
@@ -138,10 +138,10 @@ export const mutations = {
    */
   [types.UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE](
     state,
-    { newRemediationProjectDetailsScope }
+    { newRemediationProjectDetailsScope },
   ) {
     state.projectDetails.scope = newRemediationProjectDetailsScope.sort(
-      (a, b) => a.project_scope_id - b.project_scope_id
+      (a, b) => a.project_scope_id - b.project_scope_id,
     )
   },
   /**
@@ -151,7 +151,7 @@ export const mutations = {
    */
   [types.UPDATE_REMEDIATION_PROJECT_DETAILS_POSTS](
     state,
-    { newRemediationProjectDetailsPosts }
+    { newRemediationProjectDetailsPosts },
   ) {
     state.projectDetails.posts = newRemediationProjectDetailsPosts
   },
@@ -162,7 +162,7 @@ export const mutations = {
    */
   [types.UPDATE_REMEDIATION_PROJECT_DETAILS_STATUS_HISTORY](
     state,
-    { newRemediationProjectDetailsStatusHistory }
+    { newRemediationProjectDetailsStatusHistory },
   ) {
     state.projectDetails.statusHistory = newRemediationProjectDetailsStatusHistory
   },
@@ -173,7 +173,7 @@ export const mutations = {
    */
   [types.UPDATE_REMEDIATION_PROJECT_LIST](state, remediationProjectList) {
     state.remediationProjects = remediationProjectList
-  }
+  },
 }
 
 // == ACTIONS ==
@@ -190,8 +190,8 @@ export const actions = {
       dispatch('fetchRemediationProjectDetailsPosts', remediationProjectId),
       dispatch(
         'fetchRemediationProjectDetailsStatusHistory',
-        remediationProjectId
-      )
+        remediationProjectId,
+      ),
     ])
   },
   /**
@@ -202,42 +202,21 @@ export const actions = {
     try {
       const newRemediationProjectDetailsInfo = await searchSpecificRemediationProjectService(
         this.$axios,
-        remediationProjectId
+        remediationProjectId,
       )
       // Update state by committing the mutation
       commit(types.UPDATE_REMEDIATION_PROJECT_DETAILS_INFO, {
+        newRemediationProjectDetailsInfo,
         remediationProjectId,
-        newRemediationProjectDetailsInfo
       })
 
       return newRemediationProjectDetailsInfo
-    } catch (error) {
+    }
+    catch (error) {
       // TODO: handle request error
     }
   },
-  /**
-   *
-   * @param {RemediationProjectStoreContext} context
-   * @param {number} remediationProjectId
-   */
-  async fetchRemediationProjectDetailsScope({ commit }, remediationProjectId) {
-    try {
-      const newRemediationProjectDetailsScope = await searchRemediationProjectScopeService(
-        this.$axios,
-        remediationProjectId
-      )
 
-      // Update state by committing the mutation
-      commit(types.UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE, {
-        remediationProjectId,
-        newRemediationProjectDetailsScope
-      })
-
-      return newRemediationProjectDetailsScope
-    } catch (error) {
-      // TODO: handle request error
-    }
-  },
   /**
    *
    * @param {RemediationProjectStoreContext} context
@@ -247,16 +226,42 @@ export const actions = {
     try {
       const newRemediationProjectDetailsPosts = await searchRemediationProjectPostsService(
         this.$axios,
-        remediationProjectId
+        remediationProjectId,
       )
 
       // Update state by committing the mutation
       commit(types.UPDATE_REMEDIATION_PROJECT_DETAILS_POSTS, {
+        newRemediationProjectDetailsPosts,
         remediationProjectId,
-        newRemediationProjectDetailsPosts
       })
       return newRemediationProjectDetailsPosts
-    } catch (error) {
+    }
+    catch (error) {
+      // TODO: handle request error
+    }
+  },
+
+  /**
+   *
+   * @param {RemediationProjectStoreContext} context
+   * @param {number} remediationProjectId
+   */
+  async fetchRemediationProjectDetailsScope({ commit }, remediationProjectId) {
+    try {
+      const newRemediationProjectDetailsScope = await searchRemediationProjectScopeService(
+        this.$axios,
+        remediationProjectId,
+      )
+
+      // Update state by committing the mutation
+      commit(types.UPDATE_REMEDIATION_PROJECT_DETAILS_SCOPE, {
+        newRemediationProjectDetailsScope,
+        remediationProjectId,
+      })
+
+      return newRemediationProjectDetailsScope
+    }
+    catch (error) {
       // TODO: handle request error
     }
   },
@@ -267,22 +272,23 @@ export const actions = {
    */
   async fetchRemediationProjectDetailsStatusHistory(
     { commit },
-    remediationProjectId
+    remediationProjectId,
   ) {
     try {
       const newRemediationProjectDetailsStatusHistory = await searchRemediationProjectStatusHistoryService(
         this.$axios,
-        remediationProjectId
+        remediationProjectId,
       )
 
       // Update state by committing the mutation
       commit(types.UPDATE_REMEDIATION_PROJECT_DETAILS_STATUS_HISTORY, {
+        newRemediationProjectDetailsStatusHistory,
         remediationProjectId,
-        newRemediationProjectDetailsStatusHistory
       })
 
       return newRemediationProjectDetailsStatusHistory
-    } catch (error) {
+    }
+    catch (error) {
       // TODO: handle request error
     }
   },
@@ -294,10 +300,11 @@ export const actions = {
     try {
       const result = await getRemediationProjectsSummaryService(this.$axios)
       remediationProjectList = result.remediationProjects
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(error)
     }
     commit(types.UPDATE_REMEDIATION_PROJECT_LIST, remediationProjectList)
     return remediationProjectList
-  }
+  },
 }

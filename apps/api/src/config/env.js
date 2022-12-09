@@ -7,46 +7,46 @@
  * - Code autocompletion when using env variables
  */
 
-import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import dotenv from 'dotenv'
 import { version } from '../../package.json'
 
 dotenv.config()
 
-const httpsEnabled =
-  fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem')) &&
-  fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
+const httpsEnabled
+  = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
+  && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
 
 /**
  * Environmental variables
  */
 
-export const buildEnvObj = (env) => ({
-  port: env.PORT || '3001',
+export const buildEnvObj = env => ({
   httpsEnabled,
   mailServer: {
-    MAIL_SERVER: env.MAIL_SERVER,
-    MAIL_PORT: env.MAIL_PORT,
     MAIL_LOGIN: env.MAIL_LOGIN,
     MAIL_PASSWORD: env.MAIL_PASSWORD,
+    MAIL_PORT: env.MAIL_PORT,
+    MAIL_SERVER: env.MAIL_SERVER,
   },
   nodeEnv: {
-    value: env.NODE_ENV || 'development',
-    isProduction: env.NODE_ENV === 'production',
     isDevelopment: env.NODE_ENV === 'development',
+    isProduction: env.NODE_ENV === 'production',
     isTest: env.NODE_ENV === 'test',
+    value: env.NODE_ENV || 'development',
+  },
+  port: env.PORT || '3001',
+  self: {
+    origin:
+      env.PUBLIC_DOMAIN.replace(/:\d+/, `:${env.PORT}`)
+      || 'http://localhost:3001',
   },
   store: {
     baseURL: env.STORE_BASE_URL || 'http://localhost:3002',
   },
   ui: {
     origin: env.PUBLIC_DOMAIN || 'http://localhost:3000',
-  },
-  self: {
-    origin:
-      env.PUBLIC_DOMAIN.replace(/:\d+/, `:${env.PORT}`) ||
-      'http://localhost:3001',
   },
 })
 

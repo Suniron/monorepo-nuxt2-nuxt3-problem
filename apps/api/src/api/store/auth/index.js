@@ -5,7 +5,7 @@ export const requestLogin = async (provider, params) => {
   const { logger, axios } = provider
   try {
     const { username, password } = params
-    const bodyParams = { username, password }
+    const bodyParams = { password, username }
 
     const response = await axios.post('login', bodyParams)
     const accessToken = response.data.accessToken || ''
@@ -13,7 +13,8 @@ export const requestLogin = async (provider, params) => {
     const user = response.data.userInfo
 
     return { accessToken, refreshTokenCookie, user }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -22,7 +23,7 @@ export const requestLogin = async (provider, params) => {
 export const requestRefreshToken = async (
   provider,
   refreshToken,
-  currentAccessToken
+  currentAccessToken,
 ) => {
   const { logger, axios } = provider
   try {
@@ -37,11 +38,12 @@ export const requestRefreshToken = async (
           Cookie: `rt=${refreshToken}`,
         },
         withCredentials: true,
-      }
+      },
     )
 
     return { accessToken, user }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -58,7 +60,8 @@ export const requestLogout = async (provider, accessToken) => {
     const refreshTokenCookie = response.headers['set-cookie'] || ''
 
     return { refreshTokenCookie }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -74,7 +77,8 @@ export const requestIsAuthorized = async (provider, accessToken) => {
     }
     const { data } = await axios.get('/is-authorized', reqConfig)
     return data.error ? createServiceError(error) : data
-  } catch (error) {
+  }
+  catch (error) {
     return createAPIError(error)
   }
 }
@@ -86,8 +90,9 @@ export const requestSendResetPasswordMail = async (provider, params) => {
 
     const response = await axios.post('reset-password', bodyParams)
     const { resetToken, email } = response.data
-    return { resetToken, email }
-  } catch (error) {
+    return { email, resetToken }
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -100,7 +105,8 @@ export const requestUpdateResetPasswordByToken = async (provider, params) => {
     const bodyParams = { password, token }
     const response = await axios.patch('reset-password', bodyParams)
     return response
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

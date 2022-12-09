@@ -1,15 +1,144 @@
+<script>
+// @ts-check
+import RiskScoreExplanationModal from './RiskScoreExplanationModal.vue'
+import { getAssetsRisk } from '~/services/assets'
+import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
+import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
+
+export default {
+  components: {
+    RiskScoreExplanationModal,
+    LoadingSpinner
+  },
+  name: 'AssetRiskScore',
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
+  data: () => ({
+    dialogOpen: false,
+    loading: true,
+    hasVuln: false,
+    scanned: false,
+    scores: {
+      inherent: null,
+      compound: null,
+      inherited: null
+    },
+  }),
+  computed: {
+    /**
+     * @returns {number}
+     */
+    assetId() {
+      return this.asset.id
+    },
+
+    /**
+     * @returns {{letter: String, color: String}}
+     */
+    getGlobalRiskScore() {
+      return {
+        color: riskScoreColor(
+          this.scoreToUse,
+          this.hasVuln,
+          this.scanned || this.isSuperAsset,
+        ),
+        letter: riskScoreLetter(
+          this.scoreToUse,
+          this.hasVuln,
+          this.scanned || this.isSuperAsset,
+        ),
+      }
+    },
+
+    /**
+     * @returns {{
+     *  inherent: string | number,
+     *  inherited: string | number,
+     *  compound: string | number
+     * }}
+     */
+    getScoresToDisplay() {
+      return {
+        compound:
+          this.scores.compoundScore === null
+            ? 'N/A'
+            : roundScore(this.scores.compoundScore),
+        inherent:
+          this.scores.inherentScore === null
+            ? 'N/A'
+            : roundScore(this.scores.inherentScore),
+        inherited:
+          this.scores.inheritedScore === null
+            ? 'N/A'
+            : roundScore(this.scores.inheritedScore),
+      }
+    },
+
+    /**
+     * TODO: Check with a list of super assets instead the reverse
+     *
+     * @returns {boolean}
+     */
+    isSuperAsset() {
+      return !['USER', 'SERVER', 'WEB'].includes(this.asset.type)
+    },
+
+    /**
+     * Get the score to use depending on the asset type
+     *
+     * @returns {number}
+     */
+    scoreToUse() {
+      if (this.isSuperAsset)
+        return this.scores.compoundScore
+
+      return this.scores.inheritedScore
+    },
+  },
+  mounted() {
+    this.fetchScores()
+  },
+  watch: {
+    assetId() {
+      this.fetchScores()
+    }
+  },
+  methods: {
+    async fetchScores() {
+      this.loading = true
+      const { data } = await getAssetsRisk(this.$axios, this.assetId)
+      this.scores.inherentScore = data.scores.inherentScore
+      this.scores.inheritedScore = data.scores.inheritedScore
+      this.scores.compoundScore = data.scores.compoundScore
+      this.scanned = data.lastScanDate !== null
+
+      // If the inherent score is at 0, it means there only are remediated vulns.
+      // A non-scanned & no-vuln asset has an inherent risk score of 10
+      this.hasVuln = data.scores.inherentScore === 0 || data.hasVulnerability
+      this.loading = false
+    },
+  },
+}
+</script>
+
 <template>
   <LoadingSpinner v-if="loading" class="risk-score-spinner" />
   <div v-else class="d-flex flex-column" style="width: fit-content">
     <v-dialog v-model="dialogOpen" width="700">
       <template #activator="{ on }">
         <div
-          v-on="on"
           class="align-self-center risk-score-grade"
           style="cursor: pointer"
           :style="{ 'background-color': getGlobalRiskScore.color }"
+          v-on="on"
         >
-          <p class="score-letter">{{ getGlobalRiskScore.letter }}</p>
+          <p class="score-letter">
+            {{ getGlobalRiskScore.letter }}
+          </p>
         </div>
       </template>
       <RiskScoreExplanationModal :is-super-asset="isSuperAsset" />
@@ -40,130 +169,6 @@
     </template>
   </div>
 </template>
-
-<script>
-// @ts-check
-import RiskScoreExplanationModal from './RiskScoreExplanationModal.vue'
-import { getAssetsRisk } from '~/services/assets'
-import { riskScoreLetter, riskScoreColor, roundScore } from '~/utils/risk.utils'
-import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
-
-export default {
-  name: 'AssetRiskScore',
-  components: {
-    RiskScoreExplanationModal,
-    LoadingSpinner
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data: () => ({
-    dialogOpen: false,
-    loading: true,
-    scanned: false,
-    hasVuln: false,
-    scores: {
-      inherent: null,
-      inherited: null,
-      compound: null
-    }
-  }),
-  computed: {
-    /**
-     * @returns {number}
-     */
-    assetId() {
-      return this.asset.id
-    },
-    /**
-     * TODO: Check with a list of super assets instead the reverse
-     *
-     * @returns {boolean}
-     */
-    isSuperAsset() {
-      return !['USER', 'SERVER', 'WEB'].includes(this.asset.type)
-    },
-    /**
-     * Get the score to use depending on the asset type
-     *
-     * @returns {number}
-     */
-    scoreToUse() {
-      if (this.isSuperAsset) {
-        return this.scores.compoundScore
-      }
-
-      return this.scores.inheritedScore
-    },
-    /**
-     * @returns {{letter: String, color: String}}
-     */
-    getGlobalRiskScore() {
-      return {
-        letter: riskScoreLetter(
-          this.scoreToUse,
-          this.hasVuln,
-          this.scanned || this.isSuperAsset
-        ),
-        color: riskScoreColor(
-          this.scoreToUse,
-          this.hasVuln,
-          this.scanned || this.isSuperAsset
-        )
-      }
-    },
-    /**
-     * @returns {{
-     *  inherent: string | number,
-     *  inherited: string | number,
-     *  compound: string | number
-     * }}
-     */
-    getScoresToDisplay() {
-      return {
-        inherent:
-          this.scores.inherentScore === null
-            ? 'N/A'
-            : roundScore(this.scores.inherentScore),
-        inherited:
-          this.scores.inheritedScore === null
-            ? 'N/A'
-            : roundScore(this.scores.inheritedScore),
-        compound:
-          this.scores.compoundScore === null
-            ? 'N/A'
-            : roundScore(this.scores.compoundScore)
-      }
-    }
-  },
-  watch: {
-    assetId() {
-      this.fetchScores()
-    }
-  },
-  mounted() {
-    this.fetchScores()
-  },
-  methods: {
-    async fetchScores() {
-      this.loading = true
-      const { data } = await getAssetsRisk(this.$axios, this.assetId)
-      this.scores.inherentScore = data.scores.inherentScore
-      this.scores.inheritedScore = data.scores.inheritedScore
-      this.scores.compoundScore = data.scores.compoundScore
-      this.scanned = data.lastScanDate !== null
-
-      // If the inherent score is at 0, it means there only are remediated vulns.
-      // A non-scanned & no-vuln asset has an inherent risk score of 10
-      this.hasVuln = data.scores.inherentScore === 0 || data.hasVulnerability
-      this.loading = false
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .risk-score-grade {

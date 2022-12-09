@@ -4,7 +4,7 @@ import { createAPIError } from '@/common/errors/api'
 export const requestFetchCompliance = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -14,11 +14,12 @@ export const requestFetchCompliance = async (
       }),
     }
     const { data } = await axios.get('/compliance', {
-      params: params,
+      params,
       ...reqConfig,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

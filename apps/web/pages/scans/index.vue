@@ -1,62 +1,21 @@
-<template>
-  <v-container>
-    <stacked-bar-chart
-      id="scans-history"
-      v-if="hasChartData"
-      :data="chartData"
-      :config="chartConfig"
-    />
-
-    <div class="mt-8 mb-4 text-right">
-      <v-dialog v-model="dialog" width="1200">
-        <template #activator="{ on, attrs }">
-          <v-btn color="primary" class="mr-4" v-on="on" v-bind="attrs"
-            >Import Scan</v-btn
-          >
-        </template>
-        <scan-import @close="dialog = false" @change="dataChange" />
-      </v-dialog>
-      <nuxt-link :to="localePath('scans-schedule')">
-        <v-btn color="primary" dark>
-          + Schedule scan
-        </v-btn>
-      </nuxt-link>
-    </div>
-
-    <scans-listing :scans="scans" @change="dataChange" />
-    <v-container class="max-width">
-      <v-pagination
-        v-if="getTotalNumberOfPagination >= 1"
-        v-model="page"
-        class="my-4"
-        :length="getTotalNumberOfPagination"
-        @next="fetchScansListing()"
-        @previous="fetchScansListing()"
-        @input="fetchScansListing()"
-      ></v-pagination>
-    </v-container>
-  </v-container>
-</template>
-
 <script>
 import StackedBarChart from '~/components/charts/stacked-bar-chart'
 import ScansListing from '~/components/scans/scans-listing'
 import ScanImport from '~/components/controls/scan-import.vue'
 import {
   getScansChartDataService,
-  getScansListDataService
+  getScansListDataService,
 } from '~/services/scans'
 
 export default {
-  name: 'ScansPage',
   components: { ScansListing, StackedBarChart, ScanImport },
+  name: 'ScansPage',
   middleware: ['auth'],
   data: () => ({
-    totalPage: 0,
     page: 1,
-    pageSize: 10,
+    totalPage: 0,
     dialog: false,
-    scans: [],
+    pageSize: 10,
     chartData: {
       x: {
         value: []
@@ -78,9 +37,9 @@ export default {
         color: '#941e1e'
       }
     },
+    scans: [],
     chartConfig: {
       data: {
-        x: 'x',
         order: (a, b) => {
           const orders = {
             low: 0,
@@ -90,23 +49,28 @@ export default {
           }
 
           return orders[a.id] - orders[b.id]
-        }
-      }
+        },
+        x: 'x'
+      },
     }
   }),
   computed: {
-    hasChartData() {
-      return Object.values(this.chartData).every((group) => group.value.length)
-    },
     getTotalNumberOfPagination() {
       return Math.ceil(this.totalPage / this.pageSize)
-    }
+    },
+    hasChartData() {
+      return Object.values(this.chartData).every(group => group.value.length)
+    },
   },
   async created() {
     this.$store.dispatch('changePageTitle', 'Scans')
     await Promise.all([this.fetchScansChartData(), this.fetchScansListing()])
   },
   methods: {
+    async dataChange() {
+      await this.fetchScansChartData()
+      await this.fetchScansListing()
+    },
     async fetchScansChartData() {
       const scans = await getScansChartDataService(this.$axios)
 
@@ -122,44 +86,80 @@ export default {
           return data
         },
         {
-          x: {
-            value: []
-          },
-          low: {
+          critical: {
+            color: '#941e1e',
             value: [],
-            color: '#f0d802'
-          },
-          medium: {
-            value: [],
-            color: '#ed9b0e'
           },
           high: {
+            color: '#d92b2b',
             value: [],
-            color: '#d92b2b'
           },
-          critical: {
+          low: {
+            color: '#f0d802',
             value: [],
-            color: '#941e1e'
-          }
-        }
+          },
+          medium: {
+            color: '#ed9b0e',
+            value: [],
+          },
+          x: {
+            value: [],
+          },
+        },
       )
     },
     async fetchScansListing() {
       const queryParams = {
         page: this.page,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
       }
       const { scans, total } = await getScansListDataService(
         this.$axios,
-        queryParams
+        queryParams,
       )
       this.totalPage = total
       this.scans = scans
     },
-    async dataChange() {
-      await this.fetchScansChartData()
-      await this.fetchScansListing()
-    }
-  }
+  },
 }
 </script>
+
+<template>
+  <v-container>
+    <StackedBarChart
+      v-if="hasChartData"
+      id="scans-history"
+      :data="chartData"
+      :config="chartConfig"
+    />
+
+    <div class="mt-8 mb-4 text-right">
+      <v-dialog v-model="dialog" width="1200">
+        <template #activator="{ on, attrs }">
+          <v-btn color="primary" class="mr-4" v-bind="attrs" v-on="on">
+            Import Scan
+          </v-btn>
+        </template>
+        <ScanImport @close="dialog = false" @change="dataChange" />
+      </v-dialog>
+      <nuxt-link :to="localePath('scans-schedule')">
+        <v-btn color="primary" dark>
+          + Schedule scan
+        </v-btn>
+      </nuxt-link>
+    </div>
+
+    <ScansListing :scans="scans" @change="dataChange" />
+    <v-container class="max-width">
+      <v-pagination
+        v-if="getTotalNumberOfPagination >= 1"
+        v-model="page"
+        class="my-4"
+        :length="getTotalNumberOfPagination"
+        @next="fetchScansListing()"
+        @previous="fetchScansListing()"
+        @input="fetchScansListing()"
+      />
+    </v-container>
+  </v-container>
+</template>

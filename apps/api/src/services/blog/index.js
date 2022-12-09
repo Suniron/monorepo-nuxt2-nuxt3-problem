@@ -6,7 +6,8 @@ export const fetchPostsService = async (accessToken = '') => {
   try {
     const data = postsAPIs.fetchPosts(accessToken)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('fetchPostsService')
     return createServiceError(error)
   }
@@ -15,12 +16,12 @@ export const fetchPostsService = async (accessToken = '') => {
 export const CreateRemediationProjectPostsService = async (
   params,
   body,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await postsAPIs.CreateRemediationProjectPostsService(
     params.id,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }

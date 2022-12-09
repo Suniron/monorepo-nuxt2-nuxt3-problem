@@ -1,7 +1,7 @@
 import express from 'express'
 import {
-  fetchComplianceController,
   createComplianceController,
+  fetchComplianceController,
 } from '@/controllers/self-assessment'
 
 const router = express.Router()

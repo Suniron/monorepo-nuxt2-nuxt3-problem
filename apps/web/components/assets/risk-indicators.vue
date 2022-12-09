@@ -1,26 +1,6 @@
-<template>
-  <div class="risk-indicator">
-    <v-btn
-      v-for="[level, amount] of orderedRisks"
-      :key="level"
-      :class="`risk risk--${level}`"
-      @click.stop="goToAssetDetails(level)"
-      x-small
-    >
-      {{ amount }}
-    </v-btn>
-  </div>
-</template>
-
 <script>
 export default {
   name: 'RiskIndicators',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
   computed: {
     risks() {
       return this.asset.vulnerabilities || {}
@@ -38,13 +18,33 @@ export default {
         this.localePath({
           name: 'assets-id',
           params: { id: this.asset.id },
-          query: { severities: severity }
-        })
+          query: { severities: severity },
+        }),
       )
-    }
-  }
+    },
+  },
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="risk-indicator">
+    <v-btn
+      v-for="[level, amount] of orderedRisks"
+      :key="level"
+      :class="`risk risk--${level}`"
+      x-small
+      @click.stop="goToAssetDetails(level)"
+    >
+      {{ amount }}
+    </v-btn>
+  </div>
+</template>
 
 <style lang="scss">
 .risk-indicator {

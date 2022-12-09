@@ -1,6 +1,6 @@
 // @ts-check
-import { log } from '@/lib/logger'
 import { v4 as uuidv4 } from 'uuid'
+import { log } from '@/lib/logger'
 
 /**
  * Loads a logger to an Expres app
@@ -20,18 +20,18 @@ export default async function loadLogger(app) {
       req.log = log.child().withContext({
         // generate a random request id to improve tracing
         req: {
+          body: req.body,
+          headers: req.headers,
           id: uuidv4(),
           method: req.method,
-          url: req.url,
-          query: req.query,
           params: req.params,
-          headers: req.headers,
+          query: req.query,
           remoteAddress: req.ip,
-          body: req.body,
+          url: req.url,
         },
         res: {
-          statusCode: res.statusCode,
           headers: res.getHeaders(),
+          statusCode: res.statusCode,
         },
         type: 'request',
       })
@@ -40,7 +40,7 @@ export default async function loadLogger(app) {
       res.on('finish', () => {
         const elapsedHrTime = process.hrtime(startHrTime)
         const elapsedTimeInMs = Math.round(
-          elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6
+          elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6,
         )
         req.log
           .withMetadata({ duration: elapsedTimeInMs })
@@ -48,6 +48,6 @@ export default async function loadLogger(app) {
       })
 
       next()
-    }
+    },
   )
 }

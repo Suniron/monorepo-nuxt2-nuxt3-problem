@@ -1,6 +1,57 @@
+<script>
+// @ts-check
+/**
+ * @typedef {import('@/types/discussion').DiscussionMessage} DiscussionMessage
+ */
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+// @ts-expect-error
+import { quillEditor } from 'vue-quill-editor'
+
+export default {
+  components: {
+    QuillEditor: quillEditor,
+  },
+  data() {
+    return {
+      editorOptionReadOnly: {
+        modules: {
+          toolbar: false
+        }
+      }
+    }
+  },
+  props: {
+    /**
+     * Add title to the editor
+     */
+    title: { type: String, default: '' },
+    /**
+     * @type {import('vue').PropOptions<DiscussionMessage[]>} */
+    messages: { type: Array, default: () => [], required: true }
+  },
+  computed: {
+    /**
+     * @returns {DiscussionMessage[]} Messages sorted recent to older
+     */
+    sortedMessagesByDate() {
+      const msgs = [...this.messages]
+      return msgs.sort(
+        (a, b) =>
+          new Date(b.creationDate).getTime()
+          - new Date(a.creationDate).getTime(),
+      )
+    },
+  },
+}
+</script>
+
 <template>
   <v-card>
-    <v-card-title v-if="title">{{ title }}</v-card-title>
+    <v-card-title v-if="title">
+      {{ title }}
+    </v-card-title>
     <v-card-text>
       <v-row justify="center">
         <v-col cols="7">
@@ -21,7 +72,7 @@
                     </p>
                   </div>
 
-                  <quill-editor
+                  <QuillEditor
                     :content="msg.content"
                     :options="editorOptionReadOnly"
                     disabled
@@ -36,52 +87,3 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-// @ts-check
-/**
- * @typedef {import('@/types/discussion').DiscussionMessage} DiscussionMessage
- */
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-// @ts-ignore
-import { quillEditor } from 'vue-quill-editor'
-
-export default {
-  components: {
-    quillEditor
-  },
-  props: {
-    /**
-     * Add title to the editor
-     */
-    title: { type: String, default: '' },
-    /**
-     * @type {import('vue').PropOptions<DiscussionMessage[]>} */
-    messages: { type: Array, default: () => [], required: true }
-  },
-  data() {
-    return {
-      editorOptionReadOnly: {
-        modules: {
-          toolbar: false
-        }
-      }
-    }
-  },
-  computed: {
-    /**
-     * @returns {DiscussionMessage[]} Messages sorted recent to older
-     */
-    sortedMessagesByDate() {
-      const msgs = [...this.messages]
-      return msgs.sort(
-        (a, b) =>
-          new Date(b.creationDate).getTime() -
-          new Date(a.creationDate).getTime()
-      )
-    }
-  }
-}
-</script>

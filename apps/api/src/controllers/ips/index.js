@@ -1,9 +1,9 @@
 import { throwHTTPError } from '@/common/errors'
 
 import {
+  createIpControllerService,
   deleteIpControllerService,
   updateIpControllerService,
-  createIpControllerService,
 } from '@/services/ips'
 
 export const deleteIpController = async (req, res, next) => {
@@ -13,12 +13,14 @@ export const deleteIpController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).send({ SUCCESS })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -28,12 +30,14 @@ export const updateIpController = async (req, res, next) => {
     const { SUCCESS, error } = await updateIpControllerService(
       req.body,
       req.accessToken,
-      req.params.id
+      req.params.id,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).send({ SUCCESS })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -43,12 +47,14 @@ export const createIpController = async (req, res, next) => {
     const { ipId, error } = await createIpControllerService(
       req.body,
       req.accessToken,
-      req.params.assetId
+      req.params.assetId,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(201).send({ ipId })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

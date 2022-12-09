@@ -3,7 +3,7 @@
 
 export const getDashboardData = async (axios, params) => {
   const { data } = await axios.get('/dashboard', {
-    params
+    params,
   })
   // data.scanHistory = data.scanHistory.concat(scansChartData)
   // data.riskAsset = riskAsset
@@ -17,5 +17,5 @@ export const fetchDashboards = async (axios) => {
 }
 
 export const updateDashboardUser = async (axios, id, params) => {
-  await axios.post('/dashview/' + id, params)
+  await axios.post(`/dashview/${id}`, params)
 }

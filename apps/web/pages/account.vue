@@ -1,119 +1,11 @@
-<template>
-  <v-row align="center" justify="center" class="mt-4">
-    <v-col cols="12" lg="6">
-      <v-card>
-        <v-card-title>Edit Profile</v-card-title>
-        <v-card-text>
-          <v-form v-model="isFormValid">
-            <v-row justify="center">
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  disabled
-                  v-model="form.email"
-                  placeholder="Email"
-                  label="Email"
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  disabled
-                  v-model="form.username"
-                  placeholder="Username"
-                  label="username"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row justify="center">
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  v-model="form.firstName"
-                  placeholder="First Name"
-                  label="First Name"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  v-model="form.lastName"
-                  placeholder="Last Name"
-                  label="Last Name"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row justify="center">
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  v-model="form.oldPassword"
-                  :rules="rules.default"
-                  label="Old password"
-                  type="password"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" lg="4"> </v-col>
-            </v-row>
-            <v-row justify="center">
-              <v-col cols="12" lg="4">
-                <PasswordPolicyTooltipWrapper :password="form.password1">
-                  <v-text-field
-                    v-model="form.password1"
-                    :rules="rules.complexity"
-                    label="type new password"
-                    type="password"
-                    required
-                  />
-                </PasswordPolicyTooltipWrapper>
-              </v-col>
-              <v-col cols="12" lg="4">
-                <v-text-field
-                  v-model="form.password2"
-                  :rules="rules.new"
-                  label="re-type password"
-                  type="password"
-                  required
-                />
-              </v-col>
-            </v-row>
-            <v-row justify="end" align="end">
-              <v-col>
-                <v-btn
-                  color="primary"
-                  @click.stop="save"
-                  :disabled="!isFormValid"
-                >
-                  Save
-                </v-btn>
-              </v-col>
-              <v-col
-                cols="12"
-                style="color: red;font-weight: bold"
-                v-if="error"
-              >
-                {{ form.errorMessage }}
-              </v-col>
-              <v-col
-                cols="12"
-                style="color: green;font-weight: bold"
-                v-else-if="success"
-              >
-                {{ form.successMessage }}
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
-</template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { updateUserService } from '@/services/users'
 import { PASSWORD_VALIDATION_REGEXP } from '@/utils/users.utils'
 import PasswordPolicyTooltipWrapper from '~/components/users/PasswordPolicyTooltipWrapper.vue'
 
 export default {
   components: { PasswordPolicyTooltipWrapper },
-  middleware: ['auth'],
   data() {
     return {
       form: {
@@ -166,6 +58,7 @@ export default {
       }
     }
   },
+  middleware: ['auth'],
   computed: {
     ...mapGetters('user', [
       'isLoggedIn',
@@ -173,8 +66,8 @@ export default {
       'lastName',
       'id',
       'username',
-      'email'
-    ])
+      'email',
+    ]),
     /* rules() {
       const rules = []
       if (this.form.password2 !== '') {
@@ -212,12 +105,16 @@ export default {
   },
   methods: {
     ...mapActions('user', ['changeUserValueAfterUpdate']),
+    restToolTips() {
+      this.showOld = false
+      this.showNew = false
+    },
     async save() {
       this.error = false
       this.success = false
       const params = {
         id: this.id,
-        ...this.form
+        ...this.form,
       }
       const result = await updateUserService(this.$axios, params)
 
@@ -225,18 +122,123 @@ export default {
         this.changeUserValueAfterUpdate({
           user: {
             firstName: result.firstName,
-            lastName: result.lastName
-          }
+            lastName: result.lastName,
+          },
         })
         this.success = true
-      } else {
+      }
+      else {
         this.error = true
       }
     },
-    restToolTips() {
-      this.showOld = false
-      this.showNew = false
-    }
-  }
+  },
 }
 </script>
+
+<template>
+  <v-row align="center" justify="center" class="mt-4">
+    <v-col cols="12" lg="6">
+      <v-card>
+        <v-card-title>Edit Profile</v-card-title>
+        <v-card-text>
+          <v-form v-model="isFormValid">
+            <v-row justify="center">
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.email"
+                  disabled
+                  placeholder="Email"
+                  label="Email"
+                />
+              </v-col>
+
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.username"
+                  disabled
+                  placeholder="Username"
+                  label="username"
+                />
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.firstName"
+                  placeholder="First Name"
+                  label="First Name"
+                />
+              </v-col>
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.lastName"
+                  placeholder="Last Name"
+                  label="Last Name"
+                />
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.oldPassword"
+                  :rules="rules.default"
+                  label="Old password"
+                  type="password"
+                  required
+                />
+              </v-col>
+              <v-col cols="12" lg="4" />
+            </v-row>
+            <v-row justify="center">
+              <v-col cols="12" lg="4">
+                <PasswordPolicyTooltipWrapper :password="form.password1">
+                  <v-text-field
+                    v-model="form.password1"
+                    :rules="rules.complexity"
+                    label="type new password"
+                    type="password"
+                    required
+                  />
+                </PasswordPolicyTooltipWrapper>
+              </v-col>
+              <v-col cols="12" lg="4">
+                <v-text-field
+                  v-model="form.password2"
+                  :rules="rules.new"
+                  label="re-type password"
+                  type="password"
+                  required
+                />
+              </v-col>
+            </v-row>
+            <v-row justify="end" align="end">
+              <v-col>
+                <v-btn
+                  color="primary"
+                  :disabled="!isFormValid"
+                  @click.stop="save"
+                >
+                  Save
+                </v-btn>
+              </v-col>
+              <v-col
+                v-if="error"
+                cols="12"
+                style="color: red;font-weight: bold"
+              >
+                {{ form.errorMessage }}
+              </v-col>
+              <v-col
+                v-else-if="success"
+                cols="12"
+                style="color: green;font-weight: bold"
+              >
+                {{ form.successMessage }}
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>

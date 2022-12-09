@@ -1,45 +1,6 @@
-<template>
-  <div style="width: 100%;">
-    <v-col cols="12">
-      <v-select
-        v-if="availablePeople.length > 0"
-        :items="availablePeople"
-        item-value="id"
-        item-text="name"
-        v-model="people"
-        class="custom-multiselect"
-        multiple
-        chips
-        deletable-chips
-        @change="changed"
-        @click.stop
-        v-bind="$attrs"
-        label="Group members"
-        single-line
-        :disabled="!quickedit"
-        :menu-props="{
-          bottom: true,
-          offsetY: true,
-          closeOnClick: true
-        }"
-      >
-      </v-select>
-    </v-col>
-  </div>
-</template>
 <script>
 import { searchAssetsService } from '~/services/assets'
 export default {
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    quickedit: {
-      type: Boolean,
-      required: false
-    }
-  },
   data() {
     return {
       formData: {
@@ -49,6 +10,16 @@ export default {
         children: []
       },
       availablePeople: []
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    },
+    quickedit: {
+      type: Boolean,
+      required: false
     }
   },
   computed: {
@@ -66,20 +37,14 @@ export default {
           Array.from(
             new Set([
               ...(this.asset.children ?? [])
-                .filter((child) => child.type !== 'USER')
-                .map((child) => child.id),
-              ...people
-            ])
-          )
+                .filter(child => child.type !== 'USER')
+                .map(child => child.id),
+              ...people,
+            ]),
+          ),
         )
-      }
-    }
-  },
-  watch: {
-    asset() {
-      this.restoreTheActualStateInDatabase()
-      this.fetchMissions()
-    }
+      },
+    },
   },
   created() {
     this.restoreTheActualStateInDatabase()
@@ -87,27 +52,62 @@ export default {
     this.$root.$on('canceledSaves', this.canceledSaves)
     this.changed()
   },
+  watch: {
+    asset() {
+      this.restoreTheActualStateInDatabase()
+      this.fetchMissions()
+    }
+  },
   methods: {
-    restoreTheActualStateInDatabase() {
-      if (this.asset?.children?.length > 0) {
-        this.people = (this.asset.children ?? [])
-          .filter((person) => person.type === 'USER')
-          .map((person) => person.id)
-      }
-    },
-    changed() {
-      this.$emit('change', this.formData)
-    },
     canceledSaves() {
       this.changed()
       this.restoreTheActualStateInDatabase()
+    },
+    changed() {
+      this.$emit('change', this.formData)
     },
     async fetchMissions() {
       const serviceParams = {}
       serviceParams.types = ['USER']
       const { assets } = await searchAssetsService(this.$axios, serviceParams)
       this.availablePeople = assets
-    }
-  }
+    },
+    restoreTheActualStateInDatabase() {
+      if (this.asset?.children?.length > 0) {
+        this.people = (this.asset.children ?? [])
+          .filter(person => person.type === 'USER')
+          .map(person => person.id)
+      }
+    },
+  },
 }
 </script>
+
+<template>
+  <div style="width: 100%;">
+    <v-col cols="12">
+      <v-select
+        v-if="availablePeople.length > 0"
+        v-model="people"
+        :items="availablePeople"
+        item-value="id"
+        item-text="name"
+        class="custom-multiselect"
+        multiple
+        chips
+        deletable-chips
+        v-bind="$attrs"
+        label="Group members"
+        single-line
+        :disabled="!quickedit"
+        :menu-props="{
+          bottom: true,
+          offsetY: true,
+          closeOnClick: true,
+        }"
+        @change="changed"
+        @click.stop
+      />
+    </v-col>
+  </div>
+</template>

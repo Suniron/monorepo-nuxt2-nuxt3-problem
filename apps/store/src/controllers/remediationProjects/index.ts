@@ -13,7 +13,6 @@ import {
 
 } from '../../models/remediationProjects'
 
-
 export const getRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getRemediationProjectsModel(
@@ -30,7 +29,6 @@ export const getRemediationProjectsController = async (req: Request, res: Respon
     next(error)
   }
 }
-
 
 export const getRemediationProjectsSummaryController = async (
   req: any,
@@ -56,7 +54,6 @@ export const getRemediationProjectsSummaryController = async (
   }
 }
 
-
 export const getRemediationProjectsScopeController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getRemediationProjectsScopeModel(
@@ -73,7 +70,6 @@ export const getRemediationProjectsScopeController = async (req: Request, res: R
     next(error)
   }
 }
-
 
 export const getRemediationProjectStatusHistoryController = async (
   req: any,
@@ -96,7 +92,6 @@ export const getRemediationProjectStatusHistoryController = async (
   }
 }
 
-
 export const updateRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await updateRemediationProjectsModel(
@@ -107,14 +102,13 @@ export const updateRemediationProjectsController = async (req: Request, res: Res
 
     if ('error' in result)
       throwHTTPError(result.error)
-      
+
     res.send(result)
   }
   catch (error) {
     next(error)
   }
 }
-
 
 export const createRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -129,7 +123,6 @@ export const createRemediationProjectsController = async (req: Request, res: Res
     next(error)
   }
 }
-
 
 export const updateRemediationProjectScopeController = async (
   req: any,
@@ -153,7 +146,6 @@ export const updateRemediationProjectScopeController = async (
   }
 }
 
-
 export const updateRemediationProjectScopeItemController = async (
   req: any,
   res: any,
@@ -176,7 +168,6 @@ export const updateRemediationProjectScopeItemController = async (
     next(error)
   }
 }
-
 
 export const getRemediationProjectCommentsController = async (
   req: any,

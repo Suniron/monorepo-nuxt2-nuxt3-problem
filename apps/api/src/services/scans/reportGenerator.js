@@ -26,13 +26,13 @@ const _ = require('lodash')
 const { log } = require('@/lib/logger')
 
 const ASSET_FORMAT_MAP = {
-  SERVER: 'server',
-  WEB: 'website',
-  USER: 'user',
   BUILDING: 'building',
+  NETWORK: 'network',
   POLICY: 'policy',
   PROCEDURE: 'procedure',
-  NETWORK: 'network',
+  SERVER: 'server',
+  USER: 'user',
+  WEB: 'website',
 }
 
 if (workers.isMainThread) {
@@ -62,20 +62,21 @@ if (workers.isMainThread) {
         log.withError(err).error('reportGenerator > Error from worker')
       })
       worker.on('exit', (code) => {
-        log.error('reportGenerator > Worker closed with error code: ' + code)
+        log.error(`reportGenerator > Worker closed with error code: ${code}`)
       })
     })
   }
-} else {
+}
+else {
   // Worker thread
 
   generateReport(workers.workerData.company, workers.workerData.scanData).then(
     (buffer) => {
       workers.parentPort.postMessage({
-        type: 'report',
         data: buffer,
+        type: 'report',
       })
-    }
+    },
   )
 }
 
@@ -83,69 +84,51 @@ function generateReport(company, scanData) {
   const now = new Date()
   const assetsVulnerabilityGrouped = _.groupBy(
     scanData.scan_result_vulnerabilities,
-    'vulnerability_id'
+    'vulnerability_id',
   )
   const doc = new Document({
     numbering: {
       config: [
         {
-          reference: 'default-numbered',
           levels: [
             {
-              level: 0,
-              format: LevelFormat.DECIMAL,
-              text: '%1.',
               alignment: AlignmentType.START,
+              format: LevelFormat.DECIMAL,
+              level: 0,
               style: {
                 paragraph: {
                   indent: {
-                    left: convertInchesToTwip(0.5),
                     hanging: convertInchesToTwip(0.18),
+                    left: convertInchesToTwip(0.5),
                   },
                 },
               },
+              text: '%1.',
             },
           ],
-        },
-      ],
-    },
-    styles: {
-      paragraphStyles: [
-        {
-          name: 'Heading 1',
-          id: HeadingLevel.HEADING_1,
-          run: {
-            size: 75,
-          },
+          reference: 'default-numbered',
         },
       ],
     },
     sections: [
       {
-        properties: {
-          titlePage: 'Vulnerability report',
-        },
         children: new Array(5)
           .fill(
             new Paragraph({
-              heading: HeadingLevel.HEADING_1,
               children: [],
-            })
+              heading: HeadingLevel.HEADING_1,
+            }),
           )
           .concat([
             new Paragraph({
-              heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.CENTER,
               children: [
                 new ImageRun({
                   data: fs.readFileSync(
-                    path.join(__dirname, './xrator-brand-filtered.png')
+                    path.join(__dirname, './xrator-brand-filtered.png'),
                   ),
-                  transformation: {
-                    height: 256 * 1.2,
-                    width: 453 * 1.2,
-                  },
                   floating: {
+                    behindDocument: true,
                     horizontalPosition: {
                       offset: pointsToEMU(125 * 0.75), // Center image
                     },
@@ -153,73 +136,57 @@ function generateReport(company, scanData) {
                       offset: pointsToEMU(270),
                     },
                     wrap: {
-                      type: TextWrappingType.NONE,
                       side: TextWrappingSide.BOTH_SIDES,
+                      type: TextWrappingType.NONE,
                     },
-                    behindDocument: true,
+                  },
+                  transformation: {
+                    height: 256 * 1.2,
+                    width: 453 * 1.2,
                   },
                 }),
               ],
+              heading: HeadingLevel.HEADING_2,
             }),
             new Paragraph({
-              heading: HeadingLevel.HEADING_1,
               alignment: AlignmentType.CENTER,
               children: [
                 new TextRun('Vulnerability report for '),
                 new TextRun({
-                  text: company,
                   bold: true,
+                  text: company,
                 }),
               ],
+              heading: HeadingLevel.HEADING_1,
             }),
             new Paragraph({
-              heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.CENTER,
+              heading: HeadingLevel.HEADING_2,
               text: scanData.scan.name,
             }),
             new Paragraph({
-              heading: HeadingLevel.HEADING_3,
               alignment: AlignmentType.CENTER,
               children: [
                 new TextRun({
-                  text: `Scan run at ${new Date(
-                    scanData.scan.cdate
-                  ).toLocaleString()}`,
                   color: '#666666',
+                  text: `Scan run at ${new Date(
+                    scanData.scan.cdate,
+                  ).toLocaleString()}`,
                 }),
               ],
+              heading: HeadingLevel.HEADING_3,
             }),
           ]),
         footers: {
-          first: new Footer({
-            children: [
-              new Paragraph({
-                alignment: AlignmentType.RIGHT,
-                children: [
-                  new TextRun({
-                    text: 'Generated by Xrator at ' + now.toLocaleString(),
-                  }),
-                ],
-              }),
-            ],
-          }),
           default: new Footer({
             children: [
               new Paragraph({
                 alignment: AlignmentType.LEFT,
-                indent: {
-                  left: 100,
-                  right: 100,
-                },
                 children: [
                   new ImageRun({
                     data: fs.readFileSync(
-                      path.join(__dirname, './xrator-icon.png')
+                      path.join(__dirname, './xrator-icon.png'),
                     ),
-                    transformation: {
-                      width: 25,
-                      height: 25,
-                    },
                     floating: {
                       horizontalPosition: {
                         offset: pointsToEMU(25),
@@ -228,17 +195,25 @@ function generateReport(company, scanData) {
                         offset: pointsToEMU(800),
                       },
                       wrap: {
-                        type: TextWrappingType.NONE,
                         side: TextWrappingSide.BOTH_SIDES,
+                        type: TextWrappingType.NONE,
                       },
+                    },
+                    transformation: {
+                      height: 25,
+                      width: 25,
                     },
                   }),
                 ],
+                indent: {
+                  left: 100,
+                  right: 100,
+                },
               }),
               new Paragraph({
                 alignment: AlignmentType.RIGHT,
                 children: [
-                  new TextRun('Report generated at ' + now.toLocaleString()),
+                  new TextRun(`Report generated at ${now.toLocaleString()}`),
                 ],
               }),
               new Paragraph({
@@ -256,26 +231,52 @@ function generateReport(company, scanData) {
               }),
             ],
           }),
+          first: new Footer({
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                children: [
+                  new TextRun({
+                    text: `Generated by Xrator at ${now.toLocaleString()}`,
+                  }),
+                ],
+              }),
+            ],
+          }),
+        },
+        properties: {
+          titlePage: 'Vulnerability report',
         },
       },
       {
         children: [
           new Paragraph({
-            heading: HeadingLevel.HEADING_1,
             alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
             text: 'Executive summary',
           }),
         ],
       },
       ...Object.keys(assetsVulnerabilityGrouped).map((vulnId) => {
         return getSectionForVulnerability({
-          vulnerability: scanData.vulnerabilities.find(
-            (vuln) => vuln.id === parseInt(vulnId)
-          ),
           assetsAffected: assetsVulnerabilityGrouped[vulnId],
+          vulnerability: scanData.vulnerabilities.find(
+            vuln => vuln.id === parseInt(vulnId),
+          ),
         })
       }),
     ],
+    styles: {
+      paragraphStyles: [
+        {
+          id: HeadingLevel.HEADING_1,
+          name: 'Heading 1',
+          run: {
+            size: 75,
+          },
+        },
+      ],
+    },
   })
 
   return Packer.toBuffer(doc)
@@ -358,50 +359,50 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
   return {
     children: [
       new Paragraph({
-        heading: HeadingLevel.HEADING_1,
         alignment: AlignmentType.LEFT,
         children: [
           new TextRun({
-            text: vulnerability.name,
             bold: true,
+            text: vulnerability.name,
           }),
         ],
+        heading: HeadingLevel.HEADING_1,
       }),
       new Paragraph({
-        heading: HeadingLevel.HEADING_2,
         alignment: AlignmentType.LEFT,
         children: [
           new TextRun({
-            text: 'Description',
             bold: true,
+            text: 'Description',
           }),
         ],
+        heading: HeadingLevel.HEADING_2,
       }),
       ...tokenize(vulnerability.description).flatMap((token) => {
         return generateDocxForToken(token)
       }),
       new Paragraph({
-        heading: HeadingLevel.HEADING_2,
         alignment: AlignmentType.LEFT,
         children: [
           new TextRun({
-            text: 'Remediation',
             bold: true,
+            text: 'Remediation',
           }),
         ],
+        heading: HeadingLevel.HEADING_2,
       }),
       ...tokenize(vulnerability.remediation).flatMap((token) => {
         return generateDocxForToken(token)
       }),
       new Paragraph({
-        heading: HeadingLevel.HEADING_2,
         alignment: AlignmentType.LEFT,
         children: [
           new TextRun({
-            text: 'Affected assets',
             bold: true,
+            text: 'Affected assets',
           }),
         ],
+        heading: HeadingLevel.HEADING_2,
       }),
       new Paragraph({
         heading: HeadingLevel.HEADING_3,
@@ -410,9 +411,9 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
       new Paragraph({
         text: Object.entries(_.groupBy(assetsAffected, 'asset_type'))
           .map(([type, assetsWithType]) => {
-            const formattedType =
-              ASSET_FORMAT_MAP[type].toLowerCase() +
-              (assetsWithType.length > 1 ? 's' : '')
+            const formattedType
+              = ASSET_FORMAT_MAP[type].toLowerCase()
+              + (assetsWithType.length > 1 ? 's' : '')
             return `${assetsWithType.length} ${formattedType}`
           })
           .join(', '),
@@ -431,8 +432,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
+                        bold: true,
                         text: 'Name',
-                        bold: true,
                       }),
                     ],
                   }),
@@ -444,8 +445,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
+                        bold: true,
                         text: 'Type',
-                        bold: true,
                       }),
                     ],
                   }),
@@ -457,8 +458,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
+                        bold: true,
                         text: 'IP',
-                        bold: true,
                       }),
                     ],
                   }),
@@ -470,8 +471,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
+                        bold: true,
                         text: 'Port',
-                        bold: true,
                       }),
                     ],
                   }),
@@ -483,8 +484,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
+                        bold: true,
                         text: 'Protocol',
-                        bold: true,
                       }),
                     ],
                   }),
@@ -496,8 +497,8 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     alignment: AlignmentType.LEFT,
                     children: [
                       new TextRun({
-                        text: 'URI',
                         bold: true,
+                        text: 'URI',
                       }),
                     ],
                   }),
@@ -506,7 +507,7 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
             ],
           }),
           ...Object.keys(assetsAffected).map(
-            (assetId) =>
+            assetId =>
               new TableRow({
                 children: [
                   new TableCell({
@@ -582,7 +583,7 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
                     ],
                   }),
                 ],
-              })
+              }),
           ),
         ],
       }),
@@ -604,13 +605,13 @@ function getSectionForVulnerability({ vulnerability, assetsAffected }) {
  * @returns {tokenType[]}
  */
 function tokenize(htmlStr) {
-  if (htmlStr === null) {
+  if (htmlStr === null)
     return []
-  }
+
   const normalizedHtmlStr = htmlStr
     .replace(/\\\\/g, '\\')
     .replace(/\\"/g, '"')
-    .replace(/\\'/g, "'")
+    .replace(/\\'/g, '\'')
     .trim()
     .replace(/<\/p>\n/g, '</p>')
     .replace(/\\n/g, '\n')
@@ -618,9 +619,9 @@ function tokenize(htmlStr) {
     .replace(/<br>(?!<\/br>)/g, '<br></br>') // Ensuring all tags have closing pair
   const result = [
     ...normalizedHtmlStr.matchAll(
-      /<(.+?)(?: (.*?))?>(.*?)<\/\1>|^(.*?)(?=<\w)|(?<=\>)([^>]*?)(?=<\w|$)/gm
+      /<(.+?)(?: (.*?))?>(.*?)<\/\1>|^(.*?)(?=<\w)|(?<=\>)([^>]*?)(?=<\w|$)/gm,
     ),
-  ].filter((match) => match[0].trim().length > 0)
+  ].filter(match => match[0].trim().length > 0)
   /**
    * 0: Matching string
    * 1: Tag name
@@ -635,9 +636,9 @@ function tokenize(htmlStr) {
     return result.map((res) => {
       if (res[3] !== undefined) {
         return {
-          tag: res[1],
           attributes: res[2]?.split(/(?<=") /) ?? [],
           children: tokenize(res[3].trim()),
+          tag: res[1],
         }
       }
       return res[4] ?? res[5]
@@ -658,17 +659,18 @@ function tokenize(htmlStr) {
  */
 function generateDocxForToken(
   token,
-  { parentParagraph, parentToken, paragraphs = [] } = {}
+  { parentParagraph, parentToken, paragraphs = [] } = {},
 ) {
   if (typeof token === 'string') {
-    if (token.trim().length === 0) {
+    if (token.trim().length === 0)
       return []
-    }
+
     if (parentParagraph) {
       const text = new TextRun({ text: token })
       parentParagraph.addChildElement(text)
       return [text]
-    } else {
+    }
+    else {
       const paragraph = new Paragraph({
         children: [new TextRun({ text: token })],
       })
@@ -684,53 +686,53 @@ function generateDocxForToken(
       break
     case 'h1':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_1,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_1,
       })
       break
     case 'h2':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_2,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_2,
       })
       break
     case 'h3':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_3,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_3,
       })
       break
     case 'h4':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_4,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_4,
       })
       break
     case 'h5':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_5,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_5,
       })
       break
     case 'h6':
       docElement = new Paragraph({
-        heading: HeadingLevel.HEADING_6,
         alignment: AlignmentType.LEFT,
+        heading: HeadingLevel.HEADING_6,
       })
       break
     case 'strong':
     case 'b':
       docElement = new TextRun({
-        text: token.children[0],
         bold: true,
+        text: token.children[0],
       })
       isParagraph = false
       break
     case 'em':
     case 'i':
       docElement = new TextRun({
-        text: token.children[0],
         italics: true,
+        text: token.children[0],
       })
       isParagraph = false
       break
@@ -747,21 +749,22 @@ function generateDocxForToken(
       isParagraph = false
       break
     case 'li':
-      const level =
-        token.attributes
-          ?.map((attr) => attr.match(/ql-indent-(\d)/g))
-          .filter((indent) => indent)[0] ?? 0
+      const level
+        = token.attributes
+          ?.map(attr => attr.match(/ql-indent-(\d)/g))
+          .filter(indent => indent)[0] ?? 0
       if (parentToken.tag === 'ul') {
         docElement = new Paragraph({
           bullet: {
             level,
           },
         })
-      } else {
+      }
+      else {
         docElement = new Paragraph({
           numbering: {
-            reference: 'default-numbered',
             level,
+            reference: 'default-numbered',
           },
         })
       }
@@ -780,14 +783,14 @@ function generateDocxForToken(
     default:
       docElement = new Paragraph({})
 
-      const srcAttribute = token.attributes.find((attr) =>
-        attr.includes('src=')
+      const srcAttribute = token.attributes.find(attr =>
+        attr.includes('src='),
       )
       if (srcAttribute) {
         docElement.addChildElement(
           new TextRun({
             text: srcAttribute.match(/src=(?:"|')(.*?)(?:"|')/)[1],
-          })
+          }),
         )
       }
       break
@@ -800,19 +803,21 @@ function generateDocxForToken(
       if (Array.isArray(token.children)) {
         token.children.forEach((child) => {
           generateDocxForToken(child, {
+            paragraphs,
             parentParagraph: docElement,
             parentToken: token,
-            paragraphs,
           })
         })
       }
-    } else {
+    }
+    else {
       if (!parentParagraph) {
         const paragraph = new Paragraph({
           children: [docElement],
         })
         paragraphs.push(paragraph)
-      } else {
+      }
+      else {
         parentParagraph.addChildElement(docElement)
       }
     }

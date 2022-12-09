@@ -1,84 +1,7 @@
-<template>
-  <div style="width: 100%;">
-    <v-col cols="12">
-      <v-text-field
-        v-model="formData.position"
-        label="Job title"
-        @change="changed"
-        :disabled="!quickedit"
-      />
-    </v-col>
-    <v-col cols="12">
-      <v-text-field
-        v-model="formData.mail"
-        label="Mail"
-        :rules="[rules.email]"
-        @change="changed"
-        :disabled="!quickedit"
-      />
-    </v-col>
-    <v-col cols="12">
-      <v-text-field
-        v-model="formData.tel"
-        label="Tel"
-        :rules="[rules.phone]"
-        placeholder="+999 123456789"
-        @change="changed"
-        :disabled="!quickedit"
-      />
-    </v-col>
-    <v-col cols="12">
-      <v-select
-        v-model="formData.LOCATED_TO"
-        :items="buildings"
-        item-text="name"
-        item-value="id"
-        label="Location"
-        @change="changed"
-        :disabled="!quickedit"
-      ></v-select>
-    </v-col>
-    <v-col cols="12">
-      <v-select
-        v-if="availableUserGroups.length > 0"
-        :items="availableUserGroups"
-        item-value="id"
-        item-text="name"
-        v-model="chosenUserGroups"
-        class="custom-multiselect"
-        multiple
-        chips
-        deletable-chips
-        @change="changed"
-        @click.stop
-        v-bind="$attrs"
-        label="User group"
-        single-line
-        :disabled="!quickedit"
-        :menu-props="{
-          bottom: true,
-          offsetY: true,
-          closeOnClick: true
-        }"
-      >
-      </v-select>
-    </v-col>
-  </div>
-</template>
 <script>
 import { searchAssetsService } from '~/services/assets'
 
 export default {
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    quickedit: {
-      type: Boolean,
-      required: false
-    }
-  },
   data() {
     return {
       availableUserGroups: [],
@@ -103,6 +26,16 @@ export default {
       }
     }
   },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    },
+    quickedit: {
+      type: Boolean,
+      required: false
+    }
+  },
   watch: {
     asset(newAsset) {
       this.restoreTheActualStateInDatabase()
@@ -123,28 +56,28 @@ export default {
     this.changed()
   },
   methods: {
+    canceledSaves() {
+      this.formData = {
+        LOCATED_TO: this.fetchLocation(),
+        mail: this.asset?.mail || null,
+        position: this.asset.position || null,
+        tel: this.asset?.tel || null,
+      }
+      this.restoreTheActualStateInDatabase()
+      this.changed()
+    },
     changed() {
       this.$emit('change', {
         ...this.formData,
         parents: Array.from(
           new Set([
             ...(this.asset.parents ?? [])
-              .filter((parent) => parent.type !== 'USERGROUP')
-              .map((parent) => parent.id),
-            ...this.chosenUserGroups
-          ])
-        )
+              .filter(parent => parent.type !== 'USERGROUP')
+              .map(parent => parent.id),
+            ...this.chosenUserGroups,
+          ]),
+        ),
       })
-    },
-    canceledSaves() {
-      this.formData = {
-        position: this.asset.position || null,
-        mail: this.asset?.mail || null,
-        tel: this.asset?.tel || null,
-        LOCATED_TO: this.fetchLocation()
-      }
-      this.restoreTheActualStateInDatabase()
-      this.changed()
     },
     async fetchBuildings() {
       const serviceParams = {}
@@ -156,26 +89,94 @@ export default {
     fetchLocation() {
       const result = this.asset.relations
         ? this.asset?.relations.filter((elt) => {
-            return elt.type === 'LOCATED_TO'
-          })
+          return elt.type === 'LOCATED_TO'
+        })
         : []
       // console.log(result)
-      if (result.length === 1) return result[0].to_id
+      if (result.length === 1)
+        return result[0].to_id
       else return null
-    },
-    restoreTheActualStateInDatabase() {
-      if (this.asset?.parents?.length > 0) {
-        this.chosenUserGroups = this.asset.parents
-          .filter((parent) => parent.type === 'USERGROUP')
-          .map((userGroup) => userGroup.id)
-      }
     },
     async fetchMissions() {
       const serviceParams = {}
       serviceParams.types = ['USERGROUP']
       const { assets } = await searchAssetsService(this.$axios, serviceParams)
       this.availableUserGroups = assets
-    }
-  }
+    },
+    restoreTheActualStateInDatabase() {
+      if (this.asset?.parents?.length > 0) {
+        this.chosenUserGroups = this.asset.parents
+          .filter(parent => parent.type === 'USERGROUP')
+          .map(userGroup => userGroup.id)
+      }
+    },
+  },
 }
 </script>
+
+<template>
+  <div style="width: 100%;">
+    <v-col cols="12">
+      <v-text-field
+        v-model="formData.position"
+        label="Job title"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+    <v-col cols="12">
+      <v-text-field
+        v-model="formData.mail"
+        label="Mail"
+        :rules="[rules.email]"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+    <v-col cols="12">
+      <v-text-field
+        v-model="formData.tel"
+        label="Tel"
+        :rules="[rules.phone]"
+        placeholder="+999 123456789"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+    <v-col cols="12">
+      <v-select
+        v-model="formData.LOCATED_TO"
+        :items="buildings"
+        item-text="name"
+        item-value="id"
+        label="Location"
+        :disabled="!quickedit"
+        @change="changed"
+      />
+    </v-col>
+    <v-col cols="12">
+      <v-select
+        v-if="availableUserGroups.length > 0"
+        v-model="chosenUserGroups"
+        :items="availableUserGroups"
+        item-value="id"
+        item-text="name"
+        class="custom-multiselect"
+        multiple
+        chips
+        deletable-chips
+        v-bind="$attrs"
+        label="User group"
+        single-line
+        :disabled="!quickedit"
+        :menu-props="{
+          bottom: true,
+          offsetY: true,
+          closeOnClick: true,
+        }"
+        @change="changed"
+        @click.stop
+      />
+    </v-col>
+  </div>
+</template>

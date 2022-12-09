@@ -8,11 +8,13 @@ export const getAvailableTransitionsController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

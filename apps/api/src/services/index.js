@@ -8,7 +8,7 @@ export const passThroughService = async (
   method,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   try {
     const result = await passThroughApi.passThrough(
@@ -16,10 +16,11 @@ export const passThroughService = async (
       method,
       query,
       body,
-      accessToken
+      accessToken,
     )
     return result
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('passThroughService')
     return createServiceError(error)
   }

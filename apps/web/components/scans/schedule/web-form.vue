@@ -1,66 +1,3 @@
-<template>
-  <v-form v-model="isFormValid" @submit.prevent class="web-form">
-    <v-container>
-      <v-row class="web-form__content">
-        <v-col cols="12">
-          <v-text-field label="Scan Name" placeholder="Scan Name" solo />
-          <v-select
-            v-model="probe"
-            placeholder="Select Probe"
-            label="Select Probe"
-            :items="probes"
-            item-text="name"
-            item-value="name"
-            solo
-          ></v-select>
-          <web-url-item
-            v-for="URL of formData.URLs"
-            :key="URL.id"
-            :data="URL"
-            @delete="deleteURL(URL)"
-            class="mt-4"
-            @change="urlItemChanged"
-          />
-          <div class="mt-4">
-            <button
-              @click="addURL"
-              :disabled="formData.URLs.length >= 5"
-              class="add-url-btn"
-            >
-              + Add URL
-            </button>
-          </div>
-        </v-col>
-      </v-row>
-      <owner-maintener-item @change="ownerMaintainerChanged" />
-      <start-end-date-time-item @change="dateTimeChanged" />
-
-      <div class="internal-asset-wrapper">
-        <v-checkbox
-          v-model="formData.isInternalAsset"
-          label="This scan contains internal URLs"
-        />
-      </div>
-
-      <v-row class="web-form__actions">
-        <v-col cols="12" class="text-right">
-          <v-btn @click="() => $router.push(localePath('scans'))">
-            Cancel
-          </v-btn>
-          <v-btn
-            @click="scheduleScan"
-            :loading="isLoading"
-            color="primary"
-            class="ml-2"
-          >
-            Confirm scan
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
-</template>
-
 <script>
 import { uuid } from 'vue-uuid'
 import StartEndDateTimeItem from './form-components/CustomDateTimePicker.vue'
@@ -70,15 +7,14 @@ import { scheduleWebScan } from '~/services/scans'
 import { searchProbesService } from '~/services/probes'
 
 export default {
-  name: 'ScheduleWebForm',
   components: {
     WebUrlItem,
     StartEndDateTimeItem,
     OwnerMaintenerItem
   },
+  name: 'ScheduleWebForm',
   data() {
     return {
-      isFormValid: false,
       formData: {
         URLs: [this.createURLData()],
         isInternalAsset: false,
@@ -89,60 +25,52 @@ export default {
         owner: null,
         maintainer: null
       },
+      isFormValid: false,
       probe: null,
-      probes: [],
-      isLoading: false
+      isLoading: false,
+      probes: []
     }
   },
   created() {
     this.fetchProbes()
   },
   methods: {
-    createURLData() {
-      return {
-        id: uuid.v4(),
-        URL: '',
-        auth: null,
-        hasAuth: false
-      }
-    },
-    fetchProbes() {
-      this.probes = searchProbesService()
-    },
     addURL() {
       this.formData.URLs.push(this.createURLData())
     },
-    deleteURL(URL) {
-      const idx = this.formData.URLs.findIndex((url) => url.id === URL.id)
-
-      if (idx >= 0) {
-        const newURLs = [...this.formData.URLs]
-        newURLs.splice(idx, 1)
-
-        if (!newURLs.length) newURLs.push(this.createURLData())
-
-        this.formData.URLs = newURLs
-      }
-    },
-    urlItemChanged(URLData) {
-      const urlToChangeIdx = this.formData.URLs.findIndex(
-        (url) => url.id === URLData.id
-      )
-      if (urlToChangeIdx >= 0) {
-        const newURLs = [...this.formData.URLs]
-        newURLs.splice(urlToChangeIdx, 1, URLData)
-
-        this.formData.URLs = newURLs
+    createURLData() {
+      return {
+        URL: '',
+        auth: null,
+        hasAuth: false,
+        id: uuid.v4(),
       }
     },
     dateTimeChanged(dateTimeData) {
       if (dateTimeData.startDate) {
         this.formData.startDate = dateTimeData.startDate
         this.formData.endDate = dateTimeData.endDate
-      } else {
+      }
+      else {
         this.formData.startTime = dateTimeData.startTime
         this.formData.endTime = dateTimeData.endTime
       }
+    },
+    deleteURL(URL) {
+      const idx = this.formData.URLs.findIndex(url => url.id === URL.id)
+
+      if (idx >= 0) {
+        const newURLs = [...this.formData.URLs]
+        newURLs.splice(idx, 1)
+
+        if (!newURLs.length)
+          newURLs.push(this.createURLData())
+
+        this.formData.URLs = newURLs
+      }
+    },
+    fetchProbes() {
+      this.probes = searchProbesService()
     },
     ownerMaintainerChanged(ownerMaintenerData) {
       if (ownerMaintenerData.owner)
@@ -164,20 +92,21 @@ export default {
                 asset.auth.privateKey
                   ? asset.auth.privateKey.text()
                   : Promise.resolve(''),
-                asset.auth.caCrt ? asset.auth.caCrt.text() : Promise.resolve('')
+                asset.auth.caCrt ? asset.auth.caCrt.text() : Promise.resolve(''),
               ])
 
               item.auth = {
-                type: asset.auth.type,
-                publicCrt,
+                caCrt,
                 privateKey,
-                caCrt
+                publicCrt,
+                type: asset.auth.type,
               }
-            } else {
+            }
+            else {
               item.auth = {
+                password: asset.auth.password,
                 type: asset.auth.type,
                 username: asset.auth.username,
-                password: asset.auth.password
               }
             }
           }
@@ -187,25 +116,101 @@ export default {
         const assets = await Promise.all(assetsPromises)
         const params = {
           assets,
+          endDate: this.formData.endDate,
+          endTime: this.formData.endTime,
           hasInternal: this.formData.isInternalAsset,
           startDate: this.formData.startDate,
-          endDate: this.formData.endDate,
           startTime: this.formData.startTime,
-          endTime: this.formData.endTime
         }
 
         await scheduleWebScan(this.$axios, params)
 
         this.$router.push(this.localePath('scans'))
-      } catch (error) {
+      }
+      catch (error) {
         // silently catch
-      } finally {
+      }
+      finally {
         this.isLoading = false
       }
-    }
-  }
+    },
+    urlItemChanged(URLData) {
+      const urlToChangeIdx = this.formData.URLs.findIndex(
+        url => url.id === URLData.id,
+      )
+      if (urlToChangeIdx >= 0) {
+        const newURLs = [...this.formData.URLs]
+        newURLs.splice(urlToChangeIdx, 1, URLData)
+
+        this.formData.URLs = newURLs
+      }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-form v-model="isFormValid" class="web-form" @submit.prevent>
+    <v-container>
+      <v-row class="web-form__content">
+        <v-col cols="12">
+          <v-text-field label="Scan Name" placeholder="Scan Name" solo />
+          <v-select
+            v-model="probe"
+            placeholder="Select Probe"
+            label="Select Probe"
+            :items="probes"
+            item-text="name"
+            item-value="name"
+            solo
+          />
+          <WebUrlItem
+            v-for="URL of formData.URLs"
+            :key="URL.id"
+            :data="URL"
+            class="mt-4"
+            @delete="deleteURL(URL)"
+            @change="urlItemChanged"
+          />
+          <div class="mt-4">
+            <button
+              :disabled="formData.URLs.length >= 5"
+              class="add-url-btn"
+              @click="addURL"
+            >
+              + Add URL
+            </button>
+          </div>
+        </v-col>
+      </v-row>
+      <OwnerMaintenerItem @change="ownerMaintainerChanged" />
+      <StartEndDateTimeItem @change="dateTimeChanged" />
+
+      <div class="internal-asset-wrapper">
+        <v-checkbox
+          v-model="formData.isInternalAsset"
+          label="This scan contains internal URLs"
+        />
+      </div>
+
+      <v-row class="web-form__actions">
+        <v-col cols="12" class="text-right">
+          <v-btn @click="() => $router.push(localePath('scans'))">
+            Cancel
+          </v-btn>
+          <v-btn
+            :loading="isLoading"
+            color="primary"
+            class="ml-2"
+            @click="scheduleScan"
+          >
+            Confirm scan
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
+</template>
 
 <style lang="scss">
 .web-form {

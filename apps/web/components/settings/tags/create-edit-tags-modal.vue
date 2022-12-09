@@ -1,3 +1,108 @@
+<script>
+// Services
+import { createTagService, patchTagService } from '~/services/tags'
+
+export default {
+  name: 'CreateTagModal',
+  data() {
+    return {
+      error: '',
+      name: '',
+      color: '',
+      isFormValid: false,
+      isLoading: false,
+      rules: {
+        required: (v) => !!v || 'This field is required'
+      }
+    }
+  },
+  computed: {
+    /**
+     * @returns {Boolean}
+     */
+    isEdit() {
+      return Boolean(this.tag?.id)
+    },
+  },
+  watch: {
+    tag() {
+      this.resetForm()
+    }
+  },
+  created() {
+    this.resetForm()
+  },
+  methods: {
+    close() {
+      this.resetForm()
+      this.$refs.form.resetValidation()
+      this.$emit('close')
+    },
+    async createOrUpdateTag() {
+      if (!this.$refs.form.validate())
+        return
+
+      if (
+        this.tags.find(x => x.name === this.name && x.id !== this.tag?.id)
+      ) {
+        this.error = 'This tag name already exists'
+        return
+      }
+
+      try {
+        this.isLoading = true
+
+        const { name, color } = this
+        const params = { color, name }
+
+        if (this.isEdit)
+          await patchTagService(this.$axios, this.tag.id, params)
+        else
+          await createTagService(this.$axios, params)
+
+        this.$emit('created')
+        this.close()
+      }
+      catch (error) {
+        console.error(error)
+      }
+      finally {
+        this.isLoading = false
+      }
+    },
+    goToAsset(id) {
+      this.$router.push(`/assets/${id}`)
+    },
+    resetForm() {
+      if (this.isEdit) {
+        this.name = this.tag.name
+        this.color = this.tag.color
+      }
+      else {
+        this.name = 'New Tag'
+        this.color = '#909090'
+      }
+      this.error = ''
+      this.isFormValid = this.isEdit
+    },
+  },
+  props: {
+    tag: {
+      default: null,
+      type: Object,
+    },
+    tags: {
+      default: () => [],
+      type: Array,
+    },
+    users: {
+      default: () => [],
+      type: Array,
+    },
+  },
+}
+</script>
+
 <template>
   <v-card>
     <v-card-title>{{ isEdit ? 'Update' : 'Add' }} tag</v-card-title>
@@ -28,7 +133,7 @@
                 :disabled="isLoading"
               />
             </v-col>
-            <v-col cols="12" style="color: red;font-weight: bold" v-if="error">
+            <v-col v-if="error" cols="12" style="color: red;font-weight: bold">
               {{ error }}
             </v-col>
           </v-row>
@@ -53,7 +158,9 @@
     <!-- Actions -->
     <v-card-actions>
       <v-spacer />
-      <v-btn :disabled="isLoading" @click="close">Cancel</v-btn>
+      <v-btn :disabled="isLoading" @click="close">
+        Cancel
+      </v-btn>
       <v-btn
         color="primary"
         :disabled="!isFormValid || isLoading"
@@ -64,105 +171,3 @@
     </v-card-actions>
   </v-card>
 </template>
-
-<script>
-// Services
-import { createTagService, patchTagService } from '~/services/tags'
-
-export default {
-  name: 'CreateTagModal',
-  props: {
-    tag: {
-      type: Object,
-      default: null
-    },
-    users: {
-      type: Array,
-      default: () => []
-    },
-    tags: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      error: '',
-      name: '',
-      color: '',
-      isFormValid: false,
-      isLoading: false,
-      rules: {
-        required: (v) => !!v || 'This field is required'
-      }
-    }
-  },
-  computed: {
-    /**
-     * @returns {Boolean}
-     */
-    isEdit() {
-      return Boolean(this.tag?.id)
-    }
-  },
-  watch: {
-    tag() {
-      this.resetForm()
-    }
-  },
-  created() {
-    this.resetForm()
-  },
-  methods: {
-    resetForm() {
-      if (this.isEdit) {
-        this.name = this.tag.name
-        this.color = this.tag.color
-      } else {
-        this.name = 'New Tag'
-        this.color = '#909090'
-      }
-      this.error = ''
-      this.isFormValid = this.isEdit
-    },
-    close() {
-      this.resetForm()
-      this.$refs.form.resetValidation()
-      this.$emit('close')
-    },
-    async createOrUpdateTag() {
-      if (!this.$refs.form.validate()) return
-
-      if (
-        this.tags.find((x) => x.name === this.name && x.id !== this.tag?.id)
-      ) {
-        this.error = 'This tag name already exists'
-        return
-      }
-
-      try {
-        this.isLoading = true
-
-        const { name, color } = this
-        const params = { name, color }
-
-        if (this.isEdit) {
-          await patchTagService(this.$axios, this.tag.id, params)
-        } else {
-          await createTagService(this.$axios, params)
-        }
-
-        this.$emit('created')
-        this.close()
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.isLoading = false
-      }
-    },
-    goToAsset(id) {
-      this.$router.push(`/assets/${id}`)
-    }
-  }
-}
-</script>

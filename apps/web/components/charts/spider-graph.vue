@@ -1,23 +1,3 @@
-<template>
-  <div :id="id" style="position: relative;">
-    <div v-if="title || exportFileName" class="d-flex align-center">
-      <p v-if="title" class="graph-title">{{ title }}</p>
-      <v-spacer />
-      <v-btn
-        v-if="exportFileName"
-        title="download the graph"
-        @click="exportGraph"
-        :loading="isExporting"
-        icon
-        color="primary"
-      >
-        <v-icon>mdi-image-move</v-icon>
-      </v-btn>
-    </div>
-    <div :id="`chart-${id}`" class="spider-graph" />
-  </div>
-</template>
-
 <script>
 // @ts-check
 import 'billboard.js/dist/billboard.css'
@@ -25,35 +5,9 @@ import 'billboard.js/dist/theme/insight.css'
 
 export default {
   name: 'SpiderGraph',
-  props: {
-    id: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: Object,
-      required: true
-    },
-    exportFileName: {
-      type: String,
-      default: null
-    }
-  },
   data() {
     return {
       isExporting: false
-    }
-  },
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.reloadChartData()
-      }
     }
   },
   mounted() {
@@ -64,10 +18,11 @@ export default {
     const chartConfig = {
       data: {
         ...data,
-        x: 'x',
         type: radar(),
-        labels: true
+        x: 'x',
+        labels: true,
       },
+      bindto: `#chart-${this.id}`,
       radar: {
         size: {
           ratio: 0.8
@@ -81,10 +36,17 @@ export default {
         direction: {
           clockwise: true
         }
-      },
-      bindto: `#chart-${this.id}`
+      }
     }
     this.chart = bb.generate(chartConfig)
+  },
+  watch: {
+    data: {
+      deep: true,
+      handler() {
+        this.reloadChartData()
+      },
+    }
   },
   methods: {
     createChartDataConfig(data) {
@@ -93,29 +55,21 @@ export default {
       for (const name in data) {
         if (data.hasOwnProperty(name)) {
           if (
-            (name === 'x' &&
-              Array.isArray(data[name].value) &&
-              data[name].value.every((val) => typeof val === 'string')) ||
-            (Array.isArray(data[name].value) &&
-              data[name].value.every((val) => !isNaN(val)))
+            (name === 'x'
+              && Array.isArray(data[name].value)
+              && data[name].value.every(val => typeof val === 'string'))
+            || (Array.isArray(data[name].value)
+              && data[name].value.every(val => !isNaN(val)))
           ) {
-            const col =
-              name === 'x'
+            const col
+              = name === 'x'
                 ? [name, ...data[name].value]
-                : [name, ...data[name].value.map((d) => Number(d))]
+                : [name, ...data[name].value.map(d => Number(d))]
             columns.push(col)
           }
         }
       }
       return { columns }
-    },
-    reloadChartData() {
-      if (this.chart) {
-        const { columns } = this.createChartDataConfig(this.data)
-        this.chart.load({
-          columns
-        })
-      }
     },
     exportGraph() {
       this.isExporting = true
@@ -129,10 +83,58 @@ export default {
         link.click()
         this.isExporting = false
       })
-    }
-  }
+    },
+    reloadChartData() {
+      if (this.chart) {
+        const { columns } = this.createChartDataConfig(this.data)
+        this.chart.load({
+          columns,
+        })
+      }
+    },
+  },
+  props: {
+    data: {
+      required: true,
+      type: Object,
+    },
+    exportFileName: {
+      default: null,
+      type: String,
+    },
+    id: {
+      required: true,
+      type: String,
+    },
+    title: {
+      default: '',
+      type: String,
+    },
+  },
 }
 </script>
+
+<template>
+  <div :id="id" style="position: relative;">
+    <div v-if="title || exportFileName" class="d-flex align-center">
+      <p v-if="title" class="graph-title">
+        {{ title }}
+      </p>
+      <v-spacer />
+      <v-btn
+        v-if="exportFileName"
+        title="download the graph"
+        :loading="isExporting"
+        icon
+        color="primary"
+        @click="exportGraph"
+      >
+        <v-icon>mdi-image-move</v-icon>
+      </v-btn>
+    </div>
+    <div :id="`chart-${id}`" class="spider-graph" />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .spider-graph {

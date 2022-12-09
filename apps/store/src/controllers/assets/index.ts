@@ -442,14 +442,14 @@ export const getAssetRiskController = async (req: any, res: any, next: any) => {
     const assetId = parseInt(req.params.id)
 
     const risk = await getAssetRiskModel(companyId, assetId)
-    console.log("risk", risk)
+    console.log('risk', risk)
     if ('error' in risk)
       return throwHTTPError(risk.error)
 
     res.send(risk)
   }
   catch (error) {
-    console.log( "======>", error)
+    console.log('======>', error)
     req.log.withError(error).error('getAssetRiskController')
     next(error)
   }

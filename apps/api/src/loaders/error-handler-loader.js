@@ -1,5 +1,5 @@
-import { HTTPError, getBadRequestError } from '@/common/errors/http'
 import { isCelebrateError } from 'celebrate'
+import { HTTPError, getBadRequestError } from '@/common/errors/http'
 
 /**
  *

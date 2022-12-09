@@ -6,13 +6,14 @@
  */
 export const loginService = async (axios, params = {}) => {
   const { username, password } = params
-  if (!username || !password) throw new Error('Username and password required')
+  if (!username || !password)
+    throw new Error('Username and password required')
 
-  const bodyParams = { username, password }
+  const bodyParams = { password, username }
   const {
-    data: { accessToken, user }
+    data: { accessToken, user },
   } = await axios.post('login', bodyParams, {
-    withCredentials: true
+    withCredentials: true,
   })
   return { accessToken, user }
 }
@@ -23,7 +24,7 @@ export const loginService = async (axios, params = {}) => {
  */
 export const refreshTokenService = async (axios) => {
   const {
-    data: { accessToken, user }
+    data: { accessToken, user },
   } = await axios.post('refresh-token', {}, { withCredentials: true })
 
   return { accessToken, user }
@@ -33,7 +34,7 @@ export const refreshTokenService = async (axios) => {
  *
  * @param { import("@nuxtjs/axios").NuxtAxiosInstance } axios
  */
-export const logoutService = (axios) =>
+export const logoutService = axios =>
   axios.delete('logout', { withCredentials: true })
 
 /**
@@ -43,13 +44,14 @@ export const logoutService = (axios) =>
  */
 export const sendResetPasswordMail = async (axios, params = {}) => {
   const { username } = params
-  if (!username) throw new Error('Username or email required')
+  if (!username)
+    throw new Error('Username or email required')
   const data = await axios.post(
     'reset-password',
     { username },
     {
-      withCredentials: true
-    }
+      withCredentials: true,
+    },
   )
   return data
 }
@@ -65,11 +67,11 @@ export const updatePasswordByToken = async (axios, params = {}) => {
     'reset-password',
     {
       password,
-      token
+      token,
     },
     {
-      withCredentials: true
-    }
+      withCredentials: true,
+    },
   )
   return data
 }

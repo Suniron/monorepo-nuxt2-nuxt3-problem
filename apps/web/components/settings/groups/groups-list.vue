@@ -1,3 +1,75 @@
+<script>
+// Service
+import CreateEditGroupModal from './create-edit-group-modal.vue'
+import { deleteGroupService, updateGroupService } from '~/services/groups'
+import DeleteModal from '~/components/settings/delete-modal.vue'
+export default {
+  components: { CreateEditGroupModal, DeleteModal },
+  name: 'GroupsList',
+  props: {
+    users: {
+      type: Array,
+      default: () => []
+    },
+    groups: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      headers: [
+        {
+          text: 'Name',
+          value: 'name',
+          sortable: false,
+          width: '30%'
+        },
+        {
+          text: 'Members',
+          sortable: false,
+          value: 'members'
+        },
+        {
+          text: 'Edit',
+          class: 'edit-column',
+          value: 'edit',
+          sortable: false,
+          width: '10%'
+        },
+      ],
+      isGroupsLoading: false,
+    }
+  },
+  methods: {
+    async changeGroupMembers(groupId, members) {
+      try {
+        this.isGroupsLoading = true
+
+        await updateGroupService(this.$axios, groupId, {
+          memberIds: members.map(m => m.id),
+        })
+
+        this.$emit('update')
+      }
+      catch (error) {
+        console.error(error)
+      }
+      finally {
+        this.isGroupsLoading = false
+      }
+    },
+    async removeGroup(item) {
+      const res = await deleteGroupService(this.$axios, item)
+      if (res.status !== 200)
+        this.error = 'An error has occured'
+      else
+        this.$emit('update')
+    },
+  },
+}
+</script>
+
 <template>
   <v-data-table
     :headers="headers"
@@ -17,7 +89,6 @@
         :items="users"
         :value="item.members"
         item-text="firstName"
-        @input="(newMembers) => changeGroupMembers(item.id, newMembers)"
         class="member-list"
         chips
         deletable-chips
@@ -27,19 +98,20 @@
         :menu-props="{
           bottom: true,
           offsetY: true,
-          closeOnClick: true
+          closeOnClick: true,
         }"
-      ></v-select>
+        @input="(newMembers) => changeGroupMembers(item.id, newMembers)"
+      />
     </template>
     <template #[`item.edit`]="{ item: itemEdit }">
       <v-dialog width="500" persistent :retain-focus="false">
         <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-pencil</v-icon
-          >
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-pencil
+          </v-icon>
         </template>
         <template #default="dialog">
-          <create-edit-group-modal
+          <CreateEditGroupModal
             :group="itemEdit"
             :users="users"
             :groups="groups"
@@ -50,12 +122,12 @@
       </v-dialog>
       <v-dialog width="500" persistent :retain-focus="false">
         <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-delete</v-icon
-          >
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-delete
+          </v-icon>
         </template>
         <template #default="dialog">
-          <delete-modal
+          <DeleteModal
             style="background-color:white"
             :item="itemEdit"
             whatis-deleting="Group"
@@ -67,77 +139,6 @@
     </template>
   </v-data-table>
 </template>
-
-<script>
-// Service
-import CreateEditGroupModal from './create-edit-group-modal.vue'
-import { updateGroupService, deleteGroupService } from '~/services/groups'
-import DeleteModal from '~/components/settings/delete-modal.vue'
-export default {
-  name: 'GroupsList',
-  components: { CreateEditGroupModal, DeleteModal },
-  props: {
-    users: {
-      type: Array,
-      default: () => []
-    },
-    groups: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      headers: [
-        {
-          text: 'Name',
-          value: 'name',
-          width: '30%',
-          sortable: false
-        },
-        {
-          text: 'Members',
-          value: 'members',
-          sortable: false
-        },
-        {
-          text: 'Edit',
-          value: 'edit',
-          class: 'edit-column',
-          width: '10%',
-          sortable: false
-        }
-      ],
-      isGroupsLoading: false
-    }
-  },
-  methods: {
-    async changeGroupMembers(groupId, members) {
-      try {
-        this.isGroupsLoading = true
-
-        await updateGroupService(this.$axios, groupId, {
-          memberIds: members.map((m) => m.id)
-        })
-
-        this.$emit('update')
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.isGroupsLoading = false
-      }
-    },
-    async removeGroup(item) {
-      const res = await deleteGroupService(this.$axios, item)
-      if (res.status !== 200) {
-        this.error = 'An error has occured'
-      } else {
-        this.$emit('update')
-      }
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .groups-list-table {

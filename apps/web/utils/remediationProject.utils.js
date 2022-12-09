@@ -11,7 +11,7 @@ export function parseRemediationHtml(remediationRawText, charLimit) {
     // Break on the first word boundary after <charLimit> characters and replace with ellipsis if there is a match
     return div.textContent.replace(
       new RegExp(`(?<=.{${charLimit}}\\b).+`),
-      '...'
+      '...',
     )
   }
   return div.textContent

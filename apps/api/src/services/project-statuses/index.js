@@ -2,11 +2,11 @@ import { projectStatusesAPIs } from '@/api/store'
 
 export const getAvailableTransitionsService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await projectStatusesAPIs.getAvailableTransitionsService(
     params,
-    accessToken
+    accessToken,
   )
   return data
 }

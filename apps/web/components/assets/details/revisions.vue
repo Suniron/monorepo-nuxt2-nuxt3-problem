@@ -1,19 +1,3 @@
-<template>
-  <v-sheet class="asset-vulnerabilities" rounded>
-    <revisions-toolbar
-      :filters="filters"
-      :latest-version-uuid="latestVersionUuid"
-      @filter="updateFilter"
-    />
-    <revisions-list
-      :revisions="revisions"
-      :asset-id="asset.id"
-      class="mt-10"
-      @saved="fetchAssetRevisions"
-    />
-  </v-sheet>
-</template>
-
 <script>
 import RevisionsToolbar from '~/components/assets/details/revisions-toolbar'
 import RevisionsList from '~/components/assets/details/revisions-list'
@@ -25,15 +9,9 @@ import { queryManager } from '~/components/mixins'
 import { searchAssetRevisions } from '~/services/assets'
 
 export default {
-  name: 'AssetRevisions',
   components: { RevisionsToolbar, RevisionsList },
+  name: 'AssetRevisions',
   mixins: [queryManager],
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       filters: {
@@ -46,12 +24,12 @@ export default {
     latestVersionUuid() {
       const sortedVersions = [...this.revisions].sort((a, b) => {
         return (
-          new Date(b.fileUploadAt).getTime() -
-          new Date(a.fileUploadAt).getTime()
+          new Date(b.fileUploadAt).getTime()
+          - new Date(a.fileUploadAt).getTime()
         )
       })
       return sortedVersions[0]?.fileUUID
-    }
+    },
   },
   created() {
     this.getFiltersFromQuery(this.$route.query)
@@ -59,32 +37,34 @@ export default {
     this.fetchAssetRevisions()
   },
   methods: {
-    /**
-     * @param {string} query
-     */
-    getFiltersFromQuery(query) {
-      if (!query) return
 
-      if (query.search) {
-        this.filters.search = query.search
-      }
-    },
     async fetchAssetRevisions() {
       try {
         const params = {
-          search: this.filters.search || undefined
+          search: this.filters.search || undefined,
         }
 
         const { revisions } = await searchAssetRevisions(
           this.$axios,
           this.asset.id,
-          params
+          params,
         )
         this.revisions = revisions
         console.log(this.revisions)
-      } catch (error) {
+      }
+      catch (error) {
         console.error(error)
       }
+    },
+    /**
+     * @param {string} query
+     */
+    getFiltersFromQuery(query) {
+      if (!query)
+        return
+
+      if (query.search)
+        this.filters.search = query.search
     },
     /**
      * @param {{name: string, value: string}} param
@@ -100,10 +80,32 @@ export default {
         this.mx_updateQueryParam({ name, value })
         this.fetchAssetRevisions()
       }
-    }
-  }
+    },
+  },
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
 }
 </script>
+
+<template>
+  <v-sheet class="asset-vulnerabilities" rounded>
+    <RevisionsToolbar
+      :filters="filters"
+      :latest-version-uuid="latestVersionUuid"
+      @filter="updateFilter"
+    />
+    <RevisionsList
+      :revisions="revisions"
+      :asset-id="asset.id"
+      class="mt-10"
+      @saved="fetchAssetRevisions"
+    />
+  </v-sheet>
+</template>
 
 <style lang="scss">
 .asset-vulnerabilities {

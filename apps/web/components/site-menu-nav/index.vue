@@ -1,3 +1,154 @@
+<script>
+// @ts-check
+import { mapActions, mapGetters } from 'vuex'
+import SimpleMenuItem from './SimpleMenuItem.vue'
+import DropdownMenuItem from '~/components/site-menu-nav/DropdownMenuItem.vue'
+import ICONS from '~/assets/img/icons'
+
+export default {
+  components: { DropdownMenuItem, SimpleMenuItem },
+  name: 'SiteNavMenu',
+  computed: {
+    ...mapGetters('user', ['isLoggedIn']),
+    /**
+     * @returns {boolean}
+     */
+    isUserAdmin() {
+      return this.$store.getters['user/isAdmin']
+    },
+    /**
+     * @returns {string}
+     */
+    version() {
+      return process.env.PACKAGE_VERSION
+    },
+  },
+  data: () => ({
+    assets: {
+      action: 'mdi-server',
+      items: [
+        {
+          assetType: 'ALL',
+          link: '/assets',
+          title: 'All',
+        },
+        {
+          assetType: 'SERVER',
+          customImg: ICONS.server,
+          link: '/assets?types=SERVER',
+          title: 'Server',
+        },
+        {
+          assetType: 'WEB',
+          customImg: ICONS.web,
+          link: '/assets?types=WEB',
+          title: 'Web',
+        },
+        {
+          assetType: 'NETWORK',
+          customImg: ICONS.network,
+          link: '/assets?types=NETWORK',
+          title: 'Network',
+        },
+        {
+          assetType: 'USER',
+          customImg: ICONS.user,
+          link: '/assets?types=USER',
+          title: 'People',
+        },
+        {
+          assetType: 'BUILDING',
+          customImg: ICONS.building,
+          link: '/assets?types=BUILDING',
+          title: 'Building',
+        },
+        {
+          assetType: 'UNIT',
+          customImg: ICONS.unit,
+          link: '/assets?types=UNIT',
+          title: 'Business Unit',
+        },
+        {
+          assetType: 'MISSION',
+          customImg: ICONS.mission,
+          link: '/assets?types=MISSION',
+          title: 'Business Mission',
+        },
+        {
+          assetType: 'USERGROUP',
+          customImg: ICONS.usergroup,
+          link: '/assets?types=USERGROUP',
+          title: 'User Group',
+        },
+      ],
+      title: 'Assets',
+    },
+    cartography: {
+      action: 'mdi-graphql',
+      items: [
+        {
+          icon: 'mdi-network',
+          link: '/cartography/network',
+          title: 'Network',
+        },
+        {
+          icon: 'mdi-map-marker',
+          link: '/cartography/worldmap',
+          title: 'World Map',
+        },
+      ],
+      title: 'Cartography',
+    },
+    expandLock: false,
+    governance: {
+      action: 'mdi-archive-arrow-down',
+      items: [
+        {
+          assetType: 'POLICY',
+          icon: 'mdi-file-alert',
+          link: '/assets?types=POLICY',
+          title: 'Policy',
+        },
+        {
+          assetType: 'PROCEDURE',
+          icon: 'mdi-file-lock',
+          link: '/assets?types=PROCEDURE',
+          title: 'Procedure',
+        },
+      ],
+      title: 'Governance',
+    },
+    mouseOver: false,
+  }),
+  methods: {
+    ...mapActions('user', ['deauthorize']),
+    ...mapActions('assets', ['updateAssetSummary']),
+    refreshAssetSummary() {
+      this.updateAssetSummary(this.$axios)
+    },
+    toggleExpandLock() {
+      this.expandLock = !this.expandLock
+      localStorage.setItem('userpref-navbar-lock', this.expandLock ? '1' : '0')
+    },
+  },
+  mounted() {
+    this.expandLock = localStorage.getItem('userpref-navbar-lock') === '1'
+
+    // Forcing navbar to update because of a vuetify bug which ignores the dynamic width on initialization
+    this.expandLock = !this.expandLock
+    setImmediate(() => {
+      this.expandLock = !this.expandLock
+    })
+  },
+  props: {
+    show: {
+      required: true,
+      type: Boolean,
+    },
+  },
+}
+</script>
+
 <template>
   <!--
     Had to use a mouse event because of Vuetify bug:
@@ -5,12 +156,12 @@
   -->
   <v-navigation-drawer
     :value="show"
-    @input="(e) => $emit('update:show', e)"
     app
     permanent
     :mini-variant="expandLock === false"
     :expand-on-hover="expandLock === false"
     :width="expandLock || mouseOver ? 256 : 56"
+    @input="(e) => $emit('update:show', e)"
     @mouseenter.native="mouseOver = true"
     @mouseleave.native="mouseOver = false"
   >
@@ -29,13 +180,13 @@
             class="logo-img"
             src="~/assets/img/logos/xrator-brand.png"
             alt="Xrator logo"
-          />
+          >
           <img
             v-else
             class="logo-img"
             src="~/assets/img/logos/xrator-icon.png"
             alt="Xrator logo"
-          />
+          >
         </v-list-item-content>
       </v-list-item>
 
@@ -73,7 +224,7 @@
               class="logo-img"
               src="~/assets/img/icons/health-cure.svg"
               alt="Health Cure Logo"
-            />
+            >
           </v-list-item-icon>
         </template>
       </SimpleMenuItem>
@@ -96,10 +247,10 @@
 
       <!-- Settings menu item -->
       <SimpleMenuItem
+        v-if="isUserAdmin"
         title="Settings"
         to="/settings"
         icon="mdi-cog"
-        v-if="isUserAdmin"
       />
     </v-list>
 
@@ -111,11 +262,11 @@
             class="logo-img"
             src="~/assets/img/logos/xrator-brand.png"
             alt="Xrator logo"
-          />
+          >
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item nuxt to="/sign-in" v-test="'navbar-sign-in'">
+      <v-list-item v-test="'navbar-sign-in'" nuxt to="/sign-in">
         <v-list-item-icon>
           <v-icon>mdi-login</v-icon>
         </v-list-item-icon>
@@ -137,7 +288,9 @@
     </v-list>
     <template #append>
       <div v-if="mouseOver" class="mx-3 text-center grey--text">
-        <p class="ma-0">Version: {{ version }}</p>
+        <p class="ma-0">
+          Version: {{ version }}
+        </p>
       </div>
       <v-list class="site-nav-list text-no-wrap" dense nav>
         <v-list-item @click="toggleExpandLock">
@@ -152,157 +305,6 @@
     </template>
   </v-navigation-drawer>
 </template>
-
-<script>
-// @ts-check
-import { mapGetters, mapActions } from 'vuex'
-import SimpleMenuItem from './SimpleMenuItem.vue'
-import DropdownMenuItem from '~/components/site-menu-nav/DropdownMenuItem.vue'
-import ICONS from '~/assets/img/icons'
-
-export default {
-  name: 'SiteNavMenu',
-  components: { DropdownMenuItem, SimpleMenuItem },
-  props: {
-    show: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data: () => ({
-    expandLock: false,
-    mouseOver: false,
-    governance: {
-      action: 'mdi-archive-arrow-down',
-      items: [
-        {
-          title: 'Policy',
-          assetType: 'POLICY',
-          link: '/assets?types=POLICY',
-          icon: 'mdi-file-alert'
-        },
-        {
-          title: 'Procedure',
-          assetType: 'PROCEDURE',
-          link: '/assets?types=PROCEDURE',
-          icon: 'mdi-file-lock'
-        }
-      ],
-      title: 'Governance'
-    },
-    assets: {
-      action: 'mdi-server',
-      items: [
-        {
-          title: 'All',
-          assetType: 'ALL',
-          link: '/assets'
-        },
-        {
-          title: 'Server',
-          assetType: 'SERVER',
-          link: '/assets?types=SERVER',
-          customImg: ICONS.server
-        },
-        {
-          title: 'Web',
-          assetType: 'WEB',
-          link: '/assets?types=WEB',
-          customImg: ICONS.web
-        },
-        {
-          title: 'Network',
-          assetType: 'NETWORK',
-          link: '/assets?types=NETWORK',
-          customImg: ICONS.network
-        },
-        {
-          title: 'People',
-          assetType: 'USER',
-          link: '/assets?types=USER',
-          customImg: ICONS.user
-        },
-        {
-          title: 'Building',
-          assetType: 'BUILDING',
-          link: '/assets?types=BUILDING',
-          customImg: ICONS.building
-        },
-        {
-          title: 'Business Unit',
-          assetType: 'UNIT',
-          link: '/assets?types=UNIT',
-          customImg: ICONS.unit
-        },
-        {
-          title: 'Business Mission',
-          assetType: 'MISSION',
-          link: '/assets?types=MISSION',
-          customImg: ICONS.mission
-        },
-        {
-          title: 'User Group',
-          assetType: 'USERGROUP',
-          link: '/assets?types=USERGROUP',
-          customImg: ICONS.usergroup
-        }
-      ],
-      title: 'Assets'
-    },
-    cartography: {
-      action: 'mdi-graphql',
-      items: [
-        {
-          title: 'Network',
-          link: '/cartography/network',
-          icon: 'mdi-network'
-        },
-        {
-          title: 'World Map',
-          link: '/cartography/worldmap',
-          icon: 'mdi-map-marker'
-        }
-      ],
-      title: 'Cartography'
-    }
-  }),
-  computed: {
-    ...mapGetters('user', ['isLoggedIn']),
-    /**
-     * @returns {boolean}
-     */
-    isUserAdmin() {
-      return this.$store.getters['user/isAdmin']
-    },
-    /**
-     * @returns {string}
-     */
-    version() {
-      return process.env.PACKAGE_VERSION
-    }
-  },
-  mounted() {
-    this.expandLock = localStorage.getItem('userpref-navbar-lock') === '1'
-
-    // Forcing navbar to update because of a vuetify bug which ignores the dynamic width on initialization
-    this.expandLock = !this.expandLock
-    setImmediate(() => {
-      this.expandLock = !this.expandLock
-    })
-  },
-  methods: {
-    ...mapActions('user', ['deauthorize']),
-    ...mapActions('assets', ['updateAssetSummary']),
-    toggleExpandLock() {
-      this.expandLock = !this.expandLock
-      localStorage.setItem('userpref-navbar-lock', this.expandLock ? '1' : '0')
-    },
-    refreshAssetSummary() {
-      this.updateAssetSummary(this.$axios)
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .site-nav-list {

@@ -4,10 +4,10 @@ window.onNuxtReady((app) => {
   store = app.$nuxt.$store
 })
 
-const getEndpoint = (id) => (id ? '/assets/' + id : '/assets')
-const getVulnerabilitiesEndpoint = (id) => getEndpoint(id) + '/vulnerabilities'
-const getRevisionsEndpoint = (id) => getEndpoint(id) + '/revisions'
-const getImportCsvEndpoit = () => getEndpoint() + '/importCSV'
+const getEndpoint = id => (id ? `/assets/${id}` : '/assets')
+const getVulnerabilitiesEndpoint = id => `${getEndpoint(id)}/vulnerabilities`
+const getRevisionsEndpoint = id => `${getEndpoint(id)}/revisions`
+const getImportCsvEndpoit = () => `${getEndpoint()}/importCSV`
 
 /**
  * Search and returns assets
@@ -35,30 +35,30 @@ export const searchAssetsService = async (axios, params) => {
     types,
     attribute,
     page,
-    pageSize
+    pageSize,
   } = params
 
   const queryParams = {
-    search,
-    ids: Array.isArray(ids) ? ids.join(',') : ids,
-    tagIds:
-      Array.isArray(tagIds) && tagIds.length ? tagIds.join(',') : undefined,
+    attribute,
     groupIds:
       Array.isArray(groupIds) && groupIds.length
         ? groupIds.join(',')
         : undefined,
+    ids: Array.isArray(ids) ? ids.join(',') : ids,
+    page,
+    pageSize,
+    search,
     severities:
       Array.isArray(severities) && severities.length
         ? severities.join(',')
         : undefined,
+    tagIds:
+      Array.isArray(tagIds) && tagIds.length ? tagIds.join(',') : undefined,
     types: Array.isArray(types) && types.length ? types.join(',') : undefined,
-    attribute,
-    page,
-    pageSize
   }
 
   const { data } = await axios.get(getEndpoint(), {
-    params: queryParams
+    params: queryParams,
   })
   return data
 }
@@ -70,9 +70,9 @@ export const searchAssetByIdService = async (axios, id) => {
 
 export const createAssetService = async (axios, params) => {
   const bodyPayload = {
+    assetData: params.assetData,
     name: params.name,
     type: params.type,
-    assetData: params.assetData
   }
 
   const data = (await axios.post(getEndpoint(), bodyPayload)).data
@@ -83,7 +83,8 @@ export const createAssetService = async (axios, params) => {
 }
 
 export const deleteAssetService = async (axios, id) => {
-  if (!id) throw new Error('Param "id" needed to delete asset')
+  if (!id)
+    throw new Error('Param "id" needed to delete asset')
 
   await axios.delete(getEndpoint(id))
 
@@ -91,31 +92,31 @@ export const deleteAssetService = async (axios, id) => {
 }
 
 export const updateAssetService = (axios, id, params) => {
-  if (!id) throw new Error('Param "id" needed to update asset')
+  if (!id)
+    throw new Error('Param "id" needed to update asset')
 
   const bodyPayload = {
+    assetData: params.assetData,
+    groupIds: params.groupIds,
     name: params.name,
+    tagIds: params.tagIds,
     type: params.type,
     x: params.x,
     y: params.y,
-    assetData: params.assetData,
-    tagIds: params.tagIds,
-    groupIds: params.groupIds
   }
 
-  if (Object.values(bodyPayload).some((param) => param !== undefined)) {
+  if (Object.values(bodyPayload).some(param => param !== undefined))
     return axios.patch(getEndpoint(id), bodyPayload)
-  }
 }
 
 export const updateAssetsBulkService = async (axios, params) => {
   const bodyPayload = {
-    name: params.name,
-    type: params.type,
-    assets: params.assets,
     assetData: params.assetData,
+    assets: params.assets,
+    groupIds: params.groupIds,
+    name: params.name,
     tagIds: params.tagIds,
-    groupIds: params.groupIds
+    type: params.type,
   }
 
   const { data } = await axios.patch(getEndpoint(), bodyPayload)
@@ -123,32 +124,32 @@ export const updateAssetsBulkService = async (axios, params) => {
 }
 
 export const createAssetVulnerability = async (axios, assetId, params) => {
-  await axios.patch('/assets/' + assetId + '/vulnerabilities', params)
+  await axios.patch(`/assets/${assetId}/vulnerabilities`, params)
 }
 export const updateSpecialPortInAssetVulnerabilities = async (axios, form) => {
   const bodyPayload = {
-    vuln: form
+    vuln: form,
   }
   const response = await axios.patch(
-    '/assets/vulnerabilities_asset/' + bodyPayload.vuln.vast_id,
-    bodyPayload
+    `/assets/vulnerabilities_asset/${bodyPayload.vuln.vast_id}`,
+    bodyPayload,
   )
   return response
 }
 
 export const deleteAssetVulnerabilities = async (axios, item) => {
   const bodyPayload = {
-    vuln: item
+    vuln: item,
   }
   await axios.delete(
-    '/assets/vulnerabilities_asset/' + bodyPayload.vuln.vast_id,
-    bodyPayload
+    `/assets/vulnerabilities_asset/${bodyPayload.vuln.vast_id}`,
+    bodyPayload,
   )
 }
 
 export const deleteAssetsBulkService = async (axios, params) => {
   const bodyPayload = {
-    assets: params.assets
+    assets: params.assets,
   }
 
   await axios.delete(getEndpoint(), { data: bodyPayload })
@@ -157,36 +158,38 @@ export const deleteAssetsBulkService = async (axios, params) => {
 }
 
 export const searchAssetVulnerabilities = async (axios, id, params) => {
-  if (!id)
+  if (!id) {
     throw new Error(
-      'Param "id" needed to search the vulnerabilities of an asset'
+      'Param "id" needed to search the vulnerabilities of an asset',
     )
+  }
 
   const queryParams = {
     search: params.search || undefined,
-    type: params.type || undefined,
     severities:
       Array.isArray(params.severities) && params.severities.length
         ? params.severities.join(',')
-        : undefined
+        : undefined,
+    type: params.type || undefined,
   }
   const { data } = await axios.get(getVulnerabilitiesEndpoint(id), {
-    params: queryParams
+    params: queryParams,
   })
 
   return data
 }
 
 export const searchAssetRevisions = async (axios, id, params) => {
-  if (!id)
+  if (!id) {
     throw new Error(
-      'Param "id" needed to search the vulnerabilities of an asset'
+      'Param "id" needed to search the vulnerabilities of an asset',
     )
+  }
   const queryParams = {
-    search: params.search || undefined
+    search: params.search || undefined,
   }
   const { data } = await axios.get(getRevisionsEndpoint(id), {
-    params: queryParams
+    params: queryParams,
   })
   return data
 }
@@ -197,7 +200,7 @@ export const importCsvService = async (axios, params) => {
 }
 
 export const fetchAssetsPortsService = async (axios, assetId) => {
-  const { data } = await axios.get('/assets/' + assetId + '/ports')
+  const { data } = await axios.get(`/assets/${assetId}/ports`)
   return data.details
 }
 
@@ -213,7 +216,7 @@ export const tmpService = async (axios, q) => {
 export const searchAssetsBelonging = async (axios, options) => {
   const params = {
     children_ids: options?.childrenIds,
-    parents_ids: options?.parentsIds
+    parents_ids: options?.parentsIds,
   }
   const result = await axios.get('/assets/belonging', { params })
 
@@ -221,7 +224,7 @@ export const searchAssetsBelonging = async (axios, options) => {
     const newObject = {
       ...asset,
       childrenIds: asset.children_ids,
-      parentsIds: asset.parents_ids
+      parentsIds: asset.parents_ids,
     }
 
     delete newObject.children_ids

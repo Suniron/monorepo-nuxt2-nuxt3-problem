@@ -5,7 +5,6 @@ import {
 
 } from '../../models/blog'
 
-
 export const fetchPostsController = async (req: any, res: any, next: any) => {
   try {
     const { error, posts, total } = await fetchPostsModel(req.user)
@@ -17,7 +16,6 @@ export const fetchPostsController = async (req: any, res: any, next: any) => {
     next(error)
   }
 }
-
 
 export const createRemediationProjectPostsController = async (
   req: any,

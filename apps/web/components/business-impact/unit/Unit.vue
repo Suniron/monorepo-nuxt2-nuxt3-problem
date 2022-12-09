@@ -1,50 +1,3 @@
-<template>
-  <v-container class="mt-3">
-    <v-row class="unit-table">
-      <v-col cols="2" class="col-with-cross" @click="goToAssetPage">
-        <detach-business-unit-to-mission-modal
-          @saved="detachBusinessUnit"
-          :unit="unit"
-          :mission="mission"
-        />
-        <h4>{{ unit.name }}</h4>
-      </v-col>
-      <v-col style="padding: 0px">
-        <v-data-table
-          disable-filtering
-          disable-pagination
-          disable-sort
-          :headers="headers"
-          hide-default-footer
-          :items="unit.fearedEvents"
-        >
-          <template #[`item.default`]="{ item }">
-            <v-text-field v-model="item.default"></v-text-field>
-          </template>
-          <template #[`item.fearedEvents`]="{ item }">
-            {{ item.name }}
-          </template>
-          <template #[`item.businessImpacts`]="{ item }">
-            <BusinessImpacts
-              @update:fearedEvent="handleUpdateFearedEvent"
-              :unit="unit"
-              :available-business-impacts="availableBusinessImpacts"
-              :feared-event="item"
-            />
-          </template>
-          <template #[`item.severity`]="{ item }">
-            <!-- TODO: Ajouter les props pour gérer en interne l'update de la sévérité -->
-            <Severity
-              @update:fearedEvent="handleUpdateFearedEvent"
-              :feared-event="item"
-            />
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
 <script>
 // @ts-check
 /**
@@ -57,8 +10,8 @@ import Severity from './BusinessImpactSeverity.vue'
 import BusinessImpacts from '~/components/business-impact/unit/BusinessImpacts.vue'
 
 export default {
-  name: 'Unit',
   components: { BusinessImpacts, Severity, DetachBusinessUnitToMissionModal },
+  name: 'Unit',
   props: {
     /** @type {import('vue').PropOptions<BusinessMission>} */
     mission: {
@@ -80,27 +33,36 @@ export default {
       {
         class: 'grey lighten-3 black--text',
         text: 'Consequences',
-        value: 'fearedEvents',
         align: 'center',
-        width: '30%'
+        value: 'fearedEvents',
+        width: '30%',
       },
       {
         class: 'grey lighten-3 black--text',
         text: 'Business Impacts',
-        value: 'businessImpacts',
         align: 'center',
-        width: '30%'
+        value: 'businessImpacts',
+        width: '30%',
       },
       {
         class: 'grey lighten-3 black--text',
         text: 'Severity',
-        value: 'severity',
         align: 'center',
-        width: '30%'
+        value: 'severity',
+        width: '30%',
       }
-    ]
+    ],
   }),
   methods: {
+
+    detachBusinessUnit() {
+      this.$emit('detachBusinessUnit', this.unit.unitId)
+    },
+
+    goToAssetPage() {
+      // @ts-expect-error
+      this.$router.push(`/assets/${this.unit.unitId}`)
+    },
     /**
      * @param {import('~/types/businessImpactAnalysis').FearedEvent} updatedFearedEvent
      */
@@ -109,25 +71,65 @@ export default {
       const updatedUnit = {
         ...this.unit,
         fearedEvents: this.unit.fearedEvents.map((fe) => {
-          if (fe.id === updatedFearedEvent.id) {
+          if (fe.id === updatedFearedEvent.id)
             return updatedFearedEvent
-          }
+
           return fe
-        })
+        }),
       }
 
       this.$emit('update:unit', updatedUnit)
     },
-    goToAssetPage() {
-      // @ts-ignore
-      this.$router.push('/assets/' + this.unit.unitId)
-    },
-    detachBusinessUnit() {
-      this.$emit('detachBusinessUnit', this.unit.unitId)
-    }
-  }
+  },
 }
 </script>
+
+<template>
+  <v-container class="mt-3">
+    <v-row class="unit-table">
+      <v-col cols="2" class="col-with-cross" @click="goToAssetPage">
+        <DetachBusinessUnitToMissionModal
+          :unit="unit"
+          :mission="mission"
+          @saved="detachBusinessUnit"
+        />
+        <h4>{{ unit.name }}</h4>
+      </v-col>
+      <v-col style="padding: 0px">
+        <v-data-table
+          disable-filtering
+          disable-pagination
+          disable-sort
+          :headers="headers"
+          hide-default-footer
+          :items="unit.fearedEvents"
+        >
+          <template #[`item.default`]="{ item }">
+            <v-text-field v-model="item.default" />
+          </template>
+          <template #[`item.fearedEvents`]="{ item }">
+            {{ item.name }}
+          </template>
+          <template #[`item.businessImpacts`]="{ item }">
+            <BusinessImpacts
+              :unit="unit"
+              :available-business-impacts="availableBusinessImpacts"
+              :feared-event="item"
+              @update:fearedEvent="handleUpdateFearedEvent"
+            />
+          </template>
+          <template #[`item.severity`]="{ item }">
+            <!-- TODO: Ajouter les props pour gérer en interne l'update de la sévérité -->
+            <Severity
+              :feared-event="item"
+              @update:fearedEvent="handleUpdateFearedEvent"
+            />
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
 
 <style lang="scss" scoped>
 .table-header {
