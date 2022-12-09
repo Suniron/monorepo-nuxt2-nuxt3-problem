@@ -1,12 +1,11 @@
-
 import env from '../../config/env'
 /**
  * @typedef {{errorType?: string, message?: string}} ErrorParam
  */
 
 export class HTTPError extends Error {
-  code: any;
-  errorType: any;
+  code: any
+  errorType: any
   /**
    *
    * @param {number} code http error code (like 2xx, 3xx, 4xx, 5xx)
@@ -15,7 +14,7 @@ export class HTTPError extends Error {
   constructor(code: any, { errorType = '', message = '' } = {}) {
     super(message)
     this.code = code
-    this.message = `[${this.getDefaultMessage()}]${message && ' ' + message}`
+    this.message = `[${this.getDefaultMessage()}]${message && ` ${message}`}`
     this.errorType = errorType || this.getDefaultErrorType()
 
     this.printError()
@@ -25,9 +24,8 @@ export class HTTPError extends Error {
    * This method will print the error message **excepted in test environment**.
    */
   printError() {
-    if (!env.nodeEnv.isTest) {
+    if (!env.nodeEnv.isTest)
       console.error(this.message)
-    }
   }
 
   getDefaultMessage() {
@@ -57,14 +55,14 @@ export class HTTPError extends Error {
     const message = this.getDefaultMessage()
     return message
       .split(' ')
-      .map((str) => str[0].toUpperCase() + str.substr(1))
+      .map(str => str[0].toUpperCase() + str.substr(1))
       .join('')
   }
 
   toJSON() {
     return {
-      errorType: this.errorType,
       code: this.code,
+      errorType: this.errorType,
       message: this.message,
     }
   }
@@ -77,7 +75,7 @@ export class HTTPError extends Error {
  */
 export const getBadRequestError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(400, { errorType, message })
 /**
@@ -87,7 +85,7 @@ export const getBadRequestError = ({
  */
 export const getUnauthorizedError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(401, { errorType, message })
 /**
@@ -97,7 +95,7 @@ export const getUnauthorizedError = ({
  */
 export const getForbiddenError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(403, { errorType, message })
 /**
@@ -107,7 +105,7 @@ export const getForbiddenError = ({
  */
 export const getNotFoundError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(404, { errorType, message })
 /**
@@ -117,7 +115,7 @@ export const getNotFoundError = ({
  */
 export const getNotAcceptableError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(406, { errorType, message })
 /**
@@ -127,7 +125,7 @@ export const getNotAcceptableError = ({
  */
 export const getConflictError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(409, { errorType, message })
 /**
@@ -137,7 +135,7 @@ export const getConflictError = ({
  */
 export const getGoneError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(410, { errorType, message })
 /**
@@ -147,6 +145,6 @@ export const getGoneError = ({
  */
 export const getInternalServerError = ({
   errorType,
-  message
+  message,
 }: any = {}) =>
   new HTTPError(500, { errorType, message })

@@ -1,16 +1,14 @@
-
-
 import { throwHTTPError } from '../../common/errors/index.js'
 import {
-  getRemediationProjectsModel,
-  getRemediationProjectsSummaryModel,
-  getRemediationProjectsScopeModel,
-  updateRemediationProjectsModel,
-  updateRemediationProjectScopeModel,
-  updateRemediationProjectScopeItemModel,
   createRemediationProjectsModel,
-  getRemediationProjectStatusHistoryModel,
   getRemediationProjectCommentsModel,
+  getRemediationProjectStatusHistoryModel,
+  getRemediationProjectsModel,
+  getRemediationProjectsScopeModel,
+  getRemediationProjectsSummaryModel,
+  updateRemediationProjectScopeItemModel,
+  updateRemediationProjectScopeModel,
+  updateRemediationProjectsModel,
 
 } from '../../models/remediationProjects'
 
@@ -23,13 +21,15 @@ export const getRemediationProjectsController = async (req: any, res: any, next:
   try {
     const result = await getRemediationProjectsModel(
       Number(req.params.id),
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -42,7 +42,7 @@ export const getRemediationProjectsController = async (req: any, res: any, next:
 export const getRemediationProjectsSummaryController = async (
   req: any,
   res: any,
-  next: any
+  next: any,
 ) => {
   try {
     const result = await getRemediationProjectsSummaryModel(
@@ -50,13 +50,15 @@ export const getRemediationProjectsSummaryController = async (
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -70,13 +72,15 @@ export const getRemediationProjectsScopeController = async (req: any, res: any, 
   try {
     const result = await getRemediationProjectsScopeModel(
       Number(req.params.id),
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -89,18 +93,20 @@ export const getRemediationProjectsScopeController = async (req: any, res: any, 
 export const getRemediationProjectStatusHistoryController = async (
   req: any,
   res: any,
-  next: any
+  next: any,
 ) => {
   try {
     const result = await getRemediationProjectStatusHistoryModel(
       Number(req.params.id),
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -115,13 +121,15 @@ export const updateRemediationProjectsController = async (req: any, res: any, ne
     const result = await updateRemediationProjectsModel(
       Number(req.params.id),
       req.body,
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -135,10 +143,12 @@ export const createRemediationProjectsController = async (req: any, res: any, ne
   try {
     const result = await createRemediationProjectsModel(req.body, req.user)
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -151,19 +161,21 @@ export const createRemediationProjectsController = async (req: any, res: any, ne
 export const updateRemediationProjectScopeController = async (
   req: any,
   res: any,
-  next: any
+  next: any,
 ) => {
   try {
     const result = await updateRemediationProjectScopeModel(
       Number(req.params.id),
       req.body,
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.status(201).send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -176,20 +188,22 @@ export const updateRemediationProjectScopeController = async (
 export const updateRemediationProjectScopeItemController = async (
   req: any,
   res: any,
-  next: any
+  next: any,
 ) => {
   try {
     const result = await updateRemediationProjectScopeItemModel(
       Number(req.params.id),
       req.params.scopeId,
       req.body,
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.status(204).send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -202,18 +216,20 @@ export const updateRemediationProjectScopeItemController = async (
 export const getRemediationProjectCommentsController = async (
   req: any,
   res: any,
-  next: any
+  next: any,
 ) => {
   try {
     const result = await getRemediationProjectCommentsModel(
       Number(req.params.id),
-      req.user
+      req.user,
     )
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

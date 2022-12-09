@@ -1,28 +1,26 @@
+import jwt from 'jsonwebtoken'
 import env from '../../config/env'
 import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
 
 import { UNAUTHORIZED } from '../../common/constants'
 
-import { passwordsMatch, createPasswordHash } from '../../common/auth/passwords'
+import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
 
-
-import { hashSync, genSaltSync } from '../../common/auth/sha512'
-
+import { genSaltSync, hashSync } from '../../common/auth/sha512'
 
 import { knex } from '../../common/db'
 
-import { generateJWTToken, verifyToken, TOKEN_TYPE } from '../../common/auth/jwt'
+import { TOKEN_TYPE, generateJWTToken, verifyToken } from '../../common/auth/jwt'
 
-import jwt from 'jsonwebtoken'
 import {
-  loginModel,
-  getTokenSessionModel,
-  logoutModel,
-  verifyAssetPermissionModel,
   getResetPasswordToken,
-  updateResetPasswordUsingToken,
+  getTokenSessionModel,
   isValidSessionRefreshToken,
+  loginModel,
+  logoutModel,
   refreshAccessToken,
+  updateResetPasswordUsingToken,
+  verifyAssetPermissionModel,
 
 } from '../../models/auth'
 
@@ -34,20 +32,19 @@ const createJwtProvider = () => {
     logger: console,
   }
   return {
-    verifyJWTToken: jwt.verify,
     env,
-    logger: console,
     getTokenSessionModel: (token: any, type: any) =>
       getTokenSessionModel(dbProvider, token, type),
-  };
+    logger: console,
+    verifyJWTToken: jwt.verify,
+  }
 }
 
 export const jwtVerify = async (req: any, _res: any, next: any) => {
   try {
-    const authHeader = req.headers['authorization']
-    if (!authHeader) {
+    const authHeader = req.headers.authorization
+    if (!authHeader)
       throwUnauthorizedError({ message: 'Authorization header not found' })
-    }
 
     const token = authHeader.split(' ')[1]
     if (!token) {
@@ -60,13 +57,15 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
     const { user, error } = await verifyToken(
       provider,
       token,
-      TOKEN_TYPE.access
+      TOKEN_TYPE.access,
     )
-    if (error) throwUnauthorizedError()
+    if (error)
+      throwUnauthorizedError()
 
     req.user = user
     next()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -81,37 +80,37 @@ const createLoginModelProvider = () => {
       },
       password,
       hash,
-      salt
+      salt,
     )
   const generateAccessToken = (payload: any) => generateJWTToken(
     jwt.sign,
     {
-      secret: access.secret,
-      expiresIn: access.life,
       audience: access.audience,
+      expiresIn: access.life,
       issuer: access.issuer,
+      secret: access.secret,
       type: access.type,
     },
-    payload
+    payload,
   )
   const generateRefreshToken = (payload: any) => generateJWTToken(
     jwt.sign,
     {
-      secret: refresh.secret,
-      expiresIn: refresh.life,
       audience: refresh.audience,
+      expiresIn: refresh.life,
       issuer: refresh.issuer,
+      secret: refresh.secret,
       type: refresh.type,
     },
-    payload
+    payload,
   )
   return {
+    TOKEN_TYPE,
+    generateAccessToken,
+    generateRefreshToken,
     knex,
     logger: console,
     passwordsMatch: passMatches,
-    generateAccessToken,
-    generateRefreshToken,
-    TOKEN_TYPE,
   }
 }
 
@@ -126,16 +125,18 @@ export const loginController = async (req: any, res: any, next: any) => {
       userInfo,
     } = await loginModel(provider, req.body)
 
-    if (error) throwHTTPError(error, message)
+    if (error)
+      throwHTTPError(error, message)
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       domain: env.jwt.refresh.domain,
       httpOnly: true,
-      secure: env.nodeEnv.isProduction && env.httpsEnabled,
       maxAge: env.jwt.refresh.lifeInMs,
+      secure: env.nodeEnv.isProduction && env.httpsEnabled,
     })
     res.status(201).send({ accessToken, userInfo })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -163,7 +164,7 @@ export const refreshAccessTokenController = async (req: any, res: any, next: any
     const { user, error: jwtError } = await verifyToken(
       provider,
       refreshToken,
-      TOKEN_TYPE.refresh
+      TOKEN_TYPE.refresh,
     )
     if (jwtError || !user || !user.id) {
       throwUnauthorizedError()
@@ -187,7 +188,8 @@ export const refreshAccessTokenController = async (req: any, res: any, next: any
     }
 
     res.status(201).send({ accessToken, user: freshUser })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -199,11 +201,13 @@ export const logoutController = async (req: any, res: any, next: any) => {
       logger: console,
     }
     const { error } = await logoutModel(provider, req.user)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME)
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -216,46 +220,49 @@ export const verifyAssetPermissionController = async (req: any, res: any, next: 
       req.body?.assets || undefined,
       req.params?.relId || undefined,
       req.params?.scanId || undefined,
-      req.params?.cartoId || undefined
+      req.params?.cartoId || undefined,
     )
-    if (error) next(error)
-    else if (status === UNAUTHORIZED) res.sendStatus(401)
+    if (error)
+      next(error)
+    else if (status === UNAUTHORIZED)
+      res.sendStatus(401)
     else next()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
 export const sendResetMailPassword = async (req: any, res: any) => {
-  if (!req.body.username) res.sendStatus(401)
+  if (!req.body.username) { res.sendStatus(401) }
   else {
     const dbProvider = {
-      knex,
-      logger: console,
       createPasswordHash: (password: any) => createPasswordHash(
         {
           genSaltSync,
           hashSync,
         },
-        password
+        password,
       ),
+      knex,
+      logger: console,
     }
     const response = await getResetPasswordToken(dbProvider, req.body)
     res.send(response)
   }
 }
 export const updateResetPasswordByToken = async (req: any, res: any) => {
-  if (!req.body.password || !req.body.token) res.sendStatus(401)
+  if (!req.body.password || !req.body.token) { res.sendStatus(401) }
   else {
     const dbProvider = {
-      knex,
-      logger: console,
       createPasswordHash: (password: any) => createPasswordHash(
         {
           genSaltSync,
           hashSync,
         },
-        password
+        password,
       ),
+      knex,
+      logger: console,
       passwordsMatch: (password: any, hash: any, salt: any) =>
         passwordsMatch(
           {
@@ -263,11 +270,12 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
           },
           password,
           hash,
-          salt
+          salt,
         ),
     }
     const { error } = await updateResetPasswordUsingToken(dbProvider, req.body)
-    if (error) res.sendStatus(404)
+    if (error)
+      res.sendStatus(404)
     else res.sendStatus(200)
   }
 }
@@ -275,7 +283,8 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
 export const isAuthorizedController = async (req: any, res: any, next: any) => {
   try {
     res.status(201).send({ isAuthorized: true })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

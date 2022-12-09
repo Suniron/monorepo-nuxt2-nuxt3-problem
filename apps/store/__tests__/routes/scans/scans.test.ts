@@ -1,9 +1,8 @@
-
 import request from 'supertest'
 import scans, {
+  createScanContent,
   generateScans,
   probe,
-  createScanContent,
 } from '../../example-values/scans.js'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
@@ -15,18 +14,17 @@ describe('/scans', () => {
         .get('/scans')
         .then((response: any) => {
           expect(response.statusCode).toBe(401)
-        });
+        })
     })
 
     it('GET / should return 200 if we fetch with token', () => {
-
       prismaMock.scan.findMany.mockResolvedValue(scans)
 
       return request(app)
         .get('/scans')
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
-        .expect('Content-Type', /json/);
+        .expect('Content-Type', /json/)
     })
 
     it('GET / with pagination should return subset of values', async () => {
@@ -38,7 +36,7 @@ describe('/scans', () => {
       prismaMock.scan.findMany.mockResolvedValue(generateScans(5))
       const result = await request(app)
         .get(`/scans?page=${page}&pageSize=${pageSize}`)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .expect('Content-Type', /json/)
 
@@ -47,7 +45,7 @@ describe('/scans', () => {
       expect(result.body.scans[0]).toHaveProperty('assets')
       result.body.scans.forEach((scan: any) => {
         expect(
-          isSortedAlphabetically(scan.assets.map((ast: any) => ast.name))
+          isSortedAlphabetically(scan.assets.map((ast: any) => ast.name)),
         ).toEqual(true)
       })
     })
@@ -61,7 +59,7 @@ describe('/scans', () => {
       prismaMock.scan.create.mockResolvedValue({ id: 66 })
       const response = await request(app)
         .post('/scans')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .send(createScanContent(numberOfScanTypePassed))
       expect(response.body.id.length).toEqual(numberOfScanTypePassed)
@@ -76,7 +74,7 @@ describe('/scans', () => {
       prismaMock.scan.create.mockResolvedValueOnce({ id: 67 })
       const response = await request(app)
         .post('/scans')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .send(createScanContent(numberOfScanTypePassed))
       expect(response.body.id.length).toEqual(numberOfScanTypePassed)
@@ -84,14 +82,14 @@ describe('/scans', () => {
     it('should return a 400 if there is no content sent', async () => {
       await request(app)
         .post('/scans')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(400)
         .send()
     })
     it('should return a 400 if there is no content sent', async () => {
       await request(app)
         .post('/scans')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(400)
         .send({
           wrongDataSent: 'yesItIs',
@@ -107,10 +105,9 @@ describe('/scans/assets', () => {
         .get('/scans/assets')
         .then((response: any) => {
           expect(response.statusCode).toBe(401)
-        });
+        })
     })
     it('GET / should return 200', async () => {
-
       prismaMock.user_group.findMany.mockResolvedValue([4])
 
       prismaMock.$transaction.mockResolvedValue([
@@ -118,8 +115,8 @@ describe('/scans/assets', () => {
           {
             ip: [
               {
-                asset_server_id: 1,
                 address: '10.254.0.2',
+                asset_server_id: 1,
               },
             ],
           },
@@ -133,28 +130,28 @@ describe('/scans/assets', () => {
         [
           {
             id: 3,
-            network: '12700.0.0.01<h1>test',
             netmask: '54564.564<h1>test',
+            network: '12700.0.0.01<h1>test',
           },
         ],
       ])
       const response = await request(app)
         .get('/scans/assets')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
       expect(response.body).toEqual({
         assets: [
           {
-            id: 1,
             address: '10.254.0.2',
+            id: 1,
           },
           {
-            id: 2,
             address: 'https://www.x-rator.com',
+            id: 2,
           },
           {
-            id: 3,
             address: '12700.0.0.01<h1>test/54564.564<h1>test',
+            id: 3,
           },
         ],
       })
@@ -201,7 +198,8 @@ describe('test the isSortedAlphabetically function', () => {
  */
 function isSortedAlphabetically(array: any) {
   return array.reduce((prv: any, cur: any, idx: any) => {
-    if (array.length <= 1) return true
+    if (array.length <= 1)
+      return true
     if (idx >= array.length - 1) {
       return (
         cur.localeCompare(prv, 'en', {
@@ -210,12 +208,12 @@ function isSortedAlphabetically(array: any) {
       )
     }
     if (
-      idx === 0 ||
-      cur.localeCompare(prv, 'en', {
+      idx === 0
+      || cur.localeCompare(prv, 'en', {
         sensitivity: 'base',
       }) >= 0
     )
       return cur
     return false
-  }, true);
+  }, true)
 }

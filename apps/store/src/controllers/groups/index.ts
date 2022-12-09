@@ -1,12 +1,11 @@
-
 import { throwHTTPError } from '../../common/errors'
 
 import { knex } from '../../common/db'
 import {
-  searchGroupsModel,
-  updateGroupModel,
   createGroupModel,
   deleteGroupModel,
+  searchGroupsModel,
+  updateGroupModel,
 
 } from '../../models/groups'
 
@@ -17,13 +16,15 @@ export const searchGroupsController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send(group || { groups, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -31,9 +32,11 @@ export const searchGroupsController = async (req: any, res: any, next: any) => {
 export const createGroupController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createGroupModel(req.body, req.user)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
     res.status(201).send({ id })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -45,13 +48,15 @@ export const updateGroupController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
         ...(req.body || {}),
       },
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error, message)
+    if (error)
+      throwHTTPError(error, message)
 
     res.send(group)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -60,7 +65,8 @@ export const deleteGroupController = async (req: any, res: any, next: any) => {
     const provider = { knex, logger: console }
     const data = await deleteGroupModel(provider, req.params.id, req.user)
     res.status(200).send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

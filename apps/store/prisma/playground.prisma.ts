@@ -11,9 +11,9 @@ const runPlayground = async () => {
   // Write your query here!
   const assets = await prismaClient.user.findMany({
     select: {
-      last_name: true,
+      company: { select: { group: true, id: true, name: true } },
       first_name: true,
-      company: { select: { name: true, id: true, group: true } },
+      last_name: true,
     },
     where: {
       roles: {

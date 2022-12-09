@@ -1,11 +1,11 @@
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  uploadFilesController,
   downloadFileController,
   processCSVController,
+  uploadFilesController,
 
 } from '../../controllers/file_upload'
-import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()
 

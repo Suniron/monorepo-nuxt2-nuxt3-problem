@@ -1,4 +1,3 @@
-
 import {
   FORBIDDEN,
   MODEL_ERROR,
@@ -24,6 +23,9 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
 
   try {
     const groups = await prismaClient.group.findMany({
+      // If no "sort" (or different from "name"), it will no sort:
+      orderBy: { name: sort === 'name' ? 'asc' : undefined },
+
       select: {
         id: true,
         name: true,
@@ -31,15 +33,16 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
           select: {
             user: {
               select: {
-                id: true,
                 email: true,
                 first_name: true,
+                id: true,
                 last_name: true,
               },
             },
           },
         },
       },
+
       where: {
         company_id: companyId,
         // If "id" is undefined, it will fetch all groups in the company:
@@ -51,11 +54,9 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
                 user_id: loggedUserInfo.id,
               }
             : // Else, ignore this filter in admin
-              undefined,
+            undefined,
         },
       },
-      // If no "sort" (or different from "name"), it will no sort:
-      orderBy: { name: sort === 'name' ? 'asc' : undefined },
     })
 
     // Rewrite result to match with current API usage ("user_groups" is used as "members" for example)
@@ -64,23 +65,23 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
         ...group,
         members: group.user_group.map((u: any) => u.user),
       }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       delete restructuredGroup.user_group
       return restructuredGroup
     })
 
     // If single group search:
     if (id) {
-      if (!restructuredGroups.length) {
+      if (!restructuredGroups.length)
         return { error: NOT_FOUND }
-      }
 
       return { group: restructuredGroups[0] }
     }
 
     // If multiple groups search:
     return { groups: restructuredGroups, total: restructuredGroups.length }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -94,15 +95,15 @@ export const createGroupModel = async (params: any, loggedUserInfo = {}) => {
 
     const { id } = await knex.transaction(async (trx: any) => {
       const [{ id }] = await trx('group')
-        .insert({ name, company_id: companyId })
+        .insert({ company_id: companyId, name })
         .returning('id')
 
       if (memberIds.length) {
         await trx('user_group').insert(
           memberIds.map((mId: any) => ({
+            group_id: id,
             user_id: mId,
-            group_id: id
-          }))
+          })),
         )
       }
 
@@ -110,7 +111,8 @@ export const createGroupModel = async (params: any, loggedUserInfo = {}) => {
     })
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -127,23 +129,21 @@ export const updateGroupModel = async (
   {
     id,
     memberIds,
-    name
+    name,
   }: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   // TODO: Check if id is a number
   const groupId = Number(id)
 
-  if (!loggedUserInfo.roles.includes('admin')) {
+  if (!loggedUserInfo.roles.includes('admin'))
     return { error: FORBIDDEN, message: 'Logged user is not admin' }
-  }
 
   try {
     // First, check if group exist:
     const { error } = await searchGroupsModel({ id: groupId }, loggedUserInfo)
-    if (error) {
+    if (error)
       return { error }
-    }
 
     // If change group name:
     if (name) {
@@ -160,7 +160,7 @@ export const updateGroupModel = async (
       updateGroupMembersTransactions.push(
         prismaClient.user_group.deleteMany({
           where: { group_id: groupId },
-        })
+        }),
       )
 
       // Step 2: add all given member ids to this group:
@@ -168,10 +168,10 @@ export const updateGroupModel = async (
         updateGroupMembersTransactions.push(
           prismaClient.user_group.createMany({
             data: memberIds.map((mId: any) => ({
+              group_id: groupId,
               user_id: mId,
-              group_id: groupId
             })),
-          })
+          }),
         )
       }
 
@@ -179,7 +179,8 @@ export const updateGroupModel = async (
     }
 
     return await searchGroupsModel({ id: groupId }, loggedUserInfo)
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -192,7 +193,8 @@ export const deleteGroupModel = async (provider: any, id: any, loggedUserInfo: a
       return { status: SUCCESS }
     }
     return { error: UNAUTHORIZED }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
   }

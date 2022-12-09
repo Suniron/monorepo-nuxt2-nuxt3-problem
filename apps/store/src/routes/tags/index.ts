@@ -1,9 +1,9 @@
 import express from 'express'
 import {
-  searchTagsController,
   createTagController,
-  updateTagController,
   deleteTagController,
+  searchTagsController,
+  updateTagController,
 
 } from '../../controllers/tags'
 

@@ -1,8 +1,6 @@
-
-
+import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 
-import request from 'supertest'
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
 import { generateLogin, generateUser } from '../../utils/index.js'
@@ -11,9 +9,9 @@ describe('POST /login', () => {
   it('when a user attemps to log it with incorrect credentials', async () => {
     const Knex = mockKnexWithFinalValue([null])
 
-    let response = await request(app).post('/login').send({
-      username: 'username',
+    const response = await request(app).post('/login').send({
       password: 'password',
+      username: 'username',
     })
 
     expect(Knex.select).toBeCalledWith(
@@ -26,13 +24,13 @@ describe('POST /login', () => {
       'usr.email',
       'usr.company_id',
       'cmp.name as company_name',
-      'usr.roles'
+      'usr.roles',
     )
     expect(Knex.from).toBeCalledWith('user as usr')
     expect(Knex.innerJoin).toBeCalledWith(
       'company as cmp',
       'usr.company_id',
-      'cmp.id'
+      'cmp.id',
     )
     expect(Knex.where).toBeCalledTimes(2)
     expect(Knex.where).toBeCalledWith(expect.any(Function))
@@ -45,9 +43,9 @@ describe('POST /login', () => {
     const customLogin = generateLogin({ firstName: 'David', lastName: 'B' })
     mockKnexWithFinalValue([customLogin])
 
-    let response = await request(app).post('/login').send({
-      username: customLogin.username,
+    const response = await request(app).post('/login').send({
       password: 'test',
+      username: customLogin.username,
     })
     expect(response.status).toBe(401)
   })
@@ -56,11 +54,11 @@ describe('POST /login', () => {
     const customLogin = generateLogin({ firstName: 'David', lastName: 'B' })
     const Knex = mockKnexWithFinalValue([customLogin])
 
-    let response = await request(app)
+    const response = await request(app)
       .post('/login')
       .send({
-        username: customLogin.username,
         password: 'UnitTestCrypt@1',
+        username: customLogin.username,
       })
       .expect(201)
 
@@ -68,7 +66,7 @@ describe('POST /login', () => {
     expect(Knex.where).toHaveBeenNthCalledWith(
       2,
       'usr.username',
-      customLogin.username
+      customLogin.username,
     )
     expect(Knex.transaction).not.toBeUndefined()
     expect(response).toEqual(expect.not.objectContaining(customLogin))
@@ -80,25 +78,25 @@ describe('POST /refresh-token', () => {
     mockVerifyToken(generateUser())
 
     prismaMock.user_session.findFirst.mockResolvedValue({
-      id: 'userSessionId',
-      user_id: 'userId',
-      token: 'token',
-      type: 'refresh',
       created_at: new Date(),
       deleted_at: null,
+      id: 'userSessionId',
+      token: 'token',
+      type: 'refresh',
+      user_id: 'userId',
     })
 
     const mockedAccessToken = 'goodAccessToken'
     const mockedUser = {
-      id: 'userId',
-      firstName: 'user.first_name',
-      lastName: 'user.last_name',
-      username: 'user.username',
-      email: 'user.email',
       companyId: 'user.company_id',
       companyName: 'user.company_name',
-      roles: 'user.roles',
+      email: 'user.email',
+      firstName: 'user.first_name',
       groups: 'user.groups',
+      id: 'userId',
+      lastName: 'user.last_name',
+      roles: 'user.roles',
+      username: 'user.username',
     }
 
     prismaMock.$transaction.mockResolvedValue({
@@ -110,7 +108,7 @@ describe('POST /refresh-token', () => {
     const req = await request(app)
       .post('/refresh-token')
       .set('Cookie', ['rt=SomeRandomRefreshToken'])
-      .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
       .expect(201)
 
     const { accessToken, user } = req.body
@@ -120,7 +118,7 @@ describe('POST /refresh-token', () => {
   it('when a user attemps to refresh their token without a refresh token', () => {
     return request(app)
       .post('/refresh-token')
-      .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
       .expect(401)
   })
 })
@@ -133,14 +131,14 @@ describe('/reset-password', () => {
       })
       .then((response: any) => {
         expect(response.statusCode).toBe(200)
-      });
+      })
   })
   it(' POST / without email should return 401', () => {
     return request(app)
       .post('/reset-password')
       .then((response: any) => {
         expect(response.statusCode).toBe(401)
-      });
+      })
   })
   it(' PATCH / should return 200', async () => {
     mockKnexWithFinalValue([
@@ -157,6 +155,6 @@ describe('/reset-password', () => {
       .patch('/reset-password')
       .then((response: any) => {
         expect(response.statusCode).toBe(401)
-      });
+      })
   })
 })

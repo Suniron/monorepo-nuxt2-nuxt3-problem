@@ -1,27 +1,27 @@
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  searchGroupsController,
-  updateGroupController,
   createGroupController,
   deleteGroupController,
+  searchGroupsController,
+  updateGroupController,
 
 } from '../../controllers/groups'
-import { celebrate, Joi, Segments } from 'celebrate'
 
 const router = express.Router()
 
 // Validations
 const updateGroupValidations = celebrate({
   [Segments.BODY]: Joi.object({
-    name: Joi.string().optional(),
     memberIds: Joi.array().items(Joi.string().uuid()).optional(),
+    name: Joi.string().optional(),
   }),
 })
 
 const createGroupValidation = celebrate({
   [Segments.BODY]: Joi.object({
-    name: Joi.string().required(),
     memberIds: Joi.array().items(Joi.string().uuid()).optional(),
+    name: Joi.string().required(),
   }),
 })
 

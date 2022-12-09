@@ -1,5 +1,3 @@
-
-
 import { throwHTTPError } from '../../common/errors/index.js'
 
 import { searchSeveritiesModel } from '../../models/severities'
@@ -23,10 +21,12 @@ export const searchSeveritiesController = async (req: any, res: any, next: any) 
       ...(req.query || {}),
     })
 
-    if ('error' in results) throwHTTPError(results.error)
+    if ('error' in results)
+      throwHTTPError(results.error)
 
     res.send(results)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

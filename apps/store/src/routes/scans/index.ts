@@ -1,13 +1,13 @@
 import express from 'express'
 import {
   createScan,
-  searchScans,
   getScanController,
+  getScanReportController,
   parseScanResultController,
   searchAssetScanController,
   searchPhishingScenariosController,
+  searchScans,
   updateScanController,
-  getScanReportController,
 
 } from '../../controllers/scans/crud-controller'
 

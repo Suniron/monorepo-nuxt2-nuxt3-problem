@@ -1,4 +1,3 @@
-
 import { HTTPError } from '../errors/http'
 
 /**
@@ -26,16 +25,16 @@ export const NOT_FOUND = 'NotFound'
 export const VALIDATION_ERROR = 'ValidationError'
 
 export const DUPLICATE = {
-  get USERNAME() {
-    return new HTTPError(409, {
-      errorType: 'Duplicate',
-      message: 'DUPLICATE.USERNAME',
-    })
-  },
   get MAIL() {
     return new HTTPError(409, {
       errorType: 'Duplicate',
       message: 'DUPLICATE.MAIL',
+    })
+  },
+  get USERNAME() {
+    return new HTTPError(409, {
+      errorType: 'Duplicate',
+      message: 'DUPLICATE.USERNAME',
     })
   },
 }

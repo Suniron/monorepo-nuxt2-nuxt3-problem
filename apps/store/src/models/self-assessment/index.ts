@@ -1,4 +1,3 @@
-
 import { knex } from '../../../src/common/db'
 
 import { computeComplianceStatistics } from '../../../src/utils/compliance.utils'
@@ -9,23 +8,23 @@ import { log } from '../../../src/lib/logger'
 
 export const fetchCompliance = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { compliance = null } = params
     let compliances = []
     let statistics = []
-    if (compliance === null)
+    if (compliance === null) {
       compliances = await knex
         .distinct('compliance')
         .select('compliance')
         .from('compliance')
         .orderBy('compliance')
+    }
     else {
       const query = knex
         .select(
           knex.raw(
-            "cle.*, agg_docs.docs as docs, acle.asset_id, acle.name, acle.compliance_id, acle.status, acle.mitigation, acle.residual_risk, ARRAY[jsonb_build_object('text', 'Non Existant', 'value', non_existant_risk),jsonb_build_object('text', 'Inneffective', 'value', inneffective_risk),jsonb_build_object('text', 'Partially Effective', 'value', partially_effective_risk), jsonb_build_object('text', 'Effective', 'value', effective_risk)] as response"
-          )
+            'cle.*, agg_docs.docs as docs, acle.asset_id, acle.name, acle.compliance_id, acle.status, acle.mitigation, acle.residual_risk, ARRAY[jsonb_build_object(\'text\', \'Non Existant\', \'value\', non_existant_risk),jsonb_build_object(\'text\', \'Inneffective\', \'value\', inneffective_risk),jsonb_build_object(\'text\', \'Partially Effective\', \'value\', partially_effective_risk), jsonb_build_object(\'text\', \'Effective\', \'value\', effective_risk)] as response',
+          ),
         )
         .from('compliance as cle')
         .leftJoin(
@@ -36,13 +35,13 @@ export const fetchCompliance = async (params: any, loggedUserInfo = {}) => {
               'ast.name',
               'ac.status',
               'ac.mitigation',
-              'ac.residual_risk'
+              'ac.residual_risk',
             )
             .join('asset as ast', 'ast.id', 'ac.id')
             .where('ast.company_id', companyId)
             .as('acle'),
           'cle.id',
-          'acle.compliance_id'
+          'acle.compliance_id',
         )
         .where({ 'cle.compliance': compliance })
 
@@ -63,10 +62,11 @@ export const fetchCompliance = async (params: any, loggedUserInfo = {}) => {
       statistics = computeComplianceStatistics(compliances)
     }
     return {
-      compliances: compliances,
+      compliances,
       statistics: statistics.length ? statistics : undefined,
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('fetchCompliance')
   }
 }

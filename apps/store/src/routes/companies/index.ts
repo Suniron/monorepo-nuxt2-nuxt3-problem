@@ -1,16 +1,15 @@
-
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  searchCompanyController,
   createCompanyController,
-  searchCompanyLogoController,
-  updateCompanyLogoController,
   deleteCompanyLogoController,
-  updateCompanyController,
   getCompanyRiskController,
+  searchCompanyController,
+  searchCompanyLogoController,
+  updateCompanyController,
+  updateCompanyLogoController,
 
 } from '../../controllers/companies'
-import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()
 
@@ -37,7 +36,7 @@ router.get('/company/logo', searchCompanyLogoController)
 router.patch(
   '/company/logo',
   updateCompanyLogoValidation,
-  updateCompanyLogoController
+  updateCompanyLogoController,
 )
 
 router.delete('/company/logo', deleteCompanyLogoController)

@@ -1,8 +1,8 @@
 import express from 'express'
-import { celebrate, Segments, Joi } from 'celebrate'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  fetchPostsController,
   createRemediationProjectPostsController,
+  fetchPostsController,
 
 } from '../../controllers/blog'
 
@@ -17,7 +17,7 @@ router.get('/posts', fetchPostsController)
 router.post(
   '/posts/remediation-project/:id',
   getRemediationProjectByIdValidation,
-  createRemediationProjectPostsController
+  createRemediationProjectPostsController,
 )
 
 export default router

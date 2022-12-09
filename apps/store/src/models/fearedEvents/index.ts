@@ -1,5 +1,3 @@
-
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR, SUCCESS, VALIDATION_ERROR } from '../../../src/common/constants'
@@ -18,24 +16,22 @@ export const updateFearedEventsModel = async (fearedEventId: any, params: any) =
     // == Check params ==
     if (
       // bad fearedEventId:
-      !fearedEventId ||
-      isNaN(Number(fearedEventId)) ||
+      !fearedEventId
+      || isNaN(Number(fearedEventId))
       // bad severityId:
-      !params ||
-      !Object.entries(params).length ||
-      !params.severityId ||
-      isNaN(Number(params.severityId))
-    ) {
+      || !params
+      || !Object.entries(params).length
+      || !params.severityId
+      || isNaN(Number(params.severityId))
+    )
       return { error: VALIDATION_ERROR }
-    }
 
     const { severityId } = params
 
     // == Check existence of Severity & Feared Event ==
     // If Severity not found, return error:
-    if (!(await knex('severity').select().where({ id: severityId })).length) {
+    if (!(await knex('severity').select().where({ id: severityId })).length)
       return { error: MODEL_ERROR }
-    }
 
     // If Feared Event not found, return error:
     if (
@@ -44,16 +40,16 @@ export const updateFearedEventsModel = async (fearedEventId: any, params: any) =
           .select()
           .where({ id: fearedEventId })
       ).length
-    ) {
+    )
       return { error: MODEL_ERROR }
-    }
 
     // == Update severity ==
     await knex('business_mission_unit_has_feared_event')
       .update('severity_id', severityId)
       .where({ id: fearedEventId })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

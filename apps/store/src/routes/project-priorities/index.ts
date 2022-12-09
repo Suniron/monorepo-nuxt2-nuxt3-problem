@@ -1,4 +1,3 @@
-
 import express from 'express'
 
 import { searchProjectPrioritiesController } from '../../controllers/project-priorities'

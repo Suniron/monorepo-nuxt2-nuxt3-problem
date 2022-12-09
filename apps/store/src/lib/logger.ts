@@ -1,4 +1,3 @@
-
 import pino from 'pino'
 import { LogLayer, LoggerType } from 'loglayer'
 import PinoPretty from 'pino-pretty'
@@ -9,7 +8,6 @@ import {
   appVersion,
   isProd,
 } from '../../src/config/env'
-
 
 const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
   {
@@ -45,7 +43,7 @@ const p = pino(
       'req.headers.cookie',
     ],
   },
-  pino.multistream(streams)
+  pino.multistream(streams),
 )
 
 export const log = new LogLayer({
@@ -64,10 +62,11 @@ export const log = new LogLayer({
     name: 'store',
     version: appVersion,
   },
+
+  date: new Date().toISOString(),
   // let's also add in some additional details about the server
   env: process.env.NODE_ENV,
   instance: {
     name: INSTANCE_NAME,
   },
-  date: new Date().toISOString(),
 })

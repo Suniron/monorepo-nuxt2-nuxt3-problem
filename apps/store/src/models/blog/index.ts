@@ -1,16 +1,14 @@
-
-
 import { knex } from '../../../src/common/db'
 import {
   MODEL_ERROR,
-  VALIDATION_ERROR,
   SUCCESS,
   UNAUTHORIZED,
+  VALIDATION_ERROR,
 
 } from '../../../src/common/constants'
 import {
-  isOwnerOrAssigneeOfRemediationProject,
   checkRemediationProjectExistsOrIsAuthorised,
+  isOwnerOrAssigneeOfRemediationProject,
 
 } from '../../../src/utils/remediationProject.utils'
 
@@ -18,18 +16,17 @@ import { log } from '../../../src/lib/logger'
 
 export const fetchPostsModel = async (loggedUserInfo = {}) => {
   try {
-
     const { companyId, groups, roles } = loggedUserInfo
     const query = knex('vulnerability_asset')
       .distinctOn('vast.id')
       .select({
-        vast_id: 'vast.id',
-        type: 'ast.type',
         ast_id: 'ast.id',
-        name: 'ast.name',
-        vuln_name: 'vuln.name',
         comment: 'cmt.comment',
         created_at: 'cmt.created_at',
+        name: 'ast.name',
+        type: 'ast.type',
+        vast_id: 'vast.id',
+        vuln_name: 'vuln.name',
       })
       .from('vulnerability_asset as vast')
       .innerJoin('vulnerability as vuln', 'vuln.id', 'vast.vulnerability_id')
@@ -54,8 +51,9 @@ export const fetchPostsModel = async (loggedUserInfo = {}) => {
       }
     }
     const posts = await query
-    return { posts: posts, total: posts.length }
-  } catch (error) {
+    return { posts, total: posts.length }
+  }
+  catch (error) {
     log.withError(error).error('fetchPostsModel')
     return { error: MODEL_ERROR }
   }
@@ -69,7 +67,7 @@ export const fetchPostsModel = async (loggedUserInfo = {}) => {
 export const createRemediationProjectPostsModel = async (
   remediationProjectId: any,
   body: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   const {
     comment,
@@ -80,20 +78,19 @@ export const createRemediationProjectPostsModel = async (
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     // If user is not owner or assignee, it's forbidden to post a comment:
     if (
       !(await isOwnerOrAssigneeOfRemediationProject(
         remediationProjectId,
-        loggedUserInfo.id
+        loggedUserInfo.id,
       ))
-    ) {
+    )
       return { error: UNAUTHORIZED }
-    }
 
     // If comment comes with new status:
     if (remediationProjectStatusHistoryId) {
@@ -101,28 +98,28 @@ export const createRemediationProjectPostsModel = async (
       if (
         !(
           await knex.select().from('remediation_project_status_history').where({
-            id: remediationProjectStatusHistoryId,
             fk_project_id: remediationProjectId,
+            id: remediationProjectStatusHistoryId,
           })
         ).length
-      ) {
+      )
         return { error: VALIDATION_ERROR }
-      }
     }
 
     // Add new comment:
     const [{ id }] = await knex
       .insert({
-        fk_remediation_project_id: remediationProjectId,
-        fk_user_id: loggedUserInfo.id,
-        fk_remediation_project_status_history_id: remediationProjectStatusHistoryId,
         comment,
+        fk_remediation_project_id: remediationProjectId,
+        fk_remediation_project_status_history_id: remediationProjectStatusHistoryId,
+        fk_user_id: loggedUserInfo.id,
       })
       .into('comment_remediation_project')
       .returning('id')
 
     return { id, status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,

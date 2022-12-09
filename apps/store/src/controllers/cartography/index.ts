@@ -1,20 +1,21 @@
 import { throwHTTPError } from '../../common/errors'
 import {
+  addCartographyElementModel,
+  createCartographyModel,
+  deleteCartographyElementModel,
+  deleteCartographyModel,
   fetchCartographiesModel,
   fetchCartographyElementsModel,
-  updateCartographyModel,
-  createCartographyModel,
-  deleteCartographyModel,
-  addCartographyElementModel,
   updateCartographyElementModel,
-  deleteCartographyElementModel,
+  updateCartographyModel,
 } from '../../models/cartography'
 
 export const fetchCartographiesController = async (req: any, res: any, next: any) => {
   try {
     const { cartographies } = await fetchCartographiesModel(req.user)
-    res.send({ cartographies: cartographies })
-  } catch (error) {
+    res.send({ cartographies })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -23,10 +24,11 @@ export const fetchCartographyElementsController = async (req: any, res: any, nex
   try {
     const { elements } = await fetchCartographyElementsModel(
       req.params.cartoId,
-      req.user
+      req.user,
     )
-    res.send({ elements: elements })
-  } catch (error) {
+    res.send({ elements })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -35,7 +37,8 @@ export const updateCartographyController = async (req: any, res: any, next: any)
   try {
     await updateCartographyModel(req.params.cartoId, req.body, req.user)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -43,9 +46,11 @@ export const updateCartographyController = async (req: any, res: any, next: any)
 export const createCartographyController = async (req: any, res: any, next: any) => {
   try {
     const id = await createCartographyModel(req.body, req.user)
-    if (id.error) throwHTTPError(id.error)
-    res.send({ id: id })
-  } catch (error) {
+    if (id.error)
+      throwHTTPError(id.error)
+    res.send({ id })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -54,7 +59,8 @@ export const deleteCartographyController = async (req: any, res: any, next: any)
   try {
     await deleteCartographyModel(req.params.cartoId, req.user)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -64,11 +70,13 @@ export const addCartographyElementController = async (req: any, res: any, next: 
     const id = await addCartographyElementModel(
       req.params.cartoId,
       req.body,
-      req.user
+      req.user,
     )
-    if (id.error) throwHTTPError(id.error)
-    res.send({ id: id })
-  } catch (error) {
+    if (id.error)
+      throwHTTPError(id.error)
+    res.send({ id })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -79,10 +87,11 @@ export const updateCartographyElementController = async (req: any, res: any, nex
       req.params.cartoId,
       req.params.eId,
       req.body,
-      req.user
+      req.user,
     )
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -92,10 +101,11 @@ export const deleteCartographyElementController = async (req: any, res: any, nex
     await deleteCartographyElementModel(
       req.params.cartoId,
       req.params.eId,
-      req.user
+      req.user,
     )
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

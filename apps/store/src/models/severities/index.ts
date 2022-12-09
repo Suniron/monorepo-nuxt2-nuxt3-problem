@@ -1,5 +1,3 @@
-
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '../../../src/common/constants'
@@ -49,7 +47,8 @@ export const searchSeveritiesModel = async (params: any) => {
     }
 
     return result
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

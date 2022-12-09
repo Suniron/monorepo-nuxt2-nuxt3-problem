@@ -1,14 +1,14 @@
 import {
   createUser,
+  deleteUserModel,
   searchUsersModel,
   updateUserModel,
-  deleteUserModel,
 
 } from '../../models/users'
 
 import { knex } from '../../common/db'
 
-import { hashSync, genSaltSync } from '../../common/auth/sha512'
+import { genSaltSync, hashSync } from '../../common/auth/sha512'
 
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
 
@@ -23,12 +23,14 @@ export const searchUsersController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
-    res.status(200).send(user || { users, total })
-  } catch (error) {
+    res.status(200).send(user || { total, users })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -36,20 +38,22 @@ export const searchUsersController = async (req: any, res: any, next: any) => {
 export const createUserController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
-      knex,
-      logger: console,
       createPasswordHash: (password: any) => createPasswordHash(
         {
           genSaltSync,
           hashSync,
         },
-        password
+        password,
       ),
+      knex,
+      logger: console,
     }
     const { error, id } = await createUser(provider, req.body, req.user)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
     res.send({ id })
-  } catch (err) {
+  }
+  catch (err) {
     next(err)
   }
 }
@@ -57,15 +61,15 @@ export const createUserController = async (req: any, res: any, next: any) => {
 export const updateUserController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
-      knex,
-      logger: console,
       createPasswordHash: (password: any) => createPasswordHash(
         {
           genSaltSync,
           hashSync,
         },
-        password
+        password,
       ),
+      knex,
+      logger: console,
       passwordsMatch: (password: any, hash: any, salt: any) =>
         passwordsMatch(
           {
@@ -73,7 +77,7 @@ export const updateUserController = async (req: any, res: any, next: any) => {
           },
           password,
           hash,
-          salt
+          salt,
         ),
     }
 
@@ -83,12 +87,14 @@ export const updateUserController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
         ...(req.body || {}),
       },
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error, message)
+    if (error)
+      throwHTTPError(error, message)
     res.status(200).send(user)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -97,7 +103,8 @@ export const deleteUserController = async (req: any, res: any, next: any) => {
     const provider = { knex, logger: console }
     const data = await deleteUserModel(provider, req.params.id, req.user)
     res.status(200).send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

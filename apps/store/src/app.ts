@@ -1,8 +1,7 @@
-
-import initServer from '../src/server'
 import https from 'https'
 import fs from 'fs'
 import path from 'path'
+import initServer from '../src/server'
 import env from './config/env'
 import { initCronTasks } from './tasks'
 import { log } from './lib/logger'
@@ -17,7 +16,7 @@ const onServerStart = () => {
   ################################################
   🛡️  Data Store Server listening on: http://localhost:${env.port} 🛡️
   ################################################
-`
+`,
   )
 
   // Initialize cron tasks system:
@@ -29,17 +28,17 @@ async function startServer() {
 
   if (env.nodeEnv.isProduction && !env.httpsEnabled) {
     console.warn(
-      '[WARN] Building for production without certificate. Please provide both `server_key.pem` and `server_cert.pem` files.'
+      '[WARN] Building for production without certificate. Please provide both `server_key.pem` and `server_cert.pem` files.',
     )
   }
   if (env.nodeEnv.isProduction && env.httpsEnabled) {
     const readConfigFile = (filename: any) => fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
     const httpsOpts = {
-      key: readConfigFile('server_key.pem'),
-      cert: readConfigFile('server_cert.pem'),
-      requestCert: true,
-      rejectUnauthorized: false,
       ca: [readConfigFile('api_cert.pem')],
+      cert: readConfigFile('server_cert.pem'),
+      key: readConfigFile('server_key.pem'),
+      rejectUnauthorized: false,
+      requestCert: true,
     }
 
     const httpsServer = https.createServer(httpsOpts, app)
@@ -47,7 +46,8 @@ async function startServer() {
     httpsServer.listen(env.port, () => {
       onServerStart()
     })
-  } else {
+  }
+  else {
     app.listen(env.port, () => {
       onServerStart()
     })

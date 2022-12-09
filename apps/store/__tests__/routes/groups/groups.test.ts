@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockAdminUser, mockNonAdminUser } from '../../mocks'
@@ -32,16 +29,15 @@ describe('/groups/', () => {
         it('should be all company groups count', async () => {
           const companyGroups = groups
 
-            .filter((g) => g.company_id == 1)
+            .filter(g => g.company_id == 1)
 
-            .map((cg) => ({ ...cg, user_group: [] }))
-
+            .map(cg => ({ ...cg, user_group: [] }))
 
           prismaMock.group.findMany.mockResolvedValue(companyGroups)
 
           const response = await request(app)
             .get('/groups/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.status).toBe(200)
           expect(response.body.total).toBe(companyGroups.length)
@@ -58,16 +54,15 @@ describe('/groups/', () => {
             // TODO: need a filter by group member
             const companyGroups = groups
 
-              .filter((g) => g.company_id == 1)
+              .filter(g => g.company_id == 1)
 
-              .map((cg) => ({ ...cg, user_group: [] }))
-
+              .map(cg => ({ ...cg, user_group: [] }))
 
             prismaMock.group.findMany.mockResolvedValue(companyGroups)
 
             const response = await request(app)
               .get('/groups/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
 
             expect(response.status).toBe(200)
             expect(response.body.total).toBe(companyGroups.length)
@@ -84,8 +79,8 @@ describe('/groups/', () => {
 
       it('should be status 403', async () => {
         const response = await request(app)
-          .patch('/groups/' + groups[0].id)
-          .set('Authorization', `Bearer fake@token`)
+          .patch(`/groups/${groups[0].id}`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.status).toBe(403)
       })
@@ -98,8 +93,7 @@ describe('/groups/', () => {
 
       describe('rename group', () => {
         it('should be status 200', async () => {
-
-          const companyGroups = groups.filter((g) => g.company_id == 1)
+          const companyGroups = groups.filter(g => g.company_id == 1)
 
           prismaMock.group.findMany.mockResolvedValue([
             {
@@ -108,10 +102,10 @@ describe('/groups/', () => {
               user_group: [
                 {
                   user: {
-                    id: 12345,
-                    first_name: 'Etienne',
-                    last_name: 'BLANC',
                     email: 'etienne@blanc.com',
+                    first_name: 'Etienne',
+                    id: 12345,
+                    last_name: 'BLANC',
                   },
                 },
               ],
@@ -119,8 +113,8 @@ describe('/groups/', () => {
           ])
 
           const response = await request(app)
-            .patch('/groups/' + companyGroups[0].id)
-            .set('Authorization', `Bearer fake@token`)
+            .patch(`/groups/${companyGroups[0].id}`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.status).toBe(200)
         })

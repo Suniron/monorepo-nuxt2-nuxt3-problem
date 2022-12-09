@@ -1,5 +1,3 @@
-
-
 import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
@@ -41,7 +39,8 @@ export const searchProjectPrioritiesModel = async (params: any) => {
     }
 
     return { data: result }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

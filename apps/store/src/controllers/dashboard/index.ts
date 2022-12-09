@@ -1,5 +1,3 @@
-
-
 import { throwHTTPError, throwValidationError } from '../../common/errors'
 import {
   chartsDataModel,
@@ -21,25 +19,26 @@ export const chartsDataController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
-    if (chartDataResult.error) throwHTTPError(chartDataResult.error)
+    if (chartDataResult.error)
+      throwHTTPError(chartDataResult.error)
 
     const chartIdsResultMap = {
-      severitiesSummary: 'severitiesSummary',
       global: 'global',
-      topVulnerabilities: 'topVulnerabilities',
       likelihoods: 'likelihoods',
-      scanHistory: 'scanHistory',
       projectAssignement: 'projectAssignement',
       riskPerAsset: 'riskPerAsset',
+      scanHistory: 'scanHistory',
+      severitiesSummary: 'severitiesSummary',
+      topVulnerabilities: 'topVulnerabilities',
     }
 
     if (req.query?.cid) {
       const { cid } = req.query
 
-
-      if (!chartIdsResultMap[cid]) throwValidationError({})
+      if (!chartIdsResultMap[cid])
+        throwValidationError({})
       return res.send({
 
         [chartIdsResultMap[cid]]: chartDataResult[chartIdsResultMap[cid]],
@@ -48,12 +47,12 @@ export const chartsDataController = async (req: any, res: any, next: any) => {
 
     res.send(
       Object.values(chartIdsResultMap).reduce((hash, resultProp) => {
-
         hash[resultProp] = chartDataResult[resultProp]
         return hash
-      }, {})
+      }, {}),
     )
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -67,12 +66,12 @@ export const chartsDataController = async (req: any, res: any, next: any) => {
 export const fetchDashboardController = async (req: any, res: any, next: any) => {
   try {
     const { error, dashboard } = await fetchDashboard(req.user.id)
-    if (error) {
+    if (error)
       return throwHTTPError(error)
-    }
 
     res.send({ dashboard })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -88,11 +87,13 @@ export const updateDashboardUserController = async (req: any, res: any, next: an
     const { error } = await updateDashboardUserModel(
       req.params.dashId,
       req.body,
-      req.user
+      req.user,
     )
-    if (error) return throwHTTPError(error)
+    if (error)
+      return throwHTTPError(error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

@@ -1,5 +1,3 @@
-
-
 import { throwHTTPError } from '../../common/errors/index.js'
 
 import { searchGroupedRemediationsModel } from '../../models/remediations'
@@ -23,13 +21,15 @@ export const searchGroupedRemediationsController = async (req: any, res: any, ne
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
 
-    if ('error' in results) throwHTTPError(results.error)
+    if ('error' in results)
+      throwHTTPError(results.error)
 
     res.send(results)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

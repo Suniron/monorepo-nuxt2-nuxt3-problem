@@ -1,38 +1,32 @@
-/* eslint-disable no-unsafe-optional-chaining */
-
-
 import { knex } from '../../common/db'
 
 import prismaClient from '../../prismaClient'
 import {
   MODEL_ERROR,
   NOT_FOUND,
-  VALIDATION_ERROR,
   SUCCESS,
+  VALIDATION_ERROR,
 
 } from '../../common/constants'
-import { searchIpModel, createIpModel, updateOrCreateIpModel } from './ip'
-import { searchUriModel, createUriModel } from './uri'
-import { createCpeModel, updateOrCreateCpeModel } from './cpe'
-import {
-  createPortModel,
-  updateOrCreatePortModel,
-  searchPortModel,
-} from './port'
-import { createCipherModel } from './cipher'
-import { createCvssModel, updateCvssModel } from './cvss'
 import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
   updateStatusModel,
 
 } from '../../models/vulnerabilities'
-
 import { getUserGroupIds } from '../../utils/user.utils'
-
 import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '../../utils/assets'
-
 import { log } from '../../lib/logger'
+import { createIpModel, searchIpModel, updateOrCreateIpModel } from './ip'
+import { createUriModel, searchUriModel } from './uri'
+import { createCpeModel, updateOrCreateCpeModel } from './cpe'
+import {
+  createPortModel,
+  searchPortModel,
+  updateOrCreatePortModel,
+} from './port'
+import { createCipherModel } from './cipher'
+import { createCvssModel, updateCvssModel } from './cvss'
 
 /**
  * Returns a list of assets. If an ID is given, returns a single asset object instead.
@@ -50,47 +44,46 @@ import { log } from '../../lib/logger'
  */
 export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
     const query = knex
       .select({
-        id: 'ast.id',
-        name: 'ast.name',
-        os: 'asrv.os',
-        hostname: 'asrv.hostname',
-        type: 'ast.type',
-        ips: knex.raw("coalesce(agg_ip.ips, '{}')"),
-        ports: knex.raw("coalesce(agg_port.ports, '{}')"),
-        url: 'aweb.url',
-        language: 'aweb.language',
-        position: 'ausr.position',
-        mail: 'ausr.mail',
-        tel: 'ausr.tel',
-        phone_number: 'abdg.phone_number',
-        postal_address: 'abdg.postal_address',
-        location: 'abdg.location',
-        low_vulnerabilities: knex.raw('agg_sev.low'),
-        medium_vulnerabilities: knex.raw('agg_sev.medium'),
-        high_vulnerabilities: knex.raw('agg_sev.high'),
+        children: knex.raw('coalesce(agg_children.children, \'{}\')'),
         critical_vulnerabilities: knex.raw('agg_sev.critical'),
-        tags: knex.raw("coalesce(agg_tag.tags, '{}')"),
-        groups: knex.raw("coalesce(agg_group.groups, '{}')"),
-        parents: knex.raw("coalesce(agg_parents.parents, '{}')"),
-        children: knex.raw("coalesce(agg_children.children, '{}')"),
-        sitemap: knex.raw("coalesce(agg_sitemap.uris, '{}')"),
-        relations: knex.raw("coalesce(agg_rels.rels, '{}')"),
-        revision: 'rev.revision',
-        rev_cdate: 'rev.cdate',
-        netmask: 'anet.netmask',
         gateway: 'anet.gateway',
-        network: 'anet.network',
-        latitude: 'abdg.latitude',
-        longitude: 'abdg.longitude',
-        owner: 'user.first_name',
+        groups: knex.raw('coalesce(agg_group.groups, \'{}\')'),
+        high_vulnerabilities: knex.raw('agg_sev.high'),
+        hostname: 'asrv.hostname',
+        id: 'ast.id',
+        ips: knex.raw('coalesce(agg_ip.ips, \'{}\')'),
+        language: 'aweb.language',
         last_update_date: 'asmi.last_update_date',
-        version: 'asmi.version',
+        latitude: 'abdg.latitude',
+        location: 'abdg.location',
+        longitude: 'abdg.longitude',
+        low_vulnerabilities: knex.raw('agg_sev.low'),
+        mail: 'ausr.mail',
+        medium_vulnerabilities: knex.raw('agg_sev.medium'),
+        name: 'ast.name',
+        netmask: 'anet.netmask',
+        network: 'anet.network',
+        os: 'asrv.os',
+        owner: 'user.first_name',
+        parents: knex.raw('coalesce(agg_parents.parents, \'{}\')'),
+        phone_number: 'abdg.phone_number',
+        ports: knex.raw('coalesce(agg_port.ports, \'{}\')'),
+        position: 'ausr.position',
+        postal_address: 'abdg.postal_address',
+        relations: knex.raw('coalesce(agg_rels.rels, \'{}\')'),
+        rev_cdate: 'rev.cdate',
+        revision: 'rev.revision',
+        sitemap: knex.raw('coalesce(agg_sitemap.uris, \'{}\')'),
+        tags: knex.raw('coalesce(agg_tag.tags, \'{}\')'),
+        tel: 'ausr.tel',
         total_count: knex.raw('count(ast.id) over()'),
+        type: 'ast.type',
+        url: 'aweb.url',
+        version: 'asmi.version',
       })
       .from({ ast: 'asset' })
       .leftJoin({ asmi: 'asset_mission' }, { 'asmi.id': 'ast.id' })
@@ -111,7 +104,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .select(
         'ass.id',
         'name',
-        knex.raw("array_agg(json_build_object('id', ac.parent_id)) as parents")
+        knex.raw('array_agg(json_build_object(\'id\', ac.parent_id)) as parents'),
       )
       .from('asset as ass')
       .groupBy('ass.id')
@@ -119,25 +112,27 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .as('agg_parents')
 
     const parentsJoinParams = [parentsSubQuery, 'agg_parents.id', 'ast.id']
-    if (params.groupIds) query.innerJoin(...parentsJoinParams)
+    if (params.groupIds)
+      query.innerJoin(...parentsJoinParams)
     else query.leftJoin(...parentsJoinParams)
 
     const childrenSubQuery = knex
       .select(
         'ass.id',
         'name',
-        knex.raw("array_agg(json_build_object('id', ac.child_id)) as children")
+        knex.raw('array_agg(json_build_object(\'id\', ac.child_id)) as children'),
       )
       .from('asset as ass')
       .groupBy('ass.id')
       .leftJoin('v_asset_child as ac', 'ass.id', 'ac.parent_id')
       .as('agg_children')
-    /* It allow us to get the ID linked to the current asset 
+    /* It allow us to get the ID linked to the current asset
        I was not able to get the entire information, so i'll keep this ID and make a
        sql request to get more informations on the asset
     */
     const childrenJoinParams = [childrenSubQuery, 'agg_children.id', 'ast.id']
-    if (params.groupIds) query.innerJoin(...childrenJoinParams)
+    if (params.groupIds)
+      query.innerJoin(...childrenJoinParams)
     else query.leftJoin(...childrenJoinParams)
 
     // Subqueries
@@ -145,8 +140,8 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .select(
         'asset_id',
         knex.raw(
-          "array_agg(json_build_object('id', tag.id, 'name', tag.name, 'color', tag.color)) as tags"
-        )
+          'array_agg(json_build_object(\'id\', tag.id, \'name\', tag.name, \'color\', tag.color)) as tags',
+        ),
       )
       .from('tag_asset as atg')
       .innerJoin('tag', 'atg.tag_id', 'tag.id')
@@ -154,15 +149,16 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .as('agg_tag')
 
     const tagsJoinParams = [tagsSubquery, 'agg_tag.asset_id', 'ast.id']
-    if (params.tagIds) query.innerJoin(...tagsJoinParams)
+    if (params.tagIds)
+      query.innerJoin(...tagsJoinParams)
     else query.leftJoin(...tagsJoinParams)
 
     const groupsSubquery = knex
       .select(
         'asset_id',
         knex.raw(
-          "array_agg(json_build_object('id', gast.group_id, 'name', grp.name)) as groups"
-        )
+          'array_agg(json_build_object(\'id\', gast.group_id, \'name\', grp.name)) as groups',
+        ),
       )
       .from('group_asset as gast')
       .innerJoin('group as grp', 'grp.id', 'gast.group_id')
@@ -170,29 +166,30 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .as('agg_group')
 
     const groupsJoinParams = [groupsSubquery, 'agg_group.asset_id', 'ast.id']
-    if (params.groupIds) query.innerJoin(...groupsJoinParams)
+    if (params.groupIds)
+      query.innerJoin(...groupsJoinParams)
     else query.leftJoin(...groupsJoinParams)
     // Severities Subquery
     const sevSubquery = knex
       .select({
         asset_id: 'asset_id',
-        low: knex.raw(
-          "count(vast.id) filter (where LOWER(vast.severity) = 'low' or cvss.score <= 3.9)"
-        ),
-        medium: knex.raw(
-          "count(vast.id) filter (where LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9))"
+        critical: knex.raw(
+          'count(vast.id) filter (where LOWER(vast.severity) = \'critical\' or cvss.score >= 9)',
         ),
         high: knex.raw(
-          "count(vast.id) filter (where LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9))"
+          'count(vast.id) filter (where LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9))',
         ),
-        critical: knex.raw(
-          "count(vast.id) filter (where LOWER(vast.severity) = 'critical' or cvss.score >= 9)"
+        low: knex.raw(
+          'count(vast.id) filter (where LOWER(vast.severity) = \'low\' or cvss.score <= 3.9)',
+        ),
+        medium: knex.raw(
+          'count(vast.id) filter (where LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9))',
         ),
       })
       .from('vulnerability_asset as vast')
       .leftJoin('cvss', { 'cvss.id': 'vast.cvss_id' })
-      .whereRaw(`status is NULL`)
-      .orWhereRaw(`LOWER(status) = 'open'`)
+      .whereRaw('status is NULL')
+      .orWhereRaw('LOWER(status) = \'open\'')
       .groupBy('asset_id')
       .as('agg_sev')
     query.leftJoin(sevSubquery, { 'agg_sev.asset_id': 'ast.id' })
@@ -202,21 +199,21 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .select(
         'asset_server_id',
         knex.raw(
-          "array_agg(json_build_object('id', ip.id, 'address', ip.address, 'mac', ip.mac, 'iface', ip.iface, 'mask', ip.mask)) as ips"
-        )
+          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask)) as ips',
+        ),
       )
       .from('ip')
       .groupBy('asset_server_id')
       .as('agg_ip')
     query.leftJoin(ipsSubquery, { 'agg_ip.asset_server_id': 'ast.id' })
 
-    //Ports subquery
+    // Ports subquery
     const portsSubquery = knex
       .select(
         'ip_id',
         knex.raw(
-          "array_agg(json_build_object('id', port.id, 'number', port.number, 'protocol', port.protocol, 'status', port.status)) as ports"
-        )
+          'array_agg(json_build_object(\'id\', port.id, \'number\', port.number, \'protocol\', port.protocol, \'status\', port.status)) as ports',
+        ),
       )
       .from('port')
       .groupBy('ip_id')
@@ -228,8 +225,8 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .select(
         'from_asset_id',
         knex.raw(
-          "array_agg(json_build_object('id', from_asset_id, 'rel_id', rel.id, 'type', rel.type, 'name', astto.name, 'asset_type', astto.type, 'to_id', rel.to_asset_id)) as rels"
-        )
+          'array_agg(json_build_object(\'id\', from_asset_id, \'rel_id\', rel.id, \'type\', rel.type, \'name\', astto.name, \'asset_type\', astto.type, \'to_id\', rel.to_asset_id)) as rels',
+        ),
       )
       .from('relation as rel')
       .innerJoin('asset as astto', { 'astto.id': 'rel.to_asset_id' })
@@ -241,7 +238,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     const siteMapSubquery = knex
       .select(
         'asset_web_id',
-        knex.raw("array_agg(json_build_object('uri', uri)) as uris")
+        knex.raw('array_agg(json_build_object(\'uri\', uri)) as uris'),
       )
       .from('uri')
       .groupBy('asset_web_id')
@@ -262,71 +259,74 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     } = params
 
     const filterRegex = /(?<keyword>\w+):(?<value>\S*)/g
-    let filteredSearch = search?.replace(filterRegex, '').trim()
+    const filteredSearch = search?.replace(filterRegex, '').trim()
     // Get the "keyword:value" pair and remove it from the classic search
     /**
      * @type {Array<{keyword: string, value: string}>}
      */
-    const filters = [...(search ?? '').matchAll(filterRegex)].map((result) => ({
+    const filters = [...(search ?? '').matchAll(filterRegex)].map(result => ({
       keyword: result.groups?.keyword.toLowerCase() ?? '',
       value: result.groups?.value.toLowerCase() ?? '',
     }))
     if (id) {
       query.where({ 'ast.id': id })
-    } else if (ids) {
+    }
+    else if (ids) {
       query.whereIn('ast.id', ids.split(','))
-    } else {
+    }
+    else {
       if (filteredSearch) {
         if (!strict) {
           const assetIps = await searchIpModel(
             knex,
             filteredSearch.toLowerCase(),
-            companyId
+            companyId,
           )
           const assetIpIds = assetIps.reduce((res: any, ipId: any) => {
             res.push(ipId.ast_id)
             return res
           }, [])
-          query.where(function(this: any) {
+          query.where(function (this: any) {
             this.where(
               knex.raw('LOWER(ast.name)'),
               'like',
-              knex.raw('?', `%${filteredSearch.toLowerCase()}%`)
+              knex.raw('?', `%${filteredSearch.toLowerCase()}%`),
             )
               .orWhere(
                 knex.raw('LOWER(asrv.os)'),
                 'like',
-                knex.raw('?', `%${filteredSearch.toLowerCase()}%`)
+                knex.raw('?', `%${filteredSearch.toLowerCase()}%`),
               )
               .orWhere(
                 knex.raw('LOWER(aweb.url)'),
                 'like',
-                knex.raw('?', `%${filteredSearch.toLowerCase()}%`)
+                knex.raw('?', `%${filteredSearch.toLowerCase()}%`),
               )
               .orWhere(
                 knex.raw('LOWER(aweb.language)'),
                 'like',
-                knex.raw('?', `%${filteredSearch.toLowerCase()}%`)
+                knex.raw('?', `%${filteredSearch.toLowerCase()}%`),
               )
               .orWhere(
                 knex.raw('LOWER(abdg.location)'),
                 'like',
-                knex.raw('?', `%${filteredSearch.toLowerCase()}%`)
+                knex.raw('?', `%${filteredSearch.toLowerCase()}%`),
               )
               .orWhere('ast.id', 'in', assetIpIds)
           })
-        } else {
+        }
+        else {
           const assetIps = await searchIpModel(
             knex,
             filteredSearch.toLowerCase(),
             companyId,
-            true
+            true,
           )
           const assetIpIds = assetIps.reduce((res: any, ipId: any) => {
             res.push(ipId.ast_id)
             return res
           }, [])
-          query.where(function(this: any) {
+          query.where(function (this: any) {
             this.where('ast.name', filteredSearch)
               .orWhere('asrv.os', filteredSearch)
               .orWhere('aweb.url', filteredSearch)
@@ -339,46 +339,44 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       if (severities) {
         const arrSeverities = severities.split(',').map((s: any) => s.toLowerCase())
         const SEVERITIES = {
+          critical: 'critical',
+          high: 'high',
           low: 'low',
           medium: 'medium',
-          high: 'high',
-          critical: 'critical',
         }
         query.andWhere((builder: any) => {
           arrSeverities.forEach((sev: any) => {
-
-            if (SEVERITIES[sev]) {
+            if (SEVERITIES[sev])
               builder.orWhere(`agg_sev.${sev}`, '>', 0)
-            }
           })
         })
-        /*arrSeverities.forEach((sev) => {
+        /* arrSeverities.forEach((sev) => {
           if (SEVERITIES[sev]) {
             query
               .whereNotNull(`agg_sev.${sev}`)
               .andWhere(`agg_sev.${sev}`, '>', 0)
           }
-        })*/
+        }) */
       }
 
       if (!roles.includes('admin')) {
-        if (groups) {
+        if (groups)
           groupsSubquery.whereIn('gast.group_id', groups)
-        }
-        query.andWhere(function(this: any) {
+
+        query.andWhere(function (this: any) {
           this.whereNotNull('agg_group.groups')
         })
       }
       if (tagIds) {
         const arrTagIds = tagIds.split(',')
-        tagsSubquery.whereIn('atg.asset_id', function(this: any) {
+        tagsSubquery.whereIn('atg.asset_id', function (this: any) {
           this.select('asset_id').from('tag_asset').whereIn('tag_id', arrTagIds)
         })
       }
 
       if (groupIds) {
         const arrGroupIds = groupIds.split(',')
-        groupsSubquery.whereIn('gast.asset_id', function(this: any) {
+        groupsSubquery.whereIn('gast.asset_id', function (this: any) {
           this.select('asset_id')
             .from('group_asset')
             .whereIn('group_id', arrGroupIds)
@@ -392,13 +390,14 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     }
 
     if (
-      !isNaN(parseInt(page)) &&
-      !isNaN(parseInt(pageSize)) &&
-      filters.length === 0
-    )
+      !isNaN(parseInt(page))
+      && !isNaN(parseInt(pageSize))
+      && filters.length === 0
+    ) {
       query
         .limit(parseInt(pageSize))
         .offset((parseInt(page) - 1) * parseInt(pageSize))
+    }
     const result = await query
     for (const elem of result) {
       if (elem.parents?.length > 0) {
@@ -414,7 +413,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
               name,
               type,
             }
-          })
+          }),
         )
       }
       if (elem.children?.length > 0) {
@@ -430,7 +429,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
               name,
               type,
             }
-          })
+          }),
         )
       }
     }
@@ -444,19 +443,19 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
           result_filtered = result_filtered.filter((asset: any) => {
             return asset.ports.some((port: any) => {
               return port.number === parseInt(value)
-            });
+            })
           })
           break
         case 'id':
           result_filtered = result_filtered.filter(
-            (asset: any) => asset.id === parseInt(value)
+            (asset: any) => asset.id === parseInt(value),
           )
           break
 
         default:
           result_filtered = result_filtered.filter(
-            (asset: any) => typeof asset[keyword] === 'string' &&
-            asset[keyword].toLowerCase().includes(value)
+            (asset: any) => typeof asset[keyword] === 'string'
+            && asset[keyword].toLowerCase().includes(value),
           )
           break
       }
@@ -465,7 +464,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     if (Array.isArray(result)) {
       if (id) {
         // Single asset
-        if (result.length === 1) return { asset: result[0] }
+        if (result.length === 1) { return { asset: result[0] } }
         else {
           log
             .withError(new Error(`Asset with id "${id}" not found`))
@@ -475,9 +474,8 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       }
 
       let total_result = result_filtered.length
-      if (filters.length === 0 && result.length > 0) {
+      if (filters.length === 0 && result.length > 0)
         total_result = result[0].total_count
-      }
 
       if (page && filters.length > 0) {
         const minAssetShow = (page - 1) * parseInt(pageSize)
@@ -493,7 +491,8 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     }
 
     throw new Error('Unexpected result at search assets')
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetsModel error')
     return { error: MODEL_ERROR }
   }
@@ -505,10 +504,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
  */
 export const searchAssetsBelongingModel = async (
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId, roles, id: userId } = loggedUserInfo
     const { parents_ids: parentsIds, children_ids: childrenIds } = params
     const groups = await getUserGroupIds(userId)
@@ -527,11 +525,13 @@ export const searchAssetsBelongingModel = async (
     if (parentsIds?.length && childrenIds?.length) {
       query = query.andWhere((builder: any) => builder
         .whereIn('parent_id', parentsIds.split(','))
-        .orWhereIn('child_id', childrenIds.split(','))
+        .orWhereIn('child_id', childrenIds.split(',')),
       )
-    } else if (parentsIds?.length) {
+    }
+    else if (parentsIds?.length) {
       query = query.whereIn('parent_id', parentsIds.split(','))
-    } else if (childrenIds?.length) {
+    }
+    else if (childrenIds?.length) {
       query = query.whereIn('child_id', childrenIds.split(','))
     }
 
@@ -571,23 +571,23 @@ export const searchAssetsBelongingModel = async (
         child_type,
       } = relation
 
+      const parent = formattedResults.find(p => p.id === parent_id)
 
-      const parent = formattedResults.find((p) => p.id === parent_id)
-
-      const child = formattedResults.find((c) => c.id === child_id)
+      const child = formattedResults.find(c => c.id === child_id)
 
       if (!parent) {
         const risk = await getAssetRiskModel(companyId, parent_id)
 
         formattedResults.push({
+          children_ids: [child_id],
           id: parent_id,
           name: parent_name,
-          type: parent_type,
-          children_ids: [child_id],
           parents_ids: [],
           risk: risk?.error ? null : risk,
+          type: parent_type,
         })
-      } else {
+      }
+      else {
         parent.children_ids.push(child_id)
       }
 
@@ -595,14 +595,15 @@ export const searchAssetsBelongingModel = async (
         const risk = await getAssetRiskModel(companyId, child_id)
 
         formattedResults.push({
+          children_ids: [],
           id: child_id,
           name: child_name,
-          type: child_type,
-          children_ids: [],
           parents_ids: [parent_id],
           risk: risk?.error ? null : risk,
+          type: child_type,
         })
-      } else {
+      }
+      else {
         child.parents_ids.push(parent_id)
       }
     }
@@ -611,7 +612,8 @@ export const searchAssetsBelongingModel = async (
     return {
       assets: formattedResults,
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetsBelongingModel error')
     return { error: MODEL_ERROR }
   }
@@ -642,9 +644,9 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
         .andWhere('asset.company_id', companyId)
         .orderBy('asset.name', 'desc')
         .limit(1)
-      if (highestHomonymIndex) {
+      if (highestHomonymIndex)
         name = `${inputName} ${parseInt(highestHomonymIndex.index ?? 1) + 1}`
-      }
+
       // Then create the asset
       // Adding empty arrays in case they are not present in the params
       assetData.parents ??= []
@@ -652,10 +654,10 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
 
       const [assetId] = (
         await tx('asset').returning('id').insert({
-          name,
-          type,
-          owner: userId,
           company_id: companyId,
+          name,
+          owner: userId,
+          type,
         })
       ).map((e: any) => e.id)
 
@@ -699,8 +701,8 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
         const [{ id: relationId }] = await tx('relation')
           .insert({
             from_asset_id: child.id,
-            type: 'BELONGS_TO',
             to_asset_id: assetId,
+            type: 'BELONGS_TO',
           })
           .returning('id')
 
@@ -711,8 +713,8 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
         const [{ id: relationId }] = await tx('relation')
           .insert({
             from_asset_id: assetId,
-            type: 'BELONGS_TO',
             to_asset_id: parent.id,
+            type: 'BELONGS_TO',
           })
           .returning('id')
 
@@ -721,14 +723,13 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
 
       if (type === 'UNIT') {
         const parentsMissions = relations.parents.filter(
-          (parent: any) => parent.type === 'MISSION'
+          (parent: any) => parent.type === 'MISSION',
         )
         if (parentsMissions.length > 0) {
           const listOfFearedEvents = await knex
             .select('id')
             .from('feared_event')
           for (const mission of parentsMissions) {
-
             const missionUnitRelationId = addedRelations.parents[mission.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -744,7 +745,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
       }
       if (type === 'MISSION') {
         const childrenUnits = relations.children.filter(
-          (child: any) => child.type === 'UNIT'
+          (child: any) => child.type === 'UNIT',
         )
         await tx('asset_mission').insert({
           id: assetId,
@@ -756,7 +757,6 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             .select('id')
             .from('feared_event')
           for (const unit of childrenUnits) {
-
             const missionUnitRelationId = addedRelations.children[unit.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -773,39 +773,41 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
       if (type === 'SERVER') {
         const { os = '', hostname = '', IPs = [], ports = {} } = assetData
         await tx('asset_server').insert({
+          hostname,
           id: assetId,
           os,
-          hostname,
         })
         for (let i = 0; i < IPs.length; i++) {
           const ipId = await createIpModel(tx, assetId, IPs[i])
           params.assetData.IPs[i].id = ipId
-          for (let port in ports) {
+          for (const port in ports) {
             const portId = await createPortModel(tx, ipId, ports[port])
             params.assetData.ports[port].id = portId
-            for (let cipher in ports[port].ciphers) {
+            for (const cipher in ports[port].ciphers)
               await createCipherModel(tx, portId, cipher)
-            }
           }
         }
         // Create WEB asset
-      } else if (type === 'WEB') {
+      }
+      else if (type === 'WEB') {
         const { url = '', language = '' } = assetData
         await tx('asset_web').insert({
           id: assetId,
-          url,
           language,
+          url,
         })
         // Create USER
-      } else if (type === 'USER') {
+      }
+      else if (type === 'USER') {
         const { position = '', mail = '', tel = '' } = assetData
         await tx('asset_user').insert({
           id: assetId,
-          position,
           mail,
+          position,
           tel,
         })
-      } else if (type === 'BUILDING') {
+      }
+      else if (type === 'BUILDING') {
         const {
           location = '',
           latitude = '',
@@ -815,30 +817,33 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
         } = assetData
         await tx('asset_building').insert({
           id: assetId,
-          location,
           latitude,
+          location,
           longitude,
-          postal_address,
           phone_number,
+          postal_address,
         })
-      } else if (type === 'POLICY' || type === 'PROCEDURE') {
+      }
+      else if (type === 'POLICY' || type === 'PROCEDURE') {
         const { doc, revision, cdate } = assetData
-        await tx('asset_document').insert({ id: assetId, type: type })
+        await tx('asset_document').insert({ id: assetId, type })
         await tx('revision').insert({
           asset_document_id: assetId,
-          store_id: doc,
-          revision,
           cdate,
+          revision,
+          store_id: doc,
         })
-      } else if (type === 'NETWORK') {
+      }
+      else if (type === 'NETWORK') {
         const { netmask = null, gateway = null, network = null } = assetData
         await tx('asset_network').insert({
+          gateway,
           id: assetId,
           netmask,
-          gateway,
           network,
         })
-      } else if (type === 'COMPLIANCE') {
+      }
+      else if (type === 'COMPLIANCE') {
         const {
           compliance_id,
           status = null,
@@ -846,56 +851,59 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
           residual_risk = null,
         } = assetData
         await tx('asset_compliance').insert({
-          id: assetId,
           compliance_id,
-          status,
+          id: assetId,
           mitigation,
           residual_risk,
+          status,
         })
       }
       if (assetData?.cpes) {
-        for (let cpe in assetData.cpes) {
+        for (const cpe in assetData.cpes) {
           const cpeId = await createCpeModel(tx, cpe)
           await tx('cpe_asset').insert({
-            cpe_id: cpeId,
             asset_id: assetId,
+            cpe_id: cpeId,
           })
         }
       }
 
       if (assetData?.LOCATED_TO) {
         await tx('relation').insert({
-          type: 'LOCATED_TO',
           from_asset_id: assetId,
           to_asset_id: assetData.LOCATED_TO,
+          type: 'LOCATED_TO',
         })
       }
       return assetId
     })
 
     return { id: createdAssetId }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createAssetModel error')
-    return { error: error }
+    return { error }
   }
 }
 
 export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
   try {
-    if (!id) return { error: VALIDATION_ERROR }
-
+    if (!id)
+      return { error: VALIDATION_ERROR }
 
     const { companyId } = loggedUserInfo
     const [assetToDelete] = await knex.select().from({ ast: 'asset' }).where({
-      'ast.id': id,
       'ast.company_id': companyId,
+      'ast.id': id,
     })
-    if (!assetToDelete) return { error: NOT_FOUND }
+    if (!assetToDelete)
+      return { error: NOT_FOUND }
 
     await knex('asset').where('id', id).delete()
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('deleteAssetModel error')
     return { error: MODEL_ERROR }
   }
@@ -915,8 +923,10 @@ export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
  */
 export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}) => {
   try {
-    if (!id) return { error: VALIDATION_ERROR }
-    if (!params || !Object.entries(params).length) return { status: SUCCESS } // nothing to update
+    if (!id)
+      return { error: VALIDATION_ERROR }
+    if (!params || !Object.entries(params).length)
+      return { status: SUCCESS } // nothing to update
 
     const { error, status } = await knex.transaction(async (tx: any) => {
       const { name, assetData = {}, tagIds, groupIds, x, y } = params
@@ -931,19 +941,19 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         // .leftJoin('asset_user as ausr', 'ausr.id', 'ast.id')
         // .leftJoin('asset_building as ablg', 'ablg.id', 'ast.id')
         .where({
-          'ast.id': id,
           'ast.company_id': companyId,
+          'ast.id': id,
         })
-      if (!assetExist) return { error: NOT_FOUND }
+      if (!assetExist)
+        return { error: NOT_FOUND }
 
       // Check for homonyms
       const assetWithSameName = await knex('asset')
         .where('name', 'like', `${name}`)
         .andWhere('type', 'like', `${assetExist.type}`)
         .andWhereNot({ id })
-      if (assetWithSameName.length !== 0) {
+      if (assetWithSameName.length !== 0)
         throw 'DuplicateError'
-      }
 
       const updates = []
 
@@ -994,11 +1004,11 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             .delete()
             .from('relation')
             .where({
-              'relation.type': 'BELONGS_TO',
               'relation.to_asset_id': id,
+              'relation.type': 'BELONGS_TO',
             })
             .and.whereIn('relation.from_asset_id', deletedChildren)
-            .returning('id')
+            .returning('id'),
         )
       }
       await Promise.all(
@@ -1006,13 +1016,13 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           const [{ id: relationId }] = await tx('relation')
             .insert({
               from_asset_id: childId,
-              type: 'BELONGS_TO',
               to_asset_id: id,
+              type: 'BELONGS_TO',
             })
             .returning('id')
 
           newRelationIds.children.push(relationId)
-        })
+        }),
       )
 
       if (deletedParents.length) {
@@ -1025,7 +1035,7 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
               'relation.type': 'BELONGS_TO',
             })
             .and.whereIn('relation.to_asset_id', deletedParents)
-            .returning('id')
+            .returning('id'),
         )
       }
       await Promise.all(
@@ -1033,21 +1043,21 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           const [{ id: relationId }] = await tx('relation')
             .insert({
               from_asset_id: id,
-              type: 'BELONGS_TO',
               to_asset_id: parentId,
+              type: 'BELONGS_TO',
             })
             .returning('id')
 
           newRelationIds.parents.push(relationId)
-        })
+        }),
       )
 
-      if ([name].some((item) => item !== undefined)) {
+      if ([name].some(item => item !== undefined))
         updates.push(tx('asset').where('id', id).update({ name }))
-      }
-      if ([x, y].some((item) => item !== undefined)) {
+
+      if ([x, y].some(item => item !== undefined))
         updates.push(tx('asset').where('id', id).update({ x, y }))
-      }
+
       if (assetExist.type === 'SERVER') {
         const [assetToUpdate] = await tx
           .select()
@@ -1060,23 +1070,24 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           ports = {},
         } = assetData
         updates.push(
-          tx('asset_server').where('id', id).update({ os, hostname })
+          tx('asset_server').where('id', id).update({ hostname, os }),
         )
         for (let i = 0; i < IPs.length; i++) {
           const ipId = await updateOrCreateIpModel(tx, id, IPs[i])
           params.assetData.IPs[i].id = ipId
-          for (let port in ports) {
+          for (const port in ports) {
             tx('port').update({ status: 'closed' }).where('port.ip_id', ipId)
             const portId = await updateOrCreatePortModel(tx, ipId, ports[port])
             params.assetData.ports[port].id = portId
             const { ciphers = [] } = ports[port]
-            for (let cipher in ciphers) {
+            for (const cipher in ciphers) {
               tx('cipher_suite').delete().where('cipher_suite.port_id', portId)
               await createCipherModel(tx, portId, cipher)
             }
           }
         }
-      } else if (assetExist.type === 'UNIT') {
+      }
+      else if (assetExist.type === 'UNIT') {
         if (newRelationIds.parents.length > 0) {
           const listOfFearedEvents = await knex
             .select('id')
@@ -1087,14 +1098,16 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
                 tx('business_mission_unit_has_feared_event').insert({
                   business_mission_unit_id: missionUnitRelationId,
                   feared_event_id: fearedEvent.id,
-                })
+                }),
               )
             }
           }
         }
-      } else if (assetExist.type === 'USERGROUP') {
+      }
+      else if (assetExist.type === 'USERGROUP') {
         // REMOVED
-      } else if (assetExist.type === 'MISSION') {
+      }
+      else if (assetExist.type === 'MISSION') {
         if (newRelationIds.children.length > 0) {
           const listOfFearedEvents = await knex
             .select('id')
@@ -1105,12 +1118,13 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
                 tx('business_mission_unit_has_feared_event').insert({
                   business_mission_unit_id: unitMissionRelationId,
                   feared_event_id: fearedEvent.id,
-                })
+                }),
               )
             }
           }
         }
-      } else if (assetExist.type === 'USER') {
+      }
+      else if (assetExist.type === 'USER') {
         const [assetToUpdate] = await tx
           .select()
           .from('asset_user as asrv')
@@ -1119,12 +1133,13 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           tx('asset_user')
             .where('id', id)
             .update({
-              position: assetData?.position || assetToUpdate.position,
               mail: assetData?.mail || assetToUpdate.mail,
+              position: assetData?.position || assetToUpdate.position,
               tel: assetData?.tel || assetToUpdate.tel,
-            })
+            }),
         )
-      } else if (assetExist.type === 'WEB') {
+      }
+      else if (assetExist.type === 'WEB') {
         const [assetToUpdate] = await tx
           .select()
           .from('asset_web as asrv')
@@ -1133,13 +1148,14 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           tx('asset_web')
             .where('id', id)
             .update({
-              url: assetData?.url || assetToUpdate.url,
               language: assetData?.language || assetToUpdate.language,
-            })
+              url: assetData?.url || assetToUpdate.url,
+            }),
         )
-      } else if (
-        assetExist.type === 'POLICY' ||
-        assetExist.type === 'PROCEDURE'
+      }
+      else if (
+        assetExist.type === 'POLICY'
+        || assetExist.type === 'PROCEDURE'
       ) {
         const [assetToUpdate] = await tx
           .select()
@@ -1151,9 +1167,10 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             .update({
               cdate: assetData?.rev_cdate || assetToUpdate.rev_cdate,
               revision: assetData?.revision || assetToUpdate.revision,
-            })
+            }),
         )
-      } else if (assetExist.type === 'BUILDING') {
+      }
+      else if (assetExist.type === 'BUILDING') {
         const [assetToUpdate] = await tx
           .select()
           .from('asset_building as asrv')
@@ -1162,16 +1179,17 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           tx('asset_building')
             .where('id', id)
             .update({
-              location: assetData?.location || assetToUpdate.location,
               latitude: assetData?.latitude || assetToUpdate.latitude,
+              location: assetData?.location || assetToUpdate.location,
               longitude: assetData?.longitude || assetToUpdate.longitude,
               phone_number:
                 assetData?.phone_number || assetToUpdate.phone_number,
               postal_address:
                 assetData?.postal_address || assetToUpdate.postal_address,
-            })
+            }),
         )
-      } else if (assetExist.type === 'NETWORK') {
+      }
+      else if (assetExist.type === 'NETWORK') {
         const [assetToUpdate] = await tx
           .select()
           .from('asset_network as asrv')
@@ -1180,12 +1198,13 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           tx('asset_network')
             .where('id', id)
             .update({
-              netmask: assetData.netmask || assetToUpdate.netmask,
               gateway: assetData.gateway || assetToUpdate.gateway,
+              netmask: assetData.netmask || assetToUpdate.netmask,
               network: assetData.network || assetToUpdate.network,
-            })
+            }),
         )
-      } else if (assetExist.type === 'COMPLIANCE') {
+      }
+      else if (assetExist.type === 'COMPLIANCE') {
         const [assetToUpdate] = await tx
           .select()
           .from('asset_compliance as acle')
@@ -1194,29 +1213,30 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
           tx('asset_compliance')
             .where('id', id)
             .update({
-              status: assetData?.status || assetToUpdate.status,
               mitigation: assetData?.mitigation || assetToUpdate?.mitigation,
               residual_risk:
                 assetData?.residual_risk || assetToUpdate.residual_risk,
-            })
+              status: assetData?.status || assetToUpdate.status,
+            }),
         )
       }
       if (assetData?.cpes) {
-        for (let cpe in assetData.cpes) {
+        for (const cpe in assetData.cpes) {
           const cpeId = await updateOrCreateCpeModel(
             tx,
             { assetId: id },
-            assetData.cpes[cpe]
+            assetData.cpes[cpe],
           )
           const [cpeAssetExist] = await knex
             .select()
             .from('cpe_asset as cast')
             .where({ 'cast.asset_id': id, 'cast.cpe_id': cpeId })
-          if (!cpeAssetExist)
+          if (!cpeAssetExist) {
             await tx('cpe_asset').insert({
-              cpe_id: cpeId,
               asset_id: id,
+              cpe_id: cpeId,
             })
+          }
         }
       }
 
@@ -1227,20 +1247,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         })
         for (let i = 0; i < assetData.OWN_BY.length; i++) {
           const idToDel = owners.findIndex(
-            (item: any) => item.to_asset_id === assetData.OWN_BY[i]
+            (item: any) => item.to_asset_id === assetData.OWN_BY[i],
           )
 
           idToDel === -1
             ? updates.push(
-                tx('relation').insert({
-                  from_asset_id: id,
-                  to_asset_id: assetData.OWN_BY[i],
-                  type: 'OWN_BY',
-                })
-              )
+              tx('relation').insert({
+                from_asset_id: id,
+                to_asset_id: assetData.OWN_BY[i],
+                type: 'OWN_BY',
+              }),
+            )
             : owners.splice(idToDel, 1)
         }
-        owners.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        owners.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.MAINTAINED_BY) {
@@ -1250,20 +1270,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         })
         for (let i = 0; i < assetData.MAINTAINED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item: any) => item.to_asset_id === assetData.MAINTAINED_BY[i]
+            (item: any) => item.to_asset_id === assetData.MAINTAINED_BY[i],
           )
 
           idToDel === -1
             ? updates.push(
-                tx('relation').insert({
-                  from_asset_id: id,
-                  to_asset_id: assetData.MAINTAINED_BY[i],
-                  type: 'MAINTAINED_BY',
-                })
-              )
+              tx('relation').insert({
+                from_asset_id: id,
+                to_asset_id: assetData.MAINTAINED_BY[i],
+                type: 'MAINTAINED_BY',
+              }),
+            )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.REVIEWED_BY) {
@@ -1273,20 +1293,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         })
         for (let i = 0; i < assetData.REVIEWED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item: any) => item.to_asset_id === assetData.REVIEWED_BY[i]
+            (item: any) => item.to_asset_id === assetData.REVIEWED_BY[i],
           )
 
           idToDel === -1
             ? updates.push(
-                tx('relation').insert({
-                  from_asset_id: id,
-                  to_asset_id: assetData.REVIEWED_BY[i],
-                  type: 'REVIEWED_BY',
-                })
-              )
+              tx('relation').insert({
+                from_asset_id: id,
+                to_asset_id: assetData.REVIEWED_BY[i],
+                type: 'REVIEWED_BY',
+              }),
+            )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.APPROVED_BY) {
@@ -1296,20 +1316,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         })
         for (let i = 0; i < assetData.APPROVED_BY.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item: any) => item.to_asset_id === assetData.APPROVED_BY[i]
+            (item: any) => item.to_asset_id === assetData.APPROVED_BY[i],
           )
 
           idToDel === -1
             ? updates.push(
-                tx('relation').insert({
-                  from_asset_id: id,
-                  to_asset_id: assetData.APPROVED_BY[i],
-                  type: 'APPROVED_BY',
-                })
-              )
+              tx('relation').insert({
+                from_asset_id: id,
+                to_asset_id: assetData.APPROVED_BY[i],
+                type: 'APPROVED_BY',
+              }),
+            )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.REFERRED_TO) {
@@ -1319,20 +1339,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         })
         for (let i = 0; i < assetData.REFERRED_TO.length; i++) {
           const idToDel = maintainer.findIndex(
-            (item: any) => item.to_asset_id === assetData.REFERRED_TO[i]
+            (item: any) => item.to_asset_id === assetData.REFERRED_TO[i],
           )
 
           idToDel === -1
             ? updates.push(
-                tx('relation').insert({
-                  from_asset_id: id,
-                  to_asset_id: assetData.REFERRED_TO[i],
-                  type: 'REFERRED_TO',
-                })
-              )
+              tx('relation').insert({
+                from_asset_id: id,
+                to_asset_id: assetData.REFERRED_TO[i],
+                type: 'REFERRED_TO',
+              }),
+            )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id }))
+        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.LOCATED_TO) {
@@ -1348,10 +1368,10 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             .where({ from_asset_id: id, type: 'LOCATED_TO' })
           updates.push(
             await tx('relation').insert({
-              type: 'LOCATED_TO',
               from_asset_id: id,
               to_asset_id: assetData.LOCATED_TO,
-            })
+              type: 'LOCATED_TO',
+            }),
           )
         }
       }
@@ -1359,23 +1379,25 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
       if (Array.isArray(tagIds)) {
         await tx('tag_asset').where('asset_id', id).del()
 
-        if (tagIds.length)
+        if (tagIds.length) {
           updates.push(
             tx('tag_asset').insert(
-              tagIds.map((tagId) => ({ asset_id: id, tag_id: tagId }))
-            )
+              tagIds.map(tagId => ({ asset_id: id, tag_id: tagId })),
+            ),
           )
+        }
       }
 
       if (Array.isArray(groupIds)) {
         await tx('group_asset').where('asset_id', id).del()
 
-        if (groupIds.length)
+        if (groupIds.length) {
           updates.push(
             tx('group_asset').insert(
-              groupIds.map((groupId) => ({ asset_id: id, group_id: groupId }))
-            )
+              groupIds.map(groupId => ({ asset_id: id, group_id: groupId })),
+            ),
           )
+        }
       }
 
       await Promise.all(updates)
@@ -1383,7 +1405,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
     })
 
     return error ? { error } : { status }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('updateAssetError error')
     return { error: error ?? MODEL_ERROR }
   }
@@ -1403,21 +1426,20 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
 export const searchAssetRevisions = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
-        id: 'rev.id',
         asset_document_id: 'rev.asset_document_id',
-        revision: 'rev.revision',
         cdate: 'rev.cdate',
-        store_id: 'rev.store_id',
-        name: 'store.name',
-        size: 'store.size',
+        id: 'rev.id',
         md5: 'store.md5',
+        name: 'store.name',
+        revision: 'rev.revision',
+        size: 'store.size',
+        store_id: 'rev.store_id',
         type: 'store.type',
         udate: 'store.udate',
       })
@@ -1433,7 +1455,7 @@ export const searchAssetRevisions = async (
     const { search } = params
     if (search) {
       query.where(
-        knex.raw('LOWER(rev.revision) LIKE ?', `%${search.toLowerCase()}%`)
+        knex.raw('LOWER(rev.revision) LIKE ?', `%${search.toLowerCase()}%`),
       )
     }
 
@@ -1446,7 +1468,8 @@ export const searchAssetRevisions = async (
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetRevisions error')
     return { error: MODEL_ERROR }
   }
@@ -1466,33 +1489,35 @@ export const getAssetsSummary = async (loggedUserInfo: any) => {
   try {
     const { companyId } = loggedUserInfo
 
-    if (!companyId) return { error: 'Invalid company ID' }
+    if (!companyId)
+      return { error: 'Invalid company ID' }
 
     const countsResult = await prismaClient.asset.groupBy({
+      _count: true,
+      by: ['type'],
       where: {
         company_id: companyId,
       },
-      by: ['type'],
-      _count: true,
     })
 
     const counts = Object.fromEntries(
-      countsResult.map((count: any) => [count.type, count._count])
+      countsResult.map((count: any) => [count.type, count._count]),
     )
 
     return {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       summary: {
         ...counts,
         superAssets: Object.keys(counts)
-          .filter((assetType) => SUPER_ASSET_TYPES.includes(assetType))
+          .filter(assetType => SUPER_ASSET_TYPES.includes(assetType))
           .reduce((acc, assetType) => acc + counts[assetType], 0),
         technicalAssets: Object.keys(counts)
-          .filter((assetType) => TECHNICAL_ASSET_TYPES.includes(assetType))
+          .filter(assetType => TECHNICAL_ASSET_TYPES.includes(assetType))
           .reduce((acc, assetType) => acc + counts[assetType], 0),
       },
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getAssetsSummary error')
     return { error: MODEL_ERROR }
   }
@@ -1502,10 +1527,9 @@ export const searchAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { ipId, portId, uriId } = params
 
@@ -1517,13 +1541,18 @@ export const searchAssetVulnerabilityModel = async (
         'ast.company_id': companyId,
         'vast.asset_id': assetId,
       })
-    if (vulnId) query.andWhere('vast.vulnerability_id', vulnId)
-    if (ipId) query.andWhere('vast.ip_id', ipId)
-    if (portId) query.andWhere('vast.port_id', portId)
-    if (uriId) query.andWhere('vast.uri_id', uriId)
+    if (vulnId)
+      query.andWhere('vast.vulnerability_id', vulnId)
+    if (ipId)
+      query.andWhere('vast.ip_id', ipId)
+    if (portId)
+      query.andWhere('vast.port_id', portId)
+    if (uriId)
+      query.andWhere('vast.uri_id', uriId)
     const assetVuln = await query
     return assetVuln.length === 1 ? assetVuln[0].id : assetVuln
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetVulnerabilityModel error')
     return { error: MODEL_ERROR }
   }
@@ -1532,7 +1561,7 @@ export const searchAssetVulnerabilityModel = async (
 export const createAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
-  params: any
+  params: any,
 ) => {
   try {
     const {
@@ -1565,33 +1594,34 @@ export const createAssetVulnerabilityModel = async (
       const id = (
         await tx('vulnerability_asset').returning('id').insert({
           asset_id: assetId,
-          vulnerability_id: vulnId,
-          cvss_id: cvssId,
-          cpe_id,
-          ip_id,
-          port_id,
-          uri_id,
-          severity,
           confidence,
-          likelihood,
-          details,
-          exploit_code_maturity,
-          exploitability_ease,
-          patch_publication_date,
-          plugin_modification_date,
-          vuln_publication_date,
-          exploit_available,
-          exploit_framework_core,
-          exploited_by_malware,
-          status,
+          cpe_id,
           custom_description,
           custom_remediation,
+          cvss_id: cvssId,
+          details,
+          exploit_available,
+          exploit_code_maturity,
+          exploit_framework_core,
+          exploitability_ease,
+          exploited_by_malware,
+          ip_id,
+          likelihood,
+          patch_publication_date,
+          plugin_modification_date,
+          port_id,
+          severity,
+          status,
+          uri_id,
+          vuln_publication_date,
+          vulnerability_id: vulnId,
         })
       ).map((e: any) => e.id)
       return id
     })
     return astVulnId
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createAssetVulnerabilityModel error')
     return { error: MODEL_ERROR }
   }
@@ -1600,10 +1630,9 @@ export const createAssetVulnerabilityModel = async (
 export const updateAssetVulnerabilityModel = async (
   astVulnId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
 
     const [astVulnToUpdate] = await knex
@@ -1612,7 +1641,8 @@ export const updateAssetVulnerabilityModel = async (
       .leftJoin('cvss', 'cvss.id', 'vast.cvss_id')
       .innerJoin('asset as ast', 'ast.id', 'vast.asset_id')
       .where({ 'ast.company_id': companyId, 'vast.id': astVulnId })
-    if (!astVulnToUpdate) return { error: MODEL_ERROR }
+    if (!astVulnToUpdate)
+      return { error: MODEL_ERROR }
     const {
       cvss_id = astVulnToUpdate.cvss_id,
       score = astVulnToUpdate.score,
@@ -1638,38 +1668,39 @@ export const updateAssetVulnerabilityModel = async (
       statusComment = '',
     } = params
     await knex.transaction(async (tx: any) => {
-      await updateCvssModel(tx, cvss_id, { score, version, code })
+      await updateCvssModel(tx, cvss_id, { code, score, version })
       await tx('vulnerability_asset').where('id', astVulnId).update({
-        cvss_id,
-        cpe_id,
-        ip_id,
-        port_id,
-        uri_id,
-        severity,
         confidence,
-        likelihood,
+        cpe_id,
+        cvss_id,
         details,
+        exploit_available,
         exploit_code_maturity,
+        exploit_framework_core,
         exploitability_ease,
+        exploited_by_malware,
+        ip_id,
+        likelihood,
         patch_publication_date,
         plugin_modification_date,
-        vuln_publication_date,
-        exploit_available,
-        exploit_framework_core,
-        exploited_by_malware,
+        port_id,
+        severity,
         status,
+        uri_id,
+        vuln_publication_date,
       })
     })
     if (status !== astVulnToUpdate.status) {
       await updateStatusModel(
         astVulnToUpdate.asset_id,
         astVulnToUpdate.vulnerability_id,
-        { updated: status, comment: statusComment },
-        loggedUserInfo
+        { comment: statusComment, updated: status },
+        loggedUserInfo,
       )
     }
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('updateAssetVulnerabilityModel error')
     return { error: MODEL_ERROR }
   }
@@ -1677,22 +1708,22 @@ export const updateAssetVulnerabilityModel = async (
 
 export const fetchAssetPortsModel = async (assetId: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const res = []
     const ips = await searchIpModel(knex, undefined, companyId, false, assetId)
-    for (let idx in ips) {
+    for (const idx in ips) {
       const ports = await searchPortModel(knex, {
+        companyId,
         ipId: ips[idx].ip_id,
-        companyId: companyId,
       })
-      if (ports.length === 0) res.push({ ...ips[idx] })
-      for (let pidx in ports) {
+      if (ports.length === 0)
+        res.push({ ...ips[idx] })
+      for (const pidx in ports)
         res.push({ ...ips[idx], ...ports[pidx] })
-      }
     }
     return { details: res }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('fetchAssetPortsModel error')
     return { error: MODEL_ERROR }
   }
@@ -1702,21 +1733,22 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
   try {
     const { ip_id = null, ports = [] } = params
     await knex.transaction(async (tx: any) => {
-      if (!ip_id) {
+      if (!ip_id)
         params.ip_id = await createIpModel(tx, assetId, params)
-      }
-      for (let idx in ports) {
+
+      for (const idx in ports) {
         if (!ports[idx].id) {
           params.ports[idx].id = await createPortModel(
             tx,
             params.ip_id,
-            params.ports[idx]
+            params.ports[idx],
           )
         }
       }
     })
     return true
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createIpPortsModel error')
     return { error: MODEL_ERROR }
   }
@@ -1724,18 +1756,19 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
 
 export const createUrisModel = async (assetId: any, params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { address } = params
     const uri_id = await knex.transaction(async (tx: any) => {
-      let [uri_id] = await searchUriModel(tx, address, companyId, true, assetId)
+      const [uri_id] = await searchUriModel(tx, address, companyId, true, assetId)
       if (!uri_id) {
-        let uri_id = await createUriModel(tx, assetId, params)
+        const uri_id = await createUriModel(tx, assetId, params)
         return uri_id
-      } else return uri_id.uri_id
+      }
+      else { return uri_id.uri_id }
     })
     return uri_id
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createUrisModel error')
     return { error: MODEL_ERROR }
   }
@@ -1857,17 +1890,17 @@ export const getAssetScores = async (companyId: any, assetId: any) => {
   try {
     const scores = await prismaClient.v_asset_risk_scores.findFirst({
       where: {
-        company_id: companyId,
         asset_id: assetId,
+        company_id: companyId,
       },
     })
 
-    if (!scores) {
+    if (!scores)
       return { error: NOT_FOUND }
-    }
 
     return { scores }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getAssetScores error')
     return { error: MODEL_ERROR }
   }
@@ -1881,31 +1914,30 @@ export const getAssetRiskModel = async (companyId: any, assetId: any) => {
   try {
     const { scores, error: scoreError } = await getAssetScores(
       companyId,
-      assetId
+      assetId,
     )
-    if (scoreError) {
+    if (scoreError)
       return { error: scoreError }
-    }
 
     const {
       error: vulnError,
       vulnerabilitiesCount,
     } = await getAssetVulnerabilitiesCountBySeverity(companyId, assetId)
-    if (vulnError) {
+    if (vulnError)
       return { error: vulnError }
-    }
 
     return {
       hasVulnerability: hasVulnerability(vulnerabilitiesCount),
       lastScanDate: scores.last_scan_date,
       scores: {
+        compoundScore: scores.compound_score,
         inherentScore: scores.inherent_score,
         inheritedScore: scores.inherited_score,
-        compoundScore: scores.compound_score,
       },
       vulnerabilitiesCount,
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getAssetRiskModel error')
     return { error: MODEL_ERROR }
   }

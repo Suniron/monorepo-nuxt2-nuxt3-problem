@@ -1,4 +1,3 @@
-
 import {
   FORBIDDEN,
   MODEL_ERROR,
@@ -26,25 +25,28 @@ export const searchCompanyModel = async (params: any) => {
     const { cid, search } = params
     if (cid) {
       query.where('id', cid)
-    } else {
-      if (search) {
+    }
+    else {
+      if (search)
         query.where(knex.raw('LOWER(name) LIKE ?', `%${search.toLowerCase()}%`))
-      }
     }
 
     const result = await query
     if (Array.isArray(result)) {
       if (cid) {
         const [company] = result
-        if (company) return { company }
+        if (company)
+          return { company }
         else return { error: NOT_FOUND }
-      } else {
+      }
+      else {
         return { companies: result, total: result.length }
       }
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -56,7 +58,8 @@ export const createCompanyModel = async (params: any) => {
     const [{ id }] = await knex('company').insert({ name }).returning('id')
 
     return id ? { id } : { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -70,12 +73,11 @@ export const createCompanyModel = async (params: any) => {
 export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
   if (
 
-    !loggedUserInfo.companyId ||
+    !loggedUserInfo.companyId
 
-    typeof loggedUserInfo.companyId !== 'number'
-  ) {
+    || typeof loggedUserInfo.companyId !== 'number'
+  )
     return { error: MODEL_ERROR }
-  }
 
   try {
     const [{ base64_logo }] = await knex
@@ -87,7 +89,8 @@ export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
     return base64_logo
       ? { logo: convertBufferToBase64Image(base64_logo) }
       : { logo: null }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -102,31 +105,29 @@ export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
 
 export const updateCompanyLogoModel = async (loggedUserInfo: any, logo: any) => {
   if (
-    !loggedUserInfo.companyId ||
-    typeof loggedUserInfo.companyId !== 'number'
-  ) {
+    !loggedUserInfo.companyId
+    || typeof loggedUserInfo.companyId !== 'number'
+  )
     return { error: MODEL_ERROR }
-  }
 
-  if (!loggedUserInfo.roles.includes('admin')) {
+  if (!loggedUserInfo.roles.includes('admin'))
     return { error: FORBIDDEN }
-  }
 
   if (
-    !logo ||
-    typeof logo !== 'string' ||
-    !logo.startsWith('data:image/') ||
-    !isValidBase64Image(logo)
-  ) {
+    !logo
+    || typeof logo !== 'string'
+    || !logo.startsWith('data:image/')
+    || !isValidBase64Image(logo)
+  )
     return { error: VALIDATION_ERROR }
-  }
 
   try {
     await knex('company')
       .update('base64_logo', convertBase64ImageToBuffer(logo))
       .where('id', loggedUserInfo.companyId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -140,12 +141,11 @@ export const updateCompanyLogoModel = async (loggedUserInfo: any, logo: any) => 
 export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
   if (
 
-    !loggedUserInfo.companyId ||
+    !loggedUserInfo.companyId
 
-    typeof loggedUserInfo.companyId !== 'number'
-  ) {
+    || typeof loggedUserInfo.companyId !== 'number'
+  )
     return { error: MODEL_ERROR }
-  }
 
   try {
     await knex('company')
@@ -153,7 +153,8 @@ export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
 
       .where('id', loggedUserInfo.companyId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -189,21 +190,22 @@ export const updateCompanyModel = async (loggedUserInfo = {}, content: any) => {
         where: {
           id: selectedDomain,
         },
-      }
-    )
-    if (!isDomainFound || !isCompanyFound) {
-      return { error: MODEL_ERROR }
-    }
-    await prismaClient.company.update({
-      where: {
-        id: companyId,
       },
+    )
+    if (!isDomainFound || !isCompanyFound)
+      return { error: MODEL_ERROR }
+
+    await prismaClient.company.update({
       data: {
         fk_phishing_scenario_domain_id: selectedDomain,
       },
+      where: {
+        id: companyId,
+      },
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }
@@ -230,26 +232,26 @@ export const getCompanyRiskModel = async (loggedUserInfo: any) => {
             not: null,
           },
         },
-      }
+      },
     )
     /**
      * @type {{
      *  globalScore: number | null
      * }}
      */
-    let data = {
+    const data = {
       globalScore: null,
     }
     if (businessMissionsScores) {
-
-      data.globalScore =
-        businessMissionsScores.reduce(
+      data.globalScore
+        = businessMissionsScores.reduce(
           (acc: any, score: any) => acc + (score.compound_score ?? 0),
-          0
+          0,
         ) / businessMissionsScores.length
     }
     return data
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

@@ -1,4 +1,3 @@
-
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
 export const createCipherModel = async (tx: any, portId: any, params: any) => {
@@ -6,15 +5,16 @@ export const createCipherModel = async (tx: any, portId: any, params: any) => {
     const { strength = '', tls = '', names = [] } = params
     const [cipherId] = (
       await tx('cipher_suite').returning('id').insert({
+        names,
         port_id: portId,
         strength,
         tls,
-        names,
       })
     ).map((e: any) => e.id)
 
     return cipherId
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -26,7 +26,8 @@ export const updateCipherModel = async (tx: any, cipherId: any, params: any) => 
       .select()
       .from('cipher_suite as cipher')
       .where('cipher.id', cipherId)
-    if (!cipherToUpdate) return { error: NOT_FOUND }
+    if (!cipherToUpdate)
+      return { error: NOT_FOUND }
     const {
       strength = cipherToUpdate.strength,
       tls = cipherToUpdate.tls,
@@ -34,13 +35,14 @@ export const updateCipherModel = async (tx: any, cipherId: any, params: any) => 
     } = params
     await tx('cipher_suite')
       .update({
+        names,
         strength,
         tls,
-        names,
       })
       .where('cipher_suite.id', cipherId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -52,11 +54,13 @@ export const deleteCipherModel = async (tx: any, cipherId: any) => {
       .select()
       .from('cipher_suite')
       .where('cipher_suite.id', cipherId)
-    if (!cipherToUpdate) return { error: NOT_FOUND }
+    if (!cipherToUpdate)
+      return { error: NOT_FOUND }
 
     await tx('cipher_suite').delete().where('cipher_suite.id', cipherId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

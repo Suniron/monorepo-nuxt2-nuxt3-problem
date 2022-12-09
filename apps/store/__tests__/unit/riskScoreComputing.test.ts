@@ -15,8 +15,8 @@ describe('Testing the risk score computing algo', () => {
       ],
       [
         {
-          id: 1,
           from_asset_id: 1,
+          id: 1,
           to_asset_id: 2,
           type: 'CONNECTED_TO',
         },
@@ -30,7 +30,7 @@ describe('Testing the risk score computing algo', () => {
           asset_id: 2,
           inherentRisk: 0,
         },
-      ]
+      ],
     )
 
     expect(calculatedRisks).toEqual({
@@ -52,8 +52,8 @@ describe('Testing the risk score computing algo', () => {
       ],
       [
         {
-          id: 1,
           from_asset_id: 1,
+          id: 1,
           to_asset_id: 2,
           type: 'CONNECTED_TO',
         },
@@ -67,7 +67,7 @@ describe('Testing the risk score computing algo', () => {
           asset_id: 2,
           inherentRisk: 10,
         },
-      ]
+      ],
     )
 
     expect(calculatedRisks).toEqual({
@@ -87,7 +87,7 @@ describe('Testing the risk score computing algo', () => {
     const calculatedRisks = riskScoreComputing(
       params.listUnvisited,
       params.relations,
-      params.inherentScores
+      params.inherentScores,
     )
 
     expect(calculatedRisks).toEqual({
@@ -113,7 +113,7 @@ describe('Testing the risk score computing algo', () => {
     const calculatedRisks = riskScoreComputing(
       params.listUnvisited,
       params.relations,
-      params.inherentScores
+      params.inherentScores,
     )
 
     expect(calculatedRisks).toEqual({
@@ -149,7 +149,7 @@ describe('Testing the risk score computing algo', () => {
     const calculatedRisks = riskScoreComputing(
       params.listUnvisited,
       params.relations,
-      params.inherentScores
+      params.inherentScores,
     )
 
     const averageInherent = (3.75 + 7.5 + 1.875 + 3.725 + 1.875) / 5
@@ -189,7 +189,7 @@ describe('Testing the risk score computing algo', () => {
     const calculatedRisks = riskScoreComputing(
       params.listUnvisited,
       params.relations,
-      params.inherentScores
+      params.inherentScores,
     )
 
     const averageInherent6 = (3.75 + 7.5 + 1.875) / 3
@@ -240,7 +240,7 @@ describe('Testing the risk score computing algo', () => {
     const calculatedRisks = riskScoreComputing(
       params.listUnvisited,
       params.relations,
-      params.inherentScores
+      params.inherentScores,
     )
 
     const scores = {}
@@ -251,20 +251,18 @@ describe('Testing the risk score computing algo', () => {
 
     scores[3] = 7.5 / 4
 
-
     scores[4] = 3.7
 
     scores[5] = 3.7 / 2
-
 
     scores[6] = 0.5 * ((scores[1] + scores[2] + scores[3]) / 3) + 0.5 * 7.5
 
     scores[7] = 0.5 * ((scores[4] + scores[5]) / 2) + 0.5 * 3.7
 
-    scores[8] =
+    scores[8]
 
-      0.5 * ((scores[1] + scores[2] + scores[3] + scores[4] + scores[5]) / 5) +
-      0.5 * 7.5
+      = 0.5 * ((scores[1] + scores[2] + scores[3] + scores[4] + scores[5]) / 5)
+      + 0.5 * 7.5
 
     expect(calculatedRisks).toEqual(scores)
   })
@@ -289,8 +287,8 @@ const RELATION_TYPES_ENUM = {
   BELONGS_TO: 'BELONGS_TO',
   CONNECTED_TO: 'CONNECTED_TO',
   LOCATED_TO: 'LOCATED_TO',
-  OWN_BY: 'OWN_BY',
   MAINTAINED_BY: 'MAINTAINED_BY',
+  OWN_BY: 'OWN_BY',
 }
 
 /**
@@ -327,14 +325,14 @@ function graphToParams(graph: any) {
     })
   })
   return {
-    listUnvisited,
+    inherentScores,
 
+    listUnvisited,
     relations: graph.edges.map((edge, index) => ({
       ...edge,
-      id: index
+      id: index,
     })),
-    inherentScores,
-  };
+  }
 }
 
 /**
@@ -359,22 +357,23 @@ function parseGraph(str: any) {
       const [assetType, inherentRisk] = assetDetails.split('/')
       nodes.push({
         id: parseInt(id),
-        type: assetType,
         inherentRisk: Number(inherentRisk),
+        type: assetType,
       })
-    } else {
+    }
+    else {
       /**
        * @type {string | undefined | null}
        */
       let relationType = Object.keys(RELATION_TYPES_ENUM)
         .concat('NULL')
-        .find((relationType) => line.includes(relationType))
+        .find(relationType => line.includes(relationType))
       if (relationType) {
         const [from, to] = line.split(relationType)
-        if (relationType === 'NULL') {
+        if (relationType === 'NULL')
 
           relationType = null
-        }
+
         edges.push({
           from_asset_id: parseFloat(from),
           to_asset_id: parseFloat(to),
@@ -383,5 +382,5 @@ function parseGraph(str: any) {
       }
     }
   })
-  return { nodes, edges }
+  return { edges, nodes }
 }

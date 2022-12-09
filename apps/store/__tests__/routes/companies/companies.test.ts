@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
@@ -25,7 +22,6 @@ beforeAll(async () => {
 describe('/company', () => {
   describe('PATCH/', () => {
     it('should return a model error if the domain doesnt exists', async () => {
-
       prismaMock.company.findFirst.mockResolvedValue({
         id: 1,
       })
@@ -33,11 +29,10 @@ describe('/company', () => {
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue(null)
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
       expect(response.status).toBe(500)
     })
     it('should return a model error if the company doesnt exists', async () => {
-
       prismaMock.company.findFirst.mockResolvedValue(null)
 
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
@@ -46,11 +41,10 @@ describe('/company', () => {
       })
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
       expect(response.status).toBe(500)
     })
     it('should update the data if the domain & company exists', async () => {
-
       prismaMock.company.findFirst.mockResolvedValue({ id: 1 })
 
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
@@ -59,7 +53,7 @@ describe('/company', () => {
       })
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
       expect(response.status).toBe(200)
     })
   })
@@ -69,15 +63,15 @@ describe('/company/risk/', () => {
   describe('GET /', () => {
     it('should return 200 and the global risk score of the logged user company', async () => {
       const businessMissions = assetRisk.filter(
-        (ast) => ast.asset_type === 'MISSION' && ast.compound_score !== null
+        ast => ast.asset_type === 'MISSION' && ast.compound_score !== null,
       )
 
       prismaMock.v_asset_risk_scores.findMany.mockResolvedValue(
-        businessMissions
+        businessMissions,
       )
       const response = await request(app)
         .get('/company/risk/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
@@ -85,8 +79,8 @@ describe('/company/risk/', () => {
       expect(response.body.globalScore).toEqual(
         businessMissions.reduce(
           (acc, mission) => acc + (mission.compound_score ?? 0),
-          0
-        ) / businessMissions.length
+          0,
+        ) / businessMissions.length,
       )
     })
   })
@@ -108,7 +102,7 @@ describe('/company/logo/', () => {
 
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', `Bearer fake@token`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.type).toBe('application/json')
       })
@@ -118,7 +112,7 @@ describe('/company/logo/', () => {
 
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', `Bearer fake@token`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.status).toBe(500)
       })
@@ -129,7 +123,7 @@ describe('/company/logo/', () => {
         mockKnexWithFinalValue([companies[0]])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', `Bearer fake@token`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.type).toBe('application/json')
       })
@@ -138,7 +132,7 @@ describe('/company/logo/', () => {
         mockKnexWithFinalValue([companies[0]])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', `Bearer fake@token`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.status).toBe(200)
       })
@@ -152,7 +146,7 @@ describe('/company/logo/', () => {
         ])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', `Bearer fake@token`)
+          .set('Authorization', 'Bearer fake@token')
 
         expect(response.body.logo).toEqual(companies[0].base64_logo)
       })
@@ -173,7 +167,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
             .send({ logo: companies[0].base64_logo })
 
           expect(response.type).toBe('application/json')
@@ -184,7 +178,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
             .send({ logo: companies[0].base64_logo })
 
           expect(response.status).toBe(500)
@@ -197,7 +191,7 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([companies[0]])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
 
             expect(response.type).toBe('application/json')
           })
@@ -206,7 +200,7 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([companies[0]])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
 
             expect(response.status).toBe(400)
           })
@@ -217,7 +211,7 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
               .send({ logo: 'fake base64 image' })
 
             expect(response.type).toBe('application/json')
@@ -227,7 +221,7 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
               .send({ logo: 'fake base64 image' })
 
             expect(response.status).toBe(400)
@@ -239,11 +233,11 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
               .send({
                 logo:
-                  companies[0].base64_logo +
-                  'i_am_a_badly_formatted_extra_string!!!!!!!',
+                  `${companies[0].base64_logo
+                  }i_am_a_badly_formatted_extra_string!!!!!!!`,
               })
 
             expect(response.status).toBe(400)
@@ -255,7 +249,7 @@ describe('/company/logo/', () => {
             mockKnexWithFinalValue([companies[0]])
             const response = await request(app)
               .patch('/company/logo/')
-              .set('Authorization', `Bearer fake@token`)
+              .set('Authorization', 'Bearer fake@token')
               .send({ logo: companies[0].base64_logo })
 
             expect(response.status).toBe(204)
@@ -271,7 +265,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.type).toBe('application/json')
         })
@@ -281,7 +275,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.status).toBe(500)
         })
@@ -293,7 +287,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.type).toBe('application/json')
         })
@@ -303,7 +297,7 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
 
           expect(response.status).toBe(200)
         })
@@ -321,7 +315,7 @@ describe('/company/logo/', () => {
           mockKnexWithFinalValue([companies[0]])
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', `Bearer fake@token`)
+            .set('Authorization', 'Bearer fake@token')
             .send({ logo: companies[0].base64_logo })
 
           expect(response.status).toBe(403)

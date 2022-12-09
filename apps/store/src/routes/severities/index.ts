@@ -1,4 +1,3 @@
-
 import express from 'express'
 
 import { searchSeveritiesController } from '../../controllers/severities'

@@ -1,7 +1,5 @@
-
-
-import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 import { format } from 'date-fns'
+import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
 
@@ -22,9 +20,8 @@ import { log } from '../../../src/lib/logger'
 export const searchScansModel = async (
   provider: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
-
   const { companyId } = loggedUserInfo
   const { pageSize, page } = params
   try {
@@ -35,108 +32,109 @@ export const searchScansModel = async (
     })
     const scans = await prismaClient.scan
       .findMany({
+        orderBy: {
+          cdate: 'desc',
+        },
         select: {
+          cdate: true,
+          end_date: true,
+          end_time: true,
+          fdate: true,
           id: true,
           name: true,
-          cdate: true,
-          sdate: true,
-          fdate: true,
-          start_date: true,
-          end_date: true,
-          start_time: true,
-          end_time: true,
-          status: true,
           probe: {
             select: {
               name: true,
             },
           },
-          v_scan_severity_count: {
-            select: {
-              info: true,
-              low: true,
-              medium: true,
-              high: true,
-              critical: true,
-            },
-          },
+          sdate: true,
+          start_date: true,
+          start_time: true,
+          status: true,
           v_scan_asset_details: {
-            select: {
-              asset_id: true,
-              name: true,
-              os: true,
-              hostname: true,
-              ip_address: true,
-              language: true,
-              url: true,
-              mail: true,
-            },
             orderBy: {
               lower_name: 'asc',
             },
+            select: {
+              asset_id: true,
+              hostname: true,
+              ip_address: true,
+              language: true,
+              mail: true,
+              name: true,
+              os: true,
+              url: true,
+            },
+          },
+          v_scan_severity_count: {
+            select: {
+              critical: true,
+              high: true,
+              info: true,
+              low: true,
+              medium: true,
+            },
           },
         },
+        skip,
+        take,
         where: {
           company_id: companyId,
         },
-        orderBy: {
-          cdate: 'desc',
-        },
-        take: take,
-        skip: skip,
       })
       .then((scans: any) => scans.map((scan: any) => {
-      const { probe, v_scan_severity_count, v_scan_asset_details } = scan
-      return {
-        id: scan.id,
-        name: scan.name,
-        cdate: scan.cdate,
-        sdate: scan.sdate,
-        fdate: scan.fdate,
-        startDate: scan.start_date
-          ? format(new Date(scan.start_date), 'yyyy-MM-dd')
-          : null,
-        endDate: scan.end_date
-          ? format(new Date(scan.end_date), 'yyyy-MM-dd')
-          : null,
-        startTime: scan.start_time
-          ? format(new Date(scan.start_time), 'HH:mm:ss')
-          : null,
-        endTime: scan.end_time
-          ? format(new Date(scan.end_time), 'HH:mm:ss')
-          : null,
-        status: scan.status,
-        probeName: probe?.name,
-        info: v_scan_severity_count[0]?.info,
-        low: v_scan_severity_count[0]?.low,
-        medium: v_scan_severity_count[0]?.medium,
-        high: v_scan_severity_count[0]?.high,
-        crit: v_scan_severity_count[0]?.critical,
-        assets: v_scan_asset_details.map((asset: any) => {
-          return {
-            id: asset.asset_id,
-            name: asset.name,
-            os: asset.os,
-            hostname: asset.hostname,
-            ips: asset.ip_address,
-            language: asset.language,
-            url: asset.url,
-            mail: asset.mail,
-          }
-        }),
-      };
-    })
+        const { probe, v_scan_severity_count, v_scan_asset_details } = scan
+        return {
+          assets: v_scan_asset_details.map((asset: any) => {
+            return {
+              hostname: asset.hostname,
+              id: asset.asset_id,
+              ips: asset.ip_address,
+              language: asset.language,
+              mail: asset.mail,
+              name: asset.name,
+              os: asset.os,
+              url: asset.url,
+            }
+          }),
+          cdate: scan.cdate,
+          crit: v_scan_severity_count[0]?.critical,
+          endDate: scan.end_date
+            ? format(new Date(scan.end_date), 'yyyy-MM-dd')
+            : null,
+          endTime: scan.end_time
+            ? format(new Date(scan.end_time), 'HH:mm:ss')
+            : null,
+          fdate: scan.fdate,
+          high: v_scan_severity_count[0]?.high,
+          id: scan.id,
+          info: v_scan_severity_count[0]?.info,
+          low: v_scan_severity_count[0]?.low,
+          medium: v_scan_severity_count[0]?.medium,
+          name: scan.name,
+          probeName: probe?.name,
+          sdate: scan.sdate,
+          startDate: scan.start_date
+            ? format(new Date(scan.start_date), 'yyyy-MM-dd')
+            : null,
+          startTime: scan.start_time
+            ? format(new Date(scan.start_time), 'HH:mm:ss')
+            : null,
+          status: scan.status,
+        }
+      }),
       )
 
     if (Array.isArray(scans)) {
       return {
-        scans: scans,
+        scans,
         total: totalScan,
       }
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchScansModel')
     return { error: MODEL_ERROR }
   }
@@ -163,7 +161,8 @@ export const getScanModel = async (provider: any, params: any, loggedUserInfo = 
       .where('company_id', companyId)
       .andWhere('id', scanId)
     return { scan }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetScanModel')
     return { error: MODEL_ERROR }
   }
@@ -178,27 +177,9 @@ export const getScanModel = async (provider: any, params: any, loggedUserInfo = 
  */
 export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId, id: userId } = loggedUserInfo
     const userGroups = await getUserGroupIds(userId)
     const ipsRequest = prismaClient.asset_server.findMany({
-      where: {
-        asset: {
-          company_id: companyId,
-
-          AND: loggedUserInfo.roles.includes('admin')
-            ? {}
-            : {
-                group_asset: {
-                  some: {
-                    group_id: {
-                      in: userGroups,
-                    },
-                  },
-                },
-              },
-        },
-      },
       include: {
         ip: {
           select: {
@@ -212,16 +193,8 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
           },
         },
       },
-    })
-    const urlsRequest = prismaClient.asset_web.findMany({
-      select: {
-        id: true,
-        url: true,
-      },
       where: {
         asset: {
-          company_id: companyId,
-
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -233,6 +206,31 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
                   },
                 },
               },
+
+          company_id: companyId,
+        },
+      },
+    })
+    const urlsRequest = prismaClient.asset_web.findMany({
+      select: {
+        id: true,
+        url: true,
+      },
+      where: {
+        asset: {
+          AND: loggedUserInfo.roles.includes('admin')
+            ? {}
+            : {
+                group_asset: {
+                  some: {
+                    group_id: {
+                      in: userGroups,
+                    },
+                  },
+                },
+              },
+
+          company_id: companyId,
         },
         url: {
           not: null,
@@ -242,13 +240,16 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
     const networksRequest = prismaClient.asset_network.findMany({
       select: {
         id: true,
-        network: true,
         netmask: true,
+        network: true,
       },
       where: {
+        AND: {
+          netmask: {
+            not: null,
+          },
+        },
         asset: {
-          company_id: companyId,
-
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -260,14 +261,11 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
                   },
                 },
               },
+
+          company_id: companyId,
         },
         network: {
           not: null,
-        },
-        AND: {
-          netmask: {
-            not: null,
-          },
         },
       },
     })
@@ -278,38 +276,39 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
     ])
 
     ips = ips.flatMap(({
-      ip
+      ip,
     }: any) =>
       ip.map(({
         address,
-        asset_server_id
+        asset_server_id,
       }: any) => ({
-        id: asset_server_id,
         address,
-      }))
+        id: asset_server_id,
+      })),
     )
 
     urls = urls.map(({
       id,
-      url
+      url,
     }: any) => ({
-      id,
       address: url,
+      id,
     }))
 
     networks = networks.map(({
       id,
       network,
-      netmask
+      netmask,
     }: any) => ({
-      id,
       address: `${network}/${netmask}`,
+      id,
     }))
 
     return {
       assets: ips.concat(urls, networks),
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchAssetScanModel')
     return { error: MODEL_ERROR }
   }
@@ -329,7 +328,8 @@ export const searchPhishingScenariosModel = async (provider: any) => {
       .from('phishing_scenario')
 
     return { scenarios }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchPhishingScenariosModel')
     return { error: MODEL_ERROR }
   }
@@ -350,17 +350,17 @@ export const getScanReportModel = async (provider: any, params: any) => {
   try {
     const [scan] = await knex
       .select({
-        scan_id: 'sc.id',
+        cdate: 'sc.cdate',
+        end_date: 'sc.end_date',
+        end_time: 'sc.end_time',
+        fdate: 'sc.fdate',
+        label: 'sl.label',
         name: 'sc.name',
         probe: 'prb.name',
-        cdate: 'sc.cdate',
+        scan_id: 'sc.id',
         sdate: 'sc.sdate',
-        fdate: 'sc.fdate',
         start_date: 'sc.start_date',
-        end_date: 'sc.end_date',
         start_time: 'sc.start_time',
-        end_time: 'sc.end_time',
-        label: 'sl.label',
         status: 'sc.status',
       })
       .from('scan as sc')
@@ -390,19 +390,20 @@ export const getScanReportModel = async (provider: any, params: any) => {
       .from({ vul_cve: 'vulnerability_has_cve' })
       .innerJoin(
         { svr: 'scan_vulnerability_report' },
-        { 'svr.vulnerability_id': 'vul_cve.id' }
+        { 'svr.vulnerability_id': 'vul_cve.id' },
       )
       .where({ 'svr.scan_id': scanId })
 
     return {
       scanReport: {
-        scan: scan,
-        scope: assetScope,
-        vulnerabilities: vulnerabilities,
+        scan,
         scan_result_vulnerabilities: scanResult,
+        scope: assetScope,
+        vulnerabilities,
       },
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getScanReportModel')
     return { error: MODEL_ERROR }
   }
@@ -431,20 +432,21 @@ export const createScanAssetModel = async (provider: any, params: any) => {
   try {
     await knex.transaction(async (tx: any) => {
       await tx('scan_asset').insert({
-        scan_id,
         asset_id,
-        port_id,
+        cipher_suite_id,
+        cpe_asset_id,
         ip_id,
+        port_id,
+        scan_id,
+        site_map_id,
         uri_id,
         vulnerability_asset_id,
-        cpe_asset_id,
-        site_map_id,
-        cipher_suite_id,
       })
     })
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createScanAssetModel')
     return { error: MODEL_ERROR }
   }
@@ -461,14 +463,14 @@ export const createScanAssetModel = async (provider: any, params: any) => {
 export const createScanModel = async (
   provider: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   const {
     type,
     name = '',
     probe = null,
     startDate = null,
-    //endDate is not really used at the moment, but it might become useful.
+    // endDate is not really used at the moment, but it might become useful.
     endDate = null,
     startTime = null,
     endTime = null,
@@ -477,8 +479,8 @@ export const createScanModel = async (
   } = params
   // Guards
   if (
-    !Array.isArray(scanParams?.assets) &&
-    !Array.isArray(scanParams?.userAssets)
+    !Array.isArray(scanParams?.assets)
+    && !Array.isArray(scanParams?.userAssets)
   ) {
     log.error('Cannot create scan without corresponding assets')
     return { error: 'ValidationError' }
@@ -500,7 +502,7 @@ export const createScanModel = async (
     const parsedEndDate = !endDate ? null : new Date(endDate)
 
     /* We used to add into database only "hh:mm" by knex, but it is impossible with Prisma, it would throw this error :
-    Got invalid value 'hh:mm' on prisma. Provided string   expected DateTime or Null 
+    Got invalid value 'hh:mm' on prisma. Provided string   expected DateTime or Null
     To fix it, we had to rebuild an actual date, which is converted by Prisma afterward.
     */
     const fullStartTime = startTime
@@ -512,25 +514,25 @@ export const createScanModel = async (
     const fullEndTime = endTime // if we dont get a endDate, we will put endTime to null by default.
       ? new Date(
 
-          parsedStartDate.setHours(...endTime.split(':'))
-        ) /* the new Date is just about building the request, so it should be based on a sure value
+        parsedStartDate.setHours(...endTime.split(':')),
+      ) /* the new Date is just about building the request, so it should be based on a sure value
       it will only register in dataBase the hour, the date doesn't really matters. */
       : null
 
-    for (let idx in type) {
+    for (const idx in type) {
       const finalProbeId = type[idx] === 'phish' ? serverProbe?.id : probe
       const scanId = await prismaClient.scan.create({
         data: {
           company_id: companyId,
-          probe_id: finalProbeId,
-          name: name,
-          start_date: parsedStartDate,
           end_date: parsedEndDate,
-          start_time: fullStartTime,
           end_time: fullEndTime,
-          scan_type: type[idx],
-          status: SCHEDULED_STATUS,
+          name,
           parameters: scanParams,
+          probe_id: finalProbeId,
+          scan_type: type[idx],
+          start_date: parsedStartDate,
+          start_time: fullStartTime,
+          status: SCHEDULED_STATUS,
         },
         select: {
           id: true,
@@ -539,7 +541,8 @@ export const createScanModel = async (
       scanIds.push(scanId)
     }
     return { id: scanIds }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('createScanModel')
     return { error: MODEL_ERROR }
   }
@@ -563,13 +566,14 @@ export const updateScanModel = async (provider: any, id: any, params: any) => {
       await tx('scan').update({ status }).where('scan.id', id)
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('updateScanModel')
     return { error: MODEL_ERROR }
   }
 }
 
 export default {
-  searchScansModel,
   createScanModel,
+  searchScansModel,
 }

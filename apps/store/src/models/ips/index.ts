@@ -1,4 +1,3 @@
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../src/common/constants'
@@ -6,11 +5,13 @@ import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../src/common/constants'
 export const deleteIpModel = async (ipId: any) => {
   try {
     const [ipToUpdate] = await knex.select('id').from('ip').where('ip.id', ipId)
-    if (!ipToUpdate) return { error: NOT_FOUND }
+    if (!ipToUpdate)
+      return { error: NOT_FOUND }
 
     await knex('ip').delete().where('ip.id', ipId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -18,17 +19,19 @@ export const deleteIpModel = async (ipId: any) => {
 export const updateIpModel = async (ip: any, id: any) => {
   try {
     const [ipToUpdate] = await knex.select('id').from('ip').where('ip.id', id)
-    if (!ipToUpdate) return { error: NOT_FOUND }
+    if (!ipToUpdate)
+      return { error: NOT_FOUND }
     await knex('ip')
       .update({
         address: ip.address,
+        iface: ip.iface,
         mac: ip.mac,
         mask: ip.mask,
-        iface: ip.iface,
       })
       .where('ip.id', id)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -38,14 +41,15 @@ export const createIpModel = async (assetId: any, params: any) => {
   try {
     const { address, mac, iface, mask } = params
     const [ipId] = await knex('ip').returning('id').insert({
-      asset_server_id: assetId,
       address,
-      mac,
+      asset_server_id: assetId,
       iface,
+      mac,
       mask,
     })
-    return { ipId: ipId }
-  } catch (error) {
+    return { ipId }
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

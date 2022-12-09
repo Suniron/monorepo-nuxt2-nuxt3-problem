@@ -13,7 +13,8 @@ async function runSeeders() {
   try {
     await knexConnection.seed.run() // Run the seeders
     log.info('Seeding complete')
-  } catch (e) {
+  }
+  catch (e) {
     log.withError(e).error('runSeeders error')
   }
   knexConnection.destroy() // Closes the connection to end the script (prevents process hanging)

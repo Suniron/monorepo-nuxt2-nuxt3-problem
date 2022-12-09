@@ -1,6 +1,3 @@
-
-
-
 import { computeComplianceStatistics } from '../../src/utils/compliance.utils'
 import compliances from '../example-values/compliances'
 

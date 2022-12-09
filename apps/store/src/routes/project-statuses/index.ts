@@ -1,8 +1,7 @@
-
 import express from 'express'
 
+import { Joi, Segments, celebrate } from 'celebrate'
 import { getAvailableTransitionsController } from '../../controllers/project-statuses'
-import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()
 
@@ -17,7 +16,7 @@ router.get('/projects/available-transitions', getAvailableTransitionsController)
 router.get(
   '/projects/available-transitions/:statusId',
   getAvailableTransitionByIdValidation,
-  getAvailableTransitionsController
+  getAvailableTransitionsController,
 )
 
 export default router

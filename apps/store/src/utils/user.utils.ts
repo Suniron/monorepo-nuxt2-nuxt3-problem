@@ -1,5 +1,3 @@
-
-
 import prismaClient from './../prismaClient'
 
 /**

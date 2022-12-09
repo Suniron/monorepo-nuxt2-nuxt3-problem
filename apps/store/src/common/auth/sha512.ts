@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const unixcrypt = require('unixcrypt')
 const crypto = require('crypto')
+const unixcrypt = require('unixcrypt')
 
 export const genSaltSync = (rounds: any) => {
-  if (rounds >= 15) {
+  if (rounds >= 15)
     throw new Error(`${rounds} is greater than 15,Must be less that 15`)
-  }
-  if (!rounds) {
+
+  if (!rounds)
     rounds = 1000
-  }
+
   return (
-    '$6$rounds=' +
-    rounds +
-    '$' +
+    `$6$rounds=${
+    rounds
+    }$${
     crypto
       .randomBytes(Math.ceil(15 / 2))
       .toString('hex')
-      .slice(0, 15)
+      .slice(0, 15)}`
   )
 }
 

@@ -1,9 +1,8 @@
-
 import { TextEncoder } from 'util'
-global.TextEncoder = TextEncoder
 
 import { mockVerifyToken } from '../mocks'
 import { generateUser } from '.'
+global.TextEncoder = TextEncoder
 
 const customUser = generateUser({
   firstName: 'Etienne-test',

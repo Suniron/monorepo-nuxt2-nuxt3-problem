@@ -1,32 +1,32 @@
 import {
+  createScanAssetModel,
   createScanModel,
-  searchScansModel,
   getScanModel,
+  getScanReportModel,
   searchAssetScanModel,
   searchPhishingScenariosModel,
-  createScanAssetModel,
+  searchScansModel,
   updateScanModel,
-  getScanReportModel,
 
 } from '../../models/scans'
 import {
-  searchVulnerabilitiesModel,
   createVulnerabilityModel,
+  searchVulnerabilitiesModel,
   updateVulnerabilityModel,
 
 } from '../../models/vulnerabilities'
 import {
   createAssetModel,
+  createAssetVulnerabilityModel,
+  searchAssetVulnerabilityModel,
   searchAssetsModel,
   updateAssetModel,
-  searchAssetVulnerabilityModel,
-  createAssetVulnerabilityModel,
   updateAssetVulnerabilityModel,
 
 } from '../../models/assets'
 import {
-  createCartographyModel,
   addCartographyElementModel,
+  createCartographyModel,
 
 } from '../../models/cartography'
 
@@ -53,13 +53,15 @@ export const searchScans = async (req: any, res: any, next: any) => {
     const { error, scans, total } = await searchScansModel(
       provider,
       req.query,
-      req.user
+      req.user,
     )
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send({ scans, total })
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('searchScans')
     next(error)
   }
@@ -79,10 +81,12 @@ export const getScanController = async (req: any, res: any, next: any) => {
   try {
     const { error, scan } = await getScanModel(provider, req.params, req.user)
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send(scan)
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('getScanController')
     next(error)
   }
@@ -102,7 +106,8 @@ export const updateScanController = async (req: any, res: any, next: any) => {
     }
     await updateScanModel(provider, req.params.scanId, req.body, req.user)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('updateScanController')
     next(error)
   }
@@ -122,10 +127,12 @@ export const searchAssetScanController = async (req: any, res: any, next: any) =
     }
     const { error, assets } = await searchAssetScanModel(provider, req.user)
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send({ assets })
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('searchAssetScanController')
     next(error)
   }
@@ -145,10 +152,12 @@ export const searchPhishingScenariosController = async (req: any, res: any, next
     }
     const { error, scenarios } = await searchPhishingScenariosModel(provider)
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send(scenarios)
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('searchPhishingScenariosController')
     next(error)
   }
@@ -168,10 +177,12 @@ export const getScanReportController = async (req: any, res: any, next: any) => 
     }
     const { error, scanReport } = await getScanReportModel(provider, req.params)
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send(scanReport)
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('getScanReportController')
     next(error)
   }
@@ -191,10 +202,12 @@ export const createScan = async (req: any, res: any, next: any) => {
     }
     const { error, id } = await createScanModel(provider, req.body, req.user)
 
-    if (error) throwBadRequestError()
+    if (error)
+      throwBadRequestError()
 
     res.send({ id })
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('createScan')
     next(error)
   }
@@ -215,53 +228,55 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
     }
     let cy
     if (addToCy) {
-      cy =
-        parseInt(cyId) ||
-        (await createCartographyModel({ name: name }, req.user))
+      cy
+        = parseInt(cyId)
+        || (await createCartographyModel({ name }, req.user))
     }
     const restTmp = await createScanModel(
       provider,
       {
-        name: name,
+        name,
+        scanParams: { assets: [], userAssets: [] },
         status: 'Completed and Processed',
         type: ['manual'],
-        scanParams: { assets: [], userAssets: [] },
       },
-      req.user
+      req.user,
     )
     const scanId = restTmp.id[0]
     const registeredPorts: any = []
-    for (let element in vulns) {
+    for (const element in vulns) {
       const { vulnerabilities, total } = await searchVulnerabilitiesModel(
         { search: element },
-        req.user
+        req.user,
       )
       if (total > 0) {
         vulns[element].id = vulnerabilities[0].id
         await updateVulnerabilityModel(
           vulnerabilities[0].id,
           vulns[element],
-          req.user
+          req.user,
         )
-      } else {
+      }
+      else {
         const id = await createVulnerabilityModel(
-          { oid: element, burp_id: element, ...vulns[element] },
-          req.user
+          { burp_id: element, oid: element, ...vulns[element] },
+          req.user,
         )
         vulns[element].id = id
       }
     }
-    for (let elt in hosts) {
+    for (const elt in hosts) {
       const { assets } = await searchAssetsModel(
         { search: elt, strict: true },
-        req.user
+        req.user,
       )
-      if (hosts[elt].type === 'SERVER') hosts[elt].IPs = [{ address: elt }]
+      if (hosts[elt].type === 'SERVER')
+        hosts[elt].IPs = [{ address: elt }]
       const fhostname = Array.isArray(hosts[elt]?.hostname)
         ? hosts[elt]?.hostname[0]
         : typeof hosts[elt]?.hostname === 'string'
-        ? hosts[elt]?.hostname
-        : null
+          ? hosts[elt]?.hostname
+          : null
       if (Array.isArray(hosts[elt]?.hostname))
         hosts[elt].hostname = hosts[elt].hostname.join(' / ')
       if (assets.length === 1) {
@@ -269,20 +284,21 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
         await updateAssetModel(
           hosts[elt].id,
           {
+            assetData: hosts[elt],
             name: fhostname || elt,
             type: hosts[elt].type,
-            assetData: hosts[elt],
           },
-          req.user
+          req.user,
         )
-      } else {
+      }
+      else {
         const assetId = await createAssetModel(
           {
+            assetData: hosts[elt],
             name: fhostname || elt,
             type: hosts[elt].type,
-            assetData: hosts[elt],
           },
-          req.user
+          req.user,
         )
         hosts[elt].id = assetId.id
       }
@@ -291,21 +307,22 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
         hosts[elt].id,
         null,
         {},
-        req.user
+        req.user,
       )
-      if (!Array.isArray(oldVulns)) oldVulns = [{ id: oldVulns }]
+      if (!Array.isArray(oldVulns))
+        oldVulns = [{ id: oldVulns }]
       let scanWithVuln = false
-      for (let vuln in astVulns) {
+      for (const vuln in astVulns) {
         scanWithVuln = true
         const assetId = hosts[elt].id
         const vulnId = vulns[astVulns[vuln].vuln_id].id
         const ipId = hosts[elt].IPs[0].id
-        const portId =
-          astVulns[vuln].port === undefined
+        const portId
+          = astVulns[vuln].port === undefined
             ? null
             : astVulns[vuln].port.startsWith('general')
-            ? null
-            : hosts[elt].ports[astVulns[vuln].port].id
+              ? null
+              : hosts[elt].ports[astVulns[vuln].port].id
         let assetVuln = await searchAssetVulnerabilityModel(
           assetId,
           vulnId,
@@ -313,99 +330,102 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
             ipId,
             portId,
           },
-          req.user
+          req.user,
         )
-        if (Array.isArray(assetVuln)) assetVuln = assetVuln[0]
+        if (Array.isArray(assetVuln))
+          assetVuln = assetVuln[0]
         if (!assetVuln) {
           // eslint-disable-next-line prettier/prettier
           [assetVuln] = await createAssetVulnerabilityModel(
             assetId,
             vulnId,
             { ip_id: ipId, port_id: portId, ...astVulns[vuln] },
-            req.user
+            req.user,
           )
-        } else {
+        }
+        else {
           await updateAssetVulnerabilityModel(
             assetVuln,
             { ip_id: ipId, port_id: portId, ...astVulns[vuln] },
-            req.user
+            req.user,
           )
         }
         await createScanAssetModel(
           provider,
           {
             asset_id: assetId,
-            scan_id: scanId,
             ip_id: ipId,
             port_id: portId,
+            scan_id: scanId,
             vulnerability_asset_id: assetVuln,
           },
-          req.user
+          req.user,
         )
         registeredPorts.push(portId)
         oldVulns = oldVulns.filter((e: any) => e.id !== assetVuln)
       }
       if (scanWithVuln) {
-        for (let oidx in oldVulns) {
+        for (const oidx in oldVulns) {
           await updateAssetVulnerabilityModel(
             oldVulns[oidx].id,
             {
               status: 'closed',
               statusComment: 'Vulnerbility not detected by latest scan',
             },
-            req.user
+            req.user,
           )
         }
       }
-      const toRegister =
-        hosts[elt].ports === undefined
+      const toRegister
+        = hosts[elt].ports === undefined
           ? []
           : Object.keys(hosts[elt].ports).filter(
-              (p) => !registeredPorts.includes(hosts[elt].ports[p].id)
-            )
-      for (let ridx in toRegister) {
+            p => !registeredPorts.includes(hosts[elt].ports[p].id),
+          )
+      for (const ridx in toRegister) {
         await createScanAssetModel(
           provider,
           {
-            scan_id: scanId,
             asset_id: hosts[elt].id,
             ip_id: hosts[elt].IPs[0].id,
             port_id: hosts[elt].ports[toRegister[ridx]].id,
+            scan_id: scanId,
           },
-          req.user
+          req.user,
         )
       }
       if (addToCy) {
         await addCartographyElementModel(
           cy,
           { asset_id: hosts[elt].id, cygroup: 'nodes' },
-          req.user
+          req.user,
         )
         let origId
-        for (let tidx in hosts[elt].trace) {
+        for (const tidx in hosts[elt].trace) {
           const hop = hosts[elt].trace[tidx]
           const hopAssets = await searchAssetsModel(
             { search: hop, strict: true },
-            req.user
+            req.user,
           )
           let hopAstId
           if (hopAssets.assets.length === 1) {
             hopAstId = hopAssets.assets[0].id
-          } else {
+          }
+          else {
             const assetId = await createAssetModel(
               {
+                assetData: {},
                 name: hop,
                 type: 'SERVER',
-                assetData: {},
               },
-              req.user
+              req.user,
             )
             hopAstId = assetId.id
           }
           await addCartographyElementModel(
             cy,
             { asset_id: hopAstId, cygroup: 'nodes' },
-            req.user
+            req.user,
           )
           if (tidx !== '0') {
             const relId = await createRelationModel(
@@ -414,12 +434,12 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
                 to_asset_id: hopAstId,
                 type: 'CONNECTED_TO',
               },
-              req.user
+              req.user,
             )
             await addCartographyElementModel(
               cy,
-              { relation_id: relId.id, cygroup: 'edges' },
-              req.user
+              { cygroup: 'edges', relation_id: relId.id },
+              req.user,
             )
           }
           origId = hopAstId
@@ -427,13 +447,14 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
       }
     }
     res.status(201).send({ status: SUCCESS })
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('createScan')
     next(error)
   }
 }
 
 export default {
-  searchScans,
   createScan,
+  searchScans,
 }

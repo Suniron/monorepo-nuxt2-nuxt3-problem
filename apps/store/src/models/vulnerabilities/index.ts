@@ -1,8 +1,7 @@
-
 import {
   MODEL_ERROR,
-  SUCCESS,
   NOT_FOUND,
+  SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
 
@@ -21,11 +20,11 @@ import { getUserGroupIds } from '../../../src/utils/user.utils'
  */
 
 const SEVERITY = {
+  CRITICAL: 'critical',
+  HIGH: 'high',
   INFO: 'info',
   LOW: 'low',
   MEDIUM: 'medium',
-  HIGH: 'high',
-  CRITICAL: 'critical',
 }
 
 /**
@@ -35,10 +34,14 @@ const SEVERITY = {
 const getSeverityLevel = (score: any) => {
   if (score) {
     let severity = SEVERITY.CRITICAL
-    if (score === 0) severity = SEVERITY.INFO
-    else if (score <= 3.9) severity = SEVERITY.LOW
-    else if (score <= 6.9) severity = SEVERITY.MEDIUM
-    else if (score <= 8.9) severity = SEVERITY.HIGH
+    if (score === 0)
+      severity = SEVERITY.INFO
+    else if (score <= 3.9)
+      severity = SEVERITY.LOW
+    else if (score <= 6.9)
+      severity = SEVERITY.MEDIUM
+    else if (score <= 8.9)
+      severity = SEVERITY.HIGH
 
     return severity
   }
@@ -50,7 +53,7 @@ const getSeverityLevel = (score: any) => {
  * @returns {object} Return the same vulnerability object with new property severity level
  */
 const fillVulnerabilityData = (vulnerability: any) => {
-  vulnerability.details?.forEach(function (elt: any) {
+  vulnerability.details?.forEach((elt: any) => {
     if (!elt.severity && elt.cvss_score !== null) {
       const score = elt.cvss_score
 
@@ -76,7 +79,7 @@ const fillVulnerabilityData = (vulnerability: any) => {
 export const getAssetVulnerabilitiesModel = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
     const { type = 'vulnerability' } = params
@@ -84,10 +87,8 @@ export const getAssetVulnerabilitiesModel = async (
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
-        vulnerability_id: 'vul.id',
-        name: 'vul.name',
+        affected: 'vul.affected',
         description: 'vul.description',
-        remediation: 'vul.remediation',
         details: knex.raw(`coalesce(array_agg(json_build_object(
           'vast_id', vip.id,
           'details', vip.details,
@@ -106,9 +107,11 @@ export const getAssetVulnerabilitiesModel = async (
           'uri', uri.uri
           )), '{}')`),
         insight: 'vul.insight',
-        affected: 'vul.affected',
-        vulndetect: 'vul.vulndetect',
+        name: 'vul.name',
         references: 'refs.refs',
+        remediation: 'vul.remediation',
+        vulndetect: 'vul.vulndetect',
+        vulnerability_id: 'vul.id',
       })
       .from({ vip: 'vulnerability_asset' })
       .innerJoin({ ast: 'asset' }, { 'ast.id': 'vip.asset_id' })
@@ -126,8 +129,8 @@ export const getAssetVulnerabilitiesModel = async (
       .select(
         'vulnerability_id',
         knex.raw(
-          "array_agg(jsonb_build_object('type', ref.type, 'value', ref.value)) as refs"
-        )
+          'array_agg(jsonb_build_object(\'type\', ref.type, \'value\', ref.value)) as refs',
+        ),
       )
       .from({ ref: 'reference' })
       .groupBy('vulnerability_id')
@@ -138,7 +141,7 @@ export const getAssetVulnerabilitiesModel = async (
     const { search, severities } = params
     if (search) {
       query.where(
-        knex.raw('LOWER(vul.name) LIKE ?', `%${search.toLowerCase()}%`)
+        knex.raw('LOWER(vul.name) LIKE ?', `%${search.toLowerCase()}%`),
       )
     }
 
@@ -166,13 +169,14 @@ export const getAssetVulnerabilitiesModel = async (
     const result = await query
     if (Array.isArray(result)) {
       return {
-        vulnerabilities: result.map(fillVulnerabilityData),
         total: result.length,
+        vulnerabilities: result.map(fillVulnerabilityData),
       }
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -190,7 +194,7 @@ export const getAssetVulnerabilitiesModel = async (
 export const UpdateVulnerabilitiesModel = async (body: any) => {
   let {
     ipId,
-    portId
+    portId,
   }: any = {}
   const result = await knex
     .select({ ipId: 'ip.id', portId: 'port.id' })
@@ -210,9 +214,9 @@ export const UpdateVulnerabilitiesModel = async (body: any) => {
       .update({
         custom_description: body.vuln.custom_description,
         custom_remediation: body.vuln.custom_remediation,
+        details: body.vuln.details,
         ip_id: ipId,
         port_id: portId,
-        details: body.vuln.details,
       })
       .returning('cvss_id')
   ).map((e: any) => e.cvss_id)
@@ -222,9 +226,8 @@ export const UpdateVulnerabilitiesModel = async (body: any) => {
       score: body.vuln.score,
       version: body.vuln.version,
     })
-    if (isGood) {
+    if (isGood)
       return true
-    }
   }
   return false
 }
@@ -243,27 +246,29 @@ export const updateStatusModel = async (
   assetId: any,
   vulnId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-    if (!assetId || !vulnId) return { error: VALIDATION_ERROR }
-    if (!params || !Object.entries(params).length) return { status: SUCCESS } // nothing to update
-
+    if (!assetId || !vulnId)
+      return { error: VALIDATION_ERROR }
+    if (!params || !Object.entries(params).length)
+      return { status: SUCCESS } // nothing to update
 
     const { companyId } = loggedUserInfo
     const { error, status } = await knex.transaction(async (tx: any) => {
       const { updated, comment } = params
       const vipToUpdate = await tx
-        .select({ vulnerability_id: 'vip.id', status: 'vip.status' })
+        .select({ status: 'vip.status', vulnerability_id: 'vip.id' })
         .from({ vip: 'vulnerability_asset' })
         .innerJoin({ asset: 'asset' }, { 'vip.asset_id': 'asset.id' })
         .innerJoin({ cp: 'company' }, { 'asset.company_id': 'cp.id' })
         .where({
-          'cp.id': companyId,
           'asset.id': assetId,
+          'cp.id': companyId,
           'vip.id': vulnId,
         })
-      if (!vipToUpdate || vipToUpdate.length !== 1) return { error: NOT_FOUND } // Not found
+      if (!vipToUpdate || vipToUpdate.length !== 1)
+        return { error: NOT_FOUND } // Not found
 
       if (updated !== vipToUpdate.status) {
         const orig = vipToUpdate[0].status
@@ -272,11 +277,11 @@ export const updateStatusModel = async (
             .where('id', vulnId)
             .update({ status: updated }),
           tx('status_update').insert({
-            vulnerability_asset_id: vipToUpdate[0].vulnerability_id,
+            cdate: new Date(),
+            comment,
             orig_status: orig,
             updated_status: updated,
-            cdate: new Date(),
-            comment: comment,
+            vulnerability_asset_id: vipToUpdate[0].vulnerability_id,
           }),
         ]
         await Promise.all(updates)
@@ -284,7 +289,8 @@ export const updateStatusModel = async (
       return { status: SUCCESS }
     })
     return error ? { error } : { status }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -294,24 +300,24 @@ export const addPostAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
-
   const { id } = loggedUserInfo
   const { comment } = params
 
   const [assetExist] = await knex
     .select()
     .from('vulnerability_asset as vast')
-    .where({ 'vast.id': vulnId, 'vast.asset_id': assetId })
-  if (!assetExist) return { status: UNAUTHORIZED }
+    .where({ 'vast.asset_id': assetId, 'vast.id': vulnId })
+  if (!assetExist)
+    return { status: UNAUTHORIZED }
 
   const { error, status } = await knex.transaction(async (tx: any) => {
     const query = tx('comment').insert({
-      vulnerability_asset_id: vulnId,
-      user_id: id,
-      comment: comment,
+      comment,
       created_at: new Date(),
+      user_id: id,
+      vulnerability_asset_id: vulnId,
     })
     await Promise.all([query])
     return { status: SUCCESS }
@@ -322,19 +328,18 @@ export const addPostAssetVulnerabilityModel = async (
 export const searchPostAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
-
   const { companyId } = loggedUserInfo
 
   const query = knex
     .select({
-      commentId: 'cmt.id',
-      vulnId: 'cmt.vulnerability_asset_id',
       comment: 'cmt.comment',
+      commentId: 'cmt.id',
       createdAt: 'cmt.created_at',
       firstName: 'usr.first_name',
       lastName: 'usr.last_name',
+      vulnId: 'cmt.vulnerability_asset_id',
     })
     .from('comment as cmt')
     .innerJoin('user as usr', { 'usr.id': 'cmt.user_id' })
@@ -342,11 +347,11 @@ export const searchPostAssetVulnerabilityModel = async (
     .innerJoin(
       'vulnerability_asset as vast',
       'vast.id',
-      'cmt.vulnerability_asset_id'
+      'cmt.vulnerability_asset_id',
     )
     .where({
-      'cp.id': companyId,
       'cmt.vulnerability_asset_id': vulnId,
+      'cp.id': companyId,
       'vast.asset_id': assetId,
     })
     .orderBy('cmt.created_at', 'desc')
@@ -376,17 +381,18 @@ export const searchVulnerabilitiesModel = async (params: any) => {
 
     if (vid) {
       query.where('vul.id', vid)
-    } else if (search) {
-      query.where(function(this: any) {
+    }
+    else if (search) {
+      query.where(function (this: any) {
         this.where(
           knex.raw('LOWER(vul.name)'),
           'like',
-          knex.raw('?', `%${search.toLowerCase()}%`)
+          knex.raw('?', `%${search.toLowerCase()}%`),
         )
           .orWhere(knex.raw('LOWER(vul.oid)'), search.toLowerCase())
           .orWhere(
             'vul.burp_id',
-            isNaN(parseInt(search)) ? -1 : parseInt(search)
+            isNaN(parseInt(search)) ? -1 : parseInt(search),
           )
       })
     }
@@ -394,13 +400,15 @@ export const searchVulnerabilitiesModel = async (params: any) => {
     if (Array.isArray(vulnerabilities)) {
       if (vid) {
         const [vulnerability] = vulnerabilities
-        if (vulnerability) return { vulnerability }
+        if (vulnerability)
+          return { vulnerability }
         else return { error: NOT_FOUND }
       }
-      return { vulnerabilities, total: vulnerabilities.length }
+      return { total: vulnerabilities.length, vulnerabilities }
     }
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -426,10 +434,9 @@ export const searchVulnerabilitiesModel = async (params: any) => {
  */
 export const searchVulnerabilitiesWithTheirAssetsModel = async (
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
     const assetsIds = params.assets_ids?.split(',').map((id: any) => parseInt(id))
@@ -443,23 +450,29 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
 
     let vulnerabilities = await prismaClient.vulnerability
       .findMany({
+        orderBy: pageSize
+          ? {
+              vulnerability_asset: {
+                _count: 'desc',
+              },
+            }
+          : { id: 'asc' },
         select: {
-          id: true,
-          oid: true,
-          burp_id: true,
           affected: true,
+          burp_id: true,
+          cluster_id: true,
           description: true,
+          id: true,
           insight: true,
           name: true,
+          oid: true,
           remediation: true,
           vulndetect: true,
-          cluster_id: true,
           vulnerability_asset: {
+            orderBy: {
+              asset_id: 'asc',
+            },
             select: {
-              id: true,
-              severity: true,
-              likelihood: true,
-              status: true,
               asset: {
                 select: {
                   id: true,
@@ -472,6 +485,8 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
                   score: true,
                 },
               },
+              id: true,
+              likelihood: true,
               remediation_project_scope: {
                 select: {
                   remediation_project: {
@@ -482,9 +497,12 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
                   },
                 },
               },
+              severity: true,
+              status: true,
             },
             where: {
               asset: {
+                company_id: companyId,
                 group_asset: {
                   some: roles.includes('admin')
                     ? undefined
@@ -492,30 +510,20 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
                         group_id: { in: groups },
                       },
                 },
-                company_id: companyId,
               },
               asset_id: {
                 in: assetsIds,
               },
-              severity: {
-                in: severities,
-              },
               likelihood: {
                 in: likelihoods,
               },
-            },
-            orderBy: {
-              asset_id: 'asc',
+              severity: {
+                in: severities,
+              },
             },
           },
         },
         where: {
-          cluster_id: {
-            in: clustersIds,
-          },
-          id: {
-            equals: !isNaN(parseInt(vid)) ? parseInt(vid) : undefined,
-          },
           OR: [
             {
               name: {
@@ -534,9 +542,16 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
               },
             },
           ],
+          cluster_id: {
+            in: clustersIds,
+          },
+          id: {
+            equals: !isNaN(parseInt(vid)) ? parseInt(vid) : undefined,
+          },
           vulnerability_asset: {
             some: {
               asset: {
+                company_id: companyId,
                 group_asset: {
                   some: !roles.includes('admin')
                     ? {
@@ -544,56 +559,49 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
                       }
                     : undefined,
                 },
-                company_id: companyId,
               },
               asset_id: {
                 in: assetsIds,
               },
-              severity: {
-                in: severities,
-              },
               likelihood: {
                 in: likelihoods,
+              },
+              severity: {
+                in: severities,
               },
             },
           },
         },
-        orderBy: pageSize
-          ? {
-              vulnerability_asset: {
-                _count: 'desc',
-              },
-            }
-          : { id: 'asc' },
       })
       .then((vulnerabilities: any) => vulnerabilities.map((vuln: any) => {
-      const { vulnerability_asset, ...vulnerability } = vuln
-      return {
-        ...vulnerability,
-        affectedAssets: vulnerability_asset.map((vast: any) => {
-          return {
-            vastId: vast.id,
-            id: vast.asset?.id,
-            name: vast.asset?.name,
-            assetType: vast.asset?.type,
-            cvssScore: vast.cvss?.score,
-            status: vast.status,
-            severity: vast.cvss?.score
-              ? getSeverityLevel(vast.cvss?.score)
-              : vast.severity,
-            projects: vast.remediation_project_scope.map(
-              (scope: any) => scope.remediation_project
-            ),
-          };
-        }),
-      };
-    })
+        const { vulnerability_asset, ...vulnerability } = vuln
+        return {
+          ...vulnerability,
+          affectedAssets: vulnerability_asset.map((vast: any) => {
+            return {
+              assetType: vast.asset?.type,
+              cvssScore: vast.cvss?.score,
+              id: vast.asset?.id,
+              name: vast.asset?.name,
+              projects: vast.remediation_project_scope.map(
+                (scope: any) => scope.remediation_project,
+              ),
+              severity: vast.cvss?.score
+                ? getSeverityLevel(vast.cvss?.score)
+                : vast.severity,
+              status: vast.status,
+              vastId: vast.id,
+            }
+          }),
+        }
+      }),
       )
 
     if (Array.isArray(vulnerabilities)) {
       if (vid) {
         const [vulnerability] = vulnerabilities
-        if (vulnerability) return { vulnerability }
+        if (vulnerability)
+          return { vulnerability }
         else return { error: NOT_FOUND }
       }
 
@@ -601,14 +609,15 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
       if (pageSize) {
         vulnerabilities = vulnerabilities.slice(
           (page - 1) * pageSize,
-          page * pageSize
+          page * pageSize,
         )
       }
-      return { vulnerabilities, total }
+      return { total, vulnerabilities }
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -636,24 +645,25 @@ export const createVulnerabilityModel = async (params: any) => {
     } = params
     const vulnId = await knex.transaction(async (tx: any) => {
       const [{ id }] = await tx('vulnerability').returning('id').insert({
-        oid,
-        name,
-        type,
+        affected,
         baseline,
         description,
-        remediation,
         insight,
-        affected,
+        name,
+        oid,
+        remediation,
+        type,
         vulndetect,
       })
-      for (let idx in refs) {
+      for (const idx in refs) {
         const { type = '', value = '' } = refs[idx]
-        await tx('reference').insert({ vulnerability_id: id, type, value })
+        await tx('reference').insert({ type, value, vulnerability_id: id })
       }
       return id
     })
     return vulnId
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -672,7 +682,8 @@ export const updateVulnerabilityModel = async (vulnId: any, params: any) => {
       .select()
       .from('vulnerability')
       .where('id', vulnId)
-    if (!vulnExist) return { error: MODEL_ERROR }
+    if (!vulnExist)
+      return { error: MODEL_ERROR }
     const {
       name = vulnExist.name,
       description = vulnExist.description,
@@ -684,17 +695,18 @@ export const updateVulnerabilityModel = async (vulnId: any, params: any) => {
     await knex.transaction(async (tx: any) => {
       await tx('vulnerability')
         .update({
-          name,
-          description,
-          remediation,
-          insight,
           affected,
+          description,
+          insight,
+          name,
+          remediation,
           vulndetect,
         })
         .where('id', vulnId)
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -707,14 +719,14 @@ export const updateVulnerabilityModel = async (vulnId: any, params: any) => {
  */
 export const getAssetVulnerabilitiesCountBySeverity = async (
   companyId: any,
-  assetId: any
+  assetId: any,
 ) => {
   try {
     const vulnerabilitiesCount = {
+      critical: 0,
+      high: 0,
       low: 0,
       medium: 0,
-      high: 0,
-      critical: 0,
     }
 
     // Write your query here!
@@ -725,7 +737,7 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
           severity: true,
         },
         where: { asset: { company_id: companyId, id: assetId } },
-      }
+      },
     )
 
     vulnerabilitiesAssets.forEach((va: any) => {
@@ -733,16 +745,16 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
         case va.severity === 'low' || (va.cvss?.score && va.cvss.score <= 3.9):
           vulnerabilitiesCount.low++
           break
-        case va.severity === 'medium' ||
-          (va.cvss?.score && va.cvss.score >= 4 && va.cvss.score <= 6.9):
+        case va.severity === 'medium'
+          || (va.cvss?.score && va.cvss.score >= 4 && va.cvss.score <= 6.9):
           vulnerabilitiesCount.medium++
           break
-        case va.severity === 'high' ||
-          (va.cvss?.score && va.cvss.score >= 7 && va.cvss.score <= 8.9):
+        case va.severity === 'high'
+          || (va.cvss?.score && va.cvss.score >= 7 && va.cvss.score <= 8.9):
           vulnerabilitiesCount.high++
           break
-        case va.severity === 'critical' ||
-          (va.cvss?.score && va.cvss.score >= 9):
+        case va.severity === 'critical'
+          || (va.cvss?.score && va.cvss.score >= 9):
           vulnerabilitiesCount.critical++
           break
         default:
@@ -751,7 +763,8 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
     })
 
     return { vulnerabilitiesCount }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('getAssetVulnerabilitiesCountBySeverity error')
     return { error: MODEL_ERROR }
   }
@@ -763,7 +776,8 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
  */
 export const hasVulnerability = (vulnerabilities: any) => {
   for (const severity of Object.keys(vulnerabilities)) {
-    if (vulnerabilities[severity] > 0) return true
+    if (vulnerabilities[severity] > 0)
+      return true
   }
 
   return false

@@ -1,5 +1,3 @@
-
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR } from '../../../src/common/constants'
@@ -17,7 +15,7 @@ import { MODEL_ERROR } from '../../../src/common/constants'
  */
 export const searchGroupedRemediationsModel = async (
   params: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {
@@ -31,13 +29,14 @@ export const searchGroupedRemediationsModel = async (
       element.count_asset = parseInt(element.count_asset)
       element.count_asset_vuln = parseInt(element.count_asset_vuln)
       element.count_asset_vuln_unmanaged = parseInt(
-        element.count_asset_vuln_unmanaged
+        element.count_asset_vuln_unmanaged,
       )
     })
     return { data: results }
 
     // throw new Error('Unexpected result at search serities')
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

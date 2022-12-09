@@ -1,4 +1,3 @@
-
 import loadGeneral from '../../src/loaders/general-loader'
 
 import loadLogger from '../../src/loaders/logger-loader'

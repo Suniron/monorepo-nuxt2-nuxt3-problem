@@ -1,38 +1,36 @@
-
-
 import express from 'express'
+import { Joi, Segments, celebrate, errors } from 'celebrate'
 import {
-  searchAssetsController,
   createAssetController,
+  createAssetVulnerabilityController,
   deleteAssetController,
+  deleteAssetsBulkController,
+  fetchAssetPortsController,
+  getAssetRiskController,
+  getAssetsSummaryController,
+  importCSVController,
+  searchAssetRevisionsController,
+  searchAssetsBelongingController,
+  searchAssetsController,
   updateAssetController,
   updateAssetsBulkController,
-  deleteAssetsBulkController,
-  searchAssetRevisionsController,
-  importCSVController,
-  getAssetsSummaryController,
-  fetchAssetPortsController,
-  createAssetVulnerabilityController,
-  searchAssetsBelongingController,
-  getAssetRiskController,
 
 } from '../../controllers/assets'
 import {
-  assetVulnerabilitiesController,
-  updateStatusController,
   addPostAssetVulnerabilityController,
-  searchPostAssetVulnerabilityController,
-  updateVulnerabilitiesAssetController,
+  assetVulnerabilitiesController,
   deleteVulnerabilitiesAssetController,
+  searchPostAssetVulnerabilityController,
+  updateStatusController,
+  updateVulnerabilitiesAssetController,
 
 } from '../../controllers/vulnerabilities'
-import { celebrate, Segments, Joi, errors } from 'celebrate'
 
 // Validations
 const vulnerabilityStatusUpdatePayloadValidation = celebrate({
   [Segments.BODY]: Joi.object({
-    updated: Joi.string().required().lowercase(),
     comment: Joi.string().allow('').required(),
+    updated: Joi.string().required().lowercase(),
   }),
 })
 
@@ -61,19 +59,19 @@ router.patch('/assets/:id/vulnerabilities', createAssetVulnerabilityController)
 router.post(
   '/assets/:aid/vulnerabilities/:vid',
   vulnerabilityStatusUpdatePayloadValidation,
-  updateStatusController
+  updateStatusController,
 )
 router.get(
   '/assets/:aid/vulnerabilities/:vid/post',
-  searchPostAssetVulnerabilityController
+  searchPostAssetVulnerabilityController,
 )
 router.post(
   '/assets/:aid/vulnerabilities/:vid/post',
-  addPostAssetVulnerabilityController
+  addPostAssetVulnerabilityController,
 )
 router.post(
   '/assets/vulnerabilities_asset',
-  updateVulnerabilitiesAssetController
+  updateVulnerabilitiesAssetController,
 )
 router.post('/assets/vuln', deleteVulnerabilitiesAssetController)
 

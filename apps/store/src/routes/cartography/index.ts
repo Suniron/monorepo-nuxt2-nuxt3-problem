@@ -1,13 +1,13 @@
 import express from 'express'
 import {
+  addCartographyElementController,
+  createCartographyController,
+  deleteCartographyController,
+  deleteCartographyElementController,
   fetchCartographiesController,
   fetchCartographyElementsController,
   updateCartographyController,
-  createCartographyController,
-  deleteCartographyController,
-  addCartographyElementController,
   updateCartographyElementController,
-  deleteCartographyElementController,
 
 } from '../../controllers/cartography'
 
@@ -20,11 +20,11 @@ router.get('/cartographies/:cartoId', fetchCartographyElementsController)
 router.post('/cartographies/:cartoId/elements', addCartographyElementController)
 router.patch(
   '/cartographies/:cartoId/elements/:eId',
-  updateCartographyElementController
+  updateCartographyElementController,
 )
 router.delete(
   '/cartographies/:cartoId/elements/:eId',
-  deleteCartographyElementController
+  deleteCartographyElementController,
 )
 router.delete('/cartographies/:cartoId', deleteCartographyController)
 

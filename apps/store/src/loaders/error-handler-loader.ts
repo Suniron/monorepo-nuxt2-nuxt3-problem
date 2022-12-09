@@ -1,14 +1,13 @@
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
+
 // This rule is mandatory to avoid some mistakes about unused variables
+import { isCelebrateError } from 'celebrate'
 import {
   HTTPError,
-  getInternalServerError,
   getBadRequestError,
+  getInternalServerError,
 
 } from '../../src/common/errors/http'
-import { isCelebrateError } from 'celebrate'
 
 /**
  *
@@ -24,7 +23,8 @@ export const errorHandler = (err: any, req: any, res: any, _next: any) => {
   if (err instanceof HTTPError) {
     httpError = err
     req.log.withError(err).error('Error handler: http error')
-  } else if (isCelebrateError(err)) {
+  }
+  else if (isCelebrateError(err)) {
     let message = 'ValidatonErrpr'
 
     for (const [_segment, joiError] of err.details.entries()) {
@@ -37,7 +37,8 @@ export const errorHandler = (err: any, req: any, res: any, _next: any) => {
       message,
     })
     req.log.withError(err).error('Error handler: celebrate error')
-  } else {
+  }
+  else {
     // Log if error is unhandled
     req.log.withError(err).error('Error handler: Unhandled error')
   }

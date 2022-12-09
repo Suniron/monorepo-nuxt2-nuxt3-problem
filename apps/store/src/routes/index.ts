@@ -1,4 +1,3 @@
-
 import express from 'express'
 
 import assetsRoutes from '../routes/assets'

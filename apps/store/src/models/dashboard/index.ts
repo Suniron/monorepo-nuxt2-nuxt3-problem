@@ -1,5 +1,3 @@
-
-
 import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
@@ -33,25 +31,26 @@ import prismaClient from '../../../src/prismaClient'
  * }>} Total amout of vulnerabilities found in a company
  */
 const fetchSeveritiesSummary = async (params: any) => {
-  if (!params.companyId)
+  if (!params.companyId) {
     throw new Error(
-      'Param "companyId" required to fetch company severities summary'
+      'Param "companyId" required to fetch company severities summary',
     )
+  }
 
   const { companyId } = params
   const query = knex
     .select({
-      low: knex.raw(
-        "count(vast.id) FILTER (WHERE vast.severity = 'low' or cvss.score <= 3.9)"
-      ),
-      medium: knex.raw(
-        "count(vast.id) FILTER (WHERE vast.severity = 'medium' or (cvss.score <= 6.9 and cvss.score >= 4))"
+      critical: knex.raw(
+        'count(vast.id) FILTER (WHERE vast.severity = \'critical\' or cvss.score >= 9)',
       ),
       high: knex.raw(
-        "count(vast.id) FILTER (WHERE vast.severity = 'high' or (cvss.score <= 8.9 and cvss.score >= 7))"
+        'count(vast.id) FILTER (WHERE vast.severity = \'high\' or (cvss.score <= 8.9 and cvss.score >= 7))',
       ),
-      critical: knex.raw(
-        "count(vast.id) FILTER (WHERE vast.severity = 'critical' or cvss.score >= 9)"
+      low: knex.raw(
+        'count(vast.id) FILTER (WHERE vast.severity = \'low\' or cvss.score <= 3.9)',
+      ),
+      medium: knex.raw(
+        'count(vast.id) FILTER (WHERE vast.severity = \'medium\' or (cvss.score <= 6.9 and cvss.score >= 4))',
       ),
     })
     .from({ vast: 'vulnerability_asset' })
@@ -59,7 +58,7 @@ const fetchSeveritiesSummary = async (params: any) => {
     .innerJoin({ cp: 'company' }, { 'cp.id': 'ast.company_id' })
     .leftJoin('cvss', { 'cvss.id': 'vast.cvss_id' })
     .where('cp.id', companyId)
-    .andWhere(function(this: any) {
+    .andWhere(function (this: any) {
       this.where('vast.status', 'open').orWhere('vast.status', null)
     })
 
@@ -67,10 +66,10 @@ const fetchSeveritiesSummary = async (params: any) => {
 
   return {
     severitiesSummary: {
+      critical: Number(severitiesSummary.critical),
+      high: Number(severitiesSummary.high),
       low: Number(severitiesSummary.low),
       medium: Number(severitiesSummary.medium),
-      high: Number(severitiesSummary.high),
-      critical: Number(severitiesSummary.critical),
     },
   }
 }
@@ -92,10 +91,11 @@ const fetchGlobalRating = async () => {
  * @returns {Promise<{ topVulnerabilities: object[] }>}
  */
 const fetchTopNVulnerabilities = async (params: any) => {
-  if (!params.companyId)
+  if (!params.companyId) {
     throw new Error(
-      'Param "companyId" required to fetch company top vulnerabilities'
+      'Param "companyId" required to fetch company top vulnerabilities',
     )
+  }
   const { companyId, top } = params
   const numVulns = Number(top) || 5
 
@@ -107,18 +107,18 @@ const fetchTopNVulnerabilities = async (params: any) => {
         .from('vulnerability_asset as vast')
         .innerJoin(
           { vuln: 'vulnerability' },
-          { 'vuln.id': 'vast.vulnerability_id' }
+          { 'vuln.id': 'vast.vulnerability_id' },
         )
         .innerJoin({ ast: 'asset' }, { 'ast.id': 'vast.asset_id' })
         .innerJoin({ cp: 'company' }, { 'cp.id': 'ast.company_id' })
         .where('cp.id', companyId)
-        .andWhere(function(this: any) {
+        .andWhere(function (this: any) {
           this.where(knex.raw('LOWER(vast.status)'), 'open').orWhere(
             'vast.status',
-            null
+            null,
           )
         })
-        .as('all_assets')
+        .as('all_assets'),
     )
     .groupBy('id', 'name')
     .orderBy('ocurrences', 'desc')
@@ -126,16 +126,16 @@ const fetchTopNVulnerabilities = async (params: any) => {
   const vulnerabilities = await query
   const totalVulns = vulnerabilities.reduce(
     (total: any, vuln: any) => total + Number(vuln.ocurrences),
-    0
+    0,
   )
 
   return {
     topVulnerabilities: vulnerabilities.slice(0, numVulns).map((v: any) => ({
       ...v,
       ocurrences: Number(v.ocurrences),
-      percent: Math.round((Number(v.ocurrences) / totalVulns) * 100)
+      percent: Math.round((Number(v.ocurrences) / totalVulns) * 100),
     })),
-  };
+  }
 }
 
 /**
@@ -163,75 +163,89 @@ const fetchTopNVulnerabilities = async (params: any) => {
  * }>}
  */
 export const fetchVulnerabilityLikelihoods = async (params: any) => {
-  if (!params.companyId)
+  if (!params.companyId) {
     throw new Error(
-      'Param "companyId" required to fetch vulnerability likelihoods'
+      'Param "companyId" required to fetch vulnerability likelihoods',
     )
+  }
 
   const { companyId } = params
 
   const [likelihoods] = await knex
     .select({
+
+      critcal_unlikely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'unlikely\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
+      ),
+
+      critical_almost_certain: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'certain\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
+      ),
+
+      critical_likely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'likely\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
+      ),
+
+      critical_moderate: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'moderate\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
+      ),
+
+      critical_rare: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'rare\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
+      ),
+
+      high_almost_certain: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'certain\' and (LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9)))',
+      ),
+
+      high_likely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'likely\' and (LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9)))',
+      ),
+
+      high_moderate: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'moderate\' and (LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9)))',
+      ),
+
+      high_rare: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'rare\' and (LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9)))',
+      ),
+
+      high_unlikely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'unlikely\' and (LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9)))',
+      ),
+
+      low_almost_certain: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'certain\' and (LOWER(vast.severity) = \'low\' or cvss.score <= 3.9))',
+      ),
+
+      low_likely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'likely\' and (LOWER(vast.severity) = \'low\' or cvss.score <= 3.9))',
+      ),
+
+      low_moderate: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'moderate\' and (LOWER(vast.severity) = \'low\' or cvss.score <= 3.9))',
+      ),
       // asset_id: 'asset_id',
       low_rare: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'rare' and (LOWER(vast.severity) = 'low' or cvss.score <= 3.9))"
+        'count(vast.id) filter (where vast.likelihood = \'rare\' and (LOWER(vast.severity) = \'low\' or cvss.score <= 3.9))',
       ),
       low_unlikely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'unlikely' and (LOWER(vast.severity) = 'low' or cvss.score <= 3.9))"
-      ),
-      low_moderate: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'moderate' and (LOWER(vast.severity) = 'low' or cvss.score <= 3.9))"
-      ),
-      low_likely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'likely' and (LOWER(vast.severity) = 'low' or cvss.score <= 3.9))"
-      ),
-      low_almost_certain: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'certain' and (LOWER(vast.severity) = 'low' or cvss.score <= 3.9))"
-      ),
-      medium_rare: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'rare' and (LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9)))"
-      ),
-      medium_unlikely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'unlikely' and (LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9)))"
-      ),
-      medium_moderate: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'moderate' and (LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9)))"
-      ),
-      medium_likely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'likely' and (LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9)))"
+        'count(vast.id) filter (where vast.likelihood = \'unlikely\' and (LOWER(vast.severity) = \'low\' or cvss.score <= 3.9))',
       ),
       medium_almost_certain: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'certain' and (LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9)))"
+        'count(vast.id) filter (where vast.likelihood = \'certain\' and (LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9)))',
       ),
-      high_rare: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'rare' and (LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9)))"
+      medium_likely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'likely\' and (LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9)))',
       ),
-      high_unlikely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'unlikely' and (LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9)))"
+      medium_moderate: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'moderate\' and (LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9)))',
       ),
-      high_moderate: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'moderate' and (LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9)))"
+      medium_rare: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'rare\' and (LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9)))',
       ),
-      high_likely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'likely' and (LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9)))"
-      ),
-      high_almost_certain: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'certain' and (LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9)))"
-      ),
-      critical_rare: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'rare' and (LOWER(vast.severity) = 'critical' or cvss.score >= 9))"
-      ),
-      critcal_unlikely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'unlikely' and (LOWER(vast.severity) = 'critical' or cvss.score >= 9))"
-      ),
-      critical_moderate: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'moderate' and (LOWER(vast.severity) = 'critical' or cvss.score >= 9))"
-      ),
-      critical_likely: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'likely' and (LOWER(vast.severity) = 'critical' or cvss.score >= 9))"
-      ),
-      critical_almost_certain: knex.raw(
-        "count(vast.id) filter (where vast.likelihood = 'certain' and (LOWER(vast.severity) = 'critical' or cvss.score >= 9))"
+      medium_unlikely: knex.raw(
+        'count(vast.id) filter (where vast.likelihood = \'unlikely\' and (LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9)))',
       ),
     })
     .from('vulnerability_asset as vast')
@@ -240,12 +254,12 @@ export const fetchVulnerabilityLikelihoods = async (params: any) => {
     .innerJoin('vulnerability as vuln', 'vuln.id', 'vast.vulnerability_id')
     .where('ast.company_id', companyId)
     .andWhere('vuln.type', 'vulnerability')
-    .andWhere(function(this: any) {
-      this.whereRaw(`status is NULL`).orWhereRaw(`LOWER(status) = 'open'`)
+    .andWhere(function (this: any) {
+      this.whereRaw('status is NULL').orWhereRaw('LOWER(status) = \'open\'')
     })
   // .groupBy('asset_id')
 
-  /* 
+  /*
   const query = knex
     .select('severity', 'code', 'score')
     .from('vulnerability_asset as vast')
@@ -350,7 +364,7 @@ export const fetchVulnerabilityLikelihoods = async (params: any) => {
         likelihoods[v.severity.toLowerCase()].likely++
       else likelihoods[v.severity.toLowerCase()].certain++
     }
-  })*/
+  }) */
 
   return { likelihoods }
 }
@@ -358,30 +372,30 @@ export const fetchVulnerabilityLikelihoods = async (params: any) => {
 const fetchScanHistory = async (params: any) => {
   const { companyId } = params
   try {
-    const query = knex //knex('scan')
+    const query = knex // knex('scan')
       .select({
-        id: 'scan.id',
-        sdate: 'cdate',
-        status: 'scan.status',
-        low: knex.raw(
-          "count(vast.id) FILTER (WHERE LOWER(vast.severity) = 'low' or cvss.score <= 3.9)"
-        ),
-        medium: knex.raw(
-          "count(vast.id) FILTER (WHERE LOWER(vast.severity) = 'medium' or (cvss.score <= 6.9 and cvss.score >= 4))"
+        critical: knex.raw(
+          'count(vast.id) FILTER (WHERE LOWER(vast.severity) = \'critical\' or cvss.score >= 9)',
         ),
         high: knex.raw(
-          "count(vast.id) FILTER (WHERE LOWER(vast.severity) = 'high' or (cvss.score <= 8.9 and cvss.score >= 7))"
+          'count(vast.id) FILTER (WHERE LOWER(vast.severity) = \'high\' or (cvss.score <= 8.9 and cvss.score >= 7))',
         ),
-        critical: knex.raw(
-          "count(vast.id) FILTER (WHERE LOWER(vast.severity) = 'critical' or cvss.score >= 9)"
+        id: 'scan.id',
+        low: knex.raw(
+          'count(vast.id) FILTER (WHERE LOWER(vast.severity) = \'low\' or cvss.score <= 3.9)',
         ),
+        medium: knex.raw(
+          'count(vast.id) FILTER (WHERE LOWER(vast.severity) = \'medium\' or (cvss.score <= 6.9 and cvss.score >= 4))',
+        ),
+        sdate: 'cdate',
+        status: 'scan.status',
       })
       .from('scan')
       .innerJoin({ cp: 'company' }, { 'cp.id': 'scan.company_id' })
       .innerJoin({ sa: 'scan_asset' }, { 'sa.scan_id': 'scan.id' })
       .innerJoin(
         { vast: 'vulnerability_asset' },
-        { 'vast.id': 'sa.vulnerability_asset_id' }
+        { 'vast.id': 'sa.vulnerability_asset_id' },
       )
       .leftJoin('cvss', { 'cvss.id': 'vast.cvss_id' })
       .where({ 'cp.id': companyId })
@@ -390,12 +404,12 @@ const fetchScanHistory = async (params: any) => {
 
     const scanHistory = await query
 
-    if (Array.isArray(scanHistory)) {
+    if (Array.isArray(scanHistory))
       return { scanHistory }
-    }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -403,16 +417,11 @@ const fetchScanHistory = async (params: any) => {
 
 export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId, id } = loggedUserInfo
 
     const projects = await prismaClient.v_remediation_project_summary_list.findMany(
       {
         where: {
-          company_id: companyId,
-          status: {
-            in: ['open', 'in_progress', 'to_review', 'overdue'],
-          },
           OR: [
             { owner_id: id },
             {
@@ -425,57 +434,63 @@ export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) 
               },
             },
           ],
+          company_id: companyId,
+          status: {
+            in: ['open', 'in_progress', 'to_review', 'overdue'],
+          },
         },
-      }
+      },
     )
 
     const assignments = {
-      owner: projects.filter((p: any) => p.owner_id === id),
       assignee: projects.filter((p: any) => p.owner_id !== id),
+      owner: projects.filter((p: any) => p.owner_id === id),
     }
 
     return { projectAssignement: assignments }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
 }
 
 export const fetchRiskPerAsset = async (params: any) => {
-  if (!params.companyId)
+  if (!params.companyId) {
     throw new Error(
-      'Param "companyId" required to fetch company top vulnerabilities'
+      'Param "companyId" required to fetch company top vulnerabilities',
     )
+  }
   const query = knex
     .select({
+      critical: 'agg_sev.critical',
+      high: 'agg_sev.high',
       id: 'id',
       low: 'agg_sev.low',
       medium: 'agg_sev.medium',
-      high: 'agg_sev.high',
-      critical: 'agg_sev.critical',
     })
     .from('asset as ast')
     .where('ast.company_id', params.companyId)
   const sevSubquery = knex
     .select({
       asset_id: 'asset_id',
-      low: knex.raw(
-        "count(vast.id) filter (where LOWER(vast.severity) = 'low' or cvss.score <= 3.9)"
-      ),
-      medium: knex.raw(
-        "count(vast.id) filter (where LOWER(vast.severity) = 'medium' or (cvss.score >= 4 and cvss.score <= 6.9))"
+      critical: knex.raw(
+        'count(vast.id) filter (where LOWER(vast.severity) = \'critical\' or cvss.score >= 9)',
       ),
       high: knex.raw(
-        "count(vast.id) filter (where LOWER(vast.severity) = 'high' or (cvss.score >= 7 and cvss.score <= 8.9))"
+        'count(vast.id) filter (where LOWER(vast.severity) = \'high\' or (cvss.score >= 7 and cvss.score <= 8.9))',
       ),
-      critical: knex.raw(
-        "count(vast.id) filter (where LOWER(vast.severity) = 'critical' or cvss.score >= 9)"
+      low: knex.raw(
+        'count(vast.id) filter (where LOWER(vast.severity) = \'low\' or cvss.score <= 3.9)',
+      ),
+      medium: knex.raw(
+        'count(vast.id) filter (where LOWER(vast.severity) = \'medium\' or (cvss.score >= 4 and cvss.score <= 6.9))',
       ),
     })
     .from('vulnerability_asset as vast')
     .leftJoin('cvss', { 'cvss.id': 'vast.cvss_id' })
-    .whereRaw(`status is NULL`)
-    .orWhereRaw(`LOWER(status) = 'open'`)
+    .whereRaw('status is NULL')
+    .orWhereRaw('LOWER(status) = \'open\'')
     .groupBy('asset_id')
     .as('agg_sev')
   query.innerJoin(sevSubquery, { 'agg_sev.asset_id': 'ast.id' })
@@ -484,13 +499,13 @@ export const fetchRiskPerAsset = async (params: any) => {
 }
 
 const chartQueries = {
-  severitiesSummary: fetchSeveritiesSummary,
   global: fetchGlobalRating,
-  topVulnerabilities: fetchTopNVulnerabilities,
   likelihoods: fetchVulnerabilityLikelihoods,
-  scanHistory: fetchScanHistory,
   projectAssignement: fetchProjectAssignement,
   riskPerAsset: fetchRiskPerAsset,
+  scanHistory: fetchScanHistory,
+  severitiesSummary: fetchSeveritiesSummary,
+  topVulnerabilities: fetchTopNVulnerabilities,
 }
 
 // ========================================================================
@@ -505,8 +520,8 @@ const chartQueries = {
 const fetchSingleChartData = async (params: any, loggedUserInfo: any) => {
   const { cid } = params
 
-
-  if (!chartQueries[cid]) throw new Error(`Invalid chart id: "${cid}"`)
+  if (!chartQueries[cid])
+    throw new Error(`Invalid chart id: "${cid}"`)
 
   return await chartQueries[cid](params, loggedUserInfo)
 }
@@ -526,13 +541,14 @@ const fetchMultipleChartsData = async (params: any, loggedUserInfo: any) => {
       chartIds
 
         .map((id: any) => chartQueries[id]?.(params))
-        .filter((query: any) => !!query)
+        .filter((query: any) => !!query),
     )
-  } else {
+  }
+  else {
     allChartsDataArr = await Promise.all(
-      Object.values(chartQueries).map((queryFn) =>
-        queryFn(params, loggedUserInfo)
-      )
+      Object.values(chartQueries).map(queryFn =>
+        queryFn(params, loggedUserInfo),
+      ),
     )
   }
 
@@ -553,7 +569,6 @@ const fetchMultipleChartsData = async (params: any, loggedUserInfo: any) => {
  */
 export const chartsDataModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId, groups, roles } = loggedUserInfo
     const { cid } = params
     const chartParams = {
@@ -569,7 +584,8 @@ export const chartsDataModel = async (params: any, loggedUserInfo = {}) => {
     }
 
     return await fetchMultipleChartsData(chartParams, loggedUserInfo)
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -588,37 +604,37 @@ export const fetchDashboard = async (userId: any) => {
     })
     const dashboardItems = await prismaClient.dashboard_item.findMany({
       select: {
-        id: true,
-        name: true,
-        ckey: true,
-        height: true,
-        width: true,
-        x: true,
-        y: true,
-        prop: true,
         breakpoint: true,
         breakpointwidth: true,
+        ckey: true,
         dashboard_user: {
           where: {
             user_id: userId,
           },
         },
+        height: true,
+        id: true,
+        name: true,
+        prop: true,
+        width: true,
+        x: true,
+        y: true,
       },
     })
 
     // 2) Re-format items to match with old model
     const formattedDashboardItems = dashboardItems.map((item: any) => {
       const formatted = {
-        id: item.id,
+        breakpoint: item.breakpoint,
         breakpointWidth: item.breakpointwidth,
-        name: item.name,
         ckey: item.ckey,
         defaultHeight: item.height,
         defaultWidth: item.width,
         defaultX: item.x,
         defaultY: item.y,
+        id: item.id,
+        name: item.name,
         prop: item.prop,
-        breakpoint: item.breakpoint,
         userHeight: item.dashboard_user[0]?.height
           ? item.dashboard_user[0].height
           : null,
@@ -636,13 +652,14 @@ export const fetchDashboard = async (userId: any) => {
 
     // 3) Save items in thei respective breakpoints
     for (const bp of breakpoints) {
-      bp['items'] = formattedDashboardItems.filter(
-        (item: any) => item.breakpoint === bp.breakpoint
+      bp.items = formattedDashboardItems.filter(
+        (item: any) => item.breakpoint === bp.breakpoint,
       )
     }
 
     return { dashboard: breakpoints }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('fetchDashboard')
     return { error: MODEL_ERROR }
   }
@@ -651,10 +668,9 @@ export const fetchDashboard = async (userId: any) => {
 export const updateDashboardUserModel = async (
   dashId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { id } = loggedUserInfo
     const {
       x = null,
@@ -666,35 +682,37 @@ export const updateDashboardUserModel = async (
     const [userDashItem] = await knex
       .select('*')
       .from('dashboard_user as d')
-      .where({ 'd.user_id': id, 'd.dashboard_item_id': dashId })
+      .where({ 'd.dashboard_item_id': dashId, 'd.user_id': id })
     knex.transaction(async (tx: any) => {
       if (userDashItem) {
         await tx('dashboard_user')
           .update({
+            height: height ?? userDashItem.height,
+            visible,
+            width: width ?? userDashItem.width,
             x: x ?? userDashItem.x,
             y: y ?? userDashItem.y,
-            width: width ?? userDashItem.width,
-            height: height ?? userDashItem.height,
-            visible: visible,
           })
           .where({
-            'dashboard_user.user_id': id,
             'dashboard_user.dashboard_item_id': dashId,
+            'dashboard_user.user_id': id,
           })
-      } else {
+      }
+      else {
         await tx('dashboard_user').insert({
-          user_id: id,
           dashboard_item_id: dashId,
+          height,
+          user_id: id,
+          visible,
+          width,
           x,
           y,
-          width,
-          height,
-          visible,
         })
       }
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

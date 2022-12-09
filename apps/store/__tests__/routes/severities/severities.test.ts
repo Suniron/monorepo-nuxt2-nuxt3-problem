@@ -1,5 +1,3 @@
-
-
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue } from '../../mocks'
@@ -26,9 +24,9 @@ beforeAll(async () => {
 
   // Make ids:
   EXISTING_SEVERITY_ID = severities[0].id
-  NOTEXISTING_SEVERITY_ID =
+  NOTEXISTING_SEVERITY_ID
 
-    Math.max(0, ...severities.map((severity) => Number(severity.id))) + 1 // max id + 1
+    = Math.max(0, ...severities.map(severity => Number(severity.id))) + 1 // max id + 1
 })
 
 describe('/severities/', () => {
@@ -46,7 +44,7 @@ describe('/severities/', () => {
 
       const response = await request(app)
         .get('/severities/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.type).toBe('application/json')
     })
@@ -56,7 +54,7 @@ describe('/severities/', () => {
 
       const response = await request(app)
         .get('/severities/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(500)
     })
@@ -67,7 +65,7 @@ describe('/severities/', () => {
       mockKnexWithFinalValue(severities)
       const response = await request(app)
         .get('/severities/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.type).toBe('application/json')
     })
@@ -76,7 +74,7 @@ describe('/severities/', () => {
       mockKnexWithFinalValue(severities)
       const response = await request(app)
         .get('/severities/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(200)
     })
@@ -85,7 +83,7 @@ describe('/severities/', () => {
       mockKnexWithFinalValue(severities)
       const response = await request(app)
         .get('/severities/')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.body).toEqual(severities)
     })
@@ -96,7 +94,7 @@ describe('/severities/:id', () => {
   describe('GET / without auth token', () => {
     it('should return 401 ', async () => {
       const response = await request(app).get(
-        '/severities/' + EXISTING_SEVERITY_ID
+        `/severities/${EXISTING_SEVERITY_ID}`,
       )
 
       expect(response.status).toBe(401)
@@ -108,7 +106,7 @@ describe('/severities/:id', () => {
       mockKnexWithFinalValue(severities)
       const response = await request(app)
         .get('/severities/bad_id')
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(400)
     })
@@ -119,8 +117,8 @@ describe('/severities/:id', () => {
       mockKnexWithFinalValue(undefined, true)
 
       const response = await request(app)
-        .get('/severities/' + EXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${EXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.type).toBe('application/json')
     })
@@ -129,8 +127,8 @@ describe('/severities/:id', () => {
       mockKnexWithFinalValue(undefined, true)
 
       const response = await request(app)
-        .get('/severities/' + EXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${EXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(500)
     })
@@ -140,8 +138,8 @@ describe('/severities/:id', () => {
     it('should be Content-Type json', async () => {
       mockKnexWithFinalValue([severities[0]])
       const response = await request(app)
-        .get('/severities/' + EXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${EXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.type).toBe('application/json')
     })
@@ -149,8 +147,8 @@ describe('/severities/:id', () => {
     it('should be status 200', async () => {
       mockKnexWithFinalValue([severities[0]])
       const response = await request(app)
-        .get('/severities/' + EXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${EXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(200)
     })
@@ -158,8 +156,8 @@ describe('/severities/:id', () => {
     it('should found data', async () => {
       mockKnexWithFinalValue([severities[0]])
       const response = await request(app)
-        .get('/severities/' + severities[0].id)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${severities[0].id}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.body).toEqual(severities[0])
     })
@@ -169,8 +167,8 @@ describe('/severities/:id', () => {
     it('should be Content-Type json', async () => {
       mockKnexWithFinalValue([])
       const response = await request(app)
-        .get('/severities/' + NOTEXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.type).toBe('application/json')
     })
@@ -178,8 +176,8 @@ describe('/severities/:id', () => {
     it('should be status 404', async () => {
       mockKnexWithFinalValue([])
       const response = await request(app)
-        .get('/severities/' + NOTEXISTING_SEVERITY_ID)
-        .set('Authorization', `Bearer fake@token`)
+        .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(404)
     })

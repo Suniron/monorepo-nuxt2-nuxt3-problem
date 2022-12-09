@@ -16,35 +16,34 @@ export const searchTagsModel = async (params: any, loggedUserInfo = {}) => {
   try {
     // Query
 
-
     const { companyId } = loggedUserInfo
     const query = knex.select('id', 'name', 'color').from('tag').where({
       company_id: companyId,
     })
     const { id } = params
-    if (id !== undefined) {
+    if (id !== undefined)
       query.where({ id })
-    }
 
     const result = await query
     if (Array.isArray(result)) {
       if (id) {
         const [tag] = result
-        if (tag) return { tag }
+        if (tag)
+          return { tag }
         else return { error: NOT_FOUND }
       }
       return { tags: result, total: result.length }
     }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
 }
 export const createTagModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { name, color = getRandomColor() } = params
 
@@ -55,25 +54,28 @@ export const createTagModel = async (params: any, loggedUserInfo = {}) => {
 
     const duplicates = await prismaClient.tag.findMany({
       where: {
-        name: trimmedName,
         company_id: companyId,
+        name: trimmedName,
       },
     })
 
-    if (duplicates.length > 0) return { error: 'DuplicateError' }
+    if (duplicates.length > 0)
+      return { error: 'DuplicateError' }
 
     const [{ id }] = await knex('tag')
       .insert({
-        name,
         color,
         company_id: companyId,
+        name,
       })
       .returning('id')
 
-    if (id) return { id }
+    if (id)
+      return { id }
 
     return { error: MODEL_ERROR }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -81,32 +83,34 @@ export const createTagModel = async (params: any, loggedUserInfo = {}) => {
 
 export const updateTagModel = async (id: any, newTagData: any, loggedUserInfo = {}) => {
   try {
-    if (!id) return { error: VALIDATION_ERROR }
-
+    if (!id)
+      return { error: VALIDATION_ERROR }
 
     const { companyId } = loggedUserInfo
 
     const tag = await prismaClient.tag.findMany({
       where: {
-        id: Number(id),
         company_id: companyId,
+        id: Number(id),
       },
     })
 
-    if (!tag.length) return { error: NOT_FOUND }
+    if (!tag.length)
+      return { error: NOT_FOUND }
 
     await prismaClient.tag.update({
-      where: {
-        id: Number(id),
-      },
       data: {
         color: newTagData.color,
         name: newTagData.name,
       },
+      where: {
+        id: Number(id),
+      },
     })
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -114,19 +118,21 @@ export const updateTagModel = async (id: any, newTagData: any, loggedUserInfo = 
 
 export const deleteTagModel = async (id: any, loggedUserInfo = {}) => {
   try {
-    if (!id) return { error: VALIDATION_ERROR }
-
+    if (!id)
+      return { error: VALIDATION_ERROR }
 
     const { companyId } = loggedUserInfo
     const [tagToDelete] = await knex('tag').where({
-      id,
       company_id: companyId,
+      id,
     })
-    if (!tagToDelete) return { error: NOT_FOUND }
+    if (!tagToDelete)
+      return { error: NOT_FOUND }
 
     await knex('tag').where('id', id).del()
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

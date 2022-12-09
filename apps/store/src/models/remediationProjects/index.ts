@@ -1,22 +1,21 @@
-
 /**
  * @typedef {import('knex').Knex} Knex
  */
 
 import {
   MODEL_ERROR,
-  VALIDATION_ERROR,
   SUCCESS,
   UNAUTHORIZED,
+  VALIDATION_ERROR,
 
 } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
 import {
+  checkRemediationProjectExistsOrIsAuthorised,
   isOwnerOfRemediationProject,
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
-  checkRemediationProjectExistsOrIsAuthorised,
 
 } from '../../../src/utils/remediationProject.utils'
 
@@ -35,18 +34,18 @@ import {
  */
 export const getRemediationProjectsModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     /**
      * @type {RemediationProjectDetails}
      */
@@ -57,7 +56,8 @@ export const getRemediationProjectsModel = async (
       .first()
 
     return remediationProjectDetails
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,
@@ -72,7 +72,7 @@ export const getRemediationProjectsModel = async (
  */
 export const getRemediationProjectsSummaryModel = async (
   _params: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -85,10 +85,11 @@ export const getRemediationProjectsSummaryModel = async (
       .where('company_id', userCompanyId)
 
     return {
-      remediationProjects: remediationProjects,
+      remediationProjects,
       total: remediationProjects.length,
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,
@@ -103,18 +104,18 @@ export const getRemediationProjectsSummaryModel = async (
  */
 export const getRemediationProjectsScopeModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     /**
      * @type {RemediationProjectScopeItem[]}
      */
@@ -124,7 +125,8 @@ export const getRemediationProjectsScopeModel = async (
       .where({ project_id: remediationProjectId })
 
     return remediationProjectScope
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,
@@ -139,18 +141,18 @@ export const getRemediationProjectsScopeModel = async (
  */
 export const getRemediationProjectStatusHistoryModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     const remediationProjectStatusChanges = await knex
       .select()
       .from('v_remediation_project_status_history')
@@ -158,7 +160,8 @@ export const getRemediationProjectStatusHistoryModel = async (
       .orderBy('from_date', 'desc')
 
     return remediationProjectStatusChanges
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,
@@ -175,19 +178,18 @@ export const getRemediationProjectStatusHistoryModel = async (
 export const updateRemediationProjectsModel = async (
   remediationProjectId: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     const returnValue = {
       status_history_id: null,
     }
@@ -204,7 +206,6 @@ export const updateRemediationProjectsModel = async (
       .where('fk_project_id', remediationProjectId)
       .pluck('fk_user_id')
 
-
     const isUserProjectOwner = projectOwnerId === loggedUserInfo.id
 
     const isUserProjectAssignee = projectAssignees.includes(loggedUserInfo.id)
@@ -217,36 +218,36 @@ export const updateRemediationProjectsModel = async (
           await Promise.all(
             [
               {
-                paramName: 'project_name',
                 fieldName: 'name',
+                paramName: 'project_name',
               },
               {
-                paramName: 'project_description',
                 fieldName: 'description',
+                paramName: 'project_description',
               },
               {
-                paramName: 'due_date',
                 fieldName: 'due_date',
+                paramName: 'due_date',
               },
               {
-                paramName: 'priority_id',
                 fieldName: 'fk_priority_id',
+                paramName: 'priority_id',
               },
               {
-                paramName: 'owner_id',
                 fieldName: 'fk_owner',
+                paramName: 'owner_id',
               },
             ].map((field) => {
               if (
-                params[field.paramName] !== undefined &&
-                params[field.paramName] !== null
+                params[field.paramName] !== undefined
+                && params[field.paramName] !== null
               ) {
                 return trx
                   .update(field.fieldName, params[field.paramName])
                   .from('remediation_project')
                   .where({ id: remediationProjectId })
               }
-            })
+            }),
           )
 
           // Update project assignees, if necessary
@@ -257,9 +258,9 @@ export const updateRemediationProjectsModel = async (
 
             await trx('remediation_project_assignee').insert(
               params.assignees.map((userId: any) => ({
+                fk_project_id: remediationProjectId,
                 fk_user_id: userId,
-                fk_project_id: remediationProjectId
-              }))
+              })),
             )
           }
         }
@@ -281,7 +282,7 @@ export const updateRemediationProjectsModel = async (
             .innerJoin(
               { psw: 'project_status_workflow' },
               'psw.fk_from_status_id',
-              'remediation_project_status_history.fk_status_id'
+              'remediation_project_status_history.fk_status_id',
             )
             .where('fk_project_id', remediationProjectId)
             .andWhere('end_date', null)
@@ -319,7 +320,7 @@ export const updateRemediationProjectsModel = async (
               })
 
             const [{ id: statusHistoryId }] = await trx(
-              'remediation_project_status_history'
+              'remediation_project_status_history',
             )
               .insert({
                 fk_project_id: remediationProjectId,
@@ -331,33 +332,37 @@ export const updateRemediationProjectsModel = async (
               .returning('id')
 
             returnValue.status_history_id = statusHistoryId
-          } else {
+          }
+          else {
             result = UNAUTHORIZED
           }
-        } else if (
-          !isUserProjectOwner &&
+        }
+        else if (
+          !isUserProjectOwner
           /**
            * If the params do not contain the status_id field but contains any other field, send the unauthorized error
            */
-          (params.assignees ||
-            params.due_date ||
-            params.owner_id ||
-            params.priority_id ||
-            params.project_description ||
-            params.project_name)
+          && (params.assignees
+            || params.due_date
+            || params.owner_id
+            || params.priority_id
+            || params.project_description
+            || params.project_name)
         ) {
           result = UNAUTHORIZED
         }
       })
-    } else {
+    }
+    else {
       result = UNAUTHORIZED
     }
 
-    if (result === SUCCESS) {
-      return { status: result, data: returnValue }
-    }
+    if (result === SUCCESS)
+      return { data: returnValue, status: result }
+
     return { status: result }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -372,27 +377,26 @@ export const updateRemediationProjectsModel = async (
 export const updateRemediationProjectScopeModel = async (
   remediationProjectId: any,
   params: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     // Check if connected user is the owner of the remediation project:
     if (
       !(await isOwnerOfRemediationProject(
         remediationProjectId,
-        loggedUserInfo.id
+        loggedUserInfo.id,
       ))
-    ) {
+    )
       return { error: UNAUTHORIZED }
-    }
 
     const { project_scope } = params
     // Update project scope
@@ -410,29 +414,30 @@ export const updateRemediationProjectScopeModel = async (
       .pluck('fk_vulnerability_asset_id')
     const rowsToInsert = project_scope
       .filter(
-        (asset_vulnerability_id: any) => !existedRows.includes(asset_vulnerability_id)
+        (asset_vulnerability_id: any) => !existedRows.includes(asset_vulnerability_id),
       )
       .map((asset_vulnerability_id: any) => ({
-      fk_project_id: remediationProjectId,
-      fk_vulnerability_asset_id: asset_vulnerability_id
-    }))
+        fk_project_id: remediationProjectId,
+        fk_vulnerability_asset_id: asset_vulnerability_id,
+      }))
     if (rowsToInsert.length) {
       const insertedRows = await knex('remediation_project_scope')
         .insert(rowsToInsert)
         .returning('id')
       return {
-        status: SUCCESS,
         data: {
           deleted: deletedRows.length,
           inserted: insertedRows.length,
         },
+        status: SUCCESS,
       }
     }
     return {
-      status: SUCCESS,
       data: { deleted: deletedRows.length, inserted: 0 },
+      status: SUCCESS,
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -449,44 +454,43 @@ export const updateRemediationProjectScopeItemModel = async (
   remediationProjectId: any,
   scopeItemId: any,
   params: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     // Check if connected user is collaborator of the remediation project (owner or assignee):
     if (
       !(await isOwnerOrAssigneeOfRemediationProject(
         remediationProjectId,
-        loggedUserInfo.id
+        loggedUserInfo.id,
       ))
-    ) {
+    )
       return { error: UNAUTHORIZED }
-    }
 
     if (
       !(await isScopeOfRemediationProject(remediationProjectId, scopeItemId))
-    ) {
+    )
       return { error: VALIDATION_ERROR }
-    }
 
     // Update "is_done" field in database:
     await knex('remediation_project_scope')
       .where({
-        id: scopeItemId,
         fk_project_id: remediationProjectId,
+        id: scopeItemId,
       })
       .update({ is_done: params.is_done })
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -521,13 +525,13 @@ export const createRemediationProjectsModel = async (body: any, loggedUserInfo: 
   try {
     const [{ id }] = await knex
       .insert({
-        fk_company_id: companyId,
-        name,
+        creation_date: new Date().toISOString(),
         description,
+        due_date,
+        fk_company_id: companyId,
         fk_owner: owner,
         fk_priority_id: priority,
-        due_date,
-        creation_date: new Date().toISOString(),
+        name,
         start_date,
       })
       .into('remediation_project')
@@ -538,8 +542,8 @@ export const createRemediationProjectsModel = async (body: any, loggedUserInfo: 
         .insert(
           assignees.map((assigneeUUID: any) => ({
             fk_project_id: id,
-            fk_user_id: assigneeUUID
-          }))
+            fk_user_id: assigneeUUID,
+          })),
         )
         .into('remediation_project_assignee'),
 
@@ -547,8 +551,8 @@ export const createRemediationProjectsModel = async (body: any, loggedUserInfo: 
         .insert(
           project_scope.map((assetVulnId: any) => ({
             fk_project_id: id,
-            fk_vulnerability_asset_id: assetVulnId
-          }))
+            fk_vulnerability_asset_id: assetVulnId,
+          })),
         )
         .into('remediation_project_scope'),
 
@@ -561,7 +565,8 @@ export const createRemediationProjectsModel = async (body: any, loggedUserInfo: 
     ])
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return {
       error: MODEL_ERROR,
@@ -578,18 +583,18 @@ export const createRemediationProjectsModel = async (body: any, loggedUserInfo: 
  */
 export const getRemediationProjectCommentsModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any
+  loggedUserInfo: any,
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
       remediationProjectId,
-      userCompanyId
+      userCompanyId,
     )
-    if ('error' in checkError) {
+    if ('error' in checkError)
       return checkError
-    }
+
     /**
      * @type {RemediationProjectComment[]}
      */
@@ -599,7 +604,8 @@ export const getRemediationProjectCommentsModel = async (
       .where('project_id', remediationProjectId)
 
     return comment
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

@@ -1,6 +1,6 @@
+import jwt from 'jsonwebtoken'
 import env from '../../config/env'
 
-import jwt from 'jsonwebtoken'
 import { UNAUTHORIZED } from '../constants'
 
 export const ALGORITHM = 'HS512'
@@ -32,8 +32,8 @@ export const generateJWTToken = (jwtSign: any, config: any, payload: any) => {
 
   const token = jwtSign({ ...payload, typ: type }, secret, {
     algorithm: ALGORITHM,
-    expiresIn,
     audience,
+    expiresIn,
     issuer,
   })
 
@@ -82,13 +82,13 @@ export const generateAccessToken = (payload: any) => {
   return generateJWTToken(
     jwt.sign,
     {
-      secret: access.secret,
-      expiresIn: access.life,
       audience: access.audience,
+      expiresIn: access.life,
       issuer: access.issuer,
+      secret: access.secret,
       type: access.type,
     },
-    payload
+    payload,
   )
 }
 
@@ -163,16 +163,16 @@ export const generateAccessToken = (payload: any) => {
 export const verifyToken = async (provider: any, token: any, type: any) => {
   const { verifyJWTToken, env, logger, getTokenSessionModel } = provider
   try {
-    const tokenConfig =
-      type === TOKEN_TYPE.access ? env.jwt.access : env.jwt.refresh
+    const tokenConfig
+      = type === TOKEN_TYPE.access ? env.jwt.access : env.jwt.refresh
     const { secret, audience, issuer, type: configType } = tokenConfig
 
-    if (type !== configType) throw new Error(`Invalid token type: ${type}`)
+    if (type !== configType)
+      throw new Error(`Invalid token type: ${type}`)
 
     const { error, session } = await getTokenSessionModel(token, type)
-    if (error) {
+    if (error)
       throw new Error(error)
-    }
 
     const user = verifyJWTToken(token, secret, {
       algorithms: [ALGORITHM],
@@ -181,14 +181,16 @@ export const verifyToken = async (provider: any, token: any, type: any) => {
     })
     if (!user) {
       throw new Error('Invalid token')
-    } else if (user.id !== session.user_id) {
+    }
+    else if (user.id !== session.user_id) {
       throw new Error(
-        'Token user.id does not match with user_id of stored session'
+        'Token user.id does not match with user_id of stored session',
       )
     }
 
     return { user }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: UNAUTHORIZED }
   }

@@ -1,20 +1,18 @@
-
-
+import { CronJob } from 'cron'
 import { log } from '../lib/logger'
 
-import { CronJob } from 'cron'
 import { computeRiskForAllCompanies } from './computeRisks'
 
 const COMMON_CRON_PATTERNS = {
-  EVERY_MINUTE: '* * * * *',
-  EVERY_FIVE_MINUTE: '*/5 * * * *',
-  EVERY_HOUR: '0 * * * *',
+  EVERY_12_HOURS: '0 */12 * * *',
   EVERY_3_HOURS: '0 */3 * * *',
   EVERY_6_HOURS: '0 */6 * * *',
-  EVERY_12_HOURS: '0 */12 * * *',
   EVERY_DAY: '0 0 * * *',
-  EVERY_WEEK: '0 0 * * 0',
+  EVERY_FIVE_MINUTE: '*/5 * * * *',
+  EVERY_HOUR: '0 * * * *',
+  EVERY_MINUTE: '* * * * *',
   EVERY_MONTH: '0 0 1 * *',
+  EVERY_WEEK: '0 0 * * 0',
   EVERY_YEAR: '0 0 1 1 *',
 }
 
@@ -24,8 +22,8 @@ const COMMON_CRON_PATTERNS = {
 export const tasks = [
   {
     cronPattern: COMMON_CRON_PATTERNS.EVERY_FIVE_MINUTE,
-    onTick: computeRiskForAllCompanies,
     job: null,
+    onTick: computeRiskForAllCompanies,
   },
 ]
 
@@ -37,5 +35,5 @@ export const initCronTasks = () => {
     task.job.start()
   })
 
-  log.debug(tasks.length + ' cron tasks initialized')
+  log.debug(`${tasks.length} cron tasks initialized`)
 }

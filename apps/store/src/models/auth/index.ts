@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-
-
+import crypto from 'crypto'
 import { generateAccessToken } from '../../common/auth/jwt'
 import {
   FORBIDDEN,
@@ -18,7 +15,6 @@ import { knex } from '../../common/db'
 import { log } from '../../lib/logger'
 
 import prismaClient from '../../prismaClient'
-import crypto from 'crypto'
 
 export const getTokenSessionModel = async (provider: any, token: any, type: any) => {
   const { knex, logger } = provider
@@ -34,7 +30,8 @@ export const getTokenSessionModel = async (provider: any, token: any, type: any)
     }
 
     return { session }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
   }
@@ -76,11 +73,11 @@ export const loginModel = async (provider: any, params: any) => {
         'usr.email',
         'usr.company_id',
         'cmp.name as company_name',
-        'usr.roles'
+        'usr.roles',
       )
       .from('user as usr')
       .innerJoin('company as cmp', 'usr.company_id', 'cmp.id')
-      .where(function(this: any) {
+      .where(function (this: any) {
         this.where('usr.username', username).orWhere('usr.email', username)
       })
     if (!user) {
@@ -90,9 +87,8 @@ export const loginModel = async (provider: any, params: any) => {
       }
     }
     const isCorrectPass = passwordsMatch(password, user.password, user.salt)
-    if (!isCorrectPass) {
+    if (!isCorrectPass)
       return { error: UNAUTHORIZED, message: 'Incorrect password' }
-    }
 
     // Proceed to create new session
     const { accessToken, refreshToken, userInfo } = await knex.transaction(
@@ -104,14 +100,14 @@ export const loginModel = async (provider: any, params: any) => {
           .update({ deleted_at: new Date(Date.now()) })
 
         const userInfo = {
-          id: user.id,
-          firstName: user.first_name,
-          lastName: user.last_name,
-          username: user.username,
-          email: user.email,
           companyId: user.company_id,
           companyName: user.company_name,
+          email: user.email,
+          firstName: user.first_name,
+          id: user.id,
+          lastName: user.last_name,
           roles: user.roles,
+          username: user.username,
         }
         const accessToken = generateAccessToken(userInfo)
         const refreshToken = generateRefreshToken({
@@ -120,21 +116,22 @@ export const loginModel = async (provider: any, params: any) => {
 
         await trx('user_session').insert([
           {
-            user_id: user.id,
             token: refreshToken,
             type: TOKEN_TYPE.refresh,
+            user_id: user.id,
           },
           {
-            user_id: user.id,
             token: accessToken,
             type: TOKEN_TYPE.access,
+            user_id: user.id,
           },
         ])
         return { accessToken, refreshToken, userInfo }
-      }
+      },
     )
     return { accessToken, refreshToken, userInfo }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error('[model>auth>index.js>loginModel()] error:', error)
     return { error: MODEL_ERROR }
   }
@@ -149,17 +146,18 @@ export const isValidSessionRefreshToken = async (refreshToken: any, userId: any)
   try {
     const sessionFound = await prismaClient.user_session.findFirst({
       where: {
-        user_id: userId,
-        token: refreshToken,
         deleted_at: null,
+        token: refreshToken,
         type: 'refresh',
+        user_id: userId,
       },
     })
 
     return !!sessionFound
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('isValidSessionRefreshToken')
-    throw new Error('Error while checking refresh token: ' + error)
+    throw new Error(`Error while checking refresh token: ${error}`)
   }
 }
 
@@ -174,52 +172,51 @@ export const refreshAccessToken = async (userId: any) => {
         // 1) Retrieve user info
         const user = await tx.user.findFirst({
           select: {
-            email: true,
-            first_name: true,
-            last_name: true,
-            username: true,
-            id: true,
-            roles: true,
-            user_group: { select: { group_id: true } },
             company: {
               select: {
                 id: true,
                 name: true,
               },
             },
+            email: true,
+            first_name: true,
+            id: true,
+            last_name: true,
+            roles: true,
+            user_group: { select: { group_id: true } },
+            username: true,
           },
           where: {
             id: userId,
           },
         })
 
-        if (!user) {
+        if (!user)
           throw new Error('User not found')
-        } else if (!user.company) {
+        else if (!user.company)
           throw new Error('Company not found')
-        }
 
         const formattedUser = {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          firstName: user.first_name,
-          lastName: user.last_name,
-          roles: user.roles,
           companyId: user.company.id,
           companyName: user.company.name,
+          email: user.email,
+          firstName: user.first_name,
           groups: user.user_group.map((ug: any) => ug.group_id),
+          id: user.id,
+          lastName: user.last_name,
+          roles: user.roles,
+          username: user.username,
         }
 
         // 2) Disable any existing session
         await tx.user_session.updateMany({
-          where: {
-            user_id: userId,
-            deleted_at: null,
-            type: 'access',
-          },
           data: {
             deleted_at: new Date(),
+          },
+          where: {
+            deleted_at: null,
+            type: 'access',
+            user_id: userId,
           },
         })
 
@@ -227,17 +224,18 @@ export const refreshAccessToken = async (userId: any) => {
         const generatedAccessToken = generateAccessToken(formattedUser)
         const { token } = await tx.user_session.create({
           data: {
-            user_id: userId,
             token: generatedAccessToken,
             type: 'access',
+            user_id: userId,
           },
         })
 
         return { accessToken: token, user: formattedUser }
-      }
+      },
     )
     return { accessToken, user }
-  } catch (error) {
+  }
+  catch (error) {
     log.error('[model>auth>index.js>refreshAccessToken()]', error)
     return { error: MODEL_ERROR }
   }
@@ -259,7 +257,8 @@ export const logoutModel = async (provider: any, userInfo: any) => {
       })
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
   }
@@ -281,17 +280,16 @@ export const verifyAssetPermissionModel = async (
   assets = undefined,
   relId = null,
   scanId = null,
-  cartoId = null
+  cartoId = null,
 ) => {
   try {
-
     const { companyId, groups, roles } = loggedUserInfo
     if (
-      roles.includes('admin') ||
-      (isNaN(parseInt(assetId)) && assets === undefined) ||
-      !relId ||
-      !scanId ||
-      !cartoId
+      roles.includes('admin')
+      || (isNaN(parseInt(assetId)) && assets === undefined)
+      || !relId
+      || !scanId
+      || !cartoId
     )
       return { status: SUCCESS }
 
@@ -304,14 +302,18 @@ export const verifyAssetPermissionModel = async (
 
     if (assetId) {
       const [assetExist] = await query.where({ 'ast.id': assetId })
-      if (assetExist) return { status: SUCCESS }
+      if (assetExist)
+        return { status: SUCCESS }
       else return { status: UNAUTHORIZED }
-    } else if (assets) {
+    }
+    else if (assets) {
       const assetsExist = await query.whereIn({ 'ast.id': assets })
 
-      if (assetsExist.length === assets.length) return { status: SUCCESS }
+      if (assetsExist.length === assets.length)
+        return { status: SUCCESS }
       else return { status: UNAUTHORIZED }
-    } else if (relId) {
+    }
+    else if (relId) {
       const [relationExist] = await knex
         .select('rel.id')
         .from('relation as rel')
@@ -319,26 +321,32 @@ export const verifyAssetPermissionModel = async (
         .innerJoin('company as cp_from', 'cp_from.id', 'ast_from.company_id')
         .innerJoin('asset as ast_to', 'ast_to.id', 'rel.to_asset_id')
         .innerJoin('company as cp_to', 'vp_to.id', 'ast_to.company_id')
-        .where({ 'cp_from.id': companyId, cp_to: companyId, 'rel.id': relId })
-      if (!relationExist) return { status: UNAUTHORIZED }
+        .where({ 'cp_from.id': companyId, 'cp_to': companyId, 'rel.id': relId })
+      if (!relationExist)
+        return { status: UNAUTHORIZED }
       // TODO: missing return case here
-    } else if (scanId) {
+    }
+    else if (scanId) {
       const [scanExist] = await knex
         .select('scan.id')
         .from('scan')
         .innerJoin('company as cp', 'cp.id', 'scan.company_id')
         .where({ 'cp.id': companyId, 'scan.id': scanId })
-      if (!scanExist) return { status: UNAUTHORIZED }
+      if (!scanExist)
+        return { status: UNAUTHORIZED }
       // TODO: missing return case here
-    } else if (cartoId) {
+    }
+    else if (cartoId) {
       const [cartoExist] = await knex
         .select('cy.id')
         .from('cartography as cy')
         .where({ 'cy.company_id': companyId, 'cy.id': cartoId })
-      if (!cartoExist) return { status: UNAUTHORIZED }
+      if (!cartoExist)
+        return { status: UNAUTHORIZED }
       // TODO: missing return case here
     }
-  } catch (error) {
+  }
+  catch (error) {
     log.error(error)
     return { error }
   }
@@ -351,7 +359,7 @@ export const getResetPasswordToken = async (provider: any, params: any) => {
     const [user] = await knex
       .select('usr.id', 'usr.email')
       .from('user as usr')
-      .where(function(this: any) {
+      .where(function (this: any) {
         this.where('usr.username', username).orWhere('usr.email', username)
       })
     if (user) {
@@ -367,10 +375,12 @@ export const getResetPasswordToken = async (provider: any, params: any) => {
         })
       user.resetToken = randomFiftySymbols
       return user
-    } else {
+    }
+    else {
       return { error: NOT_FOUND }
     }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
   }
@@ -379,30 +389,33 @@ export const updateResetPasswordUsingToken = async (provider: any, params: any) 
   const { knex, logger, createPasswordHash } = provider
   try {
     const { password, token } = params
-    if (token === null) {
+    if (token === null)
       return { error: FORBIDDEN }
-    }
+
     const [user] = await knex
       .select('usr.id', 'usr.reset_token', 'usr.token_expires_at')
       .from('user as usr')
-      .where(function(this: any) {
+      .where(function (this: any) {
         this.where('usr.reset_token', token)
       })
     if (user) {
-      if (Date.now() > user.token_expires_at) return { error: FORBIDDEN }
+      if (Date.now() > user.token_expires_at)
+        return { error: FORBIDDEN }
       const { hash, salt } = createPasswordHash(password)
       await knex('user').where('id', user.id).update({
         password: hash,
         reset_token: null,
-        salt: salt,
+        salt,
         token_expires_at: null,
       })
       user.reset_token = null
       return { status: SUCCESS }
-    } else {
+    }
+    else {
       return { error: NOT_FOUND }
     }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
   }

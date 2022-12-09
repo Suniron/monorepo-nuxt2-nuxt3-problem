@@ -1,5 +1,3 @@
-
-
 const BASE64_PREFIX = 'data:image/'
 const BASE64_PNG_PREFIX = 'data:image/png;base64,'
 const BASE64_JPEG_PREFIX = 'data:image/jpeg;base64,'
@@ -13,7 +11,7 @@ const BASE64_IMAGE_VALIDATION_REGEX = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)
  */
 export const convertBase64ImageToBuffer = (base64Image: any) => Buffer.from(
   base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, ''),
-  'base64'
+  'base64',
 )
 
 /**
@@ -24,9 +22,8 @@ export const convertBase64ImageToBuffer = (base64Image: any) => Buffer.from(
 export const convertBufferToBase64Image = (buffer: any) => {
   const base64Image = buffer.toString('base64')
 
-  if (base64Image.startsWith(BASE64_PREFIX)) {
+  if (base64Image.startsWith(BASE64_PREFIX))
     return base64Image
-  }
 
   switch (getImageMimeType(base64Image)) {
     case 'jpeg':
@@ -46,7 +43,7 @@ export const convertBufferToBase64Image = (buffer: any) => {
  */
 export const isValidBase64Image = (base64Image: any) => {
   return BASE64_IMAGE_VALIDATION_REGEX.test(
-    base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, '')
+    base64Image.replace(BASE64_PNG_PREFIX, '').replace(BASE64_JPEG_PREFIX, ''),
   )
 }
 
@@ -63,24 +60,22 @@ function getImageMimeType(base64Image: any) {
    * @type {{[key in SupportedImageMimeType]: string[]}}
    */
   const imageMimeTypes = {
+    bmp: ['424D'],
+    gif: ['474946'],
     jpeg: ['FFD8'],
     png: ['89504E470D0A1A0A'],
-    gif: ['474946'],
-    bmp: ['424D'],
     tiff: ['4949', '4D4D'],
   }
 
   const hex = getImageAsHex(base64Image)
 
   for (const mimeType in imageMimeTypes) {
-
     const fileHeaders = imageMimeTypes[mimeType]
     const doesTypeMatch = fileHeaders.find((header: any) => {
       return hex.toLowerCase().startsWith(header.toLowerCase())
     })
-    if (doesTypeMatch) {
+    if (doesTypeMatch)
       return mimeType
-    }
   }
 }
 

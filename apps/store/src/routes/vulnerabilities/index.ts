@@ -1,9 +1,9 @@
 import express from 'express'
-import { celebrate, Segments, Joi } from 'celebrate'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
+  createVulnerabilityController,
   searchVulnerabilitiesController,
   searchVulnerabilitiesWithTheirAssetsController,
-  createVulnerabilityController,
 
 } from '../../controllers/vulnerabilities'
 
@@ -18,18 +18,18 @@ const searchVulnerabilityByIdValidation = celebrate({
 router.get('/vulnerabilities', searchVulnerabilitiesController)
 router.get(
   '/vulnerabilities/assets',
-  searchVulnerabilitiesWithTheirAssetsController
+  searchVulnerabilitiesWithTheirAssetsController,
 )
 router.post('/vulnerabilities', createVulnerabilityController)
 router.get(
   '/vulnerabilities/:vid/assets',
   searchVulnerabilityByIdValidation,
-  searchVulnerabilitiesWithTheirAssetsController
+  searchVulnerabilitiesWithTheirAssetsController,
 )
 router.get(
   '/vulnerabilities/:vid',
   searchVulnerabilityByIdValidation,
-  searchVulnerabilitiesController
+  searchVulnerabilitiesController,
 )
 
 export default router

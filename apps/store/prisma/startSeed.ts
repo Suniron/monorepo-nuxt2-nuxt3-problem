@@ -1,15 +1,13 @@
-
 import knex from 'knex'
 
 /**
  * Load seeds data in database
  */
 export const runSeeders = async () => {
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development')
     console.log('Seed demo + init data...')
-  } else {
+  else
     console.log('Seed init data...')
-  }
 
   const knexDemoConnection = knex({
     client: 'pg',
@@ -21,11 +19,10 @@ export const runSeeders = async () => {
   })
 
   await knexDemoConnection.seed.run()
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development')
     console.log('Seed demo + init data finished')
-  } else {
+  else
     console.log('Seed init data finished')
-  }
 
   await knexDemoConnection.destroy()
 }

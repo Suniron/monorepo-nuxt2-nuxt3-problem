@@ -1,12 +1,11 @@
-import express from 'express'
 import path from 'path'
-import env from './config/env'
-
-import addLoaders from '../src/loaders'
+import express from 'express'
 
 import swaggerUi from 'swagger-ui-express'
 
 import YAML from 'yamljs'
+import addLoaders from '../src/loaders'
+import env from './config/env'
 import { sanitizerMiddleware } from './utils/strings'
 import { log } from './lib/logger'
 
@@ -25,8 +24,8 @@ export default async function initServer() {
     try {
       const swaggerDocument = YAML.load(path.join(__dirname, '../api.yml'))
       app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-    } catch (error) {
-
+    }
+    catch (error) {
       log.error(error)
     }
   }

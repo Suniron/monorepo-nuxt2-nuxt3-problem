@@ -30,6 +30,6 @@ export function riskScoreLetter(score: any, hasVuln = false, scanned = false) {
       return 'E'
     default:
       log.error('riskScoreLetter: score out of range:', score)
-      throw new Error('riskScoreLetter: score out of range: ' + score)
+      throw new Error(`riskScoreLetter: score out of range: ${score}`)
   }
 }

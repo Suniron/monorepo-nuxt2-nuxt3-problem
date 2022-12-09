@@ -1,4 +1,3 @@
-
 import {
   DUPLICATE,
   FORBIDDEN,
@@ -44,27 +43,33 @@ export const searchUsersModel = async (provider: any, params: any, loggedUserInf
     }
 
     const users = await prismaClient.user.findMany({
+      // If no "sort" (or different from "first_name"), it will no sort:
+      orderBy: { first_name: sort === 'name' ? 'asc' : undefined },
+
       select: {
-        id: true,
-        username: true,
-        first_name: true,
-        last_name: true,
         email: true,
+        first_name: true,
+        id: true,
+        last_name: true,
         roles: true,
         user_group: { select: { group: { select: { id: true, name: true } } } },
+        username: true,
       },
+
       where: {
         company_id: loggedUserInfo.companyId,
-        username, // where username if not undefined
-        email, // where email if not undefined
-        id, // where user id if not undefined
+        // where username if not undefined
+        email,
+        // where email if not undefined
+        id,
+        // where user id if not undefined
         // If non-admin, search only in user group(s):
         user_group: groupsToFilter && {
           some: { group_id: { in: groupsToFilter } },
         },
+
+        username,
       },
-      // If no "sort" (or different from "first_name"), it will no sort:
-      orderBy: { first_name: sort === 'name' ? 'asc' : undefined },
     })
 
     // Reformat data because current API is used like that:
@@ -78,18 +83,17 @@ export const searchUsersModel = async (provider: any, params: any, loggedUserInf
     })
 
     // If no result, return NOT_FOUND
-    if (!restructuredUsers.length) {
+    if (!restructuredUsers.length)
       return { error: NOT_FOUND }
-    }
 
     // If search only one user:
-    if (id) {
+    if (id)
       return { user: restructuredUsers[0] }
-    }
 
     // Else, if search multiple users:
-    return { users: restructuredUsers, total: restructuredUsers.length }
-  } catch (error) {
+    return { total: restructuredUsers.length, users: restructuredUsers }
+  }
+  catch (error) {
     logger.error(error)
 
     return { error: MODEL_ERROR }
@@ -119,14 +123,14 @@ export const createUser = async (provider: any, params: any, loggedUserInfo = {}
     const { companyId, roles: loggedUserRoles } = loggedUserInfo
 
     if (
-      !companyId ||
-      !Array.isArray(loggedUserRoles) ||
-      !loggedUserRoles.includes('admin')
+      !companyId
+      || !Array.isArray(loggedUserRoles)
+      || !loggedUserRoles.includes('admin')
     ) {
       logger.error(
         new Error(
-          'Logged in user does not have privileges to create a new user'
-        )
+          'Logged in user does not have privileges to create a new user',
+        ),
       )
       return { error: FORBIDDEN }
     }
@@ -151,24 +155,25 @@ export const createUser = async (provider: any, params: any, loggedUserInfo = {}
         .insert({
           // For now, only admin users can add other user to their OWN COMPANY
           company_id: companyId,
+          email,
           first_name: firstName,
           last_name: lastName,
-          username,
           password: hash,
-          salt,
-          email,
           roles,
+          salt,
+          username,
         })
         .returning('id')
     ).map((e: any) => e.id)
 
     return { id: userId }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
-
     const { constraint } = error
-    if (constraint === 'user_email_key') return { error: DUPLICATE.MAIL }
+    if (constraint === 'user_email_key')
+      return { error: DUPLICATE.MAIL }
 
     return { error: MODEL_ERROR }
   }
@@ -208,7 +213,7 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
         'usr.salt',
         'usr.email',
         'usr.company_id',
-        'usr.roles'
+        'usr.roles',
       )
       .from('user as usr')
       .where('usr.id', id)
@@ -222,11 +227,10 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
       const isCorrectPass = passwordsMatch(
         oldPassword,
         user.password,
-        user.salt
+        user.salt,
       )
-      if (!isCorrectPass) {
+      if (!isCorrectPass)
         return { error: UNAUTHORIZED, message: 'Incorrect password' }
-      }
     }
     await knex.transaction(async (trx: any) => {
       if (roles) {
@@ -247,37 +251,39 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
           // Then repopulate with new groups
           await trx('user_group').insert(
             groupIds.map((gId: any) => ({
+              group_id: gId,
               user_id: id,
-              group_id: gId
-            }))
+            })),
           )
         }
       }
       if (
-        (oldPassword || loggedUserInfo.roles.includes('admin')) &&
-        password1 === password2 &&
-        password1
+        (oldPassword || loggedUserInfo.roles.includes('admin'))
+        && password1 === password2
+        && password1
       ) {
         const { hash, salt } = createPasswordHash(password1)
         await trx('user').where('id', id).update({
           email,
-          username,
-          password: hash,
-          salt: salt,
           first_name: firstName,
           last_name: lastName,
+          password: hash,
+          salt,
+          username,
         })
-      } else if (email || username || firstName || lastName) {
+      }
+      else if (email || username || firstName || lastName) {
         await trx('user').where('id', id).update({
           email,
-          username,
           first_name: firstName,
           last_name: lastName,
+          username,
         })
       }
     })
     return await searchUsersModel(provider, { id }, loggedUserInfo)
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return { error: MODEL_ERROR }
@@ -287,13 +293,13 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
 export const deleteUserModel = async (provider: any, id: any, loggedUserInfo = {}) => {
   const { knex, logger } = provider
   try {
-
     if (loggedUserInfo.roles.includes('admin')) {
       await knex('user').where('id', id).delete()
       return { status: SUCCESS }
     }
     return { error: UNAUTHORIZED }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return { error: MODEL_ERROR }

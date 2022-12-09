@@ -4,9 +4,8 @@ import compression from 'compression'
 import bodyParser from 'body-parser'
 
 import cors from 'cors'
-import env from '../config/env'
-
 import cookieParser from 'cookie-parser'
+import env from '../config/env'
 
 export default async function loadGeneral(app: any) {
   // adding Helmet to enhance your API's security

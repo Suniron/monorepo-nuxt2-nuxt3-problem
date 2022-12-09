@@ -1,4 +1,3 @@
-
 import express from 'express'
 
 import { updateFearedEventsController } from '../../controllers/fearedEvents'

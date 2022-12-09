@@ -1,11 +1,9 @@
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
 export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const cartographies = await knex
       .select({
@@ -15,8 +13,9 @@ export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
       .from('cartography as cy')
       .where('cy.company_id', companyId)
 
-    return { cartographies: cartographies }
-  } catch (error) {
+    return { cartographies }
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -24,27 +23,26 @@ export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
 
 export const fetchCartographyElementsModel = async (
   id: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
     const elements = await knex
       .select({
-        elementId: 'elt.id',
-        group: 'elt.cygroup',
         assetId: 'elt.asset_id',
-        relationId: 'elt.relation_id',
         cartographyId: 'elt.cartography_id',
+        elementId: 'elt.id',
+        fromId: knex.raw('NULL'),
+        group: 'elt.cygroup',
+        language: 'aweb.language',
+        name: 'ast.name',
+        os: 'asrv.os',
+        parent: 'elt.parent',
+        relationId: 'elt.relation_id',
+        toId: knex.raw('NULL'),
+        type: 'ast.type',
         x: 'elt.x',
         y: 'elt.y',
-        fromId: knex.raw('NULL'),
-        toId: knex.raw('NULL'),
-        parent: 'elt.parent',
-        name: 'ast.name',
-        type: 'ast.type',
-        os: 'asrv.os',
-        language: 'aweb.language',
       })
       .from('cartography_element as elt')
       .innerJoin('cartography as cart', 'cart.id', 'elt.cartography_id')
@@ -52,22 +50,22 @@ export const fetchCartographyElementsModel = async (
       .leftJoin('asset_server as asrv', 'asrv.id', 'ast.id')
       .leftJoin('asset_web as aweb', 'aweb.id', 'ast.id')
       .where({ 'cart.company_id': companyId, 'cart.id': id })
-      .union(function(this: any) {
+      .union(function (this: any) {
         this.select({
-          elementId: 'elt.id',
-          group: 'elt.cygroup',
           assetId: knex.raw('NULL'),
-          relationId: 'elt.relation_id',
           cartographyId: 'elt.cartography_id',
+          elementId: 'elt.id',
+          fromId: 'eltfrom.id',
+          group: 'elt.cygroup',
+          language: knex.raw('NULL'),
+          name: knex.raw('NULL'),
+          os: knex.raw('NULL'),
+          parent: knex.raw('NULL'),
+          relationId: 'elt.relation_id',
+          toId: 'eltto.id',
+          type: 'rel.type',
           x: knex.raw('NULL'),
           y: knex.raw('NULL'),
-          fromId: 'eltfrom.id',
-          toId: 'eltto.id',
-          parent: knex.raw('NULL'),
-          name: knex.raw('NULL'),
-          type: 'rel.type',
-          os: knex.raw('NULL'),
-          language: knex.raw('NULL'),
         })
           .from('cartography_element as elt')
           .innerJoin('cartography as cart', 'cart.id', 'elt.cartography_id')
@@ -75,12 +73,12 @@ export const fetchCartographyElementsModel = async (
           .innerJoin(
             'cartography_element as eltfrom',
             'eltfrom.asset_id',
-            'rel.from_asset_id'
+            'rel.from_asset_id',
           )
           .innerJoin(
             'cartography_element as eltto',
             'eltto.asset_id',
-            'rel.to_asset_id'
+            'rel.to_asset_id',
           )
           .where({
             'cart.company_id': companyId,
@@ -89,8 +87,9 @@ export const fetchCartographyElementsModel = async (
             'eltto.cartography_id': id,
           })
       })
-    return { elements: elements }
-  } catch (error) {
+    return { elements }
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -99,10 +98,9 @@ export const fetchCartographyElementsModel = async (
 export const updateCartographyModel = async (
   id: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { name = null } = params
     await knex.transaction(async (tx: any) => {
@@ -110,10 +108,11 @@ export const updateCartographyModel = async (
         .update({
           name,
         })
-        .where({ id: id, company_id: companyId })
+        .where({ company_id: companyId, id })
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -121,7 +120,6 @@ export const updateCartographyModel = async (
 
 export const createCartographyModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { name = null } = params
     const cyId = await knex.transaction(async (tx: any) => {
@@ -132,7 +130,8 @@ export const createCartographyModel = async (params: any, loggedUserInfo = {}) =
       return id
     })
     return cyId
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -140,12 +139,12 @@ export const createCartographyModel = async (params: any, loggedUserInfo = {}) =
 
 export const deleteCartographyModel = async (id: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
-    await knex('cartography').where({ id: id, company_id: companyId }).delete()
+    await knex('cartography').where({ company_id: companyId, id }).delete()
     await knex('cartography_element').where('cartography_id', id).delete()
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -157,7 +156,8 @@ export const deleteCartographyElementModel = async (id: any, eid: any) => {
       .where({ cartography_id: id, id: eid })
       .delete()
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -166,10 +166,9 @@ export const deleteCartographyElementModel = async (id: any, eid: any) => {
 export const addCartographyElementModel = async (
   id: any,
   params: any,
-  loggedUserInfo = {}
+  loggedUserInfo = {},
 ) => {
   try {
-
     const { companyId } = loggedUserInfo
     const {
       asset_id = null,
@@ -185,8 +184,9 @@ export const addCartographyElementModel = async (
       .innerJoin('cartography as cy', 'cy.id', 'cyelt.cartography_id')
       .where('cy.company_id', companyId)
       .andWhere('cy.id', id)
-      .andWhere(function(this: any) {
-        if (asset_id) this.where('cyelt.asset_id', asset_id)
+      .andWhere(function (this: any) {
+        if (asset_id)
+          this.where('cyelt.asset_id', asset_id)
         else this.where('cyelt.relation_id', relation_id)
       })
     let cid
@@ -194,20 +194,22 @@ export const addCartographyElementModel = async (
       cid = await knex.transaction(async (tx: any) => {
         const [ceId] = (
           await tx('cartography_element').returning('id').insert({
-            cartography_id: id,
             asset_id,
-            relation_id,
+            cartography_id: id,
             cygroup,
             parent,
+            relation_id,
             x,
             y,
           })
         ).map((e: any) => e.id)
         return ceId
       })
-    } else cid = elt.id
+    }
+    else { cid = elt.id }
     return cid
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }
@@ -230,7 +232,8 @@ export const updateCartographyElementModel = async (id: any, eid: any, params: a
         .where({ cartography_id: id, id: eid })
     })
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error)
     return { error: MODEL_ERROR }
   }

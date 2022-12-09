@@ -1,4 +1,3 @@
-
 import {
   getBadRequestError,
   getConflictError,
@@ -40,7 +39,7 @@ export const throwValidationError = ({
  * @throws
  */
 export const throwBadRequestError = ({
-  message
+  message,
 }: any = {}) => {
   throw getBadRequestError({ message })
 }
@@ -52,7 +51,7 @@ export const throwBadRequestError = ({
  * @throws
  */
 export const throwUnauthorizedError = ({
-  message
+  message,
 }: any = {}) => {
   throw getUnauthorizedError({ message })
 }
@@ -64,7 +63,7 @@ export const throwUnauthorizedError = ({
  * @throws
  */
 export const throwForbiddenError = ({
-  message
+  message,
 }: any = {}) => {
   throw getForbiddenError({ message })
 }
@@ -76,7 +75,7 @@ export const throwForbiddenError = ({
  * @throws
  */
 export const throwNotFoundError = ({
-  message
+  message,
 }: any = {}) => {
   throw getNotFoundError({ message })
 }
@@ -88,7 +87,7 @@ export const throwNotFoundError = ({
  * @throws
  */
 export const throwDuplicateError = ({
-  message
+  message,
 }: any = {}) => {
   throw getConflictError({ message: message ?? 'Duplicate' })
 }
@@ -100,7 +99,7 @@ export const throwDuplicateError = ({
  * @throws
  */
 export const throwInternalServerError = ({
-  message
+  message,
 }: any = {}) => {
   throw getInternalServerError({ message })
 }

@@ -1,6 +1,4 @@
-
 import { knex } from '../../../src/common/db'
-
 
 import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
@@ -18,8 +16,8 @@ export const searchMissionAnalysis = async (params: any) => {
         'ass.id',
         'ass.name',
         knex.raw(
-          `array_agg(json_build_object('id', ac.id, 'name', asstt.name, 'unitId', asstt.id)) as units`
-        )
+          'array_agg(json_build_object(\'id\', ac.id, \'name\', asstt.name, \'unitId\', asstt.id)) as units',
+        ),
       )
       .from('asset as ass')
       .groupBy('ass.id')
@@ -32,7 +30,7 @@ export const searchMissionAnalysis = async (params: any) => {
         id: 'ast.id',
         name: 'ast.name',
         type: 'ast.type',
-        units: knex.raw("coalesce(agg_mission.units, '{}')"),
+        units: knex.raw('coalesce(agg_mission.units, \'{}\')'),
       })
       .from({ ast: 'asset' })
       .where({ 'ast.id': id })
@@ -49,7 +47,7 @@ export const searchMissionAnalysis = async (params: any) => {
         .where({ 'bmuhfe.business_mission_unit_id': unit.id })
         .leftJoin(
           { feared: 'feared_event' },
-          { 'feared.id': 'bmuhfe.feared_event_id' }
+          { 'feared.id': 'bmuhfe.feared_event_id' },
         )
         .leftJoin({ sever: 'severity' }, { 'sever.id': 'bmuhfe.severity_id' })
       for (const event of unit.fearedEvents) {
@@ -64,12 +62,13 @@ export const searchMissionAnalysis = async (params: any) => {
           .where({ 'bibum.business_mission_unit_feared_event_id': event.id })
           .leftJoin(
             { buim: 'business_impact' },
-            { 'buim.id': 'bibum.id_business_impact' }
+            { 'buim.id': 'bibum.id_business_impact' },
           )
       }
     }
     return { mission }
-  } catch (error) {
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }
@@ -90,7 +89,8 @@ export const searchBusinessImpact = async () => {
       .from({ bi: 'business_impact' })
 
     return { businessImpact }
-  } catch (error) {
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }
@@ -103,7 +103,7 @@ export const searchBusinessImpact = async () => {
  */
 export const updateBusinessImpactIntoUnitModel = async (
   businessImpactLinkedIntoUnit: any,
-  params: any
+  params: any,
 ) => {
   try {
     const { fearedEventId } = params
@@ -112,14 +112,15 @@ export const updateBusinessImpactIntoUnitModel = async (
       .delete()
     for (const businessImpactId of businessImpactLinkedIntoUnit) {
       await knex(
-        'business_mission_unit_feared_event_has_business_impact'
+        'business_mission_unit_feared_event_has_business_impact',
       ).insert({
         business_mission_unit_feared_event_id: Number(fearedEventId),
         id_business_impact: businessImpactId,
       })
     }
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }

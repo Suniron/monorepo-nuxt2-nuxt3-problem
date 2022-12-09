@@ -1,16 +1,16 @@
 import express from 'express'
-import { celebrate, Segments, Joi } from 'celebrate'
+import { Joi, Segments, celebrate } from 'celebrate'
 
 import {
+  createRemediationProjectsController,
+  getRemediationProjectCommentsController,
+  getRemediationProjectStatusHistoryController,
   getRemediationProjectsController,
-  getRemediationProjectsSummaryController,
   getRemediationProjectsScopeController,
-  updateRemediationProjectsController,
+  getRemediationProjectsSummaryController,
   updateRemediationProjectScopeController,
   updateRemediationProjectScopeItemController,
-  createRemediationProjectsController,
-  getRemediationProjectStatusHistoryController,
-  getRemediationProjectCommentsController,
+  updateRemediationProjectsController,
 
 } from '../../controllers/remediationProjects'
 
@@ -24,14 +24,14 @@ const getRemediationProjectByIdValidation = celebrate({
 
 const createProjectValidation = celebrate({
   [Segments.BODY]: Joi.object({
-    name: Joi.string().required(),
+    assignees: Joi.array().items(Joi.string().uuid()).required().min(1),
     description: Joi.string().allow(null, '').required(),
+    due_date: Joi.string().isoDate().required(),
+    name: Joi.string().required(),
     owner: Joi.string().uuid().required(),
     priority: Joi.number().integer().required(),
-    due_date: Joi.string().isoDate().required(),
-    start_date: Joi.string().isoDate().optional(),
-    assignees: Joi.array().items(Joi.string().uuid()).required().min(1),
     project_scope: Joi.array().items(Joi.number().integer()).required().min(1),
+    start_date: Joi.string().isoDate().optional(),
   }),
 })
 
@@ -57,55 +57,55 @@ const updateRemediationProjectScopeItemValidation = celebrate({
 // All remediation projects
 router.get(
   '/remediation-projects/summary',
-  getRemediationProjectsSummaryController
+  getRemediationProjectsSummaryController,
 )
 
 // Specific remediation project
 router.get(
   '/remediation-projects/:id',
   getRemediationProjectByIdValidation,
-  getRemediationProjectsController
+  getRemediationProjectsController,
 )
 router.patch(
   '/remediation-projects/:id',
   getRemediationProjectByIdValidation,
-  updateRemediationProjectsController
+  updateRemediationProjectsController,
 )
 router.post(
   '/remediation-projects',
   createProjectValidation,
-  createRemediationProjectsController
+  createRemediationProjectsController,
 )
 router.get(
   '/posts/remediation-project/:id',
   getRemediationProjectByIdValidation,
-  getRemediationProjectCommentsController
+  getRemediationProjectCommentsController,
 )
 
 // Scope of a specific remediation project
 router.get(
   '/remediation-projects/:id/scope',
   getRemediationProjectByIdValidation,
-  getRemediationProjectsScopeController
+  getRemediationProjectsScopeController,
 )
 router.patch(
   '/remediation-projects/:id/scope',
   updateRemediationProjectScopeValidation,
-  updateRemediationProjectScopeController
+  updateRemediationProjectScopeController,
 )
 
 // Specific scope of a specific remediation project
 router.patch(
   '/remediation-projects/:id/scope/:scopeId',
   updateRemediationProjectScopeItemValidation,
-  updateRemediationProjectScopeItemController
+  updateRemediationProjectScopeItemController,
 )
 
 // Status history of a specific remediation project
 router.get(
   '/remediation-projects/:id/status-history',
   getRemediationProjectByIdValidation,
-  getRemediationProjectStatusHistoryController
+  getRemediationProjectStatusHistoryController,
 )
 
 export default router

@@ -1,4 +1,3 @@
-
 import { knex } from '../../../common/db'
 
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
@@ -14,10 +13,12 @@ export const updateOrCreatePortModel = async (tx: any, ipId: any, params: any) =
         'port.protocol': params.protocol,
       })
     let portId = -1
-    if (!portExist) portId = await createPortModel(tx, ipId, params)
+    if (!portExist)
+      portId = await createPortModel(tx, ipId, params)
     else await updatePortModel(tx, portExist.id, params)
     return portId === -1 ? portExist.id : portId
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -38,18 +39,19 @@ export const createPortModel = async (tx: any, ipId: any, params: any) => {
       await tx('port')
         .returning('id')
         .insert({
-          ip_id: ipId,
           cpe_id,
-          number: parseInt(number),
-          version,
-          service,
-          protocol,
           detail,
+          ip_id: ipId,
+          number: parseInt(number),
+          protocol,
+          service,
           status,
+          version,
         })
     ).map((e: any) => e.id)
     return portId
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -61,7 +63,8 @@ export const updatePortModel = async (tx: any, portId: any, params: any) => {
       .select()
       .from('port')
       .where('port.id', portId)
-    if (!portToUpdate) return { error: NOT_FOUND }
+    if (!portToUpdate)
+      return { error: NOT_FOUND }
 
     const {
       cpe_id = portToUpdate.cpe_id,
@@ -75,16 +78,17 @@ export const updatePortModel = async (tx: any, portId: any, params: any) => {
     await tx('port')
       .update({
         cpe_id,
-        number,
-        version,
-        service,
-        protocol,
         detail,
+        number,
+        protocol,
+        service,
         status,
+        version,
       })
       .where('port.id', portId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -96,11 +100,13 @@ export const deletePortModel = async (tx: any, portId: any) => {
       .select()
       .from('port')
       .where('port.id', portId)
-    if (!portToUpdate) return { error: NOT_FOUND }
+    if (!portToUpdate)
+      return { error: NOT_FOUND }
 
     await tx('port').delete().where('port.id', portId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -115,12 +121,13 @@ export const searchPortModel = async (tx: any, params: any) => {
       .innerJoin('ip', 'ip.id', 'port.ip_id')
       .innerJoin('asset as ast', 'ast.id', 'ip.asset_server_id')
       .where('ast.company_id', companyId)
-    if (ipId) {
+    if (ipId)
       query.where('port.ip_id', ipId)
-    }
+
     const ports = await query
     return ports
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

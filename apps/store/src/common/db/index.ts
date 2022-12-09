@@ -20,13 +20,12 @@ knexConnection.migrate.currentVersion().then((currentVersion) => {
       if (migrationsRan.length) {
         log.info(
           `Finished running migrations ${migrationsRan.join(
-            ', '
-          )}. Batch #${migrationBatchNumber}`
+            ', ',
+          )}. Batch #${migrationBatchNumber}`,
         )
       }
-      if (currentVersion === 'none') {
+      if (currentVersion === 'none')
         knexConnection.seed.run()
-      }
     })
 })
 

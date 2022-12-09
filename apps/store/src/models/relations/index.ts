@@ -1,5 +1,3 @@
-
-
 import { knex } from '../../../src/common/db'
 
 import prismaClient from '../../../src/prismaClient'
@@ -13,7 +11,6 @@ import {
 
 export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const { from_asset_id, to_asset_id, type, replace = false } = params
     const assets = [].concat(from_asset_id).concat(to_asset_id)
@@ -23,28 +20,31 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
       .innerJoin('company as cp', 'cp.id', 'ast.company_id')
       .where('cp.id', companyId)
       .whereIn('ast.id', assets)
-    if (assetsExist.length !== assets.length) return { error: UNAUTHORIZED }
+    if (assetsExist.length !== assets.length)
+      return { error: UNAUTHORIZED }
     let relId
     if (!replace) {
       relId = await knex.select('id').from('relation').where({
-        from_asset_id: from_asset_id,
-        to_asset_id: to_asset_id,
-        type: type,
+        from_asset_id,
+        to_asset_id,
+        type,
       })
       if (relId.length !== 1) {
         // eslint-disable-next-line prettier/prettier
         [relId] = (
           await knex.transaction((tx: any) => {
             const relationId = tx('relation').returning('id').insert({
-              from_asset_id: from_asset_id,
-              to_asset_id: to_asset_id,
-              type: type,
+              from_asset_id,
+              to_asset_id,
+              type,
             })
             return relationId
           })
         ).map((e: any) => e.id)
-      } else relId = relId[0].id
-    } else {
+      }
+      else { relId = relId[0].id }
+    }
+    else {
       // TODO: Find why it's unused
       // const ids = await knex
       //   .from('relation')
@@ -53,9 +53,9 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
       const insert: any = []
       from_asset_id.forEach((elt: any) => {
         insert.push({
-          to_asset_id: to_asset_id,
-          type: type,
           from_asset_id: elt,
+          to_asset_id,
+          type,
         })
       })
       relId = (
@@ -67,7 +67,8 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
     }
 
     return { id: relId }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -81,19 +82,18 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
  */
 export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
 
     const relationsToInsert = params.filter(
-      (relation: any) => relation.fromAssetId !== relation.toAssetId
+      (relation: any) => relation.fromAssetId !== relation.toAssetId,
     )
 
     const assets = relationsToInsert.reduce((
       /** @type {number[]} */ acc: any,
       {
         fromAssetId,
-        toAssetId
-      }: any
+        toAssetId,
+      }: any,
     ) => {
       acc.push(fromAssetId)
       acc.push(toAssetId)
@@ -106,10 +106,10 @@ export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) 
           id: true,
         },
         where: {
+          company_id: companyId,
           id: {
             in: assets,
           },
-          company_id: companyId,
         },
       })
     ).map((e: any) => e.id)
@@ -118,38 +118,38 @@ export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) 
 
     relationsToInsert.forEach((relation: any) => {
       if (
-        assetsIdsInCompany.includes(relation.fromAssetId) &&
-        assetsIdsInCompany.includes(relation.toAssetId)
+        assetsIdsInCompany.includes(relation.fromAssetId)
+        && assetsIdsInCompany.includes(relation.toAssetId)
       ) {
         queries.push(
           prismaClient.relation.upsert({
-            select: {
-              id: true,
-            },
-            where: {
-              type_from_asset_id_to_asset_id: {
-                from_asset_id: relation.fromAssetId,
-                type: relation.relationType,
-                to_asset_id: relation.toAssetId,
-              },
-            },
-            update: {},
             create: {
               from_asset_id: relation.fromAssetId,
               to_asset_id: relation.toAssetId,
               type: relation.relationType,
             },
-          })
+            select: {
+              id: true,
+            },
+            update: {},
+            where: {
+              type_from_asset_id_to_asset_id: {
+                from_asset_id: relation.fromAssetId,
+                to_asset_id: relation.toAssetId,
+                type: relation.relationType,
+              },
+            },
+          }),
         )
       }
     })
 
-    if (queries.length > 0) {
+    if (queries.length > 0)
       return { ids: await prismaClient.$transaction(queries) }
-    }
 
     return { ids: [] }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -169,14 +169,15 @@ export const updateRelationModel = async (id: any, params: any) => {
         await tx('relation')
           .returning('id')
           .update({
-            type: type,
+            type,
           })
           .where('id', id)
       ).map((e: any) => e.id)
       return relationId
     })
     return { id: relId }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -193,7 +194,8 @@ export const deleteRelationModel = async (id: any) => {
     await knex('relation').where('id', id).delete()
 
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -216,11 +218,12 @@ export const deleteRelationByAssetsIdsModel = async (params: any) => {
         type: relationType,
       },
     })
-    if (!result.count) {
+    if (!result.count)
       return { error: NOT_FOUND }
-    }
+
     return result
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

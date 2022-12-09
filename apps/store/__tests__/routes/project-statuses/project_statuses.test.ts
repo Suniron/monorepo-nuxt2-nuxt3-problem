@@ -1,5 +1,3 @@
-
-
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
@@ -34,21 +32,20 @@ beforeAll(async () => {
 describe('/projects/available-transitions', () => {
   describe('GET / with the right auth token', () => {
     it('GET / should return 200 with correct data', async () => {
-
       const availableTransitions = projectStatusWorkflows.map((transition) => {
         return {
-          project_status_workflow_id: transition.id,
-          transition: transition.transition,
           from_status_id: transition.fk_from_status_id,
           from_status_name: projectStatuses.find(
 
-            (status) => status.id === transition.fk_from_status_id
+            status => status.id === transition.fk_from_status_id,
           )?.name,
+          project_status_workflow_id: transition.id,
           to_status_id: transition.fk_to_status_id,
           to_status_name: projectStatuses.find(
 
-            (status) => status.id === transition.fk_to_status_id
+            status => status.id === transition.fk_to_status_id,
           )?.name,
+          transition: transition.transition,
         }
       })
 
@@ -57,7 +54,7 @@ describe('/projects/available-transitions', () => {
 
       const response = await request(app)
         .get('/projects/available-transitions')
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
       expect(response.status).toBe(200)
       expect(response.body).toEqual(availableTransitions)
     })
@@ -71,24 +68,24 @@ describe('/projects/available-transitions/:statusId', () => {
       const availableTransitions = projectStatusWorkflows
         .filter(
 
-          (transition) =>
-            transition.fk_from_status_id.toString() === status.toString()
+          transition =>
+            transition.fk_from_status_id.toString() === status.toString(),
         )
 
         .map((transition) => {
           return {
-            project_status_workflow_id: transition.id,
-            transition: transition.transition,
             from_status_id: transition.fk_from_status_id,
             from_status_name: projectStatuses.find(
 
-              (status) => status.id === transition.fk_from_status_id
+              status => status.id === transition.fk_from_status_id,
             )?.name,
+            project_status_workflow_id: transition.id,
             to_status_id: transition.fk_to_status_id,
             to_status_name: projectStatuses.find(
 
-              (status) => status.id === transition.fk_to_status_id
+              status => status.id === transition.fk_to_status_id,
             )?.name,
+            transition: transition.transition,
           }
         })
 
@@ -97,7 +94,7 @@ describe('/projects/available-transitions/:statusId', () => {
 
       const response = await request(app)
         .get(`/projects/available-transitions/${status}`)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
       expect(response.status).toBe(200)
       expect(response.body).toEqual(availableTransitions)
     })

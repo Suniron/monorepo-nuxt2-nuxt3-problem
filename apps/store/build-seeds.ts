@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-
-const esbuild = require('esbuild')
-
 const fs = require('fs')
 
 const path = require('path')
+const esbuild = require('esbuild')
 
 const SEEDS_FOLDER = './seeds'
 
@@ -18,12 +16,13 @@ const migrationFiles = fs
 
 esbuild
   .build({
-    logLevel: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-    entryPoints: migrationFiles,
     bundle: true,
-    outdir: 'out/seeds',
+    entryPoints: migrationFiles,
+    logLevel: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     // Reduce size in production:
     minify: process.env.NODE_ENV === 'production',
+
+    outdir: 'out/seeds',
     platform: 'node',
     target: 'node16.16',
   })

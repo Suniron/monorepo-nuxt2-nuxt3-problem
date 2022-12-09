@@ -1,5 +1,3 @@
-
-
 import { MODEL_ERROR, NOT_FOUND } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
@@ -12,7 +10,6 @@ import prismaClient from '../../../src/prismaClient'
 
 export const getPhishingScenariosDomainsModel = async (loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const selectedDomain = await prismaClient.company.findFirst({
       select: {
@@ -36,10 +33,11 @@ export const getPhishingScenariosDomainsModel = async (loggedUserInfo = {}) => {
         ...psd,
 
         isAlreadySelected:
-          psd.id === selectedDomain?.fk_phishing_scenario_domain_id
+          psd.id === selectedDomain?.fk_phishing_scenario_domain_id,
       })),
-    };
-  } catch (error) {
+    }
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }

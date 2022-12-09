@@ -1,5 +1,3 @@
-
-
 import { throwHTTPError } from '../../common/errors/index.js'
 
 import { searchProjectPrioritiesModel } from '../../models/project-priorities'
@@ -23,10 +21,12 @@ export const searchProjectPrioritiesController = async (req: any, res: any, next
       ...(req.query || {}),
     })
 
-    if (results.error) throwHTTPError(results.error)
+    if (results.error)
+      throwHTTPError(results.error)
 
     res.send(results)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

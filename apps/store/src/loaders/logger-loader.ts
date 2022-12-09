@@ -1,5 +1,3 @@
-
-
 import { log } from '../../src/lib/logger'
 
 /**
@@ -18,21 +16,22 @@ export default async function loadLogger(app: any) {
       const startHrTime = process.hrtime()
 
       req.log = log.child().withContext({
-        // generate a random request id to improve tracing
-        reqId: Math.floor(Math.random() * 100000).toString(10),
+
         req: {
+          body: req.body,
+          headers: req.headers,
           id: req.id,
           method: req.method,
-          url: req.url,
-          query: req.query,
           params: req.params,
-          headers: req.headers,
+          query: req.query,
           remoteAddress: req.ip,
-          body: req.body,
+          url: req.url,
         },
+        // generate a random request id to improve tracing
+        reqId: Math.floor(Math.random() * 100000).toString(10),
         res: {
-          statusCode: res.statusCode,
           headers: res.getHeaders(),
+          statusCode: res.statusCode,
         },
         type: 'request',
       })
@@ -41,7 +40,7 @@ export default async function loadLogger(app: any) {
       res.on('finish', () => {
         const elapsedHrTime = process.hrtime(startHrTime)
         const elapsedTimeInMs = Math.round(
-          elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6
+          elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6,
         )
         req.log
           .withMetadata({ duration: elapsedTimeInMs })
@@ -49,6 +48,6 @@ export default async function loadLogger(app: any) {
       })
 
       next()
-    }
+    },
   )
 }

@@ -1,5 +1,3 @@
-
-
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
@@ -23,8 +21,8 @@ describe('/probes/:id', () => {
 
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
-        .patch('/probes/' + id)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .patch(`/probes/${id}`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .send(body)
       // .expect('Content-Type', /json/)
       expect(response.status).toBe(204)
@@ -40,15 +38,15 @@ describe('/probes/:id', () => {
 
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
-        .patch('/probes/' + id)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .patch(`/probes/${id}`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .send(body)
       expect(response.status).toBe(400)
     })
     it('should return 400 if there is more than "name" in the body', async () => {
       // this is the data used for the test, this is the only thing you should modify
       const id = 2
-      const body = { name: 'testProbeName', fakeProperty: 'fakeData' }
+      const body = { fakeProperty: 'fakeData', name: 'testProbeName' }
 
       const result = probes.find((e: any) => e.id === id)
 
@@ -56,8 +54,8 @@ describe('/probes/:id', () => {
 
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
-        .patch('/probes/' + id)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .patch(`/probes/${id}`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .send(body)
       expect(response.status).toBe(400)
     })
@@ -72,8 +70,8 @@ describe('/probes/:id', () => {
 
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
-        .patch('/probes/' + id)
-        .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+        .patch(`/probes/${id}`)
+        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         .send(body)
       expect(response.status).toBe(404)
     })

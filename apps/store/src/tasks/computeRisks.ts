@@ -1,4 +1,3 @@
-
 import 'module-alias/register'
 
 import { riskScoreComputing } from '../utils/RiskScoreComputing'
@@ -37,13 +36,13 @@ async function calculateCompanyRisk(companyId: any) {
 
   // Ignoring TS error because there is not enum for the asset type and the string cannot match the values specified in the function's definition
   const inheritedRisks = riskScoreComputing(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     listUnvisited,
     relations,
     inherentScores.map((inherentScore: any) => ({
       asset_id: inherentScore.asset_id,
-      inherentRisk: inherentScore.inherent_score
-    }))
+      inherentRisk: inherentScore.inherent_score,
+    })),
   )
 
   const computeTime = new Date().getTime() - startDate.getTime() - queryTime
@@ -57,10 +56,10 @@ async function calculateCompanyRisk(companyId: any) {
       return [
         prismaClient.score_asset_history.upsert({
           create: {
+            fk_asset_id: Number(assetId),
             log_date: today,
             score: inheritedRisks[assetId],
             type: 'RISK',
-            fk_asset_id: Number(assetId),
           },
           update: {
             score: inheritedRisks[assetId],
@@ -75,9 +74,9 @@ async function calculateCompanyRisk(companyId: any) {
         }),
         prismaClient.score_asset.upsert({
           create: {
+            fk_asset_id: Number(assetId),
             score: inheritedRisks[assetId],
             type: 'RISK',
-            fk_asset_id: Number(assetId),
           },
           update: {
             score: inheritedRisks[assetId],
@@ -90,15 +89,15 @@ async function calculateCompanyRisk(companyId: any) {
           },
         }),
       ]
-    })
+    }),
   )
 
-  const upsertTime =
-    new Date().getTime() - startDate.getTime() - queryTime - computeTime
+  const upsertTime
+    = new Date().getTime() - startDate.getTime() - queryTime - computeTime
 
   return {
-    queryTime,
     computeTime,
+    queryTime,
     upsertTime,
   }
 }
@@ -107,7 +106,7 @@ export async function computeRiskForAllCompanies() {
   const date = new Date()
   const companies = await prismaClient.company.findMany()
   const results = await Promise.all(
-    companies.map((company: any) => calculateCompanyRisk(company.id))
+    companies.map((company: any) => calculateCompanyRisk(company.id)),
   )
   log.info(`Fetched companies in ${new Date().getTime() - date.getTime()}ms`)
   results.forEach((timings: any, index: any) => {
@@ -116,7 +115,7 @@ export async function computeRiskForAllCompanies() {
         timings.queryTime + timings.computeTime + timings.upsertTime
       }ms, query: ${timings.queryTime}ms, compute: ${
         timings.computeTime
-      }ms, upsert: ${timings.upsertTime}ms`
+      }ms, upsert: ${timings.upsertTime}ms`,
     )
   })
 }

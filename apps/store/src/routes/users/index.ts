@@ -1,12 +1,12 @@
 import express from 'express'
+import { Joi, Segments, celebrate, errors } from 'celebrate'
 import {
   createUserController,
+  deleteUserController,
   searchUsersController,
   updateUserController,
-  deleteUserController,
 
 } from '../../controllers/users'
-import { celebrate, Segments, Joi, errors } from 'celebrate'
 
 const router = express.Router()
 
@@ -14,25 +14,25 @@ const router = express.Router()
 const createUserValidation = celebrate({
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required(),
-    username: Joi.string().required(),
-    password: Joi.string().required(),
-    roles: Joi.array().items(Joi.string().valid('member', 'admin')).optional(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
+    password: Joi.string().required(),
+    roles: Joi.array().items(Joi.string().valid('member', 'admin')).optional(),
+    username: Joi.string().required(),
   }),
 })
 
 const updateUserValidation = celebrate({
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().optional(),
-    roles: Joi.array().items(Joi.string().valid('member', 'admin')).optional(),
-    username: Joi.string().optional(),
-    groupIds: Joi.array().items(Joi.number()).optional(),
     firstName: Joi.string().optional(),
+    groupIds: Joi.array().items(Joi.number()).optional(),
     lastName: Joi.string().optional(),
     oldPassword: Joi.string().optional(),
     password1: Joi.string().optional(),
     password2: Joi.string().optional(),
+    roles: Joi.array().items(Joi.string().valid('member', 'admin')).optional(),
+    username: Joi.string().optional(),
   }),
 })
 

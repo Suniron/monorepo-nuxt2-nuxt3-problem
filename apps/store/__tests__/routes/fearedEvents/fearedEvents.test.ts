@@ -27,7 +27,7 @@ describe('/feared-events/', () => {
   it('PATCH / should return 404 ', async () => {
     const response = await request(app)
       .patch('/feared-events/')
-      .set('Authorization', `Bearer fake@token`)
+      .set('Authorization', 'Bearer fake@token')
 
     expect(response.status).toBe(404)
   })
@@ -47,7 +47,7 @@ describe('/feared-events/:id', () => {
       const response = await request(app)
         .patch('/feared-events/bad_id')
         .send({ severityId: 1 }) // good severity id
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
 
       expect(response.status).toBe(400)
     })
@@ -57,7 +57,7 @@ describe('/feared-events/:id', () => {
     it('should be 400', async () => {
       const response = await request(app)
         .patch('/feared-events/1') // good Feared Event id
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
       expect(response.status).toBe(400)
     })
   })
@@ -66,7 +66,7 @@ describe('/feared-events/:id', () => {
     it('should be 400', async () => {
       const response = await request(app)
         .patch('/feared-events/1') // good Feared Event id
-        .set('Authorization', `Bearer fake@token`)
+        .set('Authorization', 'Bearer fake@token')
         .send({ severityId: 'bad_severity_id' })
       expect(response.status).toBe(400)
     })
@@ -77,14 +77,13 @@ describe('/feared-events/:id', () => {
       const fearedEventId = fearedEvents[0].id
       const severityId = severities[0].id
 
+      mockKnexWithFinalValue([severities.find(s => s.id === severityId)])
 
-      mockKnexWithFinalValue([severities.find((s) => s.id === severityId)])
-
-      mockKnexWithFinalValue([fearedEvents.find((s) => s.id === fearedEventId)])
+      mockKnexWithFinalValue([fearedEvents.find(s => s.id === fearedEventId)])
 
       const response = await request(app)
-        .patch('/feared-events/' + fearedEventId)
-        .set('Authorization', `Bearer fake@token`)
+        .patch(`/feared-events/${fearedEventId}`)
+        .set('Authorization', 'Bearer fake@token')
         .send({ severityId })
       expect(response.status).toBe(204)
     })

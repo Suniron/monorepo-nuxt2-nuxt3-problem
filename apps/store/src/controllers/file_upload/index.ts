@@ -1,8 +1,6 @@
-
-
 import { throwHTTPError } from '../../common/errors'
 
-import { uploadFilesModel, downloadFile } from '../../models/file'
+import { downloadFile, uploadFilesModel } from '../../models/file'
 
 /**
  *
@@ -14,10 +12,12 @@ export const uploadFilesController = async (req: any, res: any, next: any) => {
   try {
     const { error, uuid } = await uploadFilesModel(req.body, req.user)
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
-    res.status(201).send({ uuid: uuid })
-  } catch (error) {
+    res.status(201).send({ uuid })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -32,12 +32,14 @@ export const downloadFileController = async (req: any, res: any, next: any) => {
   try {
     const { error, data } = await downloadFile(
       req.user.companyId,
-      req.params?.id
+      req.params?.id,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
-    res.status(201).send({ isAuthorized: !!data, fileData: data })
-  } catch (error) {
+    res.status(201).send({ fileData: data, isAuthorized: !!data })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -51,7 +53,8 @@ export const downloadFileController = async (req: any, res: any, next: any) => {
 export const processCSVController = async (req: any, res: any, next: any) => {
   try {
     res.status(201).send({ isAuthorized: true })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

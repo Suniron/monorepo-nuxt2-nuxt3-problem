@@ -1,4 +1,3 @@
-
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR } from '../../../src/common/constants'
@@ -12,10 +11,10 @@ export const generateModel = async () => {
   try {
     const query = knex
       .select({
+        affected: knex.raw('coalesce(vast_agg.details, \'{}\')'),
+        description: 'vuln.description',
         name: 'vuln.name',
         remediation: 'vuln.remediation',
-        description: 'vuln.description',
-        affected: knex.raw("coalesce(vast_agg.details, '{}')"),
       })
       .from({ vuln: 'vulnerability' })
 
@@ -23,8 +22,8 @@ export const generateModel = async () => {
       .select(
         'vulnerability_id',
         knex.raw(
-          "array_agg(jsonb_build_object('status', vast.status, 'details', vast.details, 'astId', ast.id, 'astName', ast.name, 'ipId', ip.id ,'ip', ip.address, 'portId', port.id, 'port', port.number, 'uriId', uri.id, 'uri', uri.uri, 'code', cvss.code, 'score', cvss.score)) as details"
-        )
+          'array_agg(jsonb_build_object(\'status\', vast.status, \'details\', vast.details, \'astId\', ast.id, \'astName\', ast.name, \'ipId\', ip.id ,\'ip\', ip.address, \'portId\', port.id, \'port\', port.number, \'uriId\', uri.id, \'uri\', uri.uri, \'code\', cvss.code, \'score\', cvss.score)) as details',
+        ),
       )
       .from({ vast: 'vulnerability_asset' })
       .innerJoin({ vuln: 'vulnerability' }, 'vuln.id', 'vast.vulnerability_id')
@@ -39,8 +38,9 @@ export const generateModel = async () => {
     query.innerJoin(vastSubquery, 'vast_agg.vulnerability_id', 'vuln.id')
 
     const vast = await query
-    return { vast: vast }
-  } catch (error) {
+    return { vast }
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

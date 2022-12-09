@@ -1,4 +1,3 @@
-
 import { throwHTTPError } from '../../common/errors'
 
 import { searchProbesModel, updateProbeModel } from '../../models/probes'
@@ -9,13 +8,15 @@ export const searchProbesController = async (req: any, res: any, next: any) => {
       {
         ...(req.params || {}),
       },
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send(probes)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -27,13 +28,15 @@ export const updateProbeController = async (req: any, res: any, next: any) => {
         ...(req.params || {}),
       },
       req.body,
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.sendStatus(204)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

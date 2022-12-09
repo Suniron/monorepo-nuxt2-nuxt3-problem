@@ -1,5 +1,3 @@
-
-
 import { prismaMock } from '../mockPrisma'
 import {
   getAssetVulnerabilitiesCountBySeverity,
@@ -11,17 +9,15 @@ import { MODEL_ERROR } from '../../src/common/constants'
 
 describe('getAssetVulnerabilitiesCountBySeverity', () => {
   it('Should return model error if prisma throw error', async () => {
-
     prismaMock.vulnerability_asset.findMany.mockRejectedValue(
-      new Error('error')
+      new Error('error'),
     )
     expect((await getAssetVulnerabilitiesCountBySeverity(1, 1))?.error).toBe(
-      MODEL_ERROR
+      MODEL_ERROR,
     )
   })
 
   it('should return the count of vulnerabilties by severity in vulnerabilitiesCount property', async () => {
-
     prismaMock.vulnerability_asset.findMany.mockResolvedValue([
       { cvss: { score: 5 }, severity: null },
       { cvss: { score: 5.4 }, severity: null },
@@ -51,33 +47,33 @@ describe('getAssetVulnerabilitiesCountBySeverity', () => {
       { cvss: { score: 2.6 }, severity: null },
     ])
     expect(
-      (await getAssetVulnerabilitiesCountBySeverity(1, 1))?.vulnerabilitiesCount
-    ).toEqual({ low: 5, medium: 13, high: 5, critical: 3 })
+      (await getAssetVulnerabilitiesCountBySeverity(1, 1))?.vulnerabilitiesCount,
+    ).toEqual({ critical: 3, high: 5, low: 5, medium: 13 })
   })
 })
 
 describe('hasVulnerability', () => {
   it('should return false if no vulnerabily', () => {
-    expect(hasVulnerability({ low: 0, medium: 0, high: 0, critical: 0 })).toBe(
-      false
+    expect(hasVulnerability({ critical: 0, high: 0, low: 0, medium: 0 })).toBe(
+      false,
     )
   })
 
   it('should return true if vulnerabily', () => {
-    expect(hasVulnerability({ low: 1, medium: 0, high: 0, critical: 0 })).toBe(
-      true
+    expect(hasVulnerability({ critical: 0, high: 0, low: 1, medium: 0 })).toBe(
+      true,
     )
-    expect(hasVulnerability({ low: 0, medium: 1, high: 0, critical: 0 })).toBe(
-      true
+    expect(hasVulnerability({ critical: 0, high: 0, low: 0, medium: 1 })).toBe(
+      true,
     )
-    expect(hasVulnerability({ low: 0, medium: 0, high: 1, critical: 0 })).toBe(
-      true
+    expect(hasVulnerability({ critical: 0, high: 1, low: 0, medium: 0 })).toBe(
+      true,
     )
-    expect(hasVulnerability({ low: 0, medium: 0, high: 0, critical: 1 })).toBe(
-      true
+    expect(hasVulnerability({ critical: 1, high: 0, low: 0, medium: 0 })).toBe(
+      true,
     )
     expect(
-      hasVulnerability({ low: 14, medium: 50, high: 74, critical: 4 })
+      hasVulnerability({ critical: 4, high: 74, low: 14, medium: 50 }),
     ).toBe(true)
   })
 })

@@ -1,4 +1,3 @@
-
 import * as userData from '../example-values/user.json'
 
 import * as loginData from '../example-values/login.json'

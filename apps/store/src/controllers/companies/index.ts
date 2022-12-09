@@ -1,21 +1,18 @@
-
-
 /**
  * @typedef {import('express').Response} Response
  * @typedef {import('express').Request} Request
  * @typedef {import('express').NextFunction} NextFunction
  */
 
-
 import { throwHTTPError } from '../../common/errors'
 import {
   createCompanyModel,
-  searchCompanyModel,
-  searchCompanyLogoModel,
-  updateCompanyLogoModel,
   deleteCompanyLogoModel,
-  updateCompanyModel,
   getCompanyRiskModel,
+  searchCompanyLogoModel,
+  searchCompanyModel,
+  updateCompanyLogoModel,
+  updateCompanyModel,
 
 } from '../../models/companies'
 
@@ -26,13 +23,15 @@ export const searchCompanyController = async (req: any, res: any, next: any) => 
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user
+      req.user,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send(company || { companies, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -40,10 +39,12 @@ export const searchCompanyController = async (req: any, res: any, next: any) => 
 export const createCompanyController = async (req: any, res: any, next: any) => {
   try {
     const { error, id } = await createCompanyModel(req.body, req.user)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ id })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -58,10 +59,12 @@ export const searchCompanyLogoController = async (req: any, res: any, next: any)
   try {
     const { error, logo } = await searchCompanyLogoModel(req.user)
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ logo })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -76,13 +79,15 @@ export const updateCompanyLogoController = async (req: any, res: any, next: any)
   try {
     const { error, status } = await updateCompanyLogoModel(
       req.user,
-      req.body.logo
+      req.body.logo,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).json(status)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -96,10 +101,12 @@ export const updateCompanyLogoController = async (req: any, res: any, next: any)
 export const deleteCompanyLogoController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await deleteCompanyLogoModel(req.user)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(200).json(status)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -107,9 +114,11 @@ export const deleteCompanyLogoController = async (req: any, res: any, next: any)
 export const updateCompanyController = async (req: any, res: any, next: any) => {
   try {
     const { error, status } = await updateCompanyModel(req.user, req.body)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
     res.status(200).json(status)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -117,9 +126,11 @@ export const updateCompanyController = async (req: any, res: any, next: any) => 
 export const getCompanyRiskController = async (req: any, res: any, next: any) => {
   try {
     const result = await getCompanyRiskModel(req.user)
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
     res.status(200).json(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

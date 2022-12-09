@@ -1,4 +1,3 @@
-
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
 export const createCvssModel = async (tx: any, params: any) => {
@@ -12,7 +11,8 @@ export const createCvssModel = async (tx: any, params: any) => {
       })
     ).map((e: any) => e.id)
     return cvssId
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -24,7 +24,8 @@ export const updateCvssModel = async (tx: any, cvssId: any, params: any) => {
       .select()
       .from('cvss')
       .where('cvss.id', cvssId)
-    if (!cvssToUpdate) return { error: NOT_FOUND }
+    if (!cvssToUpdate)
+      return { error: NOT_FOUND }
     const {
       code = cvssToUpdate.code,
       score = cvssToUpdate.score,
@@ -36,15 +37,16 @@ export const updateCvssModel = async (tx: any, cvssId: any, params: any) => {
     await tx('cvss')
       .update({
         code,
+        impactScore,
         score,
-        version,
         temporal_score,
         temporal_vector,
-        impactScore,
+        version,
       })
       .where('cvss.id', cvssId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }
@@ -56,11 +58,13 @@ export const deleteCvssModel = async (tx: any, cvssId: any) => {
       .select()
       .from('cvss')
       .where('cvss.id', cvssId)
-    if (!cvssToUpdate) return { error: NOT_FOUND }
+    if (!cvssToUpdate)
+      return { error: NOT_FOUND }
 
     await tx('cvss').delete().where('cvss.id', cvssId)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return { error: MODEL_ERROR }
   }

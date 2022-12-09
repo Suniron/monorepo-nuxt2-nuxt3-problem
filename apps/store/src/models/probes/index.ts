@@ -1,4 +1,3 @@
-
 import { knex } from '../../../src/common/db'
 import {
   MODEL_ERROR,
@@ -13,28 +12,28 @@ import prismaClient from '../../../src/prismaClient'
 import { log } from '../../../src/lib/logger'
 export const searchProbesModel = async (params: any, loggedUserInfo = {}) => {
   try {
-
     const { companyId } = loggedUserInfo
     const probes = await knex
       .select({
-        id: 'probe.id',
-        name: 'probe.name',
-        cdate: 'probe.cdate',
-        type: 'probe.probe_type',
-        status: 'probe.status',
         address: 'probe.address',
-        mask: 'probe.mask',
-        mac: 'probe.mac',
-        info: 'probe.info',
+        cdate: 'probe.cdate',
         exitIp: 'probe.exit_ip',
         gw: 'probe.gw',
+        id: 'probe.id',
+        info: 'probe.info',
+        mac: 'probe.mac',
+        mask: 'probe.mask',
+        name: 'probe.name',
+        status: 'probe.status',
         storeId: 'probe.store_id',
+        type: 'probe.probe_type',
       })
       .from('probe')
       .where('probe.company_id', companyId)
 
     return { probes }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('searchProbesModel')
     return { error: MODEL_ERROR }
   }
@@ -50,20 +49,18 @@ export const updateProbeModel = async (params: any, body: any, loggedUserInfo: a
   try {
     const id = parseInt(params.id)
     // You might need to modify in there if anyone can change the name of a probe
-    if (!loggedUserInfo.roles.includes('admin')) {
+    if (!loggedUserInfo.roles.includes('admin'))
       return { error: UNAUTHORIZED }
-    }
 
     const probeExist = await prismaClient.probe.findFirst({
       where: {
-        id,
         company_id: loggedUserInfo.companyId,
+        id,
       },
     })
 
-    if (!probeExist) {
+    if (!probeExist)
       return { error: NOT_FOUND }
-    }
 
     const updateValidation = await prismaClient.probe.update({
       data: {
@@ -74,11 +71,12 @@ export const updateProbeModel = async (params: any, body: any, loggedUserInfo: a
       },
     })
 
-    if (!updateValidation) {
+    if (!updateValidation)
       return { error: MODEL_ERROR }
-    }
+
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     return { error: MODEL_ERROR }
   }
 }

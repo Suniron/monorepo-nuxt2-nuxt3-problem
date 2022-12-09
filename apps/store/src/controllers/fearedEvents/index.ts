@@ -1,4 +1,3 @@
-
 /**
  * @typedef {import('express').Response} Response
  * @typedef {import('express').Request} Request
@@ -20,13 +19,15 @@ export const updateFearedEventsController = async (req: any, res: any, next: any
       req.params?.id,
       req.body,
 
-      req.user
+      req.user,
     )
 
-    if ('error' in results) throwHTTPError(results.error)
+    if ('error' in results)
+      throwHTTPError(results.error)
 
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

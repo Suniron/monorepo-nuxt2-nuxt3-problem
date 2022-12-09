@@ -1,8 +1,7 @@
-/* eslint-disable no-import-assign */
 /* eslint-disable no-async-promise-executor */
 // @ts-nocheck
-import { UNAUTHORIZED } from '../src/common/constants'
 import Knex from 'knex'
+import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
 import * as jwt from '../src/common/auth/jwt'
 import { getAdminUser, getNonAdminUser } from './utils'
@@ -107,7 +106,6 @@ const knexFunctions = [
 ]
 
 export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
-
   const knexMock = jest.fn(() => {
     return knexMock
   })
@@ -190,9 +188,9 @@ export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) 
 
 export function mockVerifyToken(user: any) {
   jwt.verifyToken = jest.fn(() => {
-    if (user) {
+    if (user)
       return { user }
-    }
+
     return { error: UNAUTHORIZED }
   })
   return jwt.verifyToken

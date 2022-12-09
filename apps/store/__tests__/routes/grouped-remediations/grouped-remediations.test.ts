@@ -1,5 +1,3 @@
-
-
 import request from 'supertest'
 import { mockKnexWithFinalValue } from '../../mocks'
 
@@ -11,7 +9,7 @@ describe('/remediations/grouped', () => {
     mockKnexWithFinalValue(groupedRemediations.input)
     const result = await request(app)
       .get('/remediations/grouped')
-      .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
       .expect(200)
       .expect('Content-Type', /json/)
 

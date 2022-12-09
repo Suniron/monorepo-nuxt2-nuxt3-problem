@@ -75,19 +75,19 @@ let vulnerabilities: any = []
 let assets: any = []
 
 const newProjectData = {
-  name: 'New Project',
+  assignees: [''],
   description: 'New project description',
+  due_date: new Date().toISOString(),
+  name: 'New Project',
   owner: '',
   priority: 1,
-  due_date: new Date().toISOString(),
-  assignees: [''],
   project_scope: [1],
 }
 
 const customUser = generateUser({
   firstName: 'xrator-test',
-  lastName: 'xrator-test',
   id: 'xrator_test_id',
+  lastName: 'xrator-test',
 })
 
 beforeAll(async () => {
@@ -107,7 +107,7 @@ beforeAll(async () => {
   projectStatusHistory = await csv({
     ignoreEmpty: true,
   }).fromFile(
-    './seeds/csv_seed_files/demo/remediation_project_status_history.csv'
+    './seeds/csv_seed_files/demo/remediation_project_status_history.csv',
   )
 
   projectPriorities = await csv({
@@ -142,47 +142,46 @@ describe('/remediation-projects/summary', () => {
   describe('GET /', () => {
     describe('with the right auth token and same company id', () => {
       it('should return 200 with correct data', async () => {
-
         const remediationProjectList = remediationProjects.map((project) => {
           return {
-            project_id: project.id,
-            project_name: project.name,
+            due_date: project.due_date,
+            is_overdue: Date.now() > Number(new Date(project.due_date)),
             owner_id: project.fk_owner,
 
-            owner_name: users.find((user) => user.id === project.fk_owner)
+            owner_name: users.find(user => user.id === project.fk_owner)
               ?.username,
             priority: projectPriorities.find(
 
-              (priority) => priority.id === project.fk_priority_id
+              priority => priority.id === project.fk_priority_id,
             )?.name,
             priority_weight: projectPriorities.find(
 
-              (priority) => priority.id === project.fk_priority_id
+              priority => priority.id === project.fk_priority_id,
             )?.weight,
+            project_id: project.id,
+            project_name: project.name,
             status: projectStatus.find(
 
-              (status) =>
-                status.id ===
-                projectStatusHistory.find(
+              status =>
+                status.id
+                === projectStatusHistory.find(
 
-                  (statusHistory) =>
-                    statusHistory.fk_project_id === project.id &&
-                    statusHistory.end_date === null
-                )?.fk_status_id
+                  statusHistory =>
+                    statusHistory.fk_project_id === project.id
+                    && statusHistory.end_date === null,
+                )?.fk_status_id,
             )?.name,
             status_weight: projectStatus.find(
 
-              (status) =>
-                status.id ===
-                projectStatusHistory.find(
+              status =>
+                status.id
+                === projectStatusHistory.find(
 
-                  (statusHistory) =>
-                    statusHistory.fk_project_id === project.id &&
-                    statusHistory.end_date === null
-                )?.fk_status_id
+                  statusHistory =>
+                    statusHistory.fk_project_id === project.id
+                    && statusHistory.end_date === null,
+                )?.fk_status_id,
             )?.weight,
-            due_date: project.due_date,
-            is_overdue: Date.now() > Number(new Date(project.due_date)),
           }
         })
 
@@ -191,10 +190,10 @@ describe('/remediation-projects/summary', () => {
 
         const response = await request(app)
           .get('/remediation-projects/summary')
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(200)
         expect(response.body?.remediationProjects).toEqual(
-          remediationProjectList
+          remediationProjectList,
         )
         expect(response.body?.total).toEqual(remediationProjectList.length)
       })
@@ -210,7 +209,7 @@ describe('/remediation-projects', () => {
 
       const response = await request(app)
         .post('/remediation-projects')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .send(newProjectData)
 
@@ -221,7 +220,7 @@ describe('/remediation-projects', () => {
       expect(Knex.into).toHaveBeenCalledWith('remediation_project_scope')
 
       expect(Knex.into).toHaveBeenCalledWith(
-        'remediation_project_status_history'
+        'remediation_project_status_history',
       )
 
       expect(response.body).toEqual({ id: PROJECT_ID })
@@ -241,79 +240,79 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .get('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
     describe('with the right auth token', () => {
       it('should return 200 with correct data', async () => {
-        let projectId = 2
+        const projectId = 2
         const [remediationProjectDetails] = remediationProjects
 
-          .filter((project) => project.id.toString() === projectId.toString())
+          .filter(project => project.id.toString() === projectId.toString())
 
           .map((project) => {
             return {
-              project_id: project.id,
-              project_name: project.name,
-              project_description: project.description,
-              owner_id: project.fk_owner,
-
-              owner_name: users.find((user) => user.id === project.fk_owner)
-                ?.username,
               assignees: remediationProjectAssignees
 
-                .filter((assignee) => assignee.fk_project_id === project.id)
+                .filter(assignee => assignee.fk_project_id === project.id)
 
                 .map((assignee) => {
                   return {
                     user_id: assignee.fk_user_id,
                     username: users.find(
 
-                      (user) => user.id === assignee.fk_user_id
+                      user => user.id === assignee.fk_user_id,
                     )?.username,
                   }
                 }),
-              priority: projectPriorities.find(
-
-                (priority) => priority.id === project.fk_priority_id
-              )?.name,
-              status: projectStatus.find(
-
-                (status) =>
-                  status.id ===
-                  projectStatusHistory.find(
-
-                    (statusHistory) =>
-                      statusHistory.fk_project_id === project.id &&
-                      statusHistory.end_date === undefined
-                  )?.fk_status_id
-              )?.name,
-              status_id: projectStatus.find(
-
-                (status) =>
-                  status.id ===
-                  projectStatusHistory.find(
-
-                    (statusHistory) =>
-                      statusHistory.fk_project_id === project.id &&
-                      statusHistory.end_date === undefined
-                  )?.fk_status_id
-              )?.id,
-              status_weight: projectStatus.find(
-
-                (status) =>
-                  status.id ===
-                  projectStatusHistory.find(
-
-                    (statusHistory) =>
-                      statusHistory.fk_project_id === project.id &&
-                      statusHistory.end_date === undefined
-                  )?.fk_status_id
-              )?.weight,
               creation_date: project.creation_date,
               due_date: project.due_date,
               is_overdue: Date.now() > Number(new Date(project.due_date)),
+
+              owner_id: project.fk_owner,
+              owner_name: users.find(user => user.id === project.fk_owner)
+                ?.username,
+              priority: projectPriorities.find(
+
+                priority => priority.id === project.fk_priority_id,
+              )?.name,
+              project_description: project.description,
+              project_id: project.id,
+              project_name: project.name,
+              status: projectStatus.find(
+
+                status =>
+                  status.id
+                  === projectStatusHistory.find(
+
+                    statusHistory =>
+                      statusHistory.fk_project_id === project.id
+                      && statusHistory.end_date === undefined,
+                  )?.fk_status_id,
+              )?.name,
+              status_id: projectStatus.find(
+
+                status =>
+                  status.id
+                  === projectStatusHistory.find(
+
+                    statusHistory =>
+                      statusHistory.fk_project_id === project.id
+                      && statusHistory.end_date === undefined,
+                  )?.fk_status_id,
+              )?.id,
+              status_weight: projectStatus.find(
+
+                status =>
+                  status.id
+                  === projectStatusHistory.find(
+
+                    statusHistory =>
+                      statusHistory.fk_project_id === project.id
+                      && statusHistory.end_date === undefined,
+                  )?.fk_status_id,
+              )?.weight,
             }
           })
 
@@ -323,8 +322,8 @@ describe('/remediation-projects/:id', () => {
             Number(
               remediationProjects.find(
 
-                (project) => project.id.toString() === projectId.toString()
-              )?.fk_company_id
+                project => project.id.toString() === projectId.toString(),
+              )?.fk_company_id,
             ),
           ],
           // Mock return remediation project details
@@ -334,7 +333,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .get(`/remediation-projects/${projectId}`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(200)
         expect(response.body).toEqual(remediationProjectDetails)
       })
@@ -352,15 +351,15 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
     describe('as the owner of a project', () => {
       beforeAll(() => {
         const projectOwner = generateUser({
-          username: 'owner',
           id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
+          username: 'owner',
         })
         mockVerifyToken(projectOwner)
       })
@@ -374,35 +373,35 @@ describe('/remediation-projects/:id', () => {
         ])
 
         const patchData = {
-          project_name: 'New Project Name',
-          project_description: 'New Project Description',
           due_date: '2020-01-01',
           priority_id: 2,
+          project_description: 'New Project Description',
+          project_name: 'New Project Name',
         }
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send(patchData)
 
         expect(response.body).toEqual({
-          status: SUCCESS,
           data: {
             status_history_id: null,
           },
+          status: SUCCESS,
         })
 
         expect(Knex.update).toHaveBeenCalledTimes(4)
         expect(Knex.update).toHaveBeenCalledWith('name', patchData.project_name)
         expect(Knex.update).toHaveBeenCalledWith(
           'description',
-          patchData.project_description
+          patchData.project_description,
         )
         expect(Knex.update).toHaveBeenCalledWith('due_date', patchData.due_date)
         expect(Knex.update).toHaveBeenCalledWith(
           'fk_priority_id',
-          patchData.priority_id
+          patchData.priority_id,
         )
       })
 
@@ -418,19 +417,19 @@ describe('/remediation-projects/:id', () => {
 
         const statusId = 4
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send({
             status_id: statusId,
           })
 
         expect(response.body).toEqual({
-          status: SUCCESS,
           data: {
             status_history_id: 26,
           },
+          status: SUCCESS,
         })
 
         expect(Knex.update).toHaveBeenCalledTimes(1)
@@ -441,8 +440,8 @@ describe('/remediation-projects/:id', () => {
     describe('As an assignee of a project', () => {
       beforeAll(() => {
         const projectAssignee = generateUser({
-          username: 'assignee',
           id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
+          username: 'assignee',
         })
         mockVerifyToken(projectAssignee)
       })
@@ -455,15 +454,15 @@ describe('/remediation-projects/:id', () => {
         ])
 
         const patchData = {
-          project_name: 'New Project Name',
-          project_description: 'New Project Description',
           due_date: '2020-01-01',
           priority: 2,
+          project_description: 'New Project Description',
+          project_name: 'New Project Name',
         }
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send(patchData)
 
@@ -484,19 +483,19 @@ describe('/remediation-projects/:id', () => {
 
         const statusId = 2
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send({
             status_id: statusId,
           })
 
         expect(response.body).toEqual({
-          status: SUCCESS,
           data: {
             status_history_id: 26,
           },
+          status: SUCCESS,
         })
 
         expect(Knex.update).toHaveBeenCalledTimes(1)
@@ -514,9 +513,9 @@ describe('/remediation-projects/:id', () => {
 
         const statusId = 5
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send({
             status_id: statusId,
@@ -531,8 +530,8 @@ describe('/remediation-projects/:id', () => {
     describe('As a viewer of a project', () => {
       beforeAll(() => {
         const projectViewer = generateUser({
-          username: 'viewer',
           id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
+          username: 'viewer',
         })
         mockVerifyToken(projectViewer)
       })
@@ -545,15 +544,15 @@ describe('/remediation-projects/:id', () => {
         ])
 
         const patchData = {
-          project_name: 'New Project Name',
-          project_description: 'New Project Description',
           due_date: '2020-01-01',
           priority: 2,
+          project_description: 'New Project Description',
+          project_name: 'New Project Name',
         }
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send(patchData)
 
@@ -572,9 +571,9 @@ describe('/remediation-projects/:id', () => {
 
         const statusId = 2
 
-        let response = await request(app)
+        const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .send({
             status_id: statusId,
@@ -600,74 +599,74 @@ describe('/remediation-projects/:id/scope', () => {
 
         const response = await request(app)
           .get('/remediation-projects/1/scope')
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
     describe('with the right auth token', () => {
       it('should return 200 with correct data', async () => {
-        let projectId = 4
+        const projectId = 4
 
         const remediationProjectScope = remediationProjectScopeTable
           .filter(
 
-            (scope) => scope.fk_project_id.toString() === projectId.toString()
+            scope => scope.fk_project_id.toString() === projectId.toString(),
           )
 
           .map((scope) => {
             return {
-              project_id: scope.fk_project_id,
-              project_scope_id: scope.id,
-              vulnerability_asset_id: scope.fk_vulnerability_asset_id,
               asset_id: vulnerabilityAssets.find(
 
-                (vast) => vast.id === scope.fk_vulnerability_asset_id
+                vast => vast.id === scope.fk_vulnerability_asset_id,
               )?.asset_id,
-              asset_type: assets.find(
-
-                (asset) =>
-                  asset.id ===
-                  vulnerabilityAssets.find(
-
-                    (vast) => vast.id === scope.fk_vulnerability_asset_id
-                  )?.asset_id
-              )?.type,
               asset_name: assets.find(
 
-                (asset) =>
-                  asset.id ===
-                  vulnerabilityAssets.find(
+                asset =>
+                  asset.id
+                  === vulnerabilityAssets.find(
 
-                    (vast) => vast.id === scope.fk_vulnerability_asset_id
-                  )?.asset_id
+                    vast => vast.id === scope.fk_vulnerability_asset_id,
+                  )?.asset_id,
               )?.name,
+              asset_type: assets.find(
+
+                asset =>
+                  asset.id
+                  === vulnerabilityAssets.find(
+
+                    vast => vast.id === scope.fk_vulnerability_asset_id,
+                  )?.asset_id,
+              )?.type,
+              is_done: scope.is_done,
+              project_id: scope.fk_project_id,
+              project_scope_id: scope.id,
+              remediation: vulnerabilities.find(
+
+                vulnerability =>
+                  vulnerability.id
+                  === vulnerabilityAssets.find(
+
+                    vast => vast.id === scope.fk_vulnerability_asset_id,
+                  )?.vulnerability_id,
+              )?.remediation,
+              severity: vulnerabilityAssets.find(
+
+                vast => vast.id === scope.fk_vulnerability_asset_id,
+              )?.severity,
+              vulnerability_asset_id: scope.fk_vulnerability_asset_id,
               vulnerability_id: vulnerabilityAssets.find(
 
-                (vast) => vast.id === scope.fk_vulnerability_asset_id
+                vast => vast.id === scope.fk_vulnerability_asset_id,
               )?.vulnerability_id,
               vulnerability_name: vulnerabilities.find(
 
-                (vulnerability) =>
-                  vulnerability.id ===
-                  vulnerabilityAssets.find(
+                vulnerability =>
+                  vulnerability.id
+                  === vulnerabilityAssets.find(
 
-                    (vast) => vast.id === scope.fk_vulnerability_asset_id
-                  )?.vulnerability_id
+                    vast => vast.id === scope.fk_vulnerability_asset_id,
+                  )?.vulnerability_id,
               )?.name,
-              severity: vulnerabilityAssets.find(
-
-                (vast) => vast.id === scope.fk_vulnerability_asset_id
-              )?.severity,
-              remediation: vulnerabilities.find(
-
-                (vulnerability) =>
-                  vulnerability.id ===
-                  vulnerabilityAssets.find(
-
-                    (vast) => vast.id === scope.fk_vulnerability_asset_id
-                  )?.vulnerability_id
-              )?.remediation,
-              is_done: scope.is_done,
             }
           })
 
@@ -680,7 +679,7 @@ describe('/remediation-projects/:id/scope', () => {
 
         const response = await request(app)
           .get(`/remediation-projects/${projectId}/scope`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(200)
         expect(response.body).toEqual(remediationProjectScope)
@@ -693,9 +692,9 @@ describe('/remediation-projects/:id/scope', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(
-            '/remediation-projects/' + remediationProjects[0].id + '/scope'
+            `/remediation-projects/${remediationProjects[0].id}/scope`,
           )
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -705,9 +704,9 @@ describe('/remediation-projects/:id/scope', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(
-            '/remediation-projects/' + 'bad_remediation_project_id' + '/scope'
+            '/remediation-projects/' + 'bad_remediation_project_id' + '/scope',
           )
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -723,12 +722,12 @@ describe('/remediation-projects/:id/scope', () => {
 
         const response = await request(app)
           .patch(
-            '/remediation-projects/' + remediationProjects[0].id + '/scope'
+            `/remediation-projects/${remediationProjects[0].id}/scope`,
           )
           .send({
             project_scope: [],
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
@@ -749,7 +748,7 @@ describe('/remediation-projects/:id/scope', () => {
           .send({
             project_scope: [],
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(401)
       })
@@ -775,7 +774,7 @@ describe('/remediation-projects/:id/scope', () => {
             .send({
               project_scope: [104, 105, 106, 107],
             })
-            .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
           expect(response.status).toBe(201)
           expect(response.body).toHaveProperty('data')
@@ -814,7 +813,7 @@ describe('/remediation-projects/:id/scope', () => {
             .send({
               project_scope: [104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
             })
-            .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
           expect(response.status).toBe(201)
           expect(response.body).toHaveProperty('data')
@@ -833,7 +832,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
     describe('without auth token', () => {
       it('should return 401', async () => {
         const response = await request(app).patch(
-          '/remediation-projects/' + remediationProjects[0].id + '/scope/1'
+          `/remediation-projects/${remediationProjects[0].id}/scope/1`,
         )
 
         expect(response.status).toBe(401)
@@ -844,7 +843,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -854,7 +853,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch('/remediation-projects/bad_remediation_project_id/scope/1')
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -864,9 +863,9 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(
-            `/remediation-projects/${remediationProjects[0].id}/scope/bad_scope_id`
+            `/remediation-projects/${remediationProjects[0].id}/scope/bad_scope_id`,
           )
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -883,7 +882,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
           .send({ is_done: true })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
@@ -893,8 +892,8 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         // Generate and mock connected user id
         const notOwnerOrAsigneeUser = generateUser({
           firstName: 'xrator-test',
-          lastName: 'xrator-test',
           id: 'i_am_not_owner_or_assignee_id',
+          lastName: 'xrator-test',
         })
         mockVerifyToken(notOwnerOrAsigneeUser)
 
@@ -916,7 +915,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
           .send({ is_done: true })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(401)
       })
@@ -927,8 +926,8 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         // Generate and mock connected user id
         const ownerUser = generateUser({
           firstName: 'xrator-test',
-          lastName: 'xrator-test',
           id: 'i_am_owner_id',
+          lastName: 'xrator-test',
         })
 
         mockVerifyToken(ownerUser)
@@ -949,12 +948,12 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
             .patch(
               `/remediation-projects/${1}/scope/${
                 remediationProjectScopeTable[0].id
-              }`
+              }`,
             )
             .send({
               is_done: true,
             })
-            .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
           expect(response.status).toBe(400)
         })
@@ -975,17 +974,17 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
 
-            (rps) => rps.fk_project_id === remediationProjects[0].id
+            rps => rps.fk_project_id === remediationProjects[0].id,
           )
 
           const response = await request(app)
             .patch(
-              `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`
+              `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`,
             )
             .send({
               is_done: !goodScope?.is_done,
             })
-            .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
           expect(response.status).toBe(204)
         })
@@ -997,8 +996,8 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         // Generate and mock connected user id
         const ownerUser = generateUser({
           firstName: 'xrator-test',
-          lastName: 'xrator-test',
           id: 'i_am_assignee_id',
+          lastName: 'xrator-test',
         })
 
         mockVerifyToken(ownerUser)
@@ -1014,7 +1013,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
             // Mock list of assignees witch includes the tested assignee:
             [
 
-              ...remediationProjectAssignees.map((rpa) => ({
+              ...remediationProjectAssignees.map(rpa => ({
                 fk_user_id: rpa.fk_user_id,
               })),
               { fk_user_id: 'i_am_assignee_id' },
@@ -1027,17 +1026,17 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
 
-            (rps) => rps.fk_project_id === remediationProjects[0].id
+            rps => rps.fk_project_id === remediationProjects[0].id,
           )
 
           const response = await request(app)
             .patch(
-              `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`
+              `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`,
             )
             .send({
               is_done: !goodScope?.is_done,
             })
-            .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
           expect(response.status).toBe(204)
         })
@@ -1067,17 +1066,17 @@ describe('/remediation-projects/:id/status-history', () => {
 
         const response = await request(app)
           .get(`/remediation-projects/${data[0].project_id}/status-history`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
 
-    describe("getting a project's status history", () => {
+    describe('getting a project\'s status history', () => {
       beforeAll(() => {
         mockVerifyToken(generateUser())
       })
 
-      it("should return the project's history", async () => {
+      it('should return the project\'s history', async () => {
         mockKnexWithFinalValues([
           // Mock same company_id as the user
           [1],
@@ -1086,7 +1085,7 @@ describe('/remediation-projects/:id/status-history', () => {
 
         const response = await request(app)
           .get(`/remediation-projects/${data[0].project_id}/status-history`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
 
         expect(response.body).toEqual(data)
@@ -1098,12 +1097,11 @@ describe('/remediation-projects/:id/status-history', () => {
 describe('/projects/priorities', () => {
   describe('GET /', () => {
     it('should return status 200 and list of priorities', async () => {
-
       prismaMock.project_priority.findMany.mockResolvedValue(priorities)
 
       const result = await request(app)
         .get('/projects/priorities')
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .expect('Content-Type', /json/)
 
@@ -1113,12 +1111,11 @@ describe('/projects/priorities', () => {
 
   describe('GET /:id', () => {
     it('should return status 200 and list of priorities', async () => {
-
       prismaMock.project_priority.findUnique.mockResolvedValue(priorities[0])
 
       const result = await request(app)
-        .get('/projects/priorities/' + priorities[0].id)
-        .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+        .get(`/projects/priorities/${priorities[0].id}`)
+        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
         .expect(200)
         .expect('Content-Type', /json/)
 
@@ -1129,12 +1126,12 @@ describe('/projects/priorities', () => {
 
 describe('/posts/remediation-project/:id', () => {
   describe('GET /', () => {
-    const commentsData =
-      commentsRemediationProjectData.remediationProjectComments
+    const commentsData
+      = commentsRemediationProjectData.remediationProjectComments
     describe('without auth token', () => {
       it('should return 401 ', async () => {
         const response = await request(app).get(
-          `/posts/remediation-project/${commentsData[0].project_id}`
+          `/posts/remediation-project/${commentsData[0].project_id}`,
         )
 
         expect(response.status).toBe(401)
@@ -1151,7 +1148,7 @@ describe('/posts/remediation-project/:id', () => {
 
         const response = await request(app)
           .get(`/posts/remediation-project/${commentsData[0].project_id}`)
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
@@ -1165,7 +1162,7 @@ describe('/posts/remediation-project/:id', () => {
         ])
         const response = await request(app)
           .get(`/posts/remediation-project/${commentsData[0].project_id}`)
-          .set('Authorization', `Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
           .expect(200)
           .expect('Content-Type', /json/)
         expect(response.body).toEqual(commentsData)
@@ -1187,7 +1184,7 @@ describe('/posts/remediation-project/:id', () => {
           .send({
             comment: 'A comment that will not be saved',
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
         expect(response.status).toBe(404)
       })
     })
@@ -1207,7 +1204,7 @@ describe('/posts/remediation-project/:id', () => {
           .send({
             comment: 'A comment that will not be saved',
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
           .expect(401)
       })
     })
@@ -1228,7 +1225,7 @@ describe('/posts/remediation-project/:id', () => {
           .send({
             comment: 'A comment that will be saved',
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(201)
         expect(response.body.id).toEqual(1)
@@ -1252,7 +1249,7 @@ describe('/posts/remediation-project/:id', () => {
             comment: 'A comment that will not be saved',
             remediation_project_status_history_id: 1,
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
       })
@@ -1270,9 +1267,9 @@ describe('/posts/remediation-project/:id', () => {
           // Mock status_history_id doesn't match the right remediation project
           projectStatusHistory.filter(
 
-            (psh) =>
-              psh.fk_project_id.toString() === projectId.toString() &&
-              psh.id.toString() === projectStatusHistoryId.toString()
+            psh =>
+              psh.fk_project_id.toString() === projectId.toString()
+              && psh.id.toString() === projectStatusHistoryId.toString(),
           ),
           // Mock returning insert row id
           returningId,
@@ -1283,7 +1280,7 @@ describe('/posts/remediation-project/:id', () => {
             comment: 'A comment that will be saved',
             remediation_project_status_history_id: projectStatusHistoryId,
           })
-          .set('Authorization', `Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda`)
+          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(201)
         expect(response.body.id).toEqual(1)

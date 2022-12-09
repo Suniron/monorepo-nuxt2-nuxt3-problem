@@ -1,5 +1,3 @@
-
-
 import { knex } from '../common/db'
 
 import { NOT_FOUND } from '../common/constants'
@@ -13,7 +11,7 @@ import { NOT_FOUND } from '../common/constants'
  */
 export const isOwnerOfRemediationProject = async (
   remediationProjectId: any,
-  userId: any
+  userId: any,
 ) => {
   // Check if owner:
   if (
@@ -21,11 +19,11 @@ export const isOwnerOfRemediationProject = async (
       await knex
         .select('*')
         .from('remediation_project')
-        .where({ id: remediationProjectId, fk_owner: userId })
+        .where({ fk_owner: userId, id: remediationProjectId })
     ).length
-  ) {
+  )
     return true
-  }
+
   return false
 }
 
@@ -38,7 +36,7 @@ export const isOwnerOfRemediationProject = async (
  */
 export const isAssigneeOfRemediationProject = async (
   remediationProjectId: any,
-  userId: any
+  userId: any,
 ) => {
   // Check if in assignees:
   const assigneeIds = (
@@ -48,9 +46,9 @@ export const isAssigneeOfRemediationProject = async (
       .where('fk_project_id', remediationProjectId)
   ).map((result: any) => result.fk_user_id)
 
-  if (assigneeIds.includes(userId)) {
+  if (assigneeIds.includes(userId))
     return true
-  }
+
   return false
 }
 
@@ -63,15 +61,15 @@ export const isAssigneeOfRemediationProject = async (
  */
 export const isOwnerOrAssigneeOfRemediationProject = async (
   remediationProjectId: any,
-  userId: any
+  userId: any,
 ) => {
   // Check if owner or assignee:
   if (
-    (await isOwnerOfRemediationProject(remediationProjectId, userId)) ||
-    (await isAssigneeOfRemediationProject(remediationProjectId, userId))
-  ) {
+    (await isOwnerOfRemediationProject(remediationProjectId, userId))
+    || (await isAssigneeOfRemediationProject(remediationProjectId, userId))
+  )
     return true
-  }
+
   return false
 }
 
@@ -84,13 +82,13 @@ export const isOwnerOrAssigneeOfRemediationProject = async (
  */
 export const isScopeOfRemediationProject = async (
   remediationProjectId: any,
-  projectScopeId: any
+  projectScopeId: any,
 ) => {
   return !!(
     await knex
       .select('*')
       .from('public.remediation_project_scope')
-      .where({ id: projectScopeId, fk_project_id: remediationProjectId })
+      .where({ fk_project_id: remediationProjectId, id: projectScopeId })
   ).length
 }
 
@@ -119,7 +117,7 @@ export const getRemediationProjectCompanyId = async (remediationProjectId: any) 
  */
 export const checkRemediationProjectExistsOrIsAuthorised = async (
   remediationProjectId: any,
-  companyId: any
+  companyId: any,
 ) => {
   const [projectCompanyId] = await knex
     .select('fk_company_id')

@@ -1,5 +1,3 @@
-
-
 import { throwHTTPError } from '../../common/errors/index.js'
 
 import { getAvailableTransitionsModel } from '../../models/project-statuses'
@@ -17,10 +15,12 @@ export const getAvailableTransitionsController = async (req: any, res: any, next
       ...(req.query || {}),
     })
 
-    if ('error' in results) throwHTTPError(results.error)
+    if ('error' in results)
+      throwHTTPError(results.error)
 
     res.send(results)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

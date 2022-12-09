@@ -1,6 +1,6 @@
 import 'module-alias/register'
-import env from './config/env'
 import _knex from 'knex'
+import env from './config/env'
 
 async function waitForDatabase(connectionsCount = 1) {
   return new Promise((resolve) => {
@@ -16,7 +16,8 @@ async function waitForDatabase(connectionsCount = 1) {
           // Connection successful, and no needed tretries, we end the DB connection, and stop the script
           connection.destroy()
           process.exit()
-        } else {
+        }
+        else {
           // If we need to try to connect again, wait one second, remove the existing connection and retry
           setTimeout(async () => {
             connection.destroy()

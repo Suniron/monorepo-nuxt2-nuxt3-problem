@@ -1,4 +1,3 @@
-
 import _ from 'lodash'
 
 /**
@@ -37,26 +36,26 @@ export const computeComplianceStatistics = (compliances: any) => {
     let maturity = 0
     if (section.status !== null) {
       completion = 1
-      if (section.residual_risk === 'Critical') {
+      if (section.residual_risk === 'Critical')
         maturity = 1
-      } else if (section.residual_risk === 'High') {
+      else if (section.residual_risk === 'High')
         maturity = 2
-      } else if (section.residual_risk === 'Medium') {
+      else if (section.residual_risk === 'Medium')
         maturity = 3
-      } else if (section.residual_risk === 'Low') {
+      else if (section.residual_risk === 'Low')
         maturity = 4
-      } else if (section.residual_risk === 'Ok') {
+      else if (section.residual_risk === 'Ok')
         maturity = 5
-      }
     }
-    let i = results.findIndex(
+    const i = results.findIndex(
 
-      (chapter) => chapter.chapter_small === section.chapter_small
+      chapter => chapter.chapter_small === section.chapter_small,
     )
     if (i > -1) {
       results[i].completion.push(completion)
       results[i].maturity.push(maturity)
-    } else {
+    }
+    else {
       results.push({
         chapter: section.chapter,
         chapter_small: section.chapter_small,
@@ -67,13 +66,13 @@ export const computeComplianceStatistics = (compliances: any) => {
   })
 
   return results.map((chapter) => {
-    chapter.completion =
-      Math.round(
-        (_.sum(chapter.completion) / chapter.completion.length) * 100
+    chapter.completion
+      = Math.round(
+        (_.sum(chapter.completion) / chapter.completion.length) * 100,
       ) / 10
-    chapter.maturity =
-      Math.round(
-        (_.sum(chapter.maturity) / (chapter.maturity.length * 5)) * 100
+    chapter.maturity
+      = Math.round(
+        (_.sum(chapter.maturity) / (chapter.maturity.length * 5)) * 100,
       ) / 10
     return chapter
   })
