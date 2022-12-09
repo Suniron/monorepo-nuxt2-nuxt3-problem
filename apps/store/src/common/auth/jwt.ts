@@ -1,7 +1,5 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
-import env from '@/config/env'
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
+import env from '../../config/env'
+
 import jwt from 'jsonwebtoken'
 import { UNAUTHORIZED } from '../constants'
 

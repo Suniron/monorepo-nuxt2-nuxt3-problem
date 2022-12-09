@@ -1,6 +1,5 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
-import env from '@/config/env'
+
+import env from '../../config/env'
 /**
  * @typedef {{errorType?: string, message?: string}} ErrorParam
  */

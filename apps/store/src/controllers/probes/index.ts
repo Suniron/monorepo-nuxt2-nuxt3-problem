@@ -1,7 +1,7 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/models/probes' or its corres... Remove this comment to see the full error message
-import { searchProbesModel, updateProbeModel } from '@/models/probes'
+
+import { throwHTTPError } from '../../common/errors'
+
+import { searchProbesModel, updateProbeModel } from '../../models/probes'
 
 export const searchProbesController = async (req: any, res: any, next: any) => {
   try {

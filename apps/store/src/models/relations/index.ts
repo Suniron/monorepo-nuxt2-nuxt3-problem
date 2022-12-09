@@ -1,19 +1,19 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+
+import { knex } from '../../../src/common/db'
+
+import prismaClient from '../../../src/prismaClient'
 import {
   MODEL_ERROR,
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
+
+} from '../../../src/common/constants'
 
 export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { from_asset_id, to_asset_id, type, replace = false } = params
     const assets = [].concat(from_asset_id).concat(to_asset_id)
@@ -81,7 +81,7 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
  */
 export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
 
     const relationsToInsert = params.filter(

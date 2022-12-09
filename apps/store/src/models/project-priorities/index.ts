@@ -1,8 +1,8 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+
+import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '../../../src/common/constants'
+
+import prismaClient from '../../../src/prismaClient'
 
 /**
  * @typedef {import('@/types/projectPriority').ProjectPriority} ProjectPriority

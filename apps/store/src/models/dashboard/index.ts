@@ -1,12 +1,12 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, SUCCESS } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+
+import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
+
+import { knex } from '../../../src/common/db'
+
+import { log } from '../../../src/lib/logger'
+
+import prismaClient from '../../../src/prismaClient'
 
 /* Chart Queries */
 
@@ -403,7 +403,7 @@ const fetchScanHistory = async (params: any) => {
 
 export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, id } = loggedUserInfo
 
     const projects = await prismaClient.v_remediation_project_summary_list.findMany(
@@ -505,9 +505,9 @@ const chartQueries = {
 const fetchSingleChartData = async (params: any, loggedUserInfo: any) => {
   const { cid } = params
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
   if (!chartQueries[cid]) throw new Error(`Invalid chart id: "${cid}"`)
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
   return await chartQueries[cid](params, loggedUserInfo)
 }
 
@@ -524,7 +524,7 @@ const fetchMultipleChartsData = async (params: any, loggedUserInfo: any) => {
     const chartIds = charts.split(',')
     allChartsDataArr = await Promise.all(
       chartIds
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
         .map((id: any) => chartQueries[id]?.(params))
         .filter((query: any) => !!query)
     )
@@ -553,7 +553,7 @@ const fetchMultipleChartsData = async (params: any, loggedUserInfo: any) => {
  */
 export const chartsDataModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, groups, roles } = loggedUserInfo
     const { cid } = params
     const chartParams = {
@@ -654,7 +654,7 @@ export const updateDashboardUserModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
+
     const { id } = loggedUserInfo
     const {
       x = null,

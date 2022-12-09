@@ -1,4 +1,4 @@
-// @ts-check
+
 import { HTTPError } from '../errors/http'
 
 /**

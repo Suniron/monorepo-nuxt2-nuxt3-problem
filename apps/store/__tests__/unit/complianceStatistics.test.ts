@@ -1,7 +1,7 @@
-// @ts-check
 
-// @ts-expect-error TS(2307): Cannot find module '@/utils/compliance.utils' or i... Remove this comment to see the full error message
-import { computeComplianceStatistics } from '@/utils/compliance.utils'
+
+
+import { computeComplianceStatistics } from '../../src/utils/compliance.utils'
 import compliances from '../example-values/compliances'
 
 const expected_statistics = [

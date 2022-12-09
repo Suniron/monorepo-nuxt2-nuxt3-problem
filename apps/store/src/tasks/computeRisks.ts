@@ -1,11 +1,11 @@
-// @ts-check
+
 import 'module-alias/register'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/RiskScoreComputing' or... Remove this comment to see the full error message
-import { riskScoreComputing } from '@/utils/RiskScoreComputing'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
+
+import { riskScoreComputing } from '../utils/RiskScoreComputing'
+
+import prismaClient from '../prismaClient'
+
+import { log } from '../lib/logger'
 
 async function calculateCompanyRisk(companyId: any) {
   const startDate = new Date()

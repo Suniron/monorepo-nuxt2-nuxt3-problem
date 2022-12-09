@@ -1,8 +1,8 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/models/file' or its correspo... Remove this comment to see the full error message
-import { uploadFilesModel, downloadFile } from '@/models/file'
+
+
+import { throwHTTPError } from '../../common/errors'
+
+import { uploadFilesModel, downloadFile } from '../../models/file'
 
 /**
  *

@@ -1,4 +1,4 @@
-// @ts-check
+
 import _ from 'lodash'
 
 /**
@@ -50,7 +50,7 @@ export const computeComplianceStatistics = (compliances: any) => {
       }
     }
     let i = results.findIndex(
-      // @ts-expect-error TS(7006): Parameter 'chapter' implicitly has an 'any' type.
+
       (chapter) => chapter.chapter_small === section.chapter_small
     )
     if (i > -1) {
@@ -65,7 +65,7 @@ export const computeComplianceStatistics = (compliances: any) => {
       })
     }
   })
-  // @ts-expect-error TS(7006): Parameter 'chapter' implicitly has an 'any' type.
+
   return results.map((chapter) => {
     chapter.completion =
       Math.round(

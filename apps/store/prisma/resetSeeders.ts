@@ -1,4 +1,4 @@
-// @ts-check
+
 import { runSeeders } from './startSeed'
 import { resetDatabase } from './truncateAllDatabase'
 

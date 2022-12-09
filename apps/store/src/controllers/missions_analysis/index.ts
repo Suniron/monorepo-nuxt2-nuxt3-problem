@@ -1,11 +1,11 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   searchMissionAnalysis,
   searchBusinessImpact,
   updateBusinessImpactIntoUnitModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/missions_analysis' or... Remove this comment to see the full error message
-} from '@/models/missions_analysis'
+
+} from '../../models/missions_analysis'
 
 export const searchMissionAnalysisController = async (req: any, res: any, next: any) => {
   try {

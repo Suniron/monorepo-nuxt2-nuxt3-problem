@@ -1,11 +1,11 @@
-// @ts-check
+
 /**
  * @typedef {import('express').Response} Response
  * @typedef {import('express').Request} Request
  * @typedef {import('express').NextFunction} NextFunction
  */
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors/index.js' or i... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors/index.js'
+
+import { throwHTTPError } from '../../common/errors/index.js'
 import { updateFearedEventsModel } from '../../models/fearedEvents'
 
 /**
@@ -19,7 +19,7 @@ export const updateFearedEventsController = async (req: any, res: any, next: any
     const results = await updateFearedEventsModel(
       req.params?.id,
       req.body,
-      // @ts-expect-error TS(2554): Expected 2 arguments, but got 3.
+
       req.user
     )
 

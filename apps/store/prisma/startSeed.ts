@@ -1,4 +1,4 @@
-// @ts-check
+
 import knex from 'knex'
 
 /**

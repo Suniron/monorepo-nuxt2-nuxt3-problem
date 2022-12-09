@@ -1,13 +1,13 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, SUCCESS } from '@/common/constants'
+
+
+import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 import { format } from 'date-fns'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
-import { getUserGroupIds } from '@/utils/user.utils'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
+
+import prismaClient from '../../../src/prismaClient'
+
+import { getUserGroupIds } from '../../../src/utils/user.utils'
+
+import { log } from '../../../src/lib/logger'
 
 /**
  * Returns scans
@@ -24,7 +24,7 @@ export const searchScansModel = async (
   params: any,
   loggedUserInfo = {}
 ) => {
-  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
   const { companyId } = loggedUserInfo
   const { pageSize, page } = params
   try {
@@ -153,7 +153,7 @@ export const searchScansModel = async (
  */
 export const getScanModel = async (provider: any, params: any, loggedUserInfo = {}) => {
   const { knex } = provider
-  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
   const { companyId } = loggedUserInfo
   const { scanId } = params
   try {
@@ -178,14 +178,14 @@ export const getScanModel = async (provider: any, params: any, loggedUserInfo = 
  */
 export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, id: userId } = loggedUserInfo
     const userGroups = await getUserGroupIds(userId)
     const ipsRequest = prismaClient.asset_server.findMany({
       where: {
         asset: {
           company_id: companyId,
-          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
+
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -221,7 +221,7 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
       where: {
         asset: {
           company_id: companyId,
-          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
+
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -248,7 +248,7 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
       where: {
         asset: {
           company_id: companyId,
-          // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
+
           AND: loggedUserInfo.roles.includes('admin')
             ? {}
             : {
@@ -490,7 +490,7 @@ export const createScanModel = async (
         probe_type: 'SERVER',
       },
     })
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const SCHEDULED_STATUS = status || 'New'
     const scanIds = []
@@ -504,14 +504,14 @@ export const createScanModel = async (
     To fix it, we had to rebuild an actual date, which is converted by Prisma afterward.
     */
     const fullStartTime = startTime
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
+
       ? new Date(parsedStartDate.setHours(...startTime.split(':')))
       : null
     // We always have a startDate, so we just check if we've got a start time and build the dataTime
 
     const fullEndTime = endTime // if we dont get a endDate, we will put endTime to null by default.
       ? new Date(
-          // @ts-expect-error TS(2531): Object is possibly 'null'.
+
           parsedStartDate.setHours(...endTime.split(':'))
         ) /* the new Date is just about building the request, so it should be based on a sure value
       it will only register in dataBase the hour, the date doesn't really matters. */

@@ -1,18 +1,15 @@
-// @ts-check
 /* eslint-disable no-import-assign */
 /* eslint-disable no-async-promise-executor */
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { UNAUTHORIZED } from '@/common/constants'
+// @ts-nocheck
+import { UNAUTHORIZED } from '../src/common/constants'
 import Knex from 'knex'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import * as knex from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
-import * as jwt from '@/common/auth/jwt'
+import * as knex from '../src/common/db'
+import * as jwt from '../src/common/auth/jwt'
 import { getAdminUser, getNonAdminUser } from './utils'
 
-jest.mock('@/common/auth/jwt')
+jest.mock('../src/common/auth/jwt')
 jest.mock('knex')
-jest.mock('@/common/db')
+jest.mock('../src/common/db')
 
 const knexFunctions = [
   'with',
@@ -110,7 +107,7 @@ const knexFunctions = [
 ]
 
 export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
-  // @ts-expect-error TS(7022): 'knexMock' implicitly has type 'any' because it do... Remove this comment to see the full error message
+
   const knexMock = jest.fn(() => {
     return knexMock
   })
@@ -137,8 +134,7 @@ export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-  // @ts-expect-error TS(2339): Property 'mockReturnValue' does not exist on type ... Remove this comment to see the full error message
-  Knex.mockReturnValue(mKnex)
+  knex.mockReturnValue(mKnex)
   knex.knex = knexMock
 
   return knexMock
@@ -152,7 +148,7 @@ export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
  */
 export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) {
   let returnCount = 0
-  // @ts-expect-error TS(7022): 'knexMock' implicitly has type 'any' because it do... Remove this comment to see the full error message
+
   const knexMock = jest.fn(() => {
     return knexMock
   })
@@ -185,7 +181,7 @@ export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) 
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-  // @ts-expect-error TS(2339): Property 'mockReturnValue' does not exist on type ... Remove this comment to see the full error message
+
   Knex.mockReturnValue(mKnex)
   knex.knex = knexMock
 
@@ -205,13 +201,13 @@ export function mockVerifyToken(user: any) {
 /**
  * Mock admin user token
  *
- * @param {import('@/types/user').OptionnalUserInfos?} userInfos
+ * @param {import('../src/types/user').OptionnalUserInfos?} userInfos
  */
 export const mockAdminUser = (userInfos: any) => mockVerifyToken(getAdminUser(userInfos))
 
 /**
  * Mock non admin user token
  *
- * @param {import('@/types/user').OptionnalUserInfos?} userInfos
+ * @param {import('../src/types/user').OptionnalUserInfos?} userInfos
  */
 export const mockNonAdminUser = (userInfos: any) => mockVerifyToken(getNonAdminUser(userInfos))

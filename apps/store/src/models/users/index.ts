@@ -1,4 +1,4 @@
-// @ts-check
+
 import {
   DUPLICATE,
   FORBIDDEN,
@@ -6,10 +6,10 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+} from '../../../src/common/constants'
+
+import prismaClient from '../../../src/prismaClient'
 
 /**
  *
@@ -115,7 +115,7 @@ export const createUser = async (provider: any, params: any, loggedUserInfo = {}
       email,
       roles = ['member'],
     } = params
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, roles: loggedUserRoles } = loggedUserInfo
 
     if (
@@ -166,7 +166,7 @@ export const createUser = async (provider: any, params: any, loggedUserInfo = {}
   } catch (error) {
     logger.error(error)
 
-    // @ts-expect-error TS(2339): Property 'constraint' does not exist on type 'unkn... Remove this comment to see the full error message
+
     const { constraint } = error
     if (constraint === 'user_email_key') return { error: DUPLICATE.MAIL }
 
@@ -287,7 +287,7 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
 export const deleteUserModel = async (provider: any, id: any, loggedUserInfo = {}) => {
   const { knex, logger } = provider
   try {
-    // @ts-expect-error TS(2339): Property 'roles' does not exist on type '{}'.
+
     if (loggedUserInfo.roles.includes('admin')) {
       await knex('user').where('id', id).delete()
       return { status: SUCCESS }

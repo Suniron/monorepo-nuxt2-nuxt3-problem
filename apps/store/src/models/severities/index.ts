@@ -1,8 +1,8 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '@/common/constants'
+
+
+import { knex } from '../../../src/common/db'
+
+import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '../../../src/common/constants'
 
 /**
  * @typedef {import('@/types/severity').Severity} Severity

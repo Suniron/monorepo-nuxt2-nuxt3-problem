@@ -8,8 +8,9 @@
     "dev": "NODE_ENV=development tsup --onSuccess \"node --inspect=0.0.0.0:9228 dist/src/app.js\"",
     "dev:docker": "pnpm install --frozen-lockfile && pnpm dev",
     "build": "tsup",
+    "typecheck": "tsc --noEmit",
     "start": "node ./dist/src/app.js",
-    "test": "NODE_ENV=test JWT_REFRESH_LIFE_MS=123456789 jest -i",
+    "test": "NODE_ENV=test JWT_REFRESH_LIFE_MS=123456789 jest -i --passWithNoTests",
     "lint": "eslint --ext .js . ",
     "lint:fix": "eslint --fix --ext .js . ",
     "db:truncate": "babel-node prisma/truncateAllDatabase.js",
@@ -23,9 +24,6 @@
     "postinstall": "prisma generate",
     "seed:reset": "babel-node prisma/resetSeeders.js",
     "compute-risks": "babel-node src/tasks/ComputeRisks.js"
-  },
-  "imports": {
-    "@/*": "./src/*"
   },
   "keywords": [],
   "author": "",
@@ -64,7 +62,12 @@
     "@babel/eslint-parser": "^7.17.0",
     "@babel/node": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
+    "@types/compression": "^1.7.2",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
     "@types/jest": "^29.2.4",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "eslint": "^8.20.0",
@@ -78,11 +81,8 @@
     "tsup": "^6.5.0",
     "typescript": "^4.9.3"
   },
-  "_moduleAliases": {
-    "@": "src"
-  },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "packageManager": "pnpm@7.14.2",
   "jest": {

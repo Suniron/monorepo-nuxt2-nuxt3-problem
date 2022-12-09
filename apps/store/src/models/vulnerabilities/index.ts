@@ -1,20 +1,20 @@
-// @ts-check
+
 import {
   MODEL_ERROR,
   SUCCESS,
   NOT_FOUND,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
-import { getUserGroupIds } from '@/utils/user.utils'
+
+} from '../../../src/common/constants'
+
+import { knex } from '../../../src/common/db'
+
+import { log } from '../../../src/lib/logger'
+
+import prismaClient from '../../../src/prismaClient'
+
+import { getUserGroupIds } from '../../../src/utils/user.utils'
 
 /**
  * @typedef {import('@/types/vulnerability').VulnerabilityWithItsAffectedAssets} VulnerabilityWithItsAffectedAssets
@@ -80,7 +80,7 @@ export const getAssetVulnerabilitiesModel = async (
 ) => {
   try {
     const { type = 'vulnerability' } = params
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
@@ -249,7 +249,7 @@ export const updateStatusModel = async (
     if (!assetId || !vulnId) return { error: VALIDATION_ERROR }
     if (!params || !Object.entries(params).length) return { status: SUCCESS } // nothing to update
 
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { error, status } = await knex.transaction(async (tx: any) => {
       const { updated, comment } = params
@@ -296,7 +296,7 @@ export const addPostAssetVulnerabilityModel = async (
   params: any,
   loggedUserInfo = {}
 ) => {
-  // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
+
   const { id } = loggedUserInfo
   const { comment } = params
 
@@ -324,7 +324,7 @@ export const searchPostAssetVulnerabilityModel = async (
   vulnId: any,
   loggedUserInfo = {}
 ) => {
-  // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
   const { companyId } = loggedUserInfo
 
   const query = knex
@@ -429,7 +429,7 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
     const assetsIds = params.assets_ids?.split(',').map((id: any) => parseInt(id))

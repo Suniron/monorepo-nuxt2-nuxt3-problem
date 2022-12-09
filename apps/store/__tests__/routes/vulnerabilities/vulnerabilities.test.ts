@@ -1,5 +1,5 @@
-// @ts-check
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
+
+
 import request from 'supertest'
 import csv from 'csvtojson'
 import { prismaMock } from '../../mockPrisma'
@@ -65,9 +65,9 @@ beforeAll(async () => {
 export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any) => {
   const { companyId, roles, id: userId } = loggedUserInfo
   const groups = userGroups
-    // @ts-expect-error TS(7006): Parameter 'ug' implicitly has an 'any' type.
+
     .filter((ug) => ug.user_id === userId)
-    // @ts-expect-error TS(7006): Parameter 'ug' implicitly has an 'any' type.
+
     .map((ug) => ug.group_id)
   const assetsIds =
     params.assets_ids?.split(',').map((id: any) => parseInt(id)) || []
@@ -76,12 +76,12 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
   const { vid, search = '', likelihoods = [], severities = [] } = params
   return vulnerabilities
     .filter(
-      // @ts-expect-error TS(7006): Parameter 'vuln' implicitly has an 'any' type.
+
       (vuln) =>
         (vid ? vuln.id.toString() === vid.toString() : true) &&
         (search.length ? vuln.name.includes(search) : true)
     )
-    // @ts-expect-error TS(7006): Parameter 'vuln' implicitly has an 'any' type.
+
     .map((vuln) => {
       return {
         id: vuln.id,
@@ -95,7 +95,7 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
         vulndetect: vuln.vulndetect,
         vulnerability_asset: vulnerabilityAssets
           .filter(
-            // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
+
             (vast) =>
               vast.vulnerability_id === vuln.id &&
               (assetsIds.length ? assetsIds.includes(vast.asset_id) : true) &&
@@ -107,21 +107,21 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
                 ? likelihoods.includes(vast.likelihood)
                 : true)
           )
-          // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
+
           .map((vast) => {
             return {
               id: vast.id,
               cluster_id: vast.cluster_id,
               severity: vast.severity,
               likelihood: vast.likelihood,
-              // @ts-expect-error TS(7006): Parameter 'ast' implicitly has an 'any' type.
+
               asset: assets.find((ast) => {
                 if (!roles.includes('admin')) {
                   return (
                     ast.id === vast.asset_id &&
                     ast.company_id.toString() === companyId.toString() &&
                     groupAssets.find(
-                      // @ts-expect-error TS(7006): Parameter 'grp' implicitly has an 'any' type.
+
                       (grp) =>
                         grp.asset_id === ast.id && groups.includes(grp.group_id)
                     )
@@ -132,16 +132,16 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
                   ast.company_id.toString() === companyId.toString()
                 )
               }),
-              // @ts-expect-error TS(7006): Parameter 'cvss' implicitly has an 'any' type.
+
               cvss: cvss.find((cvss) => cvss.id === vast.cvss_id),
               remediation_project_scope: [],
             }
           })
-          // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
+
           .filter((vast) => vast.asset),
       }
     })
-    // @ts-expect-error TS(7006): Parameter 'vuln' implicitly has an 'any' type.
+
     .filter((vuln) => vuln.vulnerability_asset.length > 0)
 }
 
@@ -162,14 +162,14 @@ describe('/vulnerabilities/assets', () => {
           id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
         }
       )
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
 
       const response = await request(app)
@@ -199,14 +199,14 @@ describe('/vulnerabilities/assets', () => {
           id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
         }
       )
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
 
       const response = await request(app)
@@ -231,14 +231,14 @@ describe('/vulnerabilities/assets', () => {
         roles: ['admin'],
         id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
@@ -267,14 +267,14 @@ describe('/vulnerabilities/assets', () => {
         roles: ['admin'],
         id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
@@ -293,7 +293,7 @@ describe('/vulnerabilities/assets', () => {
         expect(vuln).toMatchObject(expectedVulnerability)
         vuln.affectedAssets.forEach((ast: any) => {
           expect(params.severities).toContain(
-            // @ts-expect-error TS(7006): Parameter 'vast' implicitly has an 'any' type.
+
             vulnerabilityAssets.find((vast) => vast.id === ast.vastId)?.severity
           )
         })
@@ -307,14 +307,14 @@ describe('/vulnerabilities/assets', () => {
         roles: ['admin'],
         id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
@@ -347,9 +347,9 @@ describe('/vulnerabilities/assets', () => {
           id: '2a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc',
         }
       )
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
@@ -371,18 +371,18 @@ describe('/vulnerabilities/assets', () => {
         }
       )
       const groups = userGroups
-        // @ts-expect-error TS(7006): Parameter 'ug' implicitly has an 'any' type.
+
         .filter((ug) => ug.user_id === 'd090ea8b-7957-4ad3-86ec-0959cf0a060b')
-        // @ts-expect-error TS(7006): Parameter 'ug' implicitly has an 'any' type.
+
         .map((ug) => ug.group_id)
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
@@ -401,7 +401,7 @@ describe('/vulnerabilities/assets', () => {
         vuln.affectedAssets.forEach((ast: any) => {
           expect(groups).toContain(
             groupAssets.find(
-              // @ts-expect-error TS(7006): Parameter 'ga' implicitly has an 'any' type.
+
               (ga) => ga.asset_id === ast.id && groups.includes(ga.group_id)
             )?.group_id
           )
@@ -420,14 +420,14 @@ describe('/vulnerabilities/:vid/assets', () => {
         roles: ['admin'],
         id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
@@ -446,14 +446,14 @@ describe('/vulnerabilities/:vid/assets', () => {
         roles: ['admin'],
         id: 'd080ea8b-7957-4ad3-86ec-0959cf0a050b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
@@ -469,9 +469,9 @@ describe('/vulnerabilities/:vid/assets', () => {
         roles: ['member'],
         id: '2a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
@@ -486,14 +486,14 @@ describe('/vulnerabilities/:vid/assets', () => {
         roles: ['member'],
         id: 'd090ea8b-7957-4ad3-86ec-0959cf0a060b',
       })
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.user_group.findMany.mockResolvedValue([
         {
           group_id: 1,
           user_id: 'user id',
         },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)

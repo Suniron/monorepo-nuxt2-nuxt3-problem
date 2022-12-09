@@ -1,7 +1,7 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/models/ips' or its correspon... Remove this comment to see the full error message
-import { deleteIpModel, updateIpModel, createIpModel } from '@/models/ips'
+
+import { throwHTTPError } from '../../common/errors'
+
+import { deleteIpModel, updateIpModel, createIpModel } from '../../models/ips'
 
 export const deleteIpController = async (req: any, res: any, next: any) => {
   try {

@@ -1,15 +1,15 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/compliance.utils' or i... Remove this comment to see the full error message
-import { computeComplianceStatistics } from '@/utils/compliance.utils'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { NOT_FOUND } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
+
+import { knex } from '../../../src/common/db'
+
+import { computeComplianceStatistics } from '../../../src/utils/compliance.utils'
+
+import { NOT_FOUND } from '../../../src/common/constants'
+
+import { log } from '../../../src/lib/logger'
 
 export const fetchCompliance = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { compliance = null } = params
     let compliances = []

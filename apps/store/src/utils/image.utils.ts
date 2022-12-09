@@ -1,4 +1,4 @@
-// @ts-check
+
 
 const BASE64_PREFIX = 'data:image/'
 const BASE64_PNG_PREFIX = 'data:image/png;base64,'
@@ -73,7 +73,7 @@ function getImageMimeType(base64Image: any) {
   const hex = getImageAsHex(base64Image)
 
   for (const mimeType in imageMimeTypes) {
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     const fileHeaders = imageMimeTypes[mimeType]
     const doesTypeMatch = fileHeaders.find((header: any) => {
       return hex.toLowerCase().startsWith(header.toLowerCase())

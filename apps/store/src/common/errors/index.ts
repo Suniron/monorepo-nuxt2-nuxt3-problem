@@ -1,4 +1,4 @@
-// @ts-check
+
 import {
   getBadRequestError,
   getConflictError,
@@ -6,8 +6,8 @@ import {
   getInternalServerError,
   getNotFoundError,
   getUnauthorizedError,
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors/http' or its c... Remove this comment to see the full error message
-} from '@/common/errors/http'
+
+} from '../../common/errors/http'
 import {
   DUPLICATE,
   FORBIDDEN,
@@ -15,8 +15,8 @@ import {
   NOT_FOUND,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
+
+} from '../../common/constants'
 
 /* 400 Errors */
 

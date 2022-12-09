@@ -3,8 +3,8 @@ import {
   deleteIpController,
   updateIpController,
   createIpController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/ips' or its corr... Remove this comment to see the full error message
-} from '@/controllers/ips'
+
+} from '../../controllers/ips'
 
 import { celebrate, Segments, Joi } from 'celebrate'
 

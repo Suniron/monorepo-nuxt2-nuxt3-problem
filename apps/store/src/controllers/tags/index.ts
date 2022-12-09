@@ -1,14 +1,14 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { DUPLICATE } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { DUPLICATE } from '../../common/constants'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   searchTagsModel,
   createTagModel,
   deleteTagModel,
   updateTagModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/tags' or its correspo... Remove this comment to see the full error message
-} from '@/models/tags'
+
+} from '../../models/tags'
 
 export const searchTagsController = async (req: any, res: any, next: any) => {
   try {

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'fs'.
+
 const fs = require('fs')
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'csv'.
+
 const csv = require('csvtojson')
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'path'.
+
 const path = require('path')
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'directory'... Remove this comment to see the full error message
+
 const directory = './seeds/csv_seed_files/init_data/'
 
 const init_data = [

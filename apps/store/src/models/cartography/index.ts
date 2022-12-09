@@ -1,11 +1,11 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, SUCCESS } from '@/common/constants'
+
+import { knex } from '../../../src/common/db'
+
+import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
 export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const cartographies = await knex
       .select({
@@ -27,7 +27,7 @@ export const fetchCartographyElementsModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const elements = await knex
       .select({
@@ -102,7 +102,7 @@ export const updateCartographyModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { name = null } = params
     await knex.transaction(async (tx: any) => {
@@ -121,7 +121,7 @@ export const updateCartographyModel = async (
 
 export const createCartographyModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { name = null } = params
     const cyId = await knex.transaction(async (tx: any) => {
@@ -140,7 +140,7 @@ export const createCartographyModel = async (params: any, loggedUserInfo = {}) =
 
 export const deleteCartographyModel = async (id: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     await knex('cartography').where({ id: id, company_id: companyId }).delete()
     await knex('cartography_element').where('cartography_id', id).delete()
@@ -169,7 +169,7 @@ export const addCartographyElementModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const {
       asset_id = null,

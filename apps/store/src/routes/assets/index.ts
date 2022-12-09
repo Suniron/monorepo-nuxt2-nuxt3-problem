@@ -1,4 +1,4 @@
-// @ts-check
+
 
 import express from 'express'
 import {
@@ -15,8 +15,8 @@ import {
   createAssetVulnerabilityController,
   searchAssetsBelongingController,
   getAssetRiskController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/assets' or its c... Remove this comment to see the full error message
-} from '@/controllers/assets'
+
+} from '../../controllers/assets'
 import {
   assetVulnerabilitiesController,
   updateStatusController,
@@ -24,8 +24,8 @@ import {
   searchPostAssetVulnerabilityController,
   updateVulnerabilitiesAssetController,
   deleteVulnerabilitiesAssetController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/vulnerabilities'... Remove this comment to see the full error message
-} from '@/controllers/vulnerabilities'
+
+} from '../../controllers/vulnerabilities'
 import { celebrate, Segments, Joi, errors } from 'celebrate'
 
 // Validations

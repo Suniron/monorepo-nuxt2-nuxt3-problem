@@ -8,8 +8,8 @@ import {
   addCartographyElementController,
   updateCartographyElementController,
   deleteCartographyElementController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/cartography' or ... Remove this comment to see the full error message
-} from '@/controllers/cartography'
+
+} from '../../controllers/cartography'
 
 const router = express.Router()
 

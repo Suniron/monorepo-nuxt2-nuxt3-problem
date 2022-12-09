@@ -1,4 +1,4 @@
-// @ts-check
+
 import { TextEncoder } from 'util'
 global.TextEncoder = TextEncoder
 

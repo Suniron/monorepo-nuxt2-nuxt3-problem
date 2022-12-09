@@ -1,21 +1,17 @@
-// @ts-check
+
 import pino from 'pino'
 import { LogLayer, LoggerType } from 'loglayer'
 import PinoPretty from 'pino-pretty'
+import pinosEs from 'pino-elasticsearch'
 import {
-  appVersion,
   ELASTICSEARCH_URL,
   INSTANCE_NAME,
+  appVersion,
   isProd,
-// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
-} from '@/config/env'
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'pino... Remove this comment to see the full error message
-import pinosEs from 'pino-elasticsearch'
+} from '../../src/config/env'
 
-/**
- * @type {(pino.DestinationStream | pino.StreamEntry)[]}
- */
-const streams = [
+
+const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
   {
     level: 'trace',
     stream: PinoPretty({
@@ -29,8 +25,8 @@ if (process.env.NODE_ENV !== 'test' && ELASTICSEARCH_URL) {
   streams.push({
     level: 'trace',
     stream: pinosEs({
-      node: ELASTICSEARCH_URL,
       index: isProd ? 'operator' : 'dev-operator', // Index is needed to sort logs
+      node: ELASTICSEARCH_URL,
     }),
   })
 }
@@ -49,7 +45,6 @@ const p = pino(
       'req.headers.cookie',
     ],
   },
-  // @ts-expect-error TS(2345): Argument of type '{ level: string; stream: PrettyS... Remove this comment to see the full error message
   pino.multistream(streams)
 )
 

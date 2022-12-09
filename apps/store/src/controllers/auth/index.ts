@@ -1,23 +1,19 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError, throwUnauthorizedError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { UNAUTHORIZED } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/passwords' or it... Remove this comment to see the full error message
-import { passwordsMatch } from '@/common/auth/passwords'
+import env from '../../config/env'
+import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
 
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/sha512' or its c... Remove this comment to see the full error message
-import { hashSync, genSaltSync } from '@/common/auth/sha512'
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/passwords' or it... Remove this comment to see the full error message
-import { createPasswordHash } from '@/common/auth/passwords'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
-import { generateJWTToken, verifyToken, TOKEN_TYPE } from '@/common/auth/jwt'
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
+import { UNAUTHORIZED } from '../../common/constants'
+
+import { passwordsMatch, createPasswordHash } from '../../common/auth/passwords'
+
+
+import { hashSync, genSaltSync } from '../../common/auth/sha512'
+
+
+import { knex } from '../../common/db'
+
+import { generateJWTToken, verifyToken, TOKEN_TYPE } from '../../common/auth/jwt'
+
 import jwt from 'jsonwebtoken'
-// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
-import env from '@/config/env'
 import {
   loginModel,
   getTokenSessionModel,
@@ -27,8 +23,8 @@ import {
   updateResetPasswordUsingToken,
   isValidSessionRefreshToken,
   refreshAccessToken,
-// @ts-expect-error TS(2307): Cannot find module '@/models/auth' or its correspo... Remove this comment to see the full error message
-} from '@/models/auth'
+
+} from '../../models/auth'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
 

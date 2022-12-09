@@ -1,5 +1,5 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   getAssetVulnerabilitiesModel,
   updateStatusModel,
@@ -10,8 +10,8 @@ import {
   createVulnerabilityModel,
   UpdateVulnerabilitiesModel,
   DeleteVulnerabilitiesModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
-} from '@/models/vulnerabilities'
+
+} from '../../models/vulnerabilities'
 
 export const assetVulnerabilitiesController = async (req: any, res: any, next: any) => {
   try {

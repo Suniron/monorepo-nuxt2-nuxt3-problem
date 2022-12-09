@@ -1,7 +1,4 @@
-// @ts-check
-
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
+import { log } from '../lib/logger'
 
 /**
  * @param {Number | null} score

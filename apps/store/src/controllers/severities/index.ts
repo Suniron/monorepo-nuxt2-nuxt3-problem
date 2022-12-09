@@ -1,8 +1,8 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors/index.js' or i... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors/index.js'
-// @ts-expect-error TS(2307): Cannot find module '@/models/severities' or its co... Remove this comment to see the full error message
-import { searchSeveritiesModel } from '@/models/severities'
+
+
+import { throwHTTPError } from '../../common/errors/index.js'
+
+import { searchSeveritiesModel } from '../../models/severities'
 
 /**
  * @typedef {import('express').Response} Response

@@ -1,4 +1,4 @@
-// @ts-check
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 // This rule is mandatory to avoid some mistakes about unused variables
@@ -6,8 +6,8 @@ import {
   HTTPError,
   getInternalServerError,
   getBadRequestError,
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors/http' or its c... Remove this comment to see the full error message
-} from '@/common/errors/http'
+
+} from '../../src/common/errors/http'
 import { isCelebrateError } from 'celebrate'
 
 /**

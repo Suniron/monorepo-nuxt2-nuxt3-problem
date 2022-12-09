@@ -1,20 +1,19 @@
-// @ts-check
+
 import { prismaMock } from '../mockPrisma'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, NOT_FOUND } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/models/file' or its correspo... Remove this comment to see the full error message
-import { downloadFile } from '@/models/file'
+import { MODEL_ERROR, NOT_FOUND } from '../../src/common/constants'
+
+import { downloadFile } from '../../src/models/file'
 
 describe('downloadFile', () => {
   it('should return a model error if Prisma crash', async () => {
-    // @ts-expect-error TS(2339): Property 'mockRejectedValue' does not exist on typ... Remove this comment to see the full error message
+
     prismaMock.store.findFirst.mockRejectedValue(new Error('Prisma error'))
 
     expect((await downloadFile(123, 'goodStoreId'))?.error).toBe(MODEL_ERROR)
   })
 
   it('should return not found error if file not exist for this file id + company id', async () => {
-    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
     prismaMock.store.findFirst.mockResolvedValue(null)
 
     expect((await downloadFile(123, 'goodStoreId'))?.error).toBe(NOT_FOUND)
@@ -29,7 +28,7 @@ describe('downloadFile', () => {
       type: 'application/pdf',
     }
 
-    // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
     prismaMock.store.findFirst.mockResolvedValue(fileInfo)
 
     expect((await downloadFile(123, 'goodStoreId'))?.data).toStrictEqual(

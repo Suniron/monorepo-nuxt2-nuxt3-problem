@@ -1,7 +1,7 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '__tests__/mockPrisma' or its c... Remove this comment to see the full error message
-import { prismaMock } from '__tests__/mockPrisma'
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
+
+
+import { prismaMock } from '../../mockPrisma'
+
 import request from 'supertest'
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'

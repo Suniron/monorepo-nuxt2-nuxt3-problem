@@ -1,9 +1,16 @@
 /* eslint-disable no-unsafe-optional-chaining */
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+
+import { knex } from '../../common/db'
+
+import prismaClient from '../../prismaClient'
+import {
+  MODEL_ERROR,
+  NOT_FOUND,
+  VALIDATION_ERROR,
+  SUCCESS,
+
+} from '../../common/constants'
 import { searchIpModel, createIpModel, updateOrCreateIpModel } from './ip'
 import { searchUriModel, createUriModel } from './uri'
 import { createCpeModel, updateOrCreateCpeModel } from './cpe'
@@ -15,24 +22,17 @@ import {
 import { createCipherModel } from './cipher'
 import { createCvssModel, updateCvssModel } from './cvss'
 import {
-  MODEL_ERROR,
-  NOT_FOUND,
-  VALIDATION_ERROR,
-  SUCCESS,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
-import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
   updateStatusModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
-} from '@/models/vulnerabilities'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/user.utils' or its cor... Remove this comment to see the full error message
-import { getUserGroupIds } from '@/utils/user.utils'
-// @ts-expect-error TS(2307): Cannot find module '@/utils/assets' or its corresp... Remove this comment to see the full error message
-import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '@/utils/assets'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
+
+} from '../../models/vulnerabilities'
+
+import { getUserGroupIds } from '../../utils/user.utils'
+
+import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '../../utils/assets'
+
+import { log } from '../../lib/logger'
 
 /**
  * Returns a list of assets. If an ID is given, returns a single asset object instead.
@@ -50,7 +50,7 @@ import { log } from '@/lib/logger'
  */
 export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
     const query = knex
@@ -346,7 +346,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
         }
         query.andWhere((builder: any) => {
           arrSeverities.forEach((sev: any) => {
-            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
             if (SEVERITIES[sev]) {
               builder.orWhere(`agg_sev.${sev}`, '>', 0)
             }
@@ -508,7 +508,7 @@ export const searchAssetsBelongingModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, roles, id: userId } = loggedUserInfo
     const { parents_ids: parentsIds, children_ids: childrenIds } = params
     const groups = await getUserGroupIds(userId)
@@ -571,9 +571,9 @@ export const searchAssetsBelongingModel = async (
         child_type,
       } = relation
 
-      // @ts-expect-error TS(7006): Parameter 'p' implicitly has an 'any' type.
+
       const parent = formattedResults.find((p) => p.id === parent_id)
-      // @ts-expect-error TS(7006): Parameter 'c' implicitly has an 'any' type.
+
       const child = formattedResults.find((c) => c.id === child_id)
 
       if (!parent) {
@@ -622,7 +622,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
     const createdAssetId = await knex.transaction(async (tx: any) => {
       const { name: inputName, type, assetData = {} } = params
       let name = inputName
-      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
       const { companyId, userId } = loggedUserInfo
 
       // Resolving homonyms (appending / increasing a number at the end of the name)
@@ -703,7 +703,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             to_asset_id: assetId,
           })
           .returning('id')
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
         addedRelations.children[child.id] = relationId
       }
 
@@ -715,7 +715,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             to_asset_id: parent.id,
           })
           .returning('id')
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
         addedRelations.parents[parent.id] = relationId
       }
 
@@ -728,7 +728,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             .select('id')
             .from('feared_event')
           for (const mission of parentsMissions) {
-            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
             const missionUnitRelationId = addedRelations.parents[mission.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -756,7 +756,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             .select('id')
             .from('feared_event')
           for (const unit of childrenUnits) {
-            // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
             const missionUnitRelationId = addedRelations.children[unit.id]
             for (const fearedEvent of listOfFearedEvents) {
               await tx('business_mission_unit_has_feared_event').insert({
@@ -884,7 +884,7 @@ export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
   try {
     if (!id) return { error: VALIDATION_ERROR }
 
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const [assetToDelete] = await knex.select().from({ ast: 'asset' }).where({
       'ast.id': id,
@@ -921,7 +921,7 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
     const { error, status } = await knex.transaction(async (tx: any) => {
       const { name, assetData = {}, tagIds, groupIds, x, y } = params
       // Verify if asset exist
-      // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
       const { companyId } = loggedUserInfo
       const [assetExist] = await tx
         .select()
@@ -1010,7 +1010,7 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
               to_asset_id: id,
             })
             .returning('id')
-          // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
+
           newRelationIds.children.push(relationId)
         })
       )
@@ -1037,7 +1037,7 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
               to_asset_id: parentId,
             })
             .returning('id')
-          // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
+
           newRelationIds.parents.push(relationId)
         })
       )
@@ -1406,7 +1406,7 @@ export const searchAssetRevisions = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const query = knex
       .select({
@@ -1505,7 +1505,7 @@ export const searchAssetVulnerabilityModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { ipId, portId, uriId } = params
 
@@ -1603,7 +1603,7 @@ export const updateAssetVulnerabilityModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
 
     const [astVulnToUpdate] = await knex
@@ -1677,7 +1677,7 @@ export const updateAssetVulnerabilityModel = async (
 
 export const fetchAssetPortsModel = async (assetId: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const res = []
     const ips = await searchIpModel(knex, undefined, companyId, false, assetId)
@@ -1724,7 +1724,7 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
 
 export const createUrisModel = async (assetId: any, params: any, loggedUserInfo = {}) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId } = loggedUserInfo
     const { address } = params
     const uri_id = await knex.transaction(async (tx: any) => {

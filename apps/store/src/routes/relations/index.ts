@@ -6,8 +6,8 @@ import {
   updateRelationController,
   deleteRelationController,
   deleteRelationByAssetsIdsController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/relations' or it... Remove this comment to see the full error message
-} from '@/controllers/relations'
+
+} from '../../controllers/relations'
 
 const router = express.Router()
 

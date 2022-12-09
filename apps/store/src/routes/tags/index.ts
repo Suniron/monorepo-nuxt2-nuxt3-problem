@@ -4,8 +4,8 @@ import {
   createTagController,
   updateTagController,
   deleteTagController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/tags' or its cor... Remove this comment to see the full error message
-} from '@/controllers/tags'
+
+} from '../../controllers/tags'
 
 const router = express.Router()
 

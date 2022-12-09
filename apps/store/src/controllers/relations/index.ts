@@ -1,14 +1,14 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+
+import { throwHTTPError } from '../../common/errors'
 import {
   createRelationModel,
   createBulkRelationModel,
   updateRelationModel,
   deleteRelationModel,
   deleteRelationByAssetsIdsModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/relations' or its cor... Remove this comment to see the full error message
-} from '@/models/relations'
+
+} from '../../models/relations'
 
 /**
  * @param {import('express').Request} req

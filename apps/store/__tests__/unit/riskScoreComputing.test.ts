@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-check
-
-// @ts-expect-error TS(2307): Cannot find module '@/utils/RiskScoreComputing' or... Remove this comment to see the full error message
-import { riskScoreComputing } from '@/utils/RiskScoreComputing'
+import { riskScoreComputing } from '../../src/utils/RiskScoreComputing'
 
 describe('Testing the risk score computing algo', () => {
   it('Simple test case', () => {
@@ -248,25 +244,25 @@ describe('Testing the risk score computing algo', () => {
     )
 
     const scores = {}
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[1] = 7.5 / 2
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[2] = 7.5
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[3] = 7.5 / 4
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[4] = 3.7
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[5] = 3.7 / 2
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[6] = 0.5 * ((scores[1] + scores[2] + scores[3]) / 3) + 0.5 * 7.5
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[7] = 0.5 * ((scores[4] + scores[5]) / 2) + 0.5 * 3.7
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
     scores[8] =
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+
       0.5 * ((scores[1] + scores[2] + scores[3] + scores[4] + scores[5]) / 5) +
       0.5 * 7.5
 
@@ -332,7 +328,7 @@ function graphToParams(graph: any) {
   })
   return {
     listUnvisited,
-    // @ts-expect-error TS(7006): Parameter 'edge' implicitly has an 'any' type.
+
     relations: graph.edges.map((edge, index) => ({
       ...edge,
       id: index
@@ -376,7 +372,7 @@ function parseGraph(str: any) {
       if (relationType) {
         const [from, to] = line.split(relationType)
         if (relationType === 'NULL') {
-          // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
+
           relationType = null
         }
         edges.push({

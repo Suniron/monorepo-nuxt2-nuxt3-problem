@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * This file stores all environmental variables needed by the backend.
  * Instead of flooding the code with "process.env.MY_VAR", all env variables are stored here.
@@ -11,7 +11,6 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
-// @ts-expect-error TS(2732): Cannot find module '../../package.json'. Consider ... Remove this comment to see the full error message
 import { version } from '../../package.json'
 
 dotenv.config()

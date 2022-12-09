@@ -9,8 +9,8 @@ import {
   isAuthorizedController,
   sendResetMailPassword,
   updateResetPasswordByToken,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/auth' or its cor... Remove this comment to see the full error message
-} from '@/controllers/auth'
+
+} from '../../controllers/auth'
 
 const router = express.Router()
 

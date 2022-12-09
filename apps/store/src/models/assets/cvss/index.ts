@@ -1,5 +1,5 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '@/common/constants'
+
+import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
 export const createCvssModel = async (tx: any, params: any) => {
   try {

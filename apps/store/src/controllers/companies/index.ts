@@ -1,4 +1,4 @@
-// @ts-check
+
 
 /**
  * @typedef {import('express').Response} Response
@@ -6,8 +6,8 @@
  * @typedef {import('express').NextFunction} NextFunction
  */
 
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   createCompanyModel,
   searchCompanyModel,
@@ -16,8 +16,8 @@ import {
   deleteCompanyLogoModel,
   updateCompanyModel,
   getCompanyRiskModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/companies' or its cor... Remove this comment to see the full error message
-} from '@/models/companies'
+
+} from '../../models/companies'
 
 export const searchCompanyController = async (req: any, res: any, next: any) => {
   try {

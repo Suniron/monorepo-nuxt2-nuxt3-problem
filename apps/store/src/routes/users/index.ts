@@ -4,8 +4,8 @@ import {
   searchUsersController,
   updateUserController,
   deleteUserController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/users' or its co... Remove this comment to see the full error message
-} from '@/controllers/users'
+
+} from '../../controllers/users'
 import { celebrate, Segments, Joi, errors } from 'celebrate'
 
 const router = express.Router()

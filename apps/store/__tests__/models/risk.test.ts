@@ -1,7 +1,4 @@
-// @ts-check
-
-// @ts-expect-error TS(2307): Cannot find module '@/models/riskModels' or its co... Remove this comment to see the full error message
-import { riskScoreLetter } from '@/models/riskModels'
+import { riskScoreLetter } from '../../src/models/riskModels'
 
 describe('riskScoreLetter', () => {
   it('should throw an error if score is out of range', () => {

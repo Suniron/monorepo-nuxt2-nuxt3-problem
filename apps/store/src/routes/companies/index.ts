@@ -1,4 +1,4 @@
-// @ts-check
+
 import express from 'express'
 import {
   searchCompanyController,
@@ -8,8 +8,8 @@ import {
   deleteCompanyLogoController,
   updateCompanyController,
   getCompanyRiskController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/companies' or it... Remove this comment to see the full error message
-} from '@/controllers/companies'
+
+} from '../../controllers/companies'
 import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()

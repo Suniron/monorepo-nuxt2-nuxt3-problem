@@ -1,8 +1,8 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { NOT_FOUND } from '@/common/constants'
+
+
+import { knex } from '../common/db'
+
+import { NOT_FOUND } from '../common/constants'
 
 /**
  * Returns **true** if the user is a collaborator of the remediation project (owner or assignee).

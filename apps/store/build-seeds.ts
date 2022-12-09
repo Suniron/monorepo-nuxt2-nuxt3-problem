@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'esbuild'.
+
 const esbuild = require('esbuild')
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'fs'.
+
 const fs = require('fs')
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'path'.
+
 const path = require('path')
 
 const SEEDS_FOLDER = './seeds'

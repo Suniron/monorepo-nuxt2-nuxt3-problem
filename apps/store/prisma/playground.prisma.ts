@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// @ts-check
+
 /**
  * This file is used to test some queries with prisma
  */

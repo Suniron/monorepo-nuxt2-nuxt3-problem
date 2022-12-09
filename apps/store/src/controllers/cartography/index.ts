@@ -1,5 +1,4 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+import { throwHTTPError } from '../../common/errors'
 import {
   fetchCartographiesModel,
   fetchCartographyElementsModel,
@@ -9,8 +8,7 @@ import {
   addCartographyElementModel,
   updateCartographyElementModel,
   deleteCartographyElementModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/cartography' or its c... Remove this comment to see the full error message
-} from '@/models/cartography'
+} from '../../models/cartography'
 
 export const fetchCartographiesController = async (req: any, res: any, next: any) => {
   try {

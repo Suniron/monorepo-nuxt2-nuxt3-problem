@@ -1,9 +1,8 @@
-// @ts-check
 
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { DUPLICATE, SUCCESS } from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { DUPLICATE, SUCCESS } from '../../common/constants'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   searchAssetsModel,
   createAssetModel,
@@ -17,10 +16,10 @@ import {
   createUrisModel,
   searchAssetsBelongingModel,
   getAssetRiskModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/assets' or its corres... Remove this comment to see the full error message
-} from '@/models/assets'
-// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
-import { createVulnerabilityModel } from '@/models/vulnerabilities'
+
+} from '../../models/assets'
+
+import { createVulnerabilityModel } from '../../models/vulnerabilities'
 
 /**
  *

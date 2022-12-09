@@ -1,6 +1,6 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+
+import prismaClient from './../prismaClient'
 
 /**
  * Returns an array of group id to which the user belongs

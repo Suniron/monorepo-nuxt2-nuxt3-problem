@@ -1,14 +1,14 @@
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
+
+import { throwHTTPError } from '../../common/errors'
+
+import { knex } from '../../common/db'
 import {
   searchGroupsModel,
   updateGroupModel,
   createGroupModel,
   deleteGroupModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/groups' or its corres... Remove this comment to see the full error message
-} from '@/models/groups'
+
+} from '../../models/groups'
 
 export const searchGroupsController = async (req: any, res: any, next: any) => {
   try {

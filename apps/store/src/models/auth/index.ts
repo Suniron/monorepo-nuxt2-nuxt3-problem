@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-check
 
-// @ts-expect-error TS(2307): Cannot find module '@/common/auth/jwt' or its corr... Remove this comment to see the full error message
-import { generateAccessToken } from '@/common/auth/jwt'
+
+
+import { generateAccessToken } from '../../common/auth/jwt'
 import {
   FORBIDDEN,
   MODEL_ERROR,
@@ -10,14 +10,14 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/lib/logger' or its correspon... Remove this comment to see the full error message
-import { log } from '@/lib/logger'
-// @ts-expect-error TS(2307): Cannot find module '@/prismaClient' or its corresp... Remove this comment to see the full error message
-import prismaClient from '@/prismaClient'
+
+} from '../../common/constants'
+
+import { knex } from '../../common/db'
+
+import { log } from '../../lib/logger'
+
+import prismaClient from '../../prismaClient'
 import crypto from 'crypto'
 
 export const getTokenSessionModel = async (provider: any, token: any, type: any) => {
@@ -284,7 +284,7 @@ export const verifyAssetPermissionModel = async (
   cartoId = null
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId, groups, roles } = loggedUserInfo
     if (
       roles.includes('admin') ||
@@ -308,7 +308,7 @@ export const verifyAssetPermissionModel = async (
       else return { status: UNAUTHORIZED }
     } else if (assets) {
       const assetsExist = await query.whereIn({ 'ast.id': assets })
-      // @ts-expect-error TS(2339): Property 'length' does not exist on type 'never'.
+
       if (assetsExist.length === assets.length) return { status: SUCCESS }
       else return { status: UNAUTHORIZED }
     } else if (relId) {

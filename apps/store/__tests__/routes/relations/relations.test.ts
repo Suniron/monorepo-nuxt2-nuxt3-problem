@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-check eslint-disable-next-line
+ eslint-disable-next-line
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
+
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
@@ -23,7 +23,7 @@ describe('/relations/bulk', () => {
     })
 
     it('with a not existing relation type should return 404', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.relation.findMany.mockResolvedValue([])
       const response = await request(app)
         .post('/relations/bulk')
@@ -39,7 +39,7 @@ describe('/relations/bulk', () => {
     })
 
     it('with a relationship of an asset couple that is not valid should not return a new relation', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       prismaMock.asset.findMany.mockResolvedValue([{ id: 100 }])
       const response = await request(app)
@@ -56,7 +56,7 @@ describe('/relations/bulk', () => {
     })
 
     it('with a relationship of at least an asset not in the company not return a new relation', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       prismaMock.asset.findMany.mockResolvedValue([{ id: 10 }])
       const response = await request(app)
@@ -73,9 +73,9 @@ describe('/relations/bulk', () => {
     })
 
     it('with valid relationship data should return the created or existing ID', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.asset.findMany.mockResolvedValue([{ id: 10 }, { id: 11 }])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.$transaction.mockResolvedValue([
         {
           id: 3,
@@ -96,14 +96,14 @@ describe('/relations/bulk', () => {
     })
 
     it('with multiple valid relationship data should return the created or existing IDs', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.asset.findMany.mockResolvedValue([
         { id: 10 },
         { id: 11 },
         { id: 12 },
         { id: 13 },
       ])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.$transaction.mockResolvedValue([
         {
           id: 3,
@@ -132,9 +132,9 @@ describe('/relations/bulk', () => {
     })
 
     it('with a single valid relationship data should return only the created or existing ID', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.asset.findMany.mockResolvedValue([{ id: 10 }, { id: 11 }])
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.$transaction.mockResolvedValue([
         {
           id: 3,
@@ -170,7 +170,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       expect(response.status).toBe(400)
     })
     it('with a not existing relation type should return 404', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.relation.deleteMany.mockResolvedValue({
         count: 0,
       })
@@ -180,7 +180,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       expect(response.status).toBe(404)
     })
     it('with a relationship of an asset couple that does not exist should return 404', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.relation.deleteMany.mockResolvedValue({
         count: 0,
       })
@@ -190,7 +190,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       expect(response.status).toBe(404)
     })
     it('with existing assets relation should return status 200 with count 1', async () => {
-      // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
       prismaMock.relation.deleteMany.mockResolvedValue({
         count: 1,
       })

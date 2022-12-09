@@ -1,4 +1,4 @@
-// @ts-check
+
 /**
  * @typedef {import('knex').Knex} Knex
  */
@@ -8,17 +8,17 @@ import {
   VALIDATION_ERROR,
   SUCCESS,
   UNAUTHORIZED,
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-} from '@/common/constants'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
+
+} from '../../../src/common/constants'
+
+import { knex } from '../../../src/common/db'
 import {
   isOwnerOfRemediationProject,
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
   checkRemediationProjectExistsOrIsAuthorised,
-// @ts-expect-error TS(2307): Cannot find module '@/utils/remediationProject.uti... Remove this comment to see the full error message
-} from '@/utils/remediationProject.utils'
+
+} from '../../../src/utils/remediationProject.utils'
 
 /**
  * @typedef {import('@/types/remediationProject').RemediationProjectSummary} RemediationProjectSummary
@@ -178,7 +178,7 @@ export const updateRemediationProjectsModel = async (
   loggedUserInfo = {}
 ) => {
   try {
-    // @ts-expect-error TS(2339): Property 'companyId' does not exist on type '{}'.
+
     const { companyId: userCompanyId } = loggedUserInfo
     // Check if the remediation project exists or belongs to the same company than the user
     const checkError = await checkRemediationProjectExistsOrIsAuthorised(
@@ -204,9 +204,9 @@ export const updateRemediationProjectsModel = async (
       .where('fk_project_id', remediationProjectId)
       .pluck('fk_user_id')
 
-    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
+
     const isUserProjectOwner = projectOwnerId === loggedUserInfo.id
-    // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
+
     const isUserProjectAssignee = projectAssignees.includes(loggedUserInfo.id)
 
     if (isUserProjectOwner || isUserProjectAssignee) {
@@ -324,7 +324,7 @@ export const updateRemediationProjectsModel = async (
               .insert({
                 fk_project_id: remediationProjectId,
                 fk_status_id: params.status_id,
-                // @ts-expect-error TS(2339): Property 'id' does not exist on type '{}'.
+
                 fk_user_id: loggedUserInfo.id,
                 start_date: now,
               })

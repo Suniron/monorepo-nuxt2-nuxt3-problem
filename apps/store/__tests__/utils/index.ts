@@ -1,6 +1,6 @@
-// @ts-expect-error TS(2732): Cannot find module '../example-values/user.json'. ... Remove this comment to see the full error message
+
 import * as userData from '../example-values/user.json'
-// @ts-expect-error TS(2732): Cannot find module '../example-values/login.json'.... Remove this comment to see the full error message
+
 import * as loginData from '../example-values/login.json'
 
 /**

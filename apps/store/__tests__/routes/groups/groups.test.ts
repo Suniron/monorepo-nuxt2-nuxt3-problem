@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-check
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'supe... Remove this comment to see the full error message
+
+
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockAdminUser, mockNonAdminUser } from '../../mocks'
@@ -31,12 +31,12 @@ describe('/groups/', () => {
       describe('get all groups of my company', () => {
         it('should be all company groups count', async () => {
           const companyGroups = groups
-            // @ts-expect-error TS(7006): Parameter 'g' implicitly has an 'any' type.
+
             .filter((g) => g.company_id == 1)
-            // @ts-expect-error TS(7006): Parameter 'cg' implicitly has an 'any' type.
+
             .map((cg) => ({ ...cg, user_group: [] }))
 
-          // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
           prismaMock.group.findMany.mockResolvedValue(companyGroups)
 
           const response = await request(app)
@@ -57,12 +57,12 @@ describe('/groups/', () => {
           it('should be company groups count', async () => {
             // TODO: need a filter by group member
             const companyGroups = groups
-              // @ts-expect-error TS(7006): Parameter 'g' implicitly has an 'any' type.
+
               .filter((g) => g.company_id == 1)
-              // @ts-expect-error TS(7006): Parameter 'cg' implicitly has an 'any' type.
+
               .map((cg) => ({ ...cg, user_group: [] }))
 
-            // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
             prismaMock.group.findMany.mockResolvedValue(companyGroups)
 
             const response = await request(app)
@@ -98,9 +98,9 @@ describe('/groups/', () => {
 
       describe('rename group', () => {
         it('should be status 200', async () => {
-          // @ts-expect-error TS(7006): Parameter 'g' implicitly has an 'any' type.
+
           const companyGroups = groups.filter((g) => g.company_id == 1)
-          // @ts-expect-error TS(2339): Property 'mockResolvedValue' does not exist on typ... Remove this comment to see the full error message
+
           prismaMock.group.findMany.mockResolvedValue([
             {
               id: 123,

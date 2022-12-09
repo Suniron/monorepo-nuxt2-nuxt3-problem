@@ -1,5 +1,3 @@
-// @ts-check
-
 import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from './assets'
 
 /**
@@ -220,7 +218,7 @@ function getAllTechnicalDescendantsAssets(assetId: any, relations: any, listAsse
   })
 
   return technicalChildren.concat(
-    // @ts-expect-error TS(7006): Parameter 'childId' implicitly has an 'any' type.
+
     ...abstractChildren.map((childId) =>
       getAllTechnicalDescendantsAssets(childId, relations, listAssets).filter(
         (grandChildId: any) => !technicalChildren.includes(grandChildId)

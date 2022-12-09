@@ -4,8 +4,8 @@ import {
   updateGroupController,
   createGroupController,
   deleteGroupController,
-// @ts-expect-error TS(2307): Cannot find module '@/controllers/groups' or its c... Remove this comment to see the full error message
-} from '@/controllers/groups'
+
+} from '../../controllers/groups'
 import { celebrate, Joi, Segments } from 'celebrate'
 
 const router = express.Router()

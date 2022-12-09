@@ -7,14 +7,14 @@ import {
   createScanAssetModel,
   updateScanModel,
   getScanReportModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/scans' or its corresp... Remove this comment to see the full error message
-} from '@/models/scans'
+
+} from '../../models/scans'
 import {
   searchVulnerabilitiesModel,
   createVulnerabilityModel,
   updateVulnerabilityModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/vulnerabilities' or i... Remove this comment to see the full error message
-} from '@/models/vulnerabilities'
+
+} from '../../models/vulnerabilities'
 import {
   createAssetModel,
   searchAssetsModel,
@@ -22,21 +22,21 @@ import {
   searchAssetVulnerabilityModel,
   createAssetVulnerabilityModel,
   updateAssetVulnerabilityModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/assets' or its corres... Remove this comment to see the full error message
-} from '@/models/assets'
+
+} from '../../models/assets'
 import {
   createCartographyModel,
   addCartographyElementModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/cartography' or its c... Remove this comment to see the full error message
-} from '@/models/cartography'
-// @ts-expect-error TS(2307): Cannot find module '@/models/relations' or its cor... Remove this comment to see the full error message
-import { createRelationModel } from '@/models/relations'
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwBadRequestError } from '@/common/errors'
-// @ts-expect-error TS(2307): Cannot find module '@/common/db' or its correspond... Remove this comment to see the full error message
-import { knex } from '@/common/db'
-// @ts-expect-error TS(2307): Cannot find module '@/common/constants' or its cor... Remove this comment to see the full error message
-import { SUCCESS } from '@/common/constants'
+
+} from '../../models/cartography'
+
+import { createRelationModel } from '../../models/relations'
+
+import { throwBadRequestError } from '../../common/errors'
+
+import { knex } from '../../common/db'
+
+import { SUCCESS } from '../../common/constants'
 
 /**
  *

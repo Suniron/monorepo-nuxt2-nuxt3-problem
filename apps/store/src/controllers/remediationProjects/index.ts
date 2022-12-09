@@ -1,6 +1,6 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors/index.js' or i... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors/index.js'
+
+
+import { throwHTTPError } from '../../common/errors/index.js'
 import {
   getRemediationProjectsModel,
   getRemediationProjectsSummaryModel,
@@ -11,8 +11,8 @@ import {
   createRemediationProjectsModel,
   getRemediationProjectStatusHistoryModel,
   getRemediationProjectCommentsModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/remediationProjects' ... Remove this comment to see the full error message
-} from '@/models/remediationProjects'
+
+} from '../../models/remediationProjects'
 
 /**
  * @param {import('express').Request} req

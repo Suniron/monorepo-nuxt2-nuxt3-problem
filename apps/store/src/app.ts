@@ -1,12 +1,9 @@
-// @ts-check
-import 'module-alias/register'
-// @ts-expect-error TS(2307): Cannot find module '@/config/env' or its correspon... Remove this comment to see the full error message
-import env from '@/config/env'
-// @ts-expect-error TS(2307): Cannot find module '@/server' or its corresponding... Remove this comment to see the full error message
-import initServer from '@/server'
+
+import initServer from '../src/server'
 import https from 'https'
 import fs from 'fs'
 import path from 'path'
+import env from './config/env'
 import { initCronTasks } from './tasks'
 import { log } from './lib/logger'
 

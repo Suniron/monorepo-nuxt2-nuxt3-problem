@@ -1,11 +1,10 @@
-// @ts-check
-// @ts-expect-error TS(2307): Cannot find module '@/common/errors' or its corres... Remove this comment to see the full error message
-import { throwHTTPError } from '@/common/errors'
+
+import { throwHTTPError } from '../../common/errors'
 import {
   fetchPostsModel,
   createRemediationProjectPostsModel,
-// @ts-expect-error TS(2307): Cannot find module '@/models/blog' or its correspo... Remove this comment to see the full error message
-} from '@/models/blog'
+
+} from '../../models/blog'
 
 /**
  * @param {import('express').Request} req
