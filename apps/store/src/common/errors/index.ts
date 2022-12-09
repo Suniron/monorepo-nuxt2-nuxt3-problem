@@ -1,3 +1,4 @@
+import type { HTTPError } from '../../common/errors/http'
 import {
   getBadRequestError,
   getConflictError,
@@ -104,14 +105,10 @@ export const throwInternalServerError = ({
   throw getInternalServerError({ message })
 }
 
-/**
- * Throws an HTTP Error according the the error given
- *
- * @param {*} error Error constant that describes the error
- * @param {string=} message Custom error message
- * @throws
- */
-export const throwHTTPError = (error: any, message: any) => {
+export const throwHTTPError = (error?: string | {
+  readonly MAIL: HTTPError
+  readonly USERNAME: HTTPError
+}, message?: string) => {
   switch (error) {
     case MODEL_ERROR:
       return throwInternalServerError({ message })
