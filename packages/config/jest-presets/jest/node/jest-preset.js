@@ -3,9 +3,6 @@ module.exports = {
   detectOpenHandles: true,
   extensionsToTreatAsEsm: ['.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
   modulePathIgnorePatterns: [
     '<rootDir>/test/__fixtures__',
     '<rootDir>/node_modules',
@@ -22,4 +19,7 @@ module.exports = {
       diagnostics: false,
     }],
   },
+  testMatch:  [
+    "**/__tests__/**/*test.ts"
+  ]
 }
