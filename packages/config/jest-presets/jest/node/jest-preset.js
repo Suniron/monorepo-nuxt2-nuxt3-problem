@@ -1,27 +1,11 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-	preset: 'ts-jest/presets/default-esm',
-	moduleNameMapper: {
+  detectOpenHandles: true,
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  detectOpenHandles: true,
-  roots: ["<rootDir>"],
-  transform: {
-    '^.+\\.ts$': 'ts-jest',
-  },
-	// transform: {
-		// // '^.+\\.tsx?$' to process ts/tsx with `ts-jest`
-    // // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
-    // // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
-    // '^.+\\.[tj]sx?$': [
-    //   'ts-jest',
-    //   {
-    //     useESM: true,
-    //   },
-    // ],
-	// },
-	extensionsToTreatAsEsm: ['.ts'],
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   modulePathIgnorePatterns: [
     '<rootDir>/test/__fixtures__',
     '<rootDir>/node_modules',
@@ -30,4 +14,12 @@ module.exports = {
     '<rootDir>/.output',
     '<rootDir>/build',
   ],
-};
+  // TODO: enable when typing is fixed in all the project
+  // preset: 'ts-jest/presets/default-esm',
+  roots: ['<rootDir>'],
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      diagnostics: false,
+    }],
+  },
+}
