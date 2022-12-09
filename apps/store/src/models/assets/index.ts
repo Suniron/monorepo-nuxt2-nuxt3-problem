@@ -1,3 +1,4 @@
+import type { asset, company } from '@prisma/client'
 import { knex } from '../../common/db'
 
 import prismaClient from '../../prismaClient'
@@ -17,6 +18,7 @@ import {
 import { getUserGroupIds } from '../../utils/user.utils'
 import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '../../utils/assets'
 import { log } from '../../lib/logger'
+import { throwDuplicateError } from '../../common/errors'
 import { createIpModel, searchIpModel, updateOrCreateIpModel } from './ip'
 import { createUriModel, searchUriModel } from './uri'
 import { createCpeModel, updateOrCreateCpeModel } from './cpe'
@@ -27,6 +29,59 @@ import {
 } from './port'
 import { createCipherModel } from './cipher'
 import { createCvssModel, updateCvssModel } from './cvss'
+
+export const getAssetScores = async (companyId: company['id'], assetId: asset['id']) => {
+  try {
+    const scores = await prismaClient.v_asset_risk_scores.findFirst({
+      where: {
+        asset_id: assetId,
+        company_id: companyId,
+      },
+    })
+
+    if (!scores)
+      return { error: NOT_FOUND }
+
+    return { scores }
+  }
+  catch (error) {
+    log.withError(error).error('getAssetScores error')
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const getAssetRiskModel = async (companyId: company['id'], assetId: asset['id']) => {
+  try {
+    const { scores, error: scoreError } = await getAssetScores(
+      companyId,
+      assetId,
+    )
+    if (scoreError)
+      return { error: scoreError }
+
+    const {
+      error: vulnError,
+      vulnerabilitiesCount,
+    } = await getAssetVulnerabilitiesCountBySeverity(companyId, assetId)
+    if (vulnError)
+      return { error: vulnError }
+
+    return {
+      hasVulnerability: hasVulnerability(vulnerabilitiesCount),
+      lastScanDate: scores.last_scan_date,
+      scores: {
+        compoundScore: scores.compound_score,
+        inherentScore: scores.inherent_score,
+        inheritedScore: scores.inherited_score,
+      },
+      vulnerabilitiesCount,
+    }
+  }
+  catch (error) {
+    log.withError(error).error('getAssetRiskModel error')
+    return { error: MODEL_ERROR }
+  }
+}
 
 /**
  * Returns a list of assets. If an ID is given, returns a single asset object instead.
@@ -464,7 +519,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
     if (Array.isArray(result)) {
       if (id) {
         // Single asset
-        if (result.length === 1) { return { asset: result[0] } }
+        if (result.length === 1) {
+          return { asset: result[0] }
+        }
         else {
           log
             .withError(new Error(`Asset with id "${id}" not found`))
@@ -953,7 +1010,7 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
         .andWhere('type', 'like', `${assetExist.type}`)
         .andWhereNot({ id })
       if (assetWithSameName.length !== 0)
-        throw 'DuplicateError'
+        throwDuplicateError()
 
       const updates = []
 
@@ -1882,63 +1939,3 @@ export const createAssetVulnerabilityModel = async (
 }
 */
 
-/**
- * @param {import('@prisma/client').company['id']} companyId
- * @param {import('@prisma/client').asset['id']} assetId
- */
-export const getAssetScores = async (companyId: any, assetId: any) => {
-  try {
-    const scores = await prismaClient.v_asset_risk_scores.findFirst({
-      where: {
-        asset_id: assetId,
-        company_id: companyId,
-      },
-    })
-
-    if (!scores)
-      return { error: NOT_FOUND }
-
-    return { scores }
-  }
-  catch (error) {
-    log.withError(error).error('getAssetScores error')
-    return { error: MODEL_ERROR }
-  }
-}
-
-/**
- * @param {import('@prisma/client').company['id']} companyId
- * @param {import('@prisma/client').asset['id']} assetId
- */
-export const getAssetRiskModel = async (companyId: any, assetId: any) => {
-  try {
-    const { scores, error: scoreError } = await getAssetScores(
-      companyId,
-      assetId,
-    )
-    if (scoreError)
-      return { error: scoreError }
-
-    const {
-      error: vulnError,
-      vulnerabilitiesCount,
-    } = await getAssetVulnerabilitiesCountBySeverity(companyId, assetId)
-    if (vulnError)
-      return { error: vulnError }
-
-    return {
-      hasVulnerability: hasVulnerability(vulnerabilitiesCount),
-      lastScanDate: scores.last_scan_date,
-      scores: {
-        compoundScore: scores.compound_score,
-        inherentScore: scores.inherent_score,
-        inheritedScore: scores.inherited_score,
-      },
-      vulnerabilitiesCount,
-    }
-  }
-  catch (error) {
-    log.withError(error).error('getAssetRiskModel error')
-    return { error: MODEL_ERROR }
-  }
-}

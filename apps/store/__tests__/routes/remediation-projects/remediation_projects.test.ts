@@ -406,7 +406,7 @@ describe('/remediation-projects/:id', () => {
         )
       })
 
-      it.only('when updating the status of a remediation project', async () => {
+      it('when updating the status of a remediation project', async () => {
         const Knex = mockKnexWithFinalValues([
           // Mock the same company_id as the user
           [1],

@@ -16,7 +16,6 @@ export const uploadFilesModel = async (params: any) => {
     let uuid
     uuid = await knex.select('id').from('store').where({ md5 })
     if (uuid.length === 0) {
-      // eslint-disable-next-line prettier/prettier
       [uuid] = await knex.transaction(async (tx: any) => {
         const uuid = (
           await tx('store')

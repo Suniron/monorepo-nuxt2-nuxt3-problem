@@ -236,7 +236,7 @@ export const refreshAccessToken = async (userId: any) => {
     return { accessToken, user }
   }
   catch (error) {
-    log.error('[model>auth>index.js>refreshAccessToken()]', error)
+    log.withError(error).error('[model>auth>index.js>refreshAccessToken()]')
     return { error: MODEL_ERROR }
   }
 }
@@ -259,7 +259,7 @@ export const logoutModel = async (provider: any, userInfo: any) => {
     return { status: SUCCESS }
   }
   catch (error) {
-    logger.error(error)
+    logger.withError(error).error(error)
     return { error: MODEL_ERROR }
   }
 }
@@ -347,13 +347,13 @@ export const verifyAssetPermissionModel = async (
     }
   }
   catch (error) {
-    log.error(error)
+    log.withError(error).error('verifyAssetPermissionModel')
     return { error }
   }
 }
 
 export const getResetPasswordToken = async (provider: any, params: any) => {
-  const { knex, logger } = provider
+  const { knex } = provider
   try {
     const { username } = params
     const [user] = await knex
@@ -381,7 +381,7 @@ export const getResetPasswordToken = async (provider: any, params: any) => {
     }
   }
   catch (error) {
-    logger.error(error)
+    log.withError(error).error('getResetPasswordToken')
     return { error: MODEL_ERROR }
   }
 }

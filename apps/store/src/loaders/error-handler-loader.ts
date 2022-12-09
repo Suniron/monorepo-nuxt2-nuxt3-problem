@@ -27,6 +27,8 @@ export const errorHandler = (err: any, req: any, res: any, _next: any) => {
   else if (isCelebrateError(err)) {
     let message = 'ValidatonErrpr'
 
+    // TODO: fix this useless loop
+    // eslint-disable-next-line no-unreachable-loop
     for (const [_segment, joiError] of err.details.entries()) {
       message = joiError.message
       break

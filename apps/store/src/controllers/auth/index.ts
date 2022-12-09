@@ -233,7 +233,9 @@ export const verifyAssetPermissionController = async (req: any, res: any, next: 
   }
 }
 export const sendResetMailPassword = async (req: any, res: any) => {
-  if (!req.body.username) { res.sendStatus(401) }
+  if (!req.body.username) {
+    res.sendStatus(401)
+  }
   else {
     const dbProvider = {
       createPasswordHash: (password: any) => createPasswordHash(
@@ -251,7 +253,9 @@ export const sendResetMailPassword = async (req: any, res: any) => {
   }
 }
 export const updateResetPasswordByToken = async (req: any, res: any) => {
-  if (!req.body.password || !req.body.token) { res.sendStatus(401) }
+  if (!req.body.password || !req.body.token) {
+    res.sendStatus(401)
+  }
   else {
     const dbProvider = {
       createPasswordHash: (password: any) => createPasswordHash(

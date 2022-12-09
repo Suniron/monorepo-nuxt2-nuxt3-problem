@@ -29,7 +29,7 @@ describe('/groups/', () => {
         it('should be all company groups count', async () => {
           const companyGroups = groups
 
-            .filter(g => g.company_id == 1)
+            .filter(g => g.company_id === 1)
 
             .map(cg => ({ ...cg, user_group: [] }))
 
@@ -54,7 +54,7 @@ describe('/groups/', () => {
             // TODO: need a filter by group member
             const companyGroups = groups
 
-              .filter(g => g.company_id == 1)
+              .filter(g => g.company_id === 1)
 
               .map(cg => ({ ...cg, user_group: [] }))
 
@@ -93,7 +93,7 @@ describe('/groups/', () => {
 
       describe('rename group', () => {
         it('should be status 200', async () => {
-          const companyGroups = groups.filter(g => g.company_id == 1)
+          const companyGroups = groups.filter(g => g.company_id === 1)
 
           prismaMock.group.findMany.mockResolvedValue([
             {

@@ -260,9 +260,10 @@ export const importCSVController = async (req: any, res: any, next: any) => {
     let pass = 0
     let error, id
     for (let i = 0; i < assets.length; i++) {
-      // eslint-disable-next-line prettier/prettier
       ({ error, id } = await createAssetModel(assets[i], req.user))
-      if (error) { failed.push({ ...assets[i], error }) }
+      if (error) {
+        failed.push({ ...assets[i], error })
+      }
       else {
         pass += 1
         assets[i].id = id
@@ -274,6 +275,8 @@ export const importCSVController = async (req: any, res: any, next: any) => {
       let res
       if (
         typeof elt === 'string'
+        // TODO: refactor this
+        // eslint-disable-next-line no-cond-assign
         && (res = await searchAssetsModel({ search: elt }, req.user))
         && res.total === 1
       ) {
@@ -307,7 +310,6 @@ export const importCSVController = async (req: any, res: any, next: any) => {
         }
       }
 
-      // eslint-disable-next-line prettier/prettier
       ({ error } = await updateAssetModel(
         assets[relations[i].index].id,
         { assetData: relations[i] },
@@ -442,14 +444,12 @@ export const getAssetRiskController = async (req: any, res: any, next: any) => {
     const assetId = parseInt(req.params.id)
 
     const risk = await getAssetRiskModel(companyId, assetId)
-    console.log('risk', risk)
     if ('error' in risk)
       return throwHTTPError(risk.error)
 
     res.send(risk)
   }
   catch (error) {
-    console.log('======>', error)
     req.log.withError(error).error('getAssetRiskController')
     next(error)
   }

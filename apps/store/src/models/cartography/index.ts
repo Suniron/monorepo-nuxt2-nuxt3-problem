@@ -1,6 +1,7 @@
 import { knex } from '../../../src/common/db'
 
 import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
+import { log } from '../../lib/logger'
 
 export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
   try {
@@ -16,7 +17,7 @@ export const fetchCartographiesModel = async (loggedUserInfo = {}) => {
     return { cartographies }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('fetchCartographiesModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -90,7 +91,7 @@ export const fetchCartographyElementsModel = async (
     return { elements }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('fetchCartographyElementsModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -113,7 +114,7 @@ export const updateCartographyModel = async (
     return { status: SUCCESS }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('updateCartographyModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -132,7 +133,7 @@ export const createCartographyModel = async (params: any, loggedUserInfo = {}) =
     return cyId
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('createCartographyModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -145,7 +146,7 @@ export const deleteCartographyModel = async (id: any, loggedUserInfo = {}) => {
     return { status: SUCCESS }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('deleteCartographyModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -158,7 +159,7 @@ export const deleteCartographyElementModel = async (id: any, eid: any) => {
     return { status: SUCCESS }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('deleteCartographyElementModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -210,7 +211,7 @@ export const addCartographyElementModel = async (
     return cid
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('addCartographyElementModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -234,7 +235,7 @@ export const updateCartographyElementModel = async (id: any, eid: any, params: a
     return { status: SUCCESS }
   }
   catch (error) {
-    console.log(error)
+    log.withError(error).error('updateCartographyElementModel')
     return { error: MODEL_ERROR }
   }
 }

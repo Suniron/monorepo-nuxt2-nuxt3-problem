@@ -22,6 +22,7 @@ const runPlayground = async () => {
     },
   })
 
+  // eslint-disable-next-line no-console
   console.dir(assets, { depth: 10 })
 
   await prismaClient.$disconnect()

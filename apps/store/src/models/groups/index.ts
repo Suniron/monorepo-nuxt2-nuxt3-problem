@@ -53,8 +53,8 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
             ? {
                 user_id: loggedUserInfo.id,
               }
-            : // Else, ignore this filter in admin
-            undefined,
+              // Else, ignore this filter in admin
+            : undefined,
         },
       },
     })

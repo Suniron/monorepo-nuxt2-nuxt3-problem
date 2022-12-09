@@ -11,13 +11,6 @@ import { log } from './lib/logger'
  */
 const onServerStart = () => {
   log.info(`Server started on port ${env.port}`)
-  console.log(
-    `
-  ################################################
-  🛡️  Data Store Server listening on: http://localhost:${env.port} 🛡️
-  ################################################
-`,
-  )
 
   // Initialize cron tasks system:
   initCronTasks()

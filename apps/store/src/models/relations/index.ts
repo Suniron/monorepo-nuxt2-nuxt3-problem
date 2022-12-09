@@ -30,7 +30,6 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
         type,
       })
       if (relId.length !== 1) {
-        // eslint-disable-next-line prettier/prettier
         [relId] = (
           await knex.transaction((tx: any) => {
             const relationId = tx('relation').returning('id').insert({

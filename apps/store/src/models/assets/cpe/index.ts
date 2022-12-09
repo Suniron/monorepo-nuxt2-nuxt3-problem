@@ -1,29 +1,5 @@
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
-export const updateOrCreateCpeModel = async (tx: any, ids: any, params: any) => {
-  try {
-    const { assetId = -1, portId = -1 } = ids
-    const [cpeExist] = await tx
-      .select()
-      .from('cpe')
-      .leftJoin('cpe_asset as cast', 'cast.cpe_id', 'cpe.id')
-      .leftJoin('port', 'port.cpe_id', 'cpe.id')
-      .where('cpe', params.cpe)
-      .andWhere(function (this: any) {
-        this.where('cast.asset_id', assetId).orWhere('port.id', portId)
-      })
-    let cpeId = -1
-    if (!cpeExist)
-      cpeId = await createCpeModel(tx, params)
-    else await updateCpeModel(tx, cpeExist.id, params)
-    return cpeId === -1 ? cpeExist.id : cpeId
-  }
-  catch (error) {
-    console.error(error)
-    return { error: MODEL_ERROR }
-  }
-}
-
 export const createCpeModel = async (tx: any, params: any) => {
   try {
     const {
@@ -86,6 +62,30 @@ export const updateCpeModel = async (tx: any, cpeId: any, params: any) => {
       })
       .where('cpe.id', cpeId)
     return { status: SUCCESS }
+  }
+  catch (error) {
+    console.error(error)
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const updateOrCreateCpeModel = async (tx: any, ids: any, params: any) => {
+  try {
+    const { assetId = -1, portId = -1 } = ids
+    const [cpeExist] = await tx
+      .select()
+      .from('cpe')
+      .leftJoin('cpe_asset as cast', 'cast.cpe_id', 'cpe.id')
+      .leftJoin('port', 'port.cpe_id', 'cpe.id')
+      .where('cpe', params.cpe)
+      .andWhere(function (this: any) {
+        this.where('cast.asset_id', assetId).orWhere('port.id', portId)
+      })
+    let cpeId = -1
+    if (!cpeExist)
+      cpeId = await createCpeModel(tx, params)
+    else await updateCpeModel(tx, cpeExist.id, params)
+    return cpeId === -1 ? cpeExist.id : cpeId
   }
   catch (error) {
     console.error(error)

@@ -2,24 +2,6 @@ import { knex } from '../../../common/db'
 
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
-export const updateOrCreateIpModel = async (tx: any, assetId: any, params: any) => {
-  try {
-    const [ipExist] = await tx
-      .select()
-      .from('ip')
-      .where({ 'ip.address': params.address, 'ip.asset_server_id': assetId })
-    let ipId = -1
-    if (!ipExist)
-      ipId = await createIpModel(tx, assetId, params)
-    else await updateIpModel(tx, ipExist.id, params)
-    return ipId === -1 ? ipExist.id : ipId
-  }
-  catch (error) {
-    console.error(error)
-    return { error: MODEL_ERROR }
-  }
-}
-
 export const createIpModel = async (tx: any, assetId: any, params: any) => {
   try {
     const { address, mac = '', iface = '', mask = '' } = params
@@ -117,6 +99,24 @@ export const searchIpModel = async (
 
     const ips = await query
     return ips
+  }
+  catch (error) {
+    console.error(error)
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const updateOrCreateIpModel = async (tx: any, assetId: any, params: any) => {
+  try {
+    const [ipExist] = await tx
+      .select()
+      .from('ip')
+      .where({ 'ip.address': params.address, 'ip.asset_server_id': assetId })
+    let ipId = -1
+    if (!ipExist)
+      ipId = await createIpModel(tx, assetId, params)
+    else await updateIpModel(tx, ipExist.id, params)
+    return ipId === -1 ? ipExist.id : ipId
   }
   catch (error) {
     console.error(error)

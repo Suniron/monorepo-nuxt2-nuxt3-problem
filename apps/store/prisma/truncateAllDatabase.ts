@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import prismaClient from './../src/prismaClient'
 
 export const resetDatabase = async () => {

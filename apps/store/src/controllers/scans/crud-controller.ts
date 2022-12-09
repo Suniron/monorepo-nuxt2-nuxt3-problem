@@ -335,7 +335,6 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
         if (Array.isArray(assetVuln))
           assetVuln = assetVuln[0]
         if (!assetVuln) {
-          // eslint-disable-next-line prettier/prettier
           [assetVuln] = await createAssetVulnerabilityModel(
             assetId,
             vulnId,

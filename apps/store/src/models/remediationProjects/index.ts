@@ -246,6 +246,9 @@ export const updateRemediationProjectsModel = async (
                 .from('remediation_project')
                 .where({ id: remediationProjectId })
             }
+
+            // TODO: refactor it
+            return null
           }),
         )
 
