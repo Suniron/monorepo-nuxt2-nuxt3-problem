@@ -98,7 +98,7 @@ describe('/assets/belonging', () => {
 })
 
 describe('/assets/:id/risk', () => {
-  it('GET/assets/:id/risk should return status 200 and risk properties of the asset', async () => {
+  it('GET /assets/:id/risk should return status 200 and risk properties of the asset', async () => {
     const assetId = 11
     const risk = assetRisk.find(ast => ast.asset_id === assetId) || null
 
@@ -121,7 +121,7 @@ describe('/assets/:id/risk', () => {
     expect(result.body.scores.compoundScore).toEqual(risk?.compound_score)
   })
 
-  it('GET/assets/:id/risk should return status 404 Not found when it is not an asset of the same company as the logged user', async () => {
+  it('GET /assets/:id/risk should return status 404 Not found when it is not an asset of the same company as the logged user', async () => {
     const assetId = 113
 
     prismaMock.v_asset_risk_scores.findFirst.mockResolvedValue(null)

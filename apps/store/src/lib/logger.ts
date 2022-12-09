@@ -32,7 +32,7 @@ if (process.env.NODE_ENV !== 'test' && ELASTICSEARCH_URL) {
 // We only need to create the logging library instance once
 const p = pino(
   {
-    enabled: process.env.NODE_ENV !== 'test',
+    // enabled: process.env.NODE_ENV !== 'test',
     level: 'trace', // this MUST be set at the lowest level of the destinations,
     redact: [
       'req.body.password',

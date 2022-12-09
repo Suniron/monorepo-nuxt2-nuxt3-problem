@@ -14,12 +14,14 @@ module.exports = {
   // TODO: enable when typing is fixed in all the project
   // preset: 'ts-jest/presets/default-esm',
   roots: ['<rootDir>'],
+  setupFilesAfterEnv: ['<rootDir>/__tests__/utils/setupTests.ts'],
+  testMatch: [
+    '**/__tests__/**/*test.ts',
+  ],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       diagnostics: false,
     }],
   },
-  testMatch:  [
-    "**/__tests__/**/*test.ts"
-  ]
+
 }
