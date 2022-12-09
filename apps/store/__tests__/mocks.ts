@@ -1,9 +1,11 @@
 /* eslint-disable no-async-promise-executor */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import Knex from 'knex'
 import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
 import * as jwt from '../src/common/auth/jwt'
+import type { OptionnalUserInfos } from '../src/types/user'
 import { getAdminUser, getNonAdminUser } from './utils'
 
 jest.mock('../src/common/auth/jwt')
@@ -105,14 +107,14 @@ const knexFunctions = [
   'toSQL',
 ]
 
-export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
+export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
   const knexMock = jest.fn(() => {
     return knexMock
   })
 
   knexFunctions.forEach((fct) => {
-    function impl(this: any, param: any) {
-      this.then = (resolve: any, reject: any) =>
+    function impl(param) {
+      this.then = (resolve, reject) =>
         shouldReject ? reject(finalValue) : resolve(finalValue)
 
       if (typeof param === 'function') {
@@ -132,7 +134,8 @@ export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-  knex.mockReturnValue(mKnex)
+  Knex.mockReturnValue(mKnex)
+
   knex.knex = knexMock
 
   return knexMock
@@ -141,19 +144,18 @@ export function mockKnexWithFinalValue(finalValue: any, shouldReject = false) {
 /**
  * Mock the knex query builder with the given final values.
  * The last value of the list will be repeated as the return value of all subsequent calls
- * @param {any[]} finalValues The final values to return for each call in order
- * @param {boolean} shouldReject If the query should be rejected
+ * @param finalValues The final values to return for each call in order
+ * @param shouldReject If the query should be rejected
  */
-export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) {
+export function mockKnexWithFinalValues(finalValues: any[], shouldReject = false) {
   let returnCount = 0
-
   const knexMock = jest.fn(() => {
     return knexMock
   })
 
   knexFunctions.forEach((fct) => {
-    function impl(this: any, param: any) {
-      this.then = (resolve: any, reject: any) => {
+    function impl(param) {
+      this.then = (resolve, reject) => {
         const returnValue = shouldReject
           ? reject(finalValues[returnCount])
           : resolve(finalValues[returnCount])
@@ -179,14 +181,13 @@ export function mockKnexWithFinalValues(finalValues: any, shouldReject = false) 
   })
 
   const mKnex = jest.fn().mockReturnValue(knexMock)
-
   Knex.mockReturnValue(mKnex)
   knex.knex = knexMock
 
   return knexMock
 }
 
-export function mockVerifyToken(user: any) {
+export function mockVerifyToken(user) {
   jwt.verifyToken = jest.fn(() => {
     if (user)
       return { user }
@@ -196,16 +197,8 @@ export function mockVerifyToken(user: any) {
   return jwt.verifyToken
 }
 
-/**
- * Mock admin user token
- *
- * @param {import('../src/types/user').OptionnalUserInfos?} userInfos
- */
-export const mockAdminUser = (userInfos: any) => mockVerifyToken(getAdminUser(userInfos))
+export const mockAdminUser = (userInfos: OptionnalUserInfos) =>
+  mockVerifyToken(getAdminUser(userInfos))
 
-/**
- * Mock non admin user token
- *
- * @param {import('../src/types/user').OptionnalUserInfos?} userInfos
- */
-export const mockNonAdminUser = (userInfos: any) => mockVerifyToken(getNonAdminUser(userInfos))
+export const mockNonAdminUser = (userInfos: OptionnalUserInfos) =>
+  mockVerifyToken(getNonAdminUser(userInfos))
