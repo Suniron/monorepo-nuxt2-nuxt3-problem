@@ -14,17 +14,17 @@ describe('isValidSessionRefreshToken', () => {
     ).toBe(false)
   })
 
-  it.skip('should throw error if Prisma crash', () => {
+  it('should throw error if Prisma crash', async () => {
     prismaMock.user_session.findFirst.mockRejectedValue(
       new Error('Prisma error'),
     )
 
-    expect(() =>
-      isValidSessionRefreshToken(
+    expect(
+      await isValidSessionRefreshToken(
         'badRefreshToken',
         '1a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc',
       ),
-    ).toThrow('Prisma error')
+    ).toBeFalsy()
   })
 
   it('should return true if a user session is found for given refresh token + user id', async () => {

@@ -157,7 +157,7 @@ export const isValidSessionRefreshToken = async (refreshToken: any, userId: any)
   }
   catch (error) {
     log.withError(error).error('isValidSessionRefreshToken')
-    throw new Error(`Error while checking refresh token: ${error}`)
+    return false
   }
 }
 

@@ -11,23 +11,25 @@ const knexConnection = _knex({
   seeds: {},
 })
 
-knexConnection.migrate.currentVersion().then((currentVersion) => {
+if (process.env.NODE_ENV !== 'test') {
+  knexConnection.migrate.currentVersion().then((currentVersion) => {
   // Adding user param accessible to the migrations only to avoid running them on app setup (dry-run)
-  knexConnection
-    .withUserParams({ isSetup: currentVersion === 'none' })
-    .migrate.latest()
-    .then(([migrationBatchNumber, migrationsRan]) => {
-      if (migrationsRan.length) {
-        log.info(
+    knexConnection
+      .withUserParams({ isSetup: currentVersion === 'none' })
+      .migrate.latest()
+      .then(([migrationBatchNumber, migrationsRan]) => {
+        if (migrationsRan.length) {
+          log.info(
           `Finished running migrations ${migrationsRan.join(
             ', ',
           )}. Batch #${migrationBatchNumber}`,
-        )
-      }
-      if (currentVersion === 'none')
-        knexConnection.seed.run()
-    })
-})
+          )
+        }
+        if (currentVersion === 'none')
+          knexConnection.seed.run()
+      })
+  })
+}
 
 export const queryDB = (sql: any, params: any) => {
   return knexConnection.raw(sql, params)
