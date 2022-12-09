@@ -2,8 +2,6 @@ import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 
-eslint - disable - next - line
-
 describe('/relations/bulk', () => {
   describe('POST /', () => {
     it('with bad asset id format that is not a number should return an error 400', async () => {

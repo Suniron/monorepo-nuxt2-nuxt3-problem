@@ -5,7 +5,7 @@ import {
   mockKnexWithFinalValues,
   mockVerifyToken,
 } from '../../mocks'
-import { generateUser } from '../../utils/index.js'
+import { generateUser } from '../../utils/'
 import priorities from '../../example-values/project-priorities.json'
 import remediationProjectData from '../../example-values/remediation-projects.json'
 import commentsRemediationProjectData from '../../example-values/comments-remediation-projects.json'

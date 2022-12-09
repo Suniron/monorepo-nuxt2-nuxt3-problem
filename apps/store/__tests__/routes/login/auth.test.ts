@@ -3,7 +3,7 @@ import { prismaMock } from '../../mockPrisma'
 
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { generateLogin, generateUser } from '../../utils/index.js'
+import { generateLogin, generateUser } from '../../utils/'
 
 describe('POST /login', () => {
   it('when a user attemps to log it with incorrect credentials', async () => {

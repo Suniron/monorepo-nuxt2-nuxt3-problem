@@ -4,7 +4,7 @@
  * @typedef {import('express').NextFunction} NextFunction
  */
 
-import { throwHTTPError } from '../../common/errors/index.js'
+import { throwHTTPError } from '../../common/errors/'
 import { updateFearedEventsModel } from '../../models/fearedEvents'
 
 /**

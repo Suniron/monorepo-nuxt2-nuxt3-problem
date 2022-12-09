@@ -1,7 +1,7 @@
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { generateUser } from '../../utils/index.js'
+import { generateUser } from '../../utils/'
 import app from '../../utils/fakeApp'
 
 /**

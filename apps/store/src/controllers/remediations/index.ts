@@ -1,4 +1,4 @@
-import { throwHTTPError } from '../../common/errors/index.js'
+import { throwHTTPError } from '../../common/errors/'
 
 import { searchGroupedRemediationsModel } from '../../models/remediations'
 
