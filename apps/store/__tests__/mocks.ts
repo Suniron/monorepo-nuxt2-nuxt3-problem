@@ -5,7 +5,7 @@ import Knex from 'knex'
 import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
 import * as jwt from '../src/common/auth/jwt'
-import type { OptionnalUserInfos } from '../src/types/user'
+import type { OptionnalUserInfos } from '../@types/user'
 import { getAdminUser, getNonAdminUser } from './utils'
 
 jest.mock('../src/common/auth/jwt')

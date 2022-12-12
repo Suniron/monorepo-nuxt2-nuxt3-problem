@@ -2,6 +2,39 @@ import { knex } from '../../../common/db'
 
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
+export const createPortModel = async (tx, ipId, params) => {
+  try {
+    const {
+      cpe_id = knex.raw('NULL'),
+      number = 0,
+      version = '',
+      service = '',
+      protocol = '',
+      detail = '',
+      status = 'open',
+    } = params
+    const [portId] = (
+      await tx('port')
+        .returning('id')
+        .insert({
+          cpe_id,
+          detail,
+          ip_id: ipId,
+          number: parseInt(number),
+          protocol,
+          service,
+          status,
+          version,
+        })
+    ).map(e => e.id)
+    return portId
+  }
+  catch (error) {
+    console.error(error)
+    return { error: MODEL_ERROR }
+  }
+}
+
 export const updateIpModel = async (ip: any, id: any) => {
   try {
     const [ipToUpdate] = await knex.select('id').from('ip').where('ip.id', id)
@@ -34,6 +67,43 @@ export const createIpModel = async (assetId: any, params: any) => {
       mask,
     })
     return { ipId }
+  }
+  catch (error) {
+    console.error(error)
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const updatePortModel = async (tx, portId, params) => {
+  try {
+    const [portToUpdate] = await tx
+      .select()
+      .from('port')
+      .where('port.id', portId)
+    if (!portToUpdate)
+      return { error: NOT_FOUND }
+
+    const {
+      cpe_id = portToUpdate.cpe_id,
+      number = portToUpdate.number,
+      version = portToUpdate.version,
+      service = portToUpdate.service,
+      protocol = portToUpdate.protocol,
+      detail = portToUpdate.detail,
+      status = portToUpdate.status,
+    } = params
+    await tx('port')
+      .update({
+        cpe_id,
+        detail,
+        number,
+        protocol,
+        service,
+        status,
+        version,
+      })
+      .where('port.id', portId)
+    return { status: SUCCESS }
   }
   catch (error) {
     console.error(error)

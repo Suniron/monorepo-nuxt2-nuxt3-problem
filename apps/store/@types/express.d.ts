@@ -1,3 +1,4 @@
+import { Logger } from "@xrator-freemium/logger";
 import type { P } from 'pino'
 import type { LogLayer } from 'loglayer'
 

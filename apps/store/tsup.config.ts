@@ -4,9 +4,7 @@ import { defineConfig } from 'tsup'
 const isDev = process.env.NODE_ENV === 'development'
 
 const onSuccess = async () => {
-  fs.copyFile('./api.yml', './dist/api.yml', err =>
-    console.error('Error copying api.yml', err),
-  )
+  fs.copyFile('./api.yml', './dist/api.yml', () => {})
 }
 
 export default defineConfig(() => ({

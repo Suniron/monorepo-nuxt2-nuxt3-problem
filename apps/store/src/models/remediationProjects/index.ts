@@ -17,7 +17,7 @@ import {
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
 } from '../../../src/utils/remediationProject.utils'
-import type { RemediationProjectEdit } from '../../types/remediationProject'
+import type { RemediationProjectEdit } from '../../../@types/remediationProject'
 
 /**
  * @typedef {import('@/types/remediationProject').RemediationProjectSummary} RemediationProjectSummary
