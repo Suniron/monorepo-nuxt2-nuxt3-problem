@@ -13,7 +13,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "prestart": "pnpm generate",
-    "lint": "eslint --ext .js,.vue . ",
+    "lint": "eslint --ext .js,.vue . --quiet",
     "lint:fix": "eslint --fix --ext .js,.vue . "
   },
   "dependencies": {

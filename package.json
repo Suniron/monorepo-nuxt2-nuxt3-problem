@@ -23,6 +23,7 @@
     "test": "turbo run test"
   },
   "devDependencies": {
+    "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
     "turbo": "latest"
@@ -31,7 +32,6 @@
     "node": ">=14.0.0"
   },
   "packageManager": "pnpm@7.14.2",
-  "dependencies": {},
   "prisma": {
     "schema": "apps/store/prisma/schema.prisma"
   }

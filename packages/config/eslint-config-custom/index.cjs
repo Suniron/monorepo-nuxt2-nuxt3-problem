@@ -5,13 +5,8 @@ const config = {
     es6: true,
     node: true,
   },
-  extends: [
-    'turbo',
-    '@antfu',
-  ],
-  plugins: [
-    'sort-keys-fix',
-  ],
+  extends: ['turbo', '@antfu'],
+  plugins: ['sort-keys-fix'],
   rules: {
     'no-console': 'warn',
     'sort-keys-fix/sort-keys-fix': 'error',
