@@ -1,4 +1,3 @@
-import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 export const requestMissionAnalysisService = async (
   provider,
@@ -13,7 +12,7 @@ export const requestMissionAnalysisService = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data, error } = await axios.get(`/missions_analysis/${id}`, {
+    const { data } = await axios.get(`/missions_analysis/${id}`, {
       ...reqConfig,
       params,
     })
@@ -36,7 +35,7 @@ export const requestBusinessImpactService = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data, error } = await axios.get('/business_impact', {
+    const { data } = await axios.get('/business_impact', {
       ...reqConfig,
       params,
     })
@@ -88,7 +87,7 @@ export const requestSeveritiesService = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data, error } = await axios.get('/severities', {
+    const { data } = await axios.get('/severities', {
       ...reqConfig,
       params,
     })

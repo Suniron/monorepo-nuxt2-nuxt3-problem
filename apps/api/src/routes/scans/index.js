@@ -1,5 +1,4 @@
 import express from 'express'
-import { Joi, Segments, celebrate } from 'celebrate'
 import {
   generateScanReportController,
   getScanDetailsController,

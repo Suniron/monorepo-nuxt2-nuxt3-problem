@@ -41,7 +41,7 @@ export const createTagController = async (req, res, next) => {
 
 export const deleteTagController = async (req, res, next) => {
   try {
-    const { error, status } = await deleteTagService(
+    const { error } = await deleteTagService(
       req.params?.id,
       req.accessToken,
     )

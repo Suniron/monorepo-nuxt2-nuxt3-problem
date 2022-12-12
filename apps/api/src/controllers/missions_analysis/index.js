@@ -1,5 +1,3 @@
-import { throwHTTPError } from '@/common/errors'
-
 import {
   searchBusinessImpactService,
   searchMissionAnalysisService,

@@ -41,6 +41,8 @@ export const assetVulnerabilitiesController = async (req, res, next) => {
           - new Date(a.details[0].vuln_publication_date)
         )
       }
+
+      return undefined // TODO: better handling
     })
     res.send({ total, vulnerabilities })
   }
@@ -135,7 +137,7 @@ export const searchVulnerabilitiesWithTheirAssetsController = async (
 
 export const updateStatusController = async (req, res, next) => {
   try {
-    const { error, status } = await updateStatusService(
+    const { error } = await updateStatusService(
       req.params?.aid,
       req.params?.vid,
       req.body,
@@ -153,7 +155,7 @@ export const updateStatusController = async (req, res, next) => {
 
 export const addPostVulnerabilityAssetController = async (req, res, next) => {
   try {
-    const { error, status } = await addPostVulnerabilityAssetService(
+    const { error } = await addPostVulnerabilityAssetService(
       req.params?.aid,
       req.params?.vid,
       req.body,

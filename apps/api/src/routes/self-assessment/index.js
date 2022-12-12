@@ -1,6 +1,5 @@
 import express from 'express'
 import {
-  createComplianceController,
   fetchComplianceController,
 } from '@/controllers/self-assessment'
 

@@ -25,20 +25,14 @@ const p_rdns = new RegExp(
 )
 
 // -- Port header
-const p_port_header = new RegExp(
-  '^(?<port>PORT)\\s+(?<state>STATE)\\s+(?<service>SERVICE)\\s+(?<reason>REASON\\s*)?(?<version>VERSION$)?',
-)
+const p_port_header = /^(?<port>PORT)\s+(?<state>STATE)\s+(?<service>SERVICE)\s+(?<reason>REASON\s*)?(?<version>VERSION$)?/
 
 // -- Port finding
-const p_port_without_reason = new RegExp(
-  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)(?:\\s*(?<version>.*))?$',
-)
-const p_port_with_reason = new RegExp(
-  '^(?<number>[\\d]+)\\/(?<protocol>tcp|udp)\\s+(?:open|open\\|filtered)\\s+(?<service>[\\w\\S]*)\\s+(?<reason>.* ttl [\\d]+)\\s*(?:\\s*(?<version>.*))$',
-)
+const p_port_without_reason = /^(?<number>[\d]+)\/(?<protocol>tcp|udp)\s+(?:open|open\|filtered)\s+(?<service>[\w\S]*)(?:\s*(?<version>.*))?$/
+const p_port_with_reason = /^(?<number>[\d]+)\/(?<protocol>tcp|udp)\s+(?:open|open\|filtered)\s+(?<service>[\w\S]*)\s+(?<reason>.* ttl [\d]+)\s*(?:\s*(?<version>.*))$/
 
 // -- Script output finding
-const p_script = new RegExp('^\\|[\\s|\\_](?<script>.*)$')
+const p_script = /^\|[\s|\_](?<script>.*)$/
 
 // -- MAC address
 const p_mac = new RegExp(
@@ -48,18 +42,14 @@ const p_mac = new RegExp(
 )
 
 // -- OS detection (pattern order is important, the latter position the more precise and reliable the information is)
-const p_os = new RegExp(
-  '(?:^Service Info: OS|^OS|\\s+OS|^OS details|smb-os-discovery|\\|):\\s(?<os>[^;]+)',
-)
+const p_os = /(?:^Service Info: OS|^OS|\s+OS|^OS details|smb-os-discovery|\|):\s(?<os>[^;]+)/
 
 // -- Network distance
-const p_network_dist = new RegExp(
-  'Network Distance:\\s(?<hop_number>\\d+)\\shops?',
-)
+const p_network_dist = /Network Distance:\s(?<hop_number>\d+)\shops?/
 
 // Nmap Grepable output
 // -- Target, Ports
-const p_grepable = new RegExp('(?<whole_line>^Host:\\s.*)')
+const p_grepable = /(?<whole_line>^Host:\s.*)/
 
 // Traceroute output
 // -- traceroute normal line
@@ -91,15 +81,6 @@ const dottedquad_to_num = (ip) => {
   return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3]
 }
 
-const num_to_dottedquad = (num) => {
-  let d = num % 256
-  for (let i = 3; i > 0; i--) {
-    num = Math.floor(num / 256)
-    d = `${num % 256}.${d}`
-  }
-  return d
-}
-
 /**
  *    Check the list for a potential pattern match
  *    @param list : a list of potential matching groups
@@ -127,7 +108,7 @@ const extract_matching_pattern = (regex, group_name, unfiltered_list) => {
   const filtered_list = unfiltered_list.filter(e => e.match(regex))
 
   if (filtered_list.length === 1) {
-    filtered_string = filtered_list.join('')
+    const filtered_string = filtered_list.join('')
     result = filtered_string.match(regex).groups[group_name]
   }
   return result
@@ -174,57 +155,67 @@ class Host {
   }
 
   get get_port_number_list() {
-    if (!this.get_port_list) { return [''] }
+    if (!this.get_port_list) {
+      return ['']
+    }
     else {
       const result = []
       const ports = this.get_port_list
-      for (port in ports)
+      for (const port in ports)
         result.push(port.get_number)
+      return result
     }
-    return result
   }
 
   get get_port_protocol_list() {
-    if (!this.get_port_list) { return [''] }
+    if (!this.get_port_list) {
+      return ['']
+    }
     else {
       const result = []
       const ports = this.get_port_list
       for (const port in ports)
         result.push(port.get_protocol)
+      return result
     }
-    return result
   }
 
   get get_port_service_list() {
-    if (!this.get_port_list) { return [''] }
+    if (!this.get_port_list) {
+      return ['']
+    }
     else {
       const result = []
       const ports = this.get_port_list
       for (const port in ports) result.push(port.get_service)
+      return result
     }
-    return result
   }
 
   get get_port_version_list() {
-    if (!this.get_port_list) { return [''] }
+    if (!this.get_port_list) {
+      return ['']
+    }
     else {
       const result = []
       const ports = this.get_port_list
       for (const port in ports)
         result.push(port.get_version)
+      return result
     }
-    return result
   }
 
   get get_port_script_list() {
-    if (!this.get_port_list) { return [''] }
+    if (!this.get_port_list) {
+      return ['']
+    }
     else {
       const result = []
       const ports = this.get_port_list
       for (const port in ports)
         result.push(port.get_script)
+      return result
     }
-    return result
   }
 
   get get_os() {
@@ -338,8 +329,8 @@ const split_grepable_match = (raw_string) => {
   const p_host = new RegExp(
     `Host:\\s(?<ip>${p_ip_elementary}${+')\\s+\\((?<fqdn>|.*)\\)'}`,
   )
-  const p_ports = new RegExp('Ports:\\s+(?<ports>.*)/')
-  const p_os = new RegExp('OS:\\s(?<os>.*)')
+  const p_ports = /Ports:\s+(?<ports>.*)\//
+  const p_os = /OS:\s(?<os>.*)/
 
   // Extracted named-group matches
   const IP_str = extract_matching_pattern(p_host, 'ip', splitted_fields)
@@ -351,10 +342,10 @@ const split_grepable_match = (raw_string) => {
   current_host.set_os(OS_str)
 
   // Let's split the raw port list
-  all_ports = ports_str.split(', ')
+  const all_ports = ports_str.split(', ')
 
   // Keep only open ports
-  open_ports_list = all_ports.filter((p) => {
+  const open_ports_list = all_ports.filter((p) => {
     return p.includes('/open/')
   })
 
@@ -362,7 +353,8 @@ const split_grepable_match = (raw_string) => {
     const open_port = open_ports_list[idx]
     // Extract each field from the format [port number / state / protocol / owner / service / rpc info / version info]
     // -- Thanks to http://www.unspecific.com/nmap-oG-output/
-    const [number, state, protocol, owner, service, version] = open_port.split(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [number, _state, protocol, _owner, service, version] = open_port.split(
       '/',
       5,
     )
@@ -386,14 +378,13 @@ export const parseNmap = (lines) => {
   let p_port = p_port_without_reason
   let in_script_line = false
   let script = ''
-  let count = 0
+
   for (const i in lines) {
     const line = lines[i].trim()
     // 1st case:     Nmap Normal Output
     // -- 1st action: Grab the IP
     const IP = line.match(p_ip)?.groups || null
     if (IP) {
-      count += 1
       // Check out what patterns matched
       const IP_potential_match = [
         IP.ip_nmap5,
@@ -506,7 +497,7 @@ export const parseNmap = (lines) => {
     const grepable = line.match(p_grepable)?.groups || null
     if (grepable) {
       if (grepable.whole_line) {
-        new_host = split_grepable_match(grepable.whole_line)
+        const new_host = split_grepable_match(grepable.whole_line)
         // Update the occurence found with 'Status: Up'
         IPs[new_host.get_ip_dotted_format] = new_host
         last_host = new_host

@@ -55,7 +55,7 @@ export const updatePortForVulnerabilities = async (
 ) => {
   const response = await assetsAPIs.updatePortVuln(body, params, accessToken)
   return response !== 'Changements effectués'
-    ? createServiceError(error)
+    ? createServiceError()
     : { status: SUCCESS }
 }
 
@@ -66,7 +66,7 @@ export const deleteForVulnerabilities = async (
 ) => {
   const response = await assetsAPIs.deleteVuln(body, params, accessToken)
   return response !== 'Suppression effectués'
-    ? createServiceError(error)
+    ? createServiceError()
     : { status: SUCCESS }
 }
 
@@ -81,7 +81,7 @@ export const updateStatusService = async (
   if (!params || !Object.entries(params).length)
     return { status: SUCCESS } // nothing to update
 
-  const { error, status } = await assetsAPIs.updateStatus(
+  const { error } = await assetsAPIs.updateStatus(
     aid,
     vid,
     params,
@@ -101,7 +101,7 @@ export const addPostVulnerabilityAssetService = async (
   if (!params || !Object.entries(params).length)
     return { status: SUCCESS } // nothing to update
 
-  const { error, status } = await assetsAPIs.addPostVulnerabilityAsset(
+  const { error } = await assetsAPIs.addPostVulnerabilityAsset(
     aid,
     vid,
     params,

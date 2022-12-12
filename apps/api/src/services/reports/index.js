@@ -13,11 +13,13 @@ const regex = /(<p><img src="data:image\/png;base64,(?<img>.*?)"><\/p>|<p>(?<t1>
 const convertHTML = (str) => {
   let m
   const res = []
+  // TODO: fix this
+  // eslint-disable-next-line no-cond-assign
   while ((m = regex.exec(str)) !== null) {
     // This is necessary to avoid infinite loops with zero-width matches
-    if (m.index === regex.lastIndex) {
+    if (m.index === regex.lastIndex)
       regex.lastIndex++
-    }
+
     if (m.groups) {
       if (m.groups.img)
         res.push({ type: 'img', value: m.groups.img })

@@ -306,7 +306,6 @@ export const requestSearchPostVulnerabilityAsset = async (
   const { axios, logger } = provider
 
   try {
-    const status = SUCCESS
     if (!aid || !vid)
       return { error: VALIDATION_ERROR }
     const reqConfig = {

@@ -14,7 +14,7 @@ export const requestSearchGroups = async (
 ) => {
   const { axios, logger } = provider
   try {
-    const { id, sort = 'name' } = params
+    const { id } = params
     const reqConfig = getReqConfig(accessToken)
 
     // Group by id

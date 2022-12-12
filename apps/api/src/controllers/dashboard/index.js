@@ -1,4 +1,4 @@
-import { throwHTTPError } from '@/common/errors'
+import { throwHTTPError, throwValidationError } from '@/common/errors'
 import {
   chartsDataService,
   fetchDashboardService,

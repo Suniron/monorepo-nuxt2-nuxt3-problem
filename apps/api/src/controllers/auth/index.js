@@ -65,7 +65,7 @@ export const refreshAccessTokenController = async (req, res, next) => {
 
 export const logoutController = async (req, res, next) => {
   try {
-    const { error, refreshTokenCookie } = await logoutService(req.accessToken)
+    const { error } = await logoutService(req.accessToken)
     res.set('Set-Cookie', 'rt=;;Path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;')
     if (error)
       throwHTTPError(error)
@@ -87,7 +87,11 @@ export const isAuthorizedController = async (req, res, next) => {
     next(error)
   }
 }
-export const resetPassword = async (req, res, next) => {
+
+/**
+ * // TODO: handle error with next()
+ */
+export const resetPassword = async (req, res) => {
   const mailOrUsername = req.body.username
   const { resetToken, email } = await sendResetPasswordMail({
     username: mailOrUsername,
@@ -118,7 +122,11 @@ export const resetPassword = async (req, res, next) => {
     res.sendStatus(404)
   }
 }
-export const updatePasswordByToken = async (req, res, next) => {
+
+/**
+ * // TODO: handle error with next()
+ */
+export const updatePasswordByToken = async (req, res) => {
   const { token, password } = req.body
   const response = await updateResetPasswordByToken({ password, token })
   if (response?.error)

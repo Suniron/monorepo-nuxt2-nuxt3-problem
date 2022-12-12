@@ -81,7 +81,6 @@ export const requestUpdateUser = async (provider, params, accessToken = '') => {
       firstName,
       groupIds,
       lastName,
-      lastName,
       oldPassword,
       password1,
       password2,

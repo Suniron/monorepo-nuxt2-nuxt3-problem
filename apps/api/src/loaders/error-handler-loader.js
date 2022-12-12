@@ -10,11 +10,8 @@ import { HTTPError, getBadRequestError } from '@/common/errors/http'
  */
 export const errorHandler = (err, req, res, _next) => {
   if (isCelebrateError(err)) {
-    let message = 'ValidatonErrpr'
-    for (const [_segment, joiError] of err.details.entries()) {
-      message = joiError.message
-      break
-    }
+    // TODO: is there a better way to get the error message?
+    const message = err.details.entries()[0][1].message
 
     req.log.withError(err).error('errorHandler: celebrate error')
     return getBadRequestError({

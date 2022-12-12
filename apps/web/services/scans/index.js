@@ -1,6 +1,6 @@
 const baselines = require('./baselines.json')
 
-export const getScansChartDataService = async (axios, params) => {
+export const getScansChartDataService = async (axios) => {
   const { data } = await axios.get('/dashboard/scanHistory')
   // data.scanHistory = data.scanHistory.concat(scansChartData)
   /* const scans = Object.values(scansData)

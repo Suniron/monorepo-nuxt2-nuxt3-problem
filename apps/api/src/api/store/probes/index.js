@@ -1,10 +1,8 @@
-import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestSearchProbes = async (provider, params, accessToken) => {
   const { axios, logger } = provider
   try {
-    const { search } = params
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },

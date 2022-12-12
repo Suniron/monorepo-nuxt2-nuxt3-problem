@@ -23,6 +23,7 @@ const streams = [
 ]
 
 if (ELASTICSEARCH_URL) {
+  // eslint-disable-next-line no-console
   console.log('Log will be sent to Elasticsearch')
   streams.push({
     level: 'trace',

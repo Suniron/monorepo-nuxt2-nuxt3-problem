@@ -1,5 +1,5 @@
-import { STORE_API_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
+import { createServiceError } from '@/common/errors/service'
 
 export const requestLogin = async (provider, params) => {
   const { logger, axios } = provider
@@ -68,7 +68,7 @@ export const requestLogout = async (provider, accessToken) => {
 }
 
 export const requestIsAuthorized = async (provider, accessToken) => {
-  const { axios, logger } = provider
+  const { axios } = provider
   try {
     const reqConfig = {
       ...(accessToken && {
@@ -76,7 +76,7 @@ export const requestIsAuthorized = async (provider, accessToken) => {
       }),
     }
     const { data } = await axios.get('/is-authorized', reqConfig)
-    return data.error ? createServiceError(error) : data
+    return data.error ? createServiceError(data.error) : data
   }
   catch (error) {
     return createAPIError(error)

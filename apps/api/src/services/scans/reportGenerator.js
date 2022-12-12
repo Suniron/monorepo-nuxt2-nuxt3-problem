@@ -749,6 +749,8 @@ function generateDocxForToken(
       isParagraph = false
       break
     case 'li':
+      // TODO: fix this
+      // eslint-disable-next-line no-case-declarations
       const level
         = token.attributes
           ?.map(attr => attr.match(/ql-indent-(\d)/g))
@@ -783,6 +785,8 @@ function generateDocxForToken(
     default:
       docElement = new Paragraph({})
 
+      // TODO: fix this
+      // eslint-disable-next-line no-case-declarations
       const srcAttribute = token.attributes.find(attr =>
         attr.includes('src='),
       )

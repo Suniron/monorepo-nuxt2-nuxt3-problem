@@ -62,7 +62,7 @@ export const processCSVService = async (params, accessToken = '') => {
         const csvData = []
         const csvHeaders = []
         const parser = parse(data, {
-          on_record: (record, context) => {
+          on_record: (record) => {
             return record.map(e => (e === '' ? undefined : e))
           },
         })

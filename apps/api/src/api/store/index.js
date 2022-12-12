@@ -201,8 +201,6 @@ export const remediationProjectsAPIs = {
     requestGetRemediationProjectsScope(provider, params, accessToken),
   getRemediationProjectsService: (params, accessToken) =>
     requestGetRemediationProjects(provider, params, accessToken),
-  getRemediationProjectsService: (params, accessToken) =>
-    requestGetRemediationProjects(provider, params, accessToken),
   getRemediationProjectsSummaryService: (params, accessToken) =>
     requestGetRemediationProjectsSummary(provider, params, accessToken),
   searchProjectPrioritiesService: (params, accessToken) =>

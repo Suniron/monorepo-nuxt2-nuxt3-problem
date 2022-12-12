@@ -1,7 +1,6 @@
 import { assetsAPIs } from '@/api/store'
 import {
   NOT_FOUND,
-  SERVICE_ERROR,
   SUCCESS,
   VALIDATION_ERROR,
 } from '@/common/constants'
@@ -107,8 +106,12 @@ export const searchAssetsService = async (params, accessToken = '') => {
           },
         ]
         const addOrGetNode = (node, elt) => {
+          // TODO: fix this
+          // eslint-disable-next-line eqeqeq
           const [c] = node.children.filter(n => n.name == elt)
-          if (c) { return c }
+          if (c) {
+            return c
+          }
           else {
             node.children.push({ children: [], name: elt })
             return node.children[node.children.length - 1]
@@ -169,7 +172,7 @@ export const deleteAssetService = async (id, accessToken = '') => {
   if (!id)
     return { error: VALIDATION_ERROR }
 
-  const { error, status } = await assetsAPIs.deleteAsset(id, accessToken)
+  const { error } = await assetsAPIs.deleteAsset(id, accessToken)
   if (error) {
     if (error === NOT_FOUND)
       return { error }
@@ -185,7 +188,7 @@ export const createAssetVulnerabilityService = async (
 ) => {
   if (!id)
     return { error: VALIDATION_ERROR }
-  const { error, status } = await assetsAPIs.createAssetVulnerability(
+  const { error } = await assetsAPIs.createAssetVulnerability(
     id,
     params,
     accessToken,
@@ -204,7 +207,7 @@ export const updateAssetService = async (id, params, accessToken = '') => {
   if (!params || !Object.entries(params).length)
     return { status: SUCCESS } // nothing to update
 
-  const { error, status } = await assetsAPIs.updateAsset(
+  const { error } = await assetsAPIs.updateAsset(
     id,
     params,
     accessToken,
@@ -216,6 +219,8 @@ export const updateAssetsBulkService = async (params, accessToken = '') => {
   if (!params || !Object.entries(params).length)
     return { status: SUCCESS } // nothing to update
   Object.keys(params).forEach((elt) => {
+  // TODO: fix this
+    // eslint-disable-next-line no-unused-expressions
     !params[elt] || params[elt] === '' || params[elt]?.length === 0
       ? delete params[elt]
       : undefined
@@ -326,6 +331,8 @@ export const importCsvService = async (params, accessToken = '') => {
       ? keyIndex.csv.reduce((res, eltCsv) => {
         if (elt[eltCsv]) {
           res.push(
+            // TODO: fix this
+            // eslint-disable-next-line no-cond-assign
             (tmp = data.findIndex(
               d =>
                 d[nameIndex.csv[0]]?.toLowerCase()
@@ -343,6 +350,8 @@ export const importCsvService = async (params, accessToken = '') => {
         ? keyIndex.default.reduce((res, eltCsv) => {
           if (elt[eltCsv]) {
             res.push(
+              // TODO: fix this
+              // eslint-disable-next-line no-cond-assign
               (tmp = data.findIndex(
                 d =>
                   d[nameIndex.default[0]]?.toLowerCase()

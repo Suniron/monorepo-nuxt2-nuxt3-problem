@@ -1,5 +1,4 @@
 // @ts-check
-import { NextFunction, Request, Response } from 'express'
 import { throwHTTPError } from '@/common/errors'
 import {
   createCompanyService,
@@ -13,9 +12,9 @@ import {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
 export const searchCompanyController = async (req, res, next) => {
   try {
@@ -38,9 +37,9 @@ export const searchCompanyController = async (req, res, next) => {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
 export const createCompanyController = async (req, res, next) => {
   try {
@@ -57,9 +56,9 @@ export const createCompanyController = async (req, res, next) => {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
 export const searchCompanyLogoController = async (req, res, next) => {
   try {
@@ -80,9 +79,9 @@ export const searchCompanyLogoController = async (req, res, next) => {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
 export const updateCompanyLogoController = async (req, res, next) => {
   try {
@@ -103,9 +102,9 @@ export const updateCompanyLogoController = async (req, res, next) => {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
 export const deleteCompanyLogoController = async (req, res, next) => {
   try {
@@ -122,6 +121,7 @@ export const deleteCompanyLogoController = async (req, res, next) => {
     next(error)
   }
 }
+
 export const updateCompanyController = async (req, res, next) => {
   try {
     const { error, status } = await updateCompanyService(

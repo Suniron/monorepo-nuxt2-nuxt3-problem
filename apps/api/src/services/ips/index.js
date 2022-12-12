@@ -1,13 +1,5 @@
 import { ipsAPIs } from '@/api/store'
-import {
-  NOT_FOUND,
-  SERVICE_ERROR,
-  SUCCESS,
-  VALIDATION_ERROR,
-} from '@/common/constants'
-import { throwValidationError } from '@/common/errors'
 import { createServiceError } from '@/common/errors/service'
-deleteIpControllerService
 
 export const ipValidator = ip =>
   /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(

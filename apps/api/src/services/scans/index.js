@@ -40,7 +40,7 @@ const getOs = (product) => {
   else return product
 }
 
-const parseOpenvas = async (params, accessToken) => {
+const parseOpenvas = async (params) => {
   try {
     const tagsRe = /cvss_base_vector=(?<cvss>[\s\S]*?)\|summary=(?<desc>[\s\S]*?)\|insight=(?<insight>[\s\S]*?)\|affected=(?<affected>[\s\S]*?)\|impact=(?<impact>[\s\S]*?)\|solution=(?<solution>[\s\S]*?)\|vuldetect=(?<vuldetect>[\s\S]*?)\|solution_type=(?<solution_type>[\s\S]*)/gm
     const cpeRe = /(cpe:\/(a|o|h):(.*?)(:(.*?)(:(.*?)(:(.*?)(:(.*?)(:(.*?)|$|\n)|$|\n)|$|\n)|$|\n)|$|\n))/g
@@ -69,7 +69,7 @@ const parseOpenvas = async (params, accessToken) => {
     })
     const vulns = {}
 
-    report.report.results.result.forEach((elt, index) => {
+    report.report.results.result.forEach((elt) => {
       const oid = elt.nvt['@_oid']
       const ip = elt.host['#text']
       res[ip].type = 'SERVER'
@@ -171,7 +171,7 @@ const parseOpenvas = async (params, accessToken) => {
 
 const getSeverity = { 1: 'low', 2: 'medium', 3: 'high', 4: 'critical' }
 
-const parseNessus = (params, accessToken) => {
+const parseNessus = (params) => {
   try {
     // const tagsRe = /cvss_base_vector=(?<cvss>[\s\S]*?)\|summary=(?<desc>[\s\S]*?)\|insight=(?<insight>[\s\S]*?)\|affected=(?<affected>[\s\S]*?)\|impact=(?<impact>[\s\S]*?)\|solution=(?<solution>[\s\S]*?)\|vuldetect=(?<vuldetect>[\s\S]*?)\|solution_type=(?<solution_type>[\s\S]*)/gm
     const cpeRe = /(cpe:\/(a|o|h):(.*?)(:(.*?)(:(.*?)(:(.*?)(:(.*?)(:(.*?)|$)|$)|$)|$)|$))/g
@@ -357,13 +357,13 @@ const decodeHtml = (str) => {
         .replaceAll('&amp;', '&')
       : null
   }
-  catch {
+  catch (error) {
     log.withError(error).error('decodeHtml')
     return ''
   }
 }
 
-const parseNessusHardening = (params, accessToken) => {
+const parseNessusHardening = (params) => {
   try {
     const options = {
       ignoreAttributes: false,
@@ -507,5 +507,5 @@ export const generateScanReportService = async (
 }
 
 export const writeTmp = (q) => {
-  fs.writeFile('/tmp/compliance.json', JSON.stringify(q, null, 2), (err) => {})
+  fs.writeFile('/tmp/compliance.json', JSON.stringify(q, null, 2))
 }

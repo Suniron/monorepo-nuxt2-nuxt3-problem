@@ -8,7 +8,7 @@ import {
 
 export const deleteIpController = async (req, res, next) => {
   try {
-    const { SUCCESS, code, error } = await deleteIpControllerService(
+    const { SUCCESS, error } = await deleteIpControllerService(
       {
         ...(req.params || {}),
         ...(req.query || {}),

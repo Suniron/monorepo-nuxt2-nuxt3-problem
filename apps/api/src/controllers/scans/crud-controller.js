@@ -190,12 +190,12 @@ export const generateScanReportController = async (req, res, next) => {
 }
 
 /**
+ * // TODO: handle error with next()
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
-export const writeTmpContorller = async (req, res, next) => {
+export const writeTmpContorller = async (req, res) => {
   writeTmp(req.body)
   res.status(201)
 }

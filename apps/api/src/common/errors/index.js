@@ -1,7 +1,6 @@
 // @ts-check
 import {
   getBadRequestError,
-  getConflictError,
   getInternalServerError,
   getNotFoundError,
   getUnauthorizedError,

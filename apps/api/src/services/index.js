@@ -1,5 +1,4 @@
 import { passThroughApi } from '@/api/store'
-import { throwHTTPError } from '@/common/errors'
 import { createServiceError } from '@/common/errors/service'
 import { log } from '@/lib/logger'
 

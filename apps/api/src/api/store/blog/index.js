@@ -1,4 +1,3 @@
-import { SUCCESS, VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestFetchPosts = async (provider, accessToken) => {
