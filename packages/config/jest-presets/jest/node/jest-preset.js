@@ -2,7 +2,7 @@
 module.exports = {
   detectOpenHandles: true,
   extensionsToTreatAsEsm: ['.ts'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   modulePathIgnorePatterns: [
     '<rootDir>/test/__fixtures__',
     '<rootDir>/node_modules',
@@ -12,7 +12,7 @@ module.exports = {
     '<rootDir>/build',
   ],
   // TODO: enable when typing is fixed in all the project
-  // preset: 'ts-jest/presets/default-esm',
+  preset: 'ts-jest',
   roots: ['<rootDir>'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/utils/setupTests.ts'],
   testMatch: [
@@ -20,7 +20,7 @@ module.exports = {
   ],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
-      diagnostics: false,
+      diagnostics: false, // Disable type checking for now
     }],
   },
 

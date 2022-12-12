@@ -14,8 +14,7 @@
     "generate": "nuxt generate",
     "prestart": "pnpm generate",
     "lint": "eslint --ext .js,.vue . ",
-    "lint:fix": "eslint --fix --ext .js,.vue . ",
-    "test": "jest --passWithNoTests"
+    "lint:fix": "eslint --fix --ext .js,.vue . "
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",

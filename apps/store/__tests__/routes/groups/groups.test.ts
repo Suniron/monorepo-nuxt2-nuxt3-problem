@@ -1,13 +1,11 @@
 import request from 'supertest'
 import csv from 'csvtojson'
+import type { group } from '@prisma/client'
 import { mockAdminUser, mockNonAdminUser } from '../../mocks'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 
-/**
- * @type {import('@prisma/client').group[]}
- */
-let groups: any = []
+let groups: group[] = []
 
 beforeAll(async () => {
   // Get datas:
@@ -28,9 +26,7 @@ describe('/groups/', () => {
       describe('get all groups of my company', () => {
         it('should be all company groups count', async () => {
           const companyGroups = groups
-
             .filter(g => g.company_id === 1)
-
             .map(cg => ({ ...cg, user_group: [] }))
 
           prismaMock.group.findMany.mockResolvedValue(companyGroups)
@@ -113,7 +109,7 @@ describe('/groups/', () => {
           ])
 
           const response = await request(app)
-            .patch(`/groups/${companyGroups[0].id}`)
+            .patch(`/groups/${companyGroups[0]?.id}`)
             .set('Authorization', 'Bearer fake@token')
 
           expect(response.status).toBe(200)
