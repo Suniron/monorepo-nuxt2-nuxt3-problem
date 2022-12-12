@@ -128,7 +128,6 @@ importers:
       knex: ^2.0.0
       lodash: ^4.17.21
       loglayer: ^1.4.2
-      module-alias: ^2.2.2
       pg: ^8.5.1
       pino: ^8.7.0
       pino-elasticsearch: ^6.3.0
@@ -160,7 +159,6 @@ importers:
       knex: 2.3.0_pg@8.8.0
       lodash: 4.17.21
       loglayer: 1.4.2
-      module-alias: 2.2.2
       pg: 8.8.0
       pino: 8.7.0
       pino-elasticsearch: 6.3.0

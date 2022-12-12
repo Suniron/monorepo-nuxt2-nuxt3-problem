@@ -1,4 +1,3 @@
-import 'module-alias/register'
 import _knex from 'knex'
 import env from './config/env'
 import { log } from './lib/logger'

@@ -1,9 +1,5 @@
-import 'module-alias/register'
-
 import { riskScoreComputing } from '../utils/RiskScoreComputing'
-
 import prismaClient from '../prismaClient'
-
 import { log } from '../lib/logger'
 
 async function calculateCompanyRisk(companyId: any) {
