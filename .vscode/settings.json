@@ -41,11 +41,18 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
   "eslint.alwaysShowStatus": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue",
+    "vue-html"
+  ],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "prettier.enable": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }
