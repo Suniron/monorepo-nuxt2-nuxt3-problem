@@ -43,8 +43,8 @@ services:
     depends_on:
       - xrator_db
     build:
-      context: ./apps/store
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/store/Dockerfile
       target: runner
     environment:
       - NODE_ENV=production

@@ -20,16 +20,20 @@ FROM node:18-alpine3.16 as builder
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
-WORKDIR /api
+WORKDIR /store
 
 RUN yarn global add turbo@1.5.5
 COPY . .
+
 RUN turbo prune --scope=@xrator-operator/store --docker
 
 ###################
 # INSTALLER STAGE # This stage is used to build application before production
 ###################
 FROM node:18-alpine3.16 as installer
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /store
 
 # First install dependencies (as they change less often)
@@ -41,14 +45,13 @@ COPY --from=builder /store/out/pnpm-*.yaml .
 RUN corepack enable
 RUN pnpm install -r --frozen-lockfile
 
-COPY --from=builder /store/out/full/ .
+COPY --from=builder /store/out/full/ ./
 
 # Build the project
 
 RUN pnpm turbo build --filter=@xrator-operator/store...
 
-RUN pnpm prisma:generate
-
+RUN pnpm prisma generate
 
 ##############
 # PROD STAGE # This stage is used is production
@@ -67,7 +70,7 @@ COPY ./package.json ./pnpm-lock.yaml /store/
 # COPY --from=installer /store/prisma/schema.prisma ./
 # COPY --from=installer /store/package.json /store/
 # COPY --from=installer /store/src/ /store/src
-# COPY --from=installer /store/migrations/ /store/migrations
+# COPY --from=builder /store/migrations/ /store/migrations
 # COPY --from=installer /store/out/seeds/ /store/seeds
 # COPY --from=installer /store/seeds/csv_seed_files/ /store/seeds/csv_seed_files
 # COPY --from=installer /store/node_modules/@prisma/client/ /.prisma/client
@@ -78,8 +81,12 @@ RUN pnpm install --frozen-lockfile --prod
 # Change user to "expressjs" to improve security
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs
+COPY --from=installer /store/apps/store/migrations /store/migrations
+
 USER expressjs
 
 COPY --from=installer /store .
+
+
 
 CMD node apps/store/dist/src/prepare.js && node apps/store/dist/src/app.js
