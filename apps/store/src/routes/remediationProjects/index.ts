@@ -11,7 +11,6 @@ import {
   updateRemediationProjectScopeController,
   updateRemediationProjectScopeItemController,
   updateRemediationProjectsController,
-
 } from '../../controllers/remediationProjects'
 
 const router = express.Router()

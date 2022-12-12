@@ -7,8 +7,7 @@ import knex from 'knex'
 export const runSeeders = async () => {
   if (process.env.NODE_ENV !== 'development')
     console.log('Seed demo + init data...')
-  else
-    console.log('Seed init data...')
+  else console.log('Seed init data...')
 
   const knexDemoConnection = knex({
     client: 'pg',
@@ -22,8 +21,7 @@ export const runSeeders = async () => {
   await knexDemoConnection.seed.run()
   if (process.env.NODE_ENV !== 'development')
     console.log('Seed demo + init data finished')
-  else
-    console.log('Seed init data finished')
+  else console.log('Seed init data finished')
 
   await knexDemoConnection.destroy()
 }

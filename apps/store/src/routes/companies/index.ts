@@ -8,7 +8,6 @@ import {
   searchCompanyLogoController,
   updateCompanyController,
   updateCompanyLogoController,
-
 } from '../../controllers/companies'
 
 const router = express.Router()

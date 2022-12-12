@@ -10,10 +10,13 @@ import {
   updateRemediationProjectScopeItemModel,
   updateRemediationProjectScopeModel,
   updateRemediationProjectsModel,
-
 } from '../../models/remediationProjects'
 
-export const getRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
+export const getRemediationProjectsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await getRemediationProjectsModel(
       Number(req.params.id),
@@ -54,7 +57,11 @@ export const getRemediationProjectsSummaryController = async (
   }
 }
 
-export const getRemediationProjectsScopeController = async (req: Request, res: Response, next: NextFunction) => {
+export const getRemediationProjectsScopeController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await getRemediationProjectsScopeModel(
       Number(req.params.id),
@@ -92,7 +99,11 @@ export const getRemediationProjectStatusHistoryController = async (
   }
 }
 
-export const updateRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
+export const updateRemediationProjectsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await updateRemediationProjectsModel(
       Number(req.params.id),
@@ -110,7 +121,11 @@ export const updateRemediationProjectsController = async (req: Request, res: Res
   }
 }
 
-export const createRemediationProjectsController = async (req: Request, res: Response, next: NextFunction) => {
+export const createRemediationProjectsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await createRemediationProjectsModel(req.body, req.user)
 

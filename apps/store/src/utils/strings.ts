@@ -22,14 +22,10 @@ function sanitizeObject(obj: any) {
   const sanitizedObj = {}
   Object.keys(obj).forEach((key) => {
     if (typeof obj[key] === 'string')
-
       sanitizedObj[key] = sanitizeString(obj[key])
     else if (typeof obj[key] === 'object')
-
       sanitizedObj[key] = sanitizeObject(obj[key])
-    else
-
-      sanitizedObj[key] = obj[key]
+    else sanitizedObj[key] = obj[key]
   })
   return sanitizedObj
 }

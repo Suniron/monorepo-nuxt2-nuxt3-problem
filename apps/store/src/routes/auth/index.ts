@@ -9,7 +9,6 @@ import {
   sendResetMailPassword,
   updateResetPasswordByToken,
   verifyAssetPermissionController,
-
 } from '../../controllers/auth'
 
 const router = express.Router()

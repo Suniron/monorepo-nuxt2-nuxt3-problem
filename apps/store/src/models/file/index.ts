@@ -25,7 +25,9 @@ export const uploadFilesModel = async (params: any) => {
         return uuid
       })
     }
-    else { uuid = uuid[0].id }
+    else {
+      uuid = uuid[0].id
+    }
     return { uuid }
   }
   catch (error) {

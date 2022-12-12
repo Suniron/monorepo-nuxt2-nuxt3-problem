@@ -3,10 +3,13 @@ import {
   searchBusinessImpact,
   searchMissionAnalysis,
   updateBusinessImpactIntoUnitModel,
-
 } from '../../models/missions_analysis'
 
-export const searchMissionAnalysisController = async (req: any, res: any, next: any) => {
+export const searchMissionAnalysisController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { mission, error } = await searchMissionAnalysis(
       {
@@ -26,7 +29,11 @@ export const searchMissionAnalysisController = async (req: any, res: any, next: 
   }
 }
 
-export const searchBusinessImpactController = async (req: any, res: any, next: any) => {
+export const searchBusinessImpactController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { businessImpact, error } = await searchBusinessImpact(
       {
@@ -45,7 +52,11 @@ export const searchBusinessImpactController = async (req: any, res: any, next: a
     next(error)
   }
 }
-export const updateBusinessImpactIntoUnit = async (req: any, res: any, next: any) => {
+export const updateBusinessImpactIntoUnit = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error } = await updateBusinessImpactIntoUnitModel(
       req.body,

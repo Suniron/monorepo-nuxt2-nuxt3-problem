@@ -14,7 +14,11 @@ import { searchGroupedRemediationsModel } from '../../models/remediations'
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchGroupedRemediationsController = async (req: any, res: any, next: any) => {
+export const searchGroupedRemediationsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const results = await searchGroupedRemediationsModel(
       {

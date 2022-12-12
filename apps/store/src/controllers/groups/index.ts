@@ -6,7 +6,6 @@ import {
   deleteGroupModel,
   searchGroupsModel,
   updateGroupModel,
-
 } from '../../models/groups'
 
 export const searchGroupsController = async (req: any, res: any, next: any) => {

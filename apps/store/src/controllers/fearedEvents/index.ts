@@ -13,7 +13,11 @@ import { updateFearedEventsModel } from '../../models/fearedEvents'
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const updateFearedEventsController = async (req: any, res: any, next: any) => {
+export const updateFearedEventsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const results = await updateFearedEventsModel(
       req.params?.id,

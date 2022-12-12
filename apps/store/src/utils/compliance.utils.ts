@@ -48,7 +48,6 @@ export const computeComplianceStatistics = (compliances: any) => {
         maturity = 5
     }
     const i = results.findIndex(
-
       chapter => chapter.chapter_small === section.chapter_small,
     )
     if (i > -1) {

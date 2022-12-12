@@ -6,7 +6,6 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-
 } from '../../../src/common/constants'
 
 export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
@@ -41,7 +40,9 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
           })
         ).map((e: any) => e.id)
       }
-      else { relId = relId[0].id }
+      else {
+        relId = relId[0].id
+      }
     }
     else {
       // TODO: Find why it's unused
@@ -79,7 +80,10 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
  * @param {*} loggedUserInfo
  * @returns {Promise<{error?: undefined, ids: {id: number}[]} | {error: string, ids?: undefined}>}
  */
-export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) => {
+export const createBulkRelationModel = async (
+  params: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId } = loggedUserInfo
 
@@ -87,17 +91,14 @@ export const createBulkRelationModel = async (params: any, loggedUserInfo = {}) 
       (relation: any) => relation.fromAssetId !== relation.toAssetId,
     )
 
-    const assets = relationsToInsert.reduce((
-      /** @type {number[]} */ acc: any,
-      {
-        fromAssetId,
-        toAssetId,
-      }: any,
-    ) => {
-      acc.push(fromAssetId)
-      acc.push(toAssetId)
-      return acc
-    }, [])
+    const assets = relationsToInsert.reduce(
+      (/** @type {number[]} */ acc: any, { fromAssetId, toAssetId }: any) => {
+        acc.push(fromAssetId)
+        acc.push(toAssetId)
+        return acc
+      },
+      [],
+    )
 
     const assetsIdsInCompany = (
       await prismaClient.asset.findMany({

@@ -4,7 +4,6 @@ import {
   createIpController,
   deleteIpController,
   updateIpController,
-
 } from '../../controllers/ips'
 
 const router = express.Router()

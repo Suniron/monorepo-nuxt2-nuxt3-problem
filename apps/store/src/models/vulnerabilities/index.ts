@@ -4,7 +4,6 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-
 } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
@@ -192,10 +191,7 @@ export const getAssetVulnerabilitiesModel = async (
  * @returns True if transaction worked
  */
 export const UpdateVulnerabilitiesModel = async (body: any) => {
-  let {
-    ipId,
-    portId,
-  }: any = {}
+  let { ipId, portId }: any = {}
   const result = await knex
     .select({ ipId: 'ip.id', portId: 'port.id' })
     .from('port')
@@ -439,7 +435,9 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
   try {
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
-    const assetsIds = params.assets_ids?.split(',').map((id: any) => parseInt(id))
+    const assetsIds = params.assets_ids
+      ?.split(',')
+      .map((id: any) => parseInt(id))
     const clustersIds = params.clusters_ids
       ?.split(',')
       .map((id: any) => parseInt(id))
@@ -573,28 +571,29 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
           },
         },
       })
-      .then((vulnerabilities: any) => vulnerabilities.map((vuln: any) => {
-        const { vulnerability_asset, ...vulnerability } = vuln
-        return {
-          ...vulnerability,
-          affectedAssets: vulnerability_asset.map((vast: any) => {
-            return {
-              assetType: vast.asset?.type,
-              cvssScore: vast.cvss?.score,
-              id: vast.asset?.id,
-              name: vast.asset?.name,
-              projects: vast.remediation_project_scope.map(
-                (scope: any) => scope.remediation_project,
-              ),
-              severity: vast.cvss?.score
-                ? getSeverityLevel(vast.cvss?.score)
-                : vast.severity,
-              status: vast.status,
-              vastId: vast.id,
-            }
-          }),
-        }
-      }),
+      .then((vulnerabilities: any) =>
+        vulnerabilities.map((vuln: any) => {
+          const { vulnerability_asset, ...vulnerability } = vuln
+          return {
+            ...vulnerability,
+            affectedAssets: vulnerability_asset.map((vast: any) => {
+              return {
+                assetType: vast.asset?.type,
+                cvssScore: vast.cvss?.score,
+                id: vast.asset?.id,
+                name: vast.asset?.name,
+                projects: vast.remediation_project_scope.map(
+                  (scope: any) => scope.remediation_project,
+                ),
+                severity: vast.cvss?.score
+                  ? getSeverityLevel(vast.cvss?.score)
+                  : vast.severity,
+                status: vast.status,
+                vastId: vast.id,
+              }
+            }),
+          }
+        }),
       )
 
     if (Array.isArray(vulnerabilities)) {
@@ -730,15 +729,14 @@ export const getAssetVulnerabilitiesCountBySeverity = async (
     }
 
     // Write your query here!
-    const vulnerabilitiesAssets = await prismaClient.vulnerability_asset.findMany(
-      {
+    const vulnerabilitiesAssets
+      = await prismaClient.vulnerability_asset.findMany({
         select: {
           cvss: { select: { score: true } },
           severity: true,
         },
         where: { asset: { company_id: companyId, id: assetId } },
-      },
-    )
+      })
 
     vulnerabilitiesAssets.forEach((va: any) => {
       switch (true) {

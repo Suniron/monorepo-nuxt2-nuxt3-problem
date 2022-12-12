@@ -10,7 +10,11 @@ import { genSaltSync, hashSync } from '../../common/auth/sha512'
 
 import { knex } from '../../common/db'
 
-import { TOKEN_TYPE, generateJWTToken, verifyToken } from '../../common/auth/jwt'
+import {
+  TOKEN_TYPE,
+  generateJWTToken,
+  verifyToken,
+} from '../../common/auth/jwt'
 
 import {
   getResetPasswordToken,
@@ -21,7 +25,6 @@ import {
   refreshAccessToken,
   updateResetPasswordUsingToken,
   verifyAssetPermissionModel,
-
 } from '../../models/auth'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
@@ -82,28 +85,30 @@ const createLoginModelProvider = () => {
       hash,
       salt,
     )
-  const generateAccessToken = (payload: any) => generateJWTToken(
-    jwt.sign,
-    {
-      audience: access.audience,
-      expiresIn: access.life,
-      issuer: access.issuer,
-      secret: access.secret,
-      type: access.type,
-    },
-    payload,
-  )
-  const generateRefreshToken = (payload: any) => generateJWTToken(
-    jwt.sign,
-    {
-      audience: refresh.audience,
-      expiresIn: refresh.life,
-      issuer: refresh.issuer,
-      secret: refresh.secret,
-      type: refresh.type,
-    },
-    payload,
-  )
+  const generateAccessToken = (payload: any) =>
+    generateJWTToken(
+      jwt.sign,
+      {
+        audience: access.audience,
+        expiresIn: access.life,
+        issuer: access.issuer,
+        secret: access.secret,
+        type: access.type,
+      },
+      payload,
+    )
+  const generateRefreshToken = (payload: any) =>
+    generateJWTToken(
+      jwt.sign,
+      {
+        audience: refresh.audience,
+        expiresIn: refresh.life,
+        issuer: refresh.issuer,
+        secret: refresh.secret,
+        type: refresh.type,
+      },
+      payload,
+    )
   return {
     TOKEN_TYPE,
     generateAccessToken,
@@ -117,13 +122,8 @@ const createLoginModelProvider = () => {
 export const loginController = async (req: any, res: any, next: any) => {
   try {
     const provider = createLoginModelProvider()
-    const {
-      error,
-      message,
-      accessToken,
-      refreshToken,
-      userInfo,
-    } = await loginModel(provider, req.body)
+    const { error, message, accessToken, refreshToken, userInfo }
+      = await loginModel(provider, req.body)
 
     if (error)
       throwHTTPError(error, message)
@@ -147,7 +147,11 @@ export const loginController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const refreshAccessTokenController = async (req: any, res: any, next: any) => {
+export const refreshAccessTokenController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     /**
      * @type {string | undefined}
@@ -212,7 +216,11 @@ export const logoutController = async (req: any, res: any, next: any) => {
   }
 }
 
-export const verifyAssetPermissionController = async (req: any, res: any, next: any) => {
+export const verifyAssetPermissionController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, status } = await verifyAssetPermissionModel(
       req.user,
@@ -238,13 +246,14 @@ export const sendResetMailPassword = async (req: any, res: any) => {
   }
   else {
     const dbProvider = {
-      createPasswordHash: (password: any) => createPasswordHash(
-        {
-          genSaltSync,
-          hashSync,
-        },
-        password,
-      ),
+      createPasswordHash: (password: any) =>
+        createPasswordHash(
+          {
+            genSaltSync,
+            hashSync,
+          },
+          password,
+        ),
       knex,
       logger: console,
     }
@@ -258,13 +267,14 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
   }
   else {
     const dbProvider = {
-      createPasswordHash: (password: any) => createPasswordHash(
-        {
-          genSaltSync,
-          hashSync,
-        },
-        password,
-      ),
+      createPasswordHash: (password: any) =>
+        createPasswordHash(
+          {
+            genSaltSync,
+            hashSync,
+          },
+          password,
+        ),
       knex,
       logger: console,
       passwordsMatch: (password: any, hash: any, salt: any) =>

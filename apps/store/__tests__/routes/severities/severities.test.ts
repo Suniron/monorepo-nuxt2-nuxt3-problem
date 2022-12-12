@@ -25,7 +25,6 @@ beforeAll(async () => {
   // Make ids:
   EXISTING_SEVERITY_ID = severities[0].id
   NOTEXISTING_SEVERITY_ID
-
     = Math.max(0, ...severities.map(severity => Number(severity.id))) + 1 // max id + 1
 })
 

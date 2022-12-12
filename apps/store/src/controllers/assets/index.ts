@@ -14,7 +14,6 @@ import {
   searchAssetsBelongingModel,
   searchAssetsModel,
   updateAssetModel,
-
 } from '../../models/assets'
 
 import { createVulnerabilityModel } from '../../models/vulnerabilities'
@@ -52,7 +51,11 @@ export const searchAssetsController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetsBelongingController = async (req: any, res: any, next: any) => {
+export const searchAssetsBelongingController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, assets, total } = await searchAssetsBelongingModel(
       {
@@ -148,7 +151,11 @@ export const updateAssetController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateAssetsBulkController = async (req: any, res: any, next: any) => {
+export const updateAssetsBulkController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { name, type, assets, assetData, tagIds, groupIds } = req.body
     if (assets.length === 0)
@@ -184,7 +191,11 @@ export const updateAssetsBulkController = async (req: any, res: any, next: any) 
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const deleteAssetsBulkController = async (req: any, res: any, next: any) => {
+export const deleteAssetsBulkController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { assets } = req.body
     if (assets.length === 0)
@@ -209,7 +220,11 @@ export const deleteAssetsBulkController = async (req: any, res: any, next: any) 
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetRevisionsController = async (req: any, res: any, next: any) => {
+export const searchAssetRevisionsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, revisions, total } = await searchAssetRevisions(
       req.params?.id,
@@ -233,7 +248,11 @@ export const searchAssetRevisionsController = async (req: any, res: any, next: a
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getAssetsSummaryController = async (req: any, res: any, next: any) => {
+export const getAssetsSummaryController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, summary } = await getAssetsSummary(req.user)
     if (error)
@@ -331,7 +350,11 @@ export const importCSVController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const fetchAssetPortsController = async (req: any, res: any, next: any) => {
+export const fetchAssetPortsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, details } = await fetchAssetPortsModel(
       req.params.id,
@@ -355,7 +378,11 @@ export const fetchAssetPortsController = async (req: any, res: any, next: any) =
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const createAssetVulnerabilityController = async (req: any, res: any, next: any) => {
+export const createAssetVulnerabilityController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   req.body.custom_description = req.body.description
   req.body.custom_remediation = req.body.remediation
 
@@ -368,7 +395,7 @@ export const createAssetVulnerabilityController = async (req: any, res: any, nex
     // let newVuln = false
     if (!vulnerability_id)
       vulnerability_id = await createVulnerabilityModel(req.body, req.user)
-      // newVuln = true
+    // newVuln = true
 
     let hasIp = false
     let hasUri = false

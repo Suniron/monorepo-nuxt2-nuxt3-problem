@@ -6,7 +6,8 @@ export const resetDatabase = async () => {
   /**
    * @type {{tablename: string}[]}
    */
-  const tablenames = await prismaClient.$queryRaw`SELECT tablename FROM pg_tables WHERE schemaname='public'`
+  const tablenames
+    = await prismaClient.$queryRaw`SELECT tablename FROM pg_tables WHERE schemaname='public'`
 
   for (const { tablename } of tablenames) {
     // Ignore prisma & knex migrations tables

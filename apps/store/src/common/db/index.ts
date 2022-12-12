@@ -13,16 +13,16 @@ const knexConnection = _knex({
 
 if (process.env.NODE_ENV !== 'test') {
   knexConnection.migrate.currentVersion().then((currentVersion) => {
-  // Adding user param accessible to the migrations only to avoid running them on app setup (dry-run)
+    // Adding user param accessible to the migrations only to avoid running them on app setup (dry-run)
     knexConnection
       .withUserParams({ isSetup: currentVersion === 'none' })
       .migrate.latest()
       .then(([migrationBatchNumber, migrationsRan]) => {
         if (migrationsRan.length) {
           log.info(
-          `Finished running migrations ${migrationsRan.join(
-            ', ',
-          )}. Batch #${migrationBatchNumber}`,
+            `Finished running migrations ${migrationsRan.join(
+              ', ',
+            )}. Batch #${migrationBatchNumber}`,
           )
         }
         if (currentVersion === 'none')

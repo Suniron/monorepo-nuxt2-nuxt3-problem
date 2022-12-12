@@ -20,7 +20,11 @@ export const createCipherModel = async (tx: any, portId: any, params: any) => {
   }
 }
 
-export const updateCipherModel = async (tx: any, cipherId: any, params: any) => {
+export const updateCipherModel = async (
+  tx: any,
+  cipherId: any,
+  params: any,
+) => {
   try {
     const [cipherToUpdate] = await tx
       .select()

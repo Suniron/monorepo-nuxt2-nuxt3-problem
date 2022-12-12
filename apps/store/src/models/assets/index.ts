@@ -7,13 +7,11 @@ import {
   NOT_FOUND,
   SUCCESS,
   VALIDATION_ERROR,
-
 } from '../../common/constants'
 import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
   updateStatusModel,
-
 } from '../../models/vulnerabilities'
 import { getUserGroupIds } from '../../utils/user.utils'
 import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from '../../utils/assets'
@@ -30,7 +28,10 @@ import {
 import { createCipherModel } from './cipher'
 import { createCvssModel, updateCvssModel } from './cvss'
 
-export const getAssetScores = async (companyId: company['id'], assetId: asset['id']) => {
+export const getAssetScores = async (
+  companyId: company['id'],
+  assetId: asset['id'],
+) => {
   try {
     const scores = await prismaClient.v_asset_risk_scores.findFirst({
       where: {
@@ -50,7 +51,10 @@ export const getAssetScores = async (companyId: company['id'], assetId: asset['i
   }
 }
 
-export const getAssetRiskModel = async (companyId: company['id'], assetId: asset['id']) => {
+export const getAssetRiskModel = async (
+  companyId: company['id'],
+  assetId: asset['id'],
+) => {
   try {
     const { scores, error: scoreError } = await getAssetScores(
       companyId,
@@ -59,10 +63,8 @@ export const getAssetRiskModel = async (companyId: company['id'], assetId: asset
     if (scoreError)
       return { error: scoreError }
 
-    const {
-      error: vulnError,
-      vulnerabilitiesCount,
-    } = await getAssetVulnerabilitiesCountBySeverity(companyId, assetId)
+    const { error: vulnError, vulnerabilitiesCount }
+      = await getAssetVulnerabilitiesCountBySeverity(companyId, assetId)
     if (vulnError)
       return { error: vulnError }
 
@@ -392,7 +394,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
         }
       }
       if (severities) {
-        const arrSeverities = severities.split(',').map((s: any) => s.toLowerCase())
+        const arrSeverities = severities
+          .split(',')
+          .map((s: any) => s.toLowerCase())
         const SEVERITIES = {
           critical: 'critical',
           high: 'high',
@@ -509,8 +513,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
 
         default:
           result_filtered = result_filtered.filter(
-            (asset: any) => typeof asset[keyword] === 'string'
-            && asset[keyword].toLowerCase().includes(value),
+            (asset: any) =>
+              typeof asset[keyword] === 'string'
+              && asset[keyword].toLowerCase().includes(value),
           )
           break
       }
@@ -580,9 +585,10 @@ export const searchAssetsBelongingModel = async (
     }
 
     if (parentsIds?.length && childrenIds?.length) {
-      query = query.andWhere((builder: any) => builder
-        .whereIn('parent_id', parentsIds.split(','))
-        .orWhereIn('child_id', childrenIds.split(',')),
+      query = query.andWhere((builder: any) =>
+        builder
+          .whereIn('parent_id', parentsIds.split(','))
+          .orWhereIn('child_id', childrenIds.split(',')),
       )
     }
     else if (parentsIds?.length) {
@@ -978,7 +984,11 @@ export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
  * @param {number} params.groupId Group linked to the asset
  * @returns {Promise<{ error?: string, status?: string }>} Whether if the update was successful or not
  */
-export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}) => {
+export const updateAssetModel = async (
+  id: any,
+  params: any,
+  loggedUserInfo = {},
+) => {
   try {
     if (!id)
       return { error: VALIDATION_ERROR }
@@ -1317,7 +1327,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             )
             : owners.splice(idToDel, 1)
         }
-        owners.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
+        owners.forEach((elt: any) =>
+          updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.MAINTAINED_BY) {
@@ -1340,7 +1351,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
+        maintainer.forEach((elt: any) =>
+          updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.REVIEWED_BY) {
@@ -1363,7 +1375,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
+        maintainer.forEach((elt: any) =>
+          updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.APPROVED_BY) {
@@ -1386,7 +1399,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
+        maintainer.forEach((elt: any) =>
+          updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.REFERRED_TO) {
@@ -1409,7 +1423,8 @@ export const updateAssetModel = async (id: any, params: any, loggedUserInfo = {}
             )
             : maintainer.splice(idToDel, 1)
         }
-        maintainer.forEach((elt: any) => updates.push(knex.delete().from('relation').where({ id: elt.id })),
+        maintainer.forEach((elt: any) =>
+          updates.push(knex.delete().from('relation').where({ id: elt.id })),
         )
       }
       if (assetData?.LOCATED_TO) {
@@ -1562,7 +1577,6 @@ export const getAssetsSummary = async (loggedUserInfo: any) => {
     )
 
     return {
-
       summary: {
         ...counts,
         superAssets: Object.keys(counts)
@@ -1763,7 +1777,10 @@ export const updateAssetVulnerabilityModel = async (
   }
 }
 
-export const fetchAssetPortsModel = async (assetId: any, loggedUserInfo = {}) => {
+export const fetchAssetPortsModel = async (
+  assetId: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId } = loggedUserInfo
     const res = []
@@ -1775,8 +1792,7 @@ export const fetchAssetPortsModel = async (assetId: any, loggedUserInfo = {}) =>
       })
       if (ports.length === 0)
         res.push({ ...ips[idx] })
-      for (const pidx in ports)
-        res.push({ ...ips[idx], ...ports[pidx] })
+      for (const pidx in ports) res.push({ ...ips[idx], ...ports[pidx] })
     }
     return { details: res }
   }
@@ -1811,17 +1827,29 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
   }
 }
 
-export const createUrisModel = async (assetId: any, params: any, loggedUserInfo = {}) => {
+export const createUrisModel = async (
+  assetId: any,
+  params: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId } = loggedUserInfo
     const { address } = params
     const uri_id = await knex.transaction(async (tx: any) => {
-      const [uri_id] = await searchUriModel(tx, address, companyId, true, assetId)
+      const [uri_id] = await searchUriModel(
+        tx,
+        address,
+        companyId,
+        true,
+        assetId,
+      )
       if (!uri_id) {
         const uri_id = await createUriModel(tx, assetId, params)
         return uri_id
       }
-      else { return uri_id.uri_id }
+      else {
+        return uri_id.uri_id
+      }
     })
     return uri_id
   }
@@ -1938,4 +1966,3 @@ export const createAssetVulnerabilityModel = async (
   }
 }
 */
-

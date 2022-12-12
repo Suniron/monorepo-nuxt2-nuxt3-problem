@@ -7,7 +7,6 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-
 } from '../../common/constants'
 
 import { knex } from '../../common/db'
@@ -16,7 +15,11 @@ import { log } from '../../lib/logger'
 
 import prismaClient from '../../prismaClient'
 
-export const getTokenSessionModel = async (provider: any, token: any, type: any) => {
+export const getTokenSessionModel = async (
+  provider: any,
+  token: any,
+  type: any,
+) => {
   const { knex, logger } = provider
 
   try {
@@ -142,7 +145,10 @@ export const loginModel = async (provider: any, params: any) => {
  * @param {import("@prisma/client").user_session["token"]} refreshToken
  * @param {import("@prisma/client").user_session["user_id"]} userId
  */
-export const isValidSessionRefreshToken = async (refreshToken: any, userId: any) => {
+export const isValidSessionRefreshToken = async (
+  refreshToken: any,
+  userId: any,
+) => {
   try {
     const sessionFound = await prismaClient.user_session.findFirst({
       where: {
@@ -385,7 +391,10 @@ export const getResetPasswordToken = async (provider: any, params: any) => {
     return { error: MODEL_ERROR }
   }
 }
-export const updateResetPasswordUsingToken = async (provider: any, params: any) => {
+export const updateResetPasswordUsingToken = async (
+  provider: any,
+  params: any,
+) => {
   const { knex, logger, createPasswordHash } = provider
   try {
     const { password, token } = params

@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".out/**", ".nuxt/**"]
+      "outputs": ["dist/**", ".nuxt/**"]
     },
     "clean": {
       "cache": false
@@ -12,6 +12,9 @@
       "cache": false
     },
     "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
       "outputs": []
     },
     "test": {

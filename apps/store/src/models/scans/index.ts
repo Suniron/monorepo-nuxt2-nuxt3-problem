@@ -82,47 +82,48 @@ export const searchScansModel = async (
           company_id: companyId,
         },
       })
-      .then((scans: any) => scans.map((scan: any) => {
-        const { probe, v_scan_severity_count, v_scan_asset_details } = scan
-        return {
-          assets: v_scan_asset_details.map((asset: any) => {
-            return {
-              hostname: asset.hostname,
-              id: asset.asset_id,
-              ips: asset.ip_address,
-              language: asset.language,
-              mail: asset.mail,
-              name: asset.name,
-              os: asset.os,
-              url: asset.url,
-            }
-          }),
-          cdate: scan.cdate,
-          crit: v_scan_severity_count[0]?.critical,
-          endDate: scan.end_date
-            ? format(new Date(scan.end_date), 'yyyy-MM-dd')
-            : null,
-          endTime: scan.end_time
-            ? format(new Date(scan.end_time), 'HH:mm:ss')
-            : null,
-          fdate: scan.fdate,
-          high: v_scan_severity_count[0]?.high,
-          id: scan.id,
-          info: v_scan_severity_count[0]?.info,
-          low: v_scan_severity_count[0]?.low,
-          medium: v_scan_severity_count[0]?.medium,
-          name: scan.name,
-          probeName: probe?.name,
-          sdate: scan.sdate,
-          startDate: scan.start_date
-            ? format(new Date(scan.start_date), 'yyyy-MM-dd')
-            : null,
-          startTime: scan.start_time
-            ? format(new Date(scan.start_time), 'HH:mm:ss')
-            : null,
-          status: scan.status,
-        }
-      }),
+      .then((scans: any) =>
+        scans.map((scan: any) => {
+          const { probe, v_scan_severity_count, v_scan_asset_details } = scan
+          return {
+            assets: v_scan_asset_details.map((asset: any) => {
+              return {
+                hostname: asset.hostname,
+                id: asset.asset_id,
+                ips: asset.ip_address,
+                language: asset.language,
+                mail: asset.mail,
+                name: asset.name,
+                os: asset.os,
+                url: asset.url,
+              }
+            }),
+            cdate: scan.cdate,
+            crit: v_scan_severity_count[0]?.critical,
+            endDate: scan.end_date
+              ? format(new Date(scan.end_date), 'yyyy-MM-dd')
+              : null,
+            endTime: scan.end_time
+              ? format(new Date(scan.end_time), 'HH:mm:ss')
+              : null,
+            fdate: scan.fdate,
+            high: v_scan_severity_count[0]?.high,
+            id: scan.id,
+            info: v_scan_severity_count[0]?.info,
+            low: v_scan_severity_count[0]?.low,
+            medium: v_scan_severity_count[0]?.medium,
+            name: scan.name,
+            probeName: probe?.name,
+            sdate: scan.sdate,
+            startDate: scan.start_date
+              ? format(new Date(scan.start_date), 'yyyy-MM-dd')
+              : null,
+            startTime: scan.start_time
+              ? format(new Date(scan.start_time), 'HH:mm:ss')
+              : null,
+            status: scan.status,
+          }
+        }),
       )
 
     if (Array.isArray(scans)) {
@@ -149,7 +150,11 @@ export const searchScansModel = async (
  * @param {object} loggedUserInfo
  * @returns {Promise<{ error?: string, scan?: Object }>} scan: Data of the scan
  */
-export const getScanModel = async (provider: any, params: any, loggedUserInfo = {}) => {
+export const getScanModel = async (
+  provider: any,
+  params: any,
+  loggedUserInfo = {},
+) => {
   const { knex } = provider
 
   const { companyId } = loggedUserInfo
@@ -175,7 +180,10 @@ export const getScanModel = async (provider: any, params: any, loggedUserInfo = 
  * @param {object} loggedUserInfo
  * @returns {Promise<{ error?: string, assets?: string }>} assets: list of ip address, url and network / netmask
  */
-export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) => {
+export const searchAssetScanModel = async (
+  provider: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId, id: userId } = loggedUserInfo
     const userGroups = await getUserGroupIds(userId)
@@ -275,31 +283,19 @@ export const searchAssetScanModel = async (provider: any, loggedUserInfo = {}) =
       networksRequest,
     ])
 
-    ips = ips.flatMap(({
-      ip,
-    }: any) =>
-      ip.map(({
-        address,
-        asset_server_id,
-      }: any) => ({
+    ips = ips.flatMap(({ ip }: any) =>
+      ip.map(({ address, asset_server_id }: any) => ({
         address,
         id: asset_server_id,
       })),
     )
 
-    urls = urls.map(({
-      id,
-      url,
-    }: any) => ({
+    urls = urls.map(({ id, url }: any) => ({
       address: url,
       id,
     }))
 
-    networks = networks.map(({
-      id,
-      network,
-      netmask,
-    }: any) => ({
+    networks = networks.map(({ id, network, netmask }: any) => ({
       address: `${network}/${netmask}`,
       id,
     }))
@@ -506,14 +502,12 @@ export const createScanModel = async (
     To fix it, we had to rebuild an actual date, which is converted by Prisma afterward.
     */
     const fullStartTime = startTime
-
       ? new Date(parsedStartDate.setHours(...startTime.split(':')))
       : null
     // We always have a startDate, so we just check if we've got a start time and build the dataTime
 
     const fullEndTime = endTime // if we dont get a endDate, we will put endTime to null by default.
       ? new Date(
-
         parsedStartDate.setHours(...endTime.split(':')),
       ) /* the new Date is just about building the request, so it should be based on a sure value
       it will only register in dataBase the hour, the date doesn't really matters. */

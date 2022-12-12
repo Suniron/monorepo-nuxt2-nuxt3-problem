@@ -260,7 +260,6 @@ describe('Testing the risk score computing algo', () => {
     scores[7] = 0.5 * ((scores[4] + scores[5]) / 2) + 0.5 * 3.7
 
     scores[8]
-
       = 0.5 * ((scores[1] + scores[2] + scores[3] + scores[4] + scores[5]) / 5)
       + 0.5 * 7.5
 
@@ -371,7 +370,6 @@ function parseGraph(str: any) {
       if (relationType) {
         const [from, to] = line.split(relationType)
         if (relationType === 'NULL')
-
           relationType = null
 
         edges.push({

@@ -4,7 +4,6 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-
 } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
@@ -45,7 +44,11 @@ export const searchProbesModel = async (params: any, loggedUserInfo = {}) => {
  * @returns {Promise<{status: string} | {error: string}>}
  */
 
-export const updateProbeModel = async (params: any, body: any, loggedUserInfo: any) => {
+export const updateProbeModel = async (
+  params: any,
+  body: any,
+  loggedUserInfo: any,
+) => {
   try {
     const id = parseInt(params.id)
     // You might need to modify in there if anyone can change the name of a probe

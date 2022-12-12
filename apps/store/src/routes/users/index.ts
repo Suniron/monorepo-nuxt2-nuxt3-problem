@@ -5,7 +5,6 @@ import {
   deleteUserController,
   searchUsersController,
   updateUserController,
-
 } from '../../controllers/users'
 
 const router = express.Router()

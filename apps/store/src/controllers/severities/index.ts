@@ -14,7 +14,11 @@ import { searchSeveritiesModel } from '../../models/severities'
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchSeveritiesController = async (req: any, res: any, next: any) => {
+export const searchSeveritiesController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const results = await searchSeveritiesModel({
       ...(req.params || {}),

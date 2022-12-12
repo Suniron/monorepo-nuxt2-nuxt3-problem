@@ -1,5 +1,8 @@
 import { prismaMock } from '../mockPrisma'
-import { isValidSessionRefreshToken, refreshAccessToken } from '../../src/models/auth'
+import {
+  isValidSessionRefreshToken,
+  refreshAccessToken,
+} from '../../src/models/auth'
 import { MODEL_ERROR } from '../../src/common/constants'
 
 describe('isValidSessionRefreshToken', () => {

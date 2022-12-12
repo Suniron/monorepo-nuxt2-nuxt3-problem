@@ -119,7 +119,10 @@ export const updateCartographyModel = async (
   }
 }
 
-export const createCartographyModel = async (params: any, loggedUserInfo = {}) => {
+export const createCartographyModel = async (
+  params: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId } = loggedUserInfo
     const { name = null } = params
@@ -207,7 +210,9 @@ export const addCartographyElementModel = async (
         return ceId
       })
     }
-    else { cid = elt.id }
+    else {
+      cid = elt.id
+    }
     return cid
   }
   catch (error) {
@@ -216,7 +221,11 @@ export const addCartographyElementModel = async (
   }
 }
 
-export const updateCartographyElementModel = async (id: any, eid: any, params: any) => {
+export const updateCartographyElementModel = async (
+  id: any,
+  eid: any,
+  params: any,
+) => {
   try {
     const { parent = null, x = null, y = null } = params
     const [eltToUpdate] = await knex

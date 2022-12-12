@@ -147,7 +147,10 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
  * @param finalValues The final values to return for each call in order
  * @param shouldReject If the query should be rejected
  */
-export function mockKnexWithFinalValues(finalValues: any[], shouldReject = false) {
+export function mockKnexWithFinalValues(
+  finalValues: any[],
+  shouldReject = false,
+) {
   let returnCount = 0
   const knexMock = jest.fn(() => {
     return knexMock

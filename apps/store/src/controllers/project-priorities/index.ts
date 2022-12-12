@@ -14,7 +14,11 @@ import { searchProjectPrioritiesModel } from '../../models/project-priorities'
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchProjectPrioritiesController = async (req: any, res: any, next: any) => {
+export const searchProjectPrioritiesController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const results = await searchProjectPrioritiesModel({
       ...(req.params || {}),

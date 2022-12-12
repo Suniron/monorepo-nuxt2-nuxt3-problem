@@ -98,7 +98,9 @@ export const isScopeOfRemediationProject = async (
  * @param {string|number} remediationProjectId
  * @returns {Promise<number>}
  */
-export const getRemediationProjectCompanyId = async (remediationProjectId: any) => {
+export const getRemediationProjectCompanyId = async (
+  remediationProjectId: any,
+) => {
   const companyId = await knex
     .select('fk_company_id')
     .from('remediation_project')

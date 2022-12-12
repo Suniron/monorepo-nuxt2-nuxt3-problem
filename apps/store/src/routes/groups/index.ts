@@ -5,7 +5,6 @@ import {
   deleteGroupController,
   searchGroupsController,
   updateGroupController,
-
 } from '../../controllers/groups'
 
 const router = express.Router()

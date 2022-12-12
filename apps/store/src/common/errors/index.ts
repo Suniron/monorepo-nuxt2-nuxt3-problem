@@ -6,7 +6,6 @@ import {
   getInternalServerError,
   getNotFoundError,
   getUnauthorizedError,
-
 } from '../../common/errors/http'
 import {
   DUPLICATE,
@@ -15,7 +14,6 @@ import {
   NOT_FOUND,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-
 } from '../../common/constants'
 
 /* 400 Errors */
@@ -39,9 +37,7 @@ export const throwValidationError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwBadRequestError = ({
-  message,
-}: any = {}) => {
+export const throwBadRequestError = ({ message }: any = {}) => {
   throw getBadRequestError({ message })
 }
 
@@ -51,9 +47,7 @@ export const throwBadRequestError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwUnauthorizedError = ({
-  message,
-}: any = {}) => {
+export const throwUnauthorizedError = ({ message }: any = {}) => {
   throw getUnauthorizedError({ message })
 }
 
@@ -63,9 +57,7 @@ export const throwUnauthorizedError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwForbiddenError = ({
-  message,
-}: any = {}) => {
+export const throwForbiddenError = ({ message }: any = {}) => {
   throw getForbiddenError({ message })
 }
 
@@ -75,9 +67,7 @@ export const throwForbiddenError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwNotFoundError = ({
-  message,
-}: any = {}) => {
+export const throwNotFoundError = ({ message }: any = {}) => {
   throw getNotFoundError({ message })
 }
 
@@ -87,9 +77,7 @@ export const throwNotFoundError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwDuplicateError = ({
-  message,
-}: any = {}) => {
+export const throwDuplicateError = ({ message }: any = {}) => {
   throw getConflictError({ message: message ?? 'Duplicate' })
 }
 
@@ -99,16 +87,19 @@ export const throwDuplicateError = ({
  * @param {{errorType?: string, message?: string }} params Custom errorType or message
  * @throws
  */
-export const throwInternalServerError = ({
-  message,
-}: any = {}) => {
+export const throwInternalServerError = ({ message }: any = {}) => {
   throw getInternalServerError({ message })
 }
 
-export const throwHTTPError = (error?: string | {
-  readonly MAIL: HTTPError
-  readonly USERNAME: HTTPError
-}, message?: string) => {
+export const throwHTTPError = (
+  error?:
+  | string
+  | {
+    readonly MAIL: HTTPError
+    readonly USERNAME: HTTPError
+  },
+  message?: string,
+) => {
   switch (error) {
     case MODEL_ERROR:
       return throwInternalServerError({ message })

@@ -8,7 +8,6 @@ import {
   searchPhishingScenariosController,
   searchScans,
   updateScanController,
-
 } from '../../controllers/scans/crud-controller'
 
 const router = express.Router()

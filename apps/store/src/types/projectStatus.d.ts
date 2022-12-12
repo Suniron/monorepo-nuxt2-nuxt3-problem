@@ -1,7 +1,7 @@
-export type  ProjectStatus = {
-  id: number,
-  name: string,
-  weight: number,
+export type ProjectStatus = {
+  id: number
+  name: string
+  weight: number
 }
 
 export type ProjectStatusWorkflow = {

@@ -7,13 +7,11 @@ import {
   searchPhishingScenariosModel,
   searchScansModel,
   updateScanModel,
-
 } from '../../models/scans'
 import {
   createVulnerabilityModel,
   searchVulnerabilitiesModel,
   updateVulnerabilityModel,
-
 } from '../../models/vulnerabilities'
 import {
   createAssetModel,
@@ -22,12 +20,10 @@ import {
   searchAssetsModel,
   updateAssetModel,
   updateAssetVulnerabilityModel,
-
 } from '../../models/assets'
 import {
   addCartographyElementModel,
   createCartographyModel,
-
 } from '../../models/cartography'
 
 import { createRelationModel } from '../../models/relations'
@@ -119,7 +115,11 @@ export const updateScanController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchAssetScanController = async (req: any, res: any, next: any) => {
+export const searchAssetScanController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const provider = {
       knex,
@@ -144,7 +144,11 @@ export const searchAssetScanController = async (req: any, res: any, next: any) =
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const searchPhishingScenariosController = async (req: any, res: any, next: any) => {
+export const searchPhishingScenariosController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const provider = {
       knex,
@@ -169,7 +173,11 @@ export const searchPhishingScenariosController = async (req: any, res: any, next
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getScanReportController = async (req: any, res: any, next: any) => {
+export const getScanReportController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const provider = {
       knex,
@@ -219,7 +227,11 @@ export const createScan = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const parseScanResultController = async (req: any, res: any, next: any) => {
+export const parseScanResultController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { hosts, vulns, name, addToCy = null, cyId = null } = req.body
     const provider = {
@@ -227,11 +239,9 @@ export const parseScanResultController = async (req: any, res: any, next: any) =
       logger: console,
     }
     let cy
-    if (addToCy) {
-      cy
-        = parseInt(cyId)
-        || (await createCartographyModel({ name }, req.user))
-    }
+    if (addToCy)
+      cy = parseInt(cyId) || (await createCartographyModel({ name }, req.user))
+
     const restTmp = await createScanModel(
       provider,
       {

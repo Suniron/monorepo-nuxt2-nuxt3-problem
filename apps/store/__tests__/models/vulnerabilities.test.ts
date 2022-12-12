@@ -2,7 +2,6 @@ import { prismaMock } from '../mockPrisma'
 import {
   getAssetVulnerabilitiesCountBySeverity,
   hasVulnerability,
-
 } from '../../src/models/vulnerabilities'
 
 import { MODEL_ERROR } from '../../src/common/constants'

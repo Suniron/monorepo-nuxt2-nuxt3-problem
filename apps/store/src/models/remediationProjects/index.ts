@@ -8,7 +8,6 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-
 } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
@@ -17,7 +16,6 @@ import {
   isOwnerOfRemediationProject,
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
-
 } from '../../../src/utils/remediationProject.utils'
 import type { RemediationProjectEdit } from '../../types/remediationProject'
 
@@ -239,7 +237,7 @@ export const updateRemediationProjectsModel = async (
           ].map((field) => {
             if (
               params[field.paramName] !== undefined
-                && params[field.paramName] !== null
+              && params[field.paramName] !== null
             ) {
               return trx
                 .update(field.fieldName, params[field.paramName])
@@ -268,14 +266,14 @@ export const updateRemediationProjectsModel = async (
       }
 
       /**
-         * Whether or not the user is a project owner or assignee, check if the params contain the status_id field
-         */
+       * Whether or not the user is a project owner or assignee, check if the params contain the status_id field
+       */
       if (params.status_id !== undefined && params.status_id !== null) {
         /**
-           * @type {{
-           *  transitionName: import('@/types/projectStatusWorkflow').TransitionNames
-           * }}
-           */
+         * @type {{
+         *  transitionName: import('@/types/projectStatusWorkflow').TransitionNames
+         * }}
+         */
         const transitionResult = await knex
           .select({
             transitionName: 'psw.transition',
@@ -341,15 +339,15 @@ export const updateRemediationProjectsModel = async (
       }
       else if (
         !isUserProjectOwner
-          /**
-           * If the params do not contain the status_id field but contains any other field, send the unauthorized error
-           */
-          && (params.assignees
-            || params.due_date
-            || params.owner_id
-            || params.priority_id
-            || params.project_description
-            || params.project_name)
+        /**
+         * If the params do not contain the status_id field but contains any other field, send the unauthorized error
+         */
+        && (params.assignees
+          || params.due_date
+          || params.owner_id
+          || params.priority_id
+          || params.project_description
+          || params.project_name)
       ) {
         result = UNAUTHORIZED
       }
@@ -409,7 +407,8 @@ export const updateRemediationProjectScopeModel = async (
       .pluck('fk_vulnerability_asset_id')
     const rowsToInsert = project_scope
       .filter(
-        (asset_vulnerability_id: any) => !existedRows.includes(asset_vulnerability_id),
+        (asset_vulnerability_id: any) =>
+          !existedRows.includes(asset_vulnerability_id),
       )
       .map((asset_vulnerability_id: any) => ({
         fk_project_id: remediationProjectId,
@@ -470,9 +469,7 @@ export const updateRemediationProjectScopeItemModel = async (
     )
       return { error: UNAUTHORIZED }
 
-    if (
-      !(await isScopeOfRemediationProject(remediationProjectId, scopeItemId))
-    )
+    if (!(await isScopeOfRemediationProject(remediationProjectId, scopeItemId)))
       return { error: VALIDATION_ERROR }
 
     // Update "is_done" field in database:
@@ -505,7 +502,10 @@ export const updateRemediationProjectScopeItemModel = async (
  * @param {Express.LoggedUser} loggedUserInfo
  * @returns {Promise<{id: number} | {error: string}>}
  */
-export const createRemediationProjectsModel = async (body: any, loggedUserInfo: any) => {
+export const createRemediationProjectsModel = async (
+  body: any,
+  loggedUserInfo: any,
+) => {
   const {
     name,
     description,

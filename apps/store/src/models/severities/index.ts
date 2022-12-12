@@ -1,6 +1,10 @@
 import { knex } from '../../../src/common/db'
 
-import { MODEL_ERROR, NOT_FOUND, VALIDATION_ERROR } from '../../../src/common/constants'
+import {
+  MODEL_ERROR,
+  NOT_FOUND,
+  VALIDATION_ERROR,
+} from '../../../src/common/constants'
 
 /**
  * @typedef {import('@/types/severity').Severity} Severity

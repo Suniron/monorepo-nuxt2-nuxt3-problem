@@ -69,7 +69,11 @@ export const updateCpeModel = async (tx: any, cpeId: any, params: any) => {
   }
 }
 
-export const updateOrCreateCpeModel = async (tx: any, ids: any, params: any) => {
+export const updateOrCreateCpeModel = async (
+  tx: any,
+  ids: any,
+  params: any,
+) => {
   try {
     const { assetId = -1, portId = -1 } = ids
     const [cpeExist] = await tx

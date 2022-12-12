@@ -173,7 +173,6 @@ export const fetchVulnerabilityLikelihoods = async (params: any) => {
 
   const [likelihoods] = await knex
     .select({
-
       critcal_unlikely: knex.raw(
         'count(vast.id) filter (where vast.likelihood = \'unlikely\' and (LOWER(vast.severity) = \'critical\' or cvss.score >= 9))',
       ),
@@ -415,12 +414,15 @@ const fetchScanHistory = async (params: any) => {
   }
 }
 
-export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) => {
+export const fetchProjectAssignement = async (
+  params: any,
+  loggedUserInfo = {},
+) => {
   try {
     const { companyId, id } = loggedUserInfo
 
-    const projects = await prismaClient.v_remediation_project_summary_list.findMany(
-      {
+    const projects
+      = await prismaClient.v_remediation_project_summary_list.findMany({
         where: {
           OR: [
             { owner_id: id },
@@ -439,8 +441,7 @@ export const fetchProjectAssignement = async (params: any, loggedUserInfo = {}) 
             in: ['open', 'in_progress', 'to_review', 'overdue'],
           },
         },
-      },
-    )
+      })
 
     const assignments = {
       assignee: projects.filter((p: any) => p.owner_id !== id),

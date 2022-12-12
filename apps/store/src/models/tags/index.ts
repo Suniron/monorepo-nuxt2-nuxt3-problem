@@ -3,7 +3,6 @@ import {
   NOT_FOUND,
   SUCCESS,
   VALIDATION_ERROR,
-
 } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
@@ -81,7 +80,11 @@ export const createTagModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-export const updateTagModel = async (id: any, newTagData: any, loggedUserInfo = {}) => {
+export const updateTagModel = async (
+  id: any,
+  newTagData: any,
+  loggedUserInfo = {},
+) => {
   try {
     if (!id)
       return { error: VALIDATION_ERROR }

@@ -36,13 +36,11 @@ describe('/projects/available-transitions', () => {
         return {
           from_status_id: transition.fk_from_status_id,
           from_status_name: projectStatuses.find(
-
             status => status.id === transition.fk_from_status_id,
           )?.name,
           project_status_workflow_id: transition.id,
           to_status_id: transition.fk_to_status_id,
           to_status_name: projectStatuses.find(
-
             status => status.id === transition.fk_to_status_id,
           )?.name,
           transition: transition.transition,
@@ -67,7 +65,6 @@ describe('/projects/available-transitions/:statusId', () => {
       const status = 3
       const availableTransitions = projectStatusWorkflows
         .filter(
-
           transition =>
             transition.fk_from_status_id.toString() === status.toString(),
         )
@@ -76,13 +73,11 @@ describe('/projects/available-transitions/:statusId', () => {
           return {
             from_status_id: transition.fk_from_status_id,
             from_status_name: projectStatuses.find(
-
               status => status.id === transition.fk_from_status_id,
             )?.name,
             project_status_workflow_id: transition.id,
             to_status_id: transition.fk_to_status_id,
             to_status_name: projectStatuses.find(
-
               status => status.id === transition.fk_to_status_id,
             )?.name,
             transition: transition.transition,

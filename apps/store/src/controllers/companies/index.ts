@@ -13,10 +13,13 @@ import {
   searchCompanyModel,
   updateCompanyLogoModel,
   updateCompanyModel,
-
 } from '../../models/companies'
 
-export const searchCompanyController = async (req: any, res: any, next: any) => {
+export const searchCompanyController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, company, companies, total } = await searchCompanyModel(
       {
@@ -36,7 +39,11 @@ export const searchCompanyController = async (req: any, res: any, next: any) => 
   }
 }
 
-export const createCompanyController = async (req: any, res: any, next: any) => {
+export const createCompanyController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, id } = await createCompanyModel(req.body, req.user)
     if (error)
@@ -55,7 +62,11 @@ export const createCompanyController = async (req: any, res: any, next: any) => 
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const searchCompanyLogoController = async (req: any, res: any, next: any) => {
+export const searchCompanyLogoController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, logo } = await searchCompanyLogoModel(req.user)
 
@@ -75,7 +86,11 @@ export const searchCompanyLogoController = async (req: any, res: any, next: any)
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const updateCompanyLogoController = async (req: any, res: any, next: any) => {
+export const updateCompanyLogoController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, status } = await updateCompanyLogoModel(
       req.user,
@@ -98,7 +113,11 @@ export const updateCompanyLogoController = async (req: any, res: any, next: any)
  * @param {Response} res
  * @param {NextFunction} next
  */
-export const deleteCompanyLogoController = async (req: any, res: any, next: any) => {
+export const deleteCompanyLogoController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, status } = await deleteCompanyLogoModel(req.user)
     if (error)
@@ -111,7 +130,11 @@ export const deleteCompanyLogoController = async (req: any, res: any, next: any)
   }
 }
 
-export const updateCompanyController = async (req: any, res: any, next: any) => {
+export const updateCompanyController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, status } = await updateCompanyModel(req.user, req.body)
     if (error)
@@ -123,7 +146,11 @@ export const updateCompanyController = async (req: any, res: any, next: any) => 
   }
 }
 
-export const getCompanyRiskController = async (req: any, res: any, next: any) => {
+export const getCompanyRiskController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const result = await getCompanyRiskModel(req.user)
     if ('error' in result)

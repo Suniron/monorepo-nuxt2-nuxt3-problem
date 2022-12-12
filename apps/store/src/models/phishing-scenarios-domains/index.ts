@@ -20,7 +20,8 @@ export const getPhishingScenariosDomainsModel = async (loggedUserInfo = {}) => {
       },
     })
 
-    const phishingScenariosDomains = await prismaClient.phishing_scenario_domain.findMany()
+    const phishingScenariosDomains
+      = await prismaClient.phishing_scenario_domain.findMany()
     if (!phishingScenariosDomains) {
       return {
         error: NOT_FOUND,

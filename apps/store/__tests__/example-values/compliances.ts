@@ -195,8 +195,7 @@ export default [
     id: 18,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Access Control / Access to networks and network services',
+    name: 'ISO 27001 / Access Control / Access to networks and network services',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -468,8 +467,7 @@ export default [
     id: 22,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Access Control / Management of secret authentication information of users',
+    name: 'ISO 27001 / Access Control / Management of secret authentication information of users',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -508,8 +506,7 @@ export default [
     id: 82,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Information Security Incident Management / Reporting information security weaknesses',
+    name: 'ISO 27001 / Information Security Incident Management / Reporting information security weaknesses',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'High',
@@ -548,8 +545,7 @@ export default [
     id: 83,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Information Security Incident Management / Assessment of and decision on information security events',
+    name: 'ISO 27001 / Information Security Incident Management / Assessment of and decision on information security events',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -588,8 +584,7 @@ export default [
     id: 81,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Information Security Incident Management / Reporting information security events',
+    name: 'ISO 27001 / Information Security Incident Management / Reporting information security events',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -628,8 +623,7 @@ export default [
     id: 84,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Information Security Incident Management / Response to information security incidents',
+    name: 'ISO 27001 / Information Security Incident Management / Response to information security incidents',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -668,8 +662,7 @@ export default [
     id: 86,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Information Security Incident Management / Collection of evidence',
+    name: 'ISO 27001 / Information Security Incident Management / Collection of evidence',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'High',
@@ -864,8 +857,7 @@ export default [
     id: 95,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Compliance / Compliance with security policies and standards',
+    name: 'ISO 27001 / Compliance / Compliance with security policies and standards',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -943,8 +935,7 @@ export default [
     id: 1,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Organization of Information Security / Segregation of duties',
+    name: 'ISO 27001 / Organization of Information Security / Segregation of duties',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -983,8 +974,7 @@ export default [
     id: 2,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Organization of Information Security / Infromation security in project management',
+    name: 'ISO 27001 / Organization of Information Security / Infromation security in project management',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -1023,8 +1013,7 @@ export default [
     id: 3,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Organization of Information Security / Mobile Device Policy',
+    name: 'ISO 27001 / Organization of Information Security / Mobile Device Policy',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'High',
@@ -1141,8 +1130,7 @@ export default [
     id: 6,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Human Resources Security / Information security awareness, education and training',
+    name: 'ISO 27001 / Human Resources Security / Information security awareness, education and training',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -1181,8 +1169,7 @@ export default [
     id: 7,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Human Resources Security / Termination or change of employment responsibilities',
+    name: 'ISO 27001 / Human Resources Security / Termination or change of employment responsibilities',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -1532,8 +1519,7 @@ export default [
     id: 30,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Cryptography / Policy on the use of cryptographic controls',
+    name: 'ISO 27001 / Cryptography / Policy on the use of cryptographic controls',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -1611,8 +1597,7 @@ export default [
     id: 32,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Physical security perimeter',
+    name: 'ISO 27001 / Physical and Environmental Security / Physical security perimeter',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -1651,8 +1636,7 @@ export default [
     id: 33,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Physical entry controls',
+    name: 'ISO 27001 / Physical and Environmental Security / Physical entry controls',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'High',
@@ -1691,8 +1675,7 @@ export default [
     id: 34,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Securing offices rooms and facilities',
+    name: 'ISO 27001 / Physical and Environmental Security / Securing offices rooms and facilities',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -1731,8 +1714,7 @@ export default [
     id: 35,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Protecting against external and environmental threats',
+    name: 'ISO 27001 / Physical and Environmental Security / Protecting against external and environmental threats',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Critical',
@@ -1771,8 +1753,7 @@ export default [
     id: 36,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Working in secure areas',
+    name: 'ISO 27001 / Physical and Environmental Security / Working in secure areas',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -1811,8 +1792,7 @@ export default [
     id: 37,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Delivery and loading areas',
+    name: 'ISO 27001 / Physical and Environmental Security / Delivery and loading areas',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -1851,8 +1831,7 @@ export default [
     id: 38,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Equipment siting and protection',
+    name: 'ISO 27001 / Physical and Environmental Security / Equipment siting and protection',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'High',
@@ -1891,8 +1870,7 @@ export default [
     id: 39,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Supporting utilities',
+    name: 'ISO 27001 / Physical and Environmental Security / Supporting utilities',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -1970,8 +1948,7 @@ export default [
     id: 41,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Equipment maintenance',
+    name: 'ISO 27001 / Physical and Environmental Security / Equipment maintenance',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Medium',
@@ -2049,8 +2026,7 @@ export default [
     id: 43,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Security of equipment and assets off premises',
+    name: 'ISO 27001 / Physical and Environmental Security / Security of equipment and assets off premises',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -2089,8 +2065,7 @@ export default [
     id: 44,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Secure Disposal or reuse of equipment',
+    name: 'ISO 27001 / Physical and Environmental Security / Secure Disposal or reuse of equipment',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -2129,8 +2104,7 @@ export default [
     id: 45,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Physical and Environmental Security / Unattended user equipment',
+    name: 'ISO 27001 / Physical and Environmental Security / Unattended user equipment',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -2325,8 +2299,7 @@ export default [
     id: 56,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Operations Security / Installation of software on operational systems',
+    name: 'ISO 27001 / Operations Security / Installation of software on operational systems',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Low',
@@ -2482,8 +2455,7 @@ export default [
     id: 63,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Communications Security / Information transfer policies and procedures',
+    name: 'ISO 27001 / Communications Security / Information transfer policies and procedures',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Critical',
@@ -2561,8 +2533,7 @@ export default [
     id: 75,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / System Acquisition, Development and Maintenance / System security testing',
+    name: 'ISO 27001 / System Acquisition, Development and Maintenance / System security testing',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -2601,8 +2572,7 @@ export default [
     id: 77,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / System Acquisition, Development and Maintenance / Protection of test data',
+    name: 'ISO 27001 / System Acquisition, Development and Maintenance / Protection of test data',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -2641,8 +2611,7 @@ export default [
     id: 76,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / System Acquisition, Development and Maintenance / System acceptance testing',
+    name: 'ISO 27001 / System Acquisition, Development and Maintenance / System acceptance testing',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: 'Ok',
@@ -2681,8 +2650,7 @@ export default [
     id: 78,
     inneffective_risk: 'Medium',
     mitigation: null,
-    name:
-      'ISO 27001 / Supplier Relationships / Addressing security within supplier agreements',
+    name: 'ISO 27001 / Supplier Relationships / Addressing security within supplier agreements',
     non_existant_risk: 'High',
     partially_effective_risk: 'Low',
     residual_risk: null,

@@ -41,7 +41,11 @@ export const createIpModel = async (assetId: any, params: any) => {
   }
 }
 
-export const updateOrCreatePortModel = async (tx: any, ipId: any, params: any) => {
+export const updateOrCreatePortModel = async (
+  tx: any,
+  ipId: any,
+  params: any,
+) => {
   try {
     const [portExist] = await tx
       .select()

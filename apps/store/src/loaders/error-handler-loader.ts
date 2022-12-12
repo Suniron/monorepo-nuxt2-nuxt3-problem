@@ -6,7 +6,6 @@ import {
   HTTPError,
   getBadRequestError,
   getInternalServerError,
-
 } from '../../src/common/errors/http'
 
 /**

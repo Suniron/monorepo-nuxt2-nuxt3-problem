@@ -235,9 +235,7 @@ describe('/company/logo/', () => {
               .patch('/company/logo/')
               .set('Authorization', 'Bearer fake@token')
               .send({
-                logo:
-                  `${companies[0].base64_logo
-                  }i_am_a_badly_formatted_extra_string!!!!!!!`,
+                logo: `${companies[0].base64_logo}i_am_a_badly_formatted_extra_string!!!!!!!`,
               })
 
             expect(response.status).toBe(400)

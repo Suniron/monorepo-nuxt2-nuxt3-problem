@@ -8,7 +8,11 @@ import { getAvailableTransitionsModel } from '../../models/project-statuses'
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const getAvailableTransitionsController = async (req: any, res: any, next: any) => {
+export const getAvailableTransitionsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const results = await getAvailableTransitionsModel({
       ...(req.params || {}),

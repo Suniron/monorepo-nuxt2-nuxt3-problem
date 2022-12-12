@@ -2,7 +2,6 @@ import { throwHTTPError } from '../../common/errors'
 import {
   createRemediationProjectPostsModel,
   fetchPostsModel,
-
 } from '../../models/blog'
 
 export const fetchPostsController = async (req: any, res: any, next: any) => {

@@ -3,7 +3,6 @@ import {
   chartsDataController,
   fetchDashboardController,
   updateDashboardUserController,
-
 } from '../../controllers/dashboard'
 
 const router = express.Router()

@@ -39,7 +39,11 @@ export const updateUriModel = async (tx: any, uriId: any, params: any) => {
   }
 }
 
-export const updateOrCreateUriModel = async (tx: any, assetId: any, params: any) => {
+export const updateOrCreateUriModel = async (
+  tx: any,
+  assetId: any,
+  params: any,
+) => {
   try {
     const [uriExist] = await tx
       .select()
@@ -89,8 +93,7 @@ export const searchUriModel = async (
       query.where(function (this: any) {
         if (!strict)
           this.where('uri', 'like', knex.raw('?', `%${search}%`))
-        else
-          this.where('uri', search)
+        else this.where('uri', search)
       })
     }
     if (assetId)

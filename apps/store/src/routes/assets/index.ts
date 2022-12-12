@@ -14,7 +14,6 @@ import {
   searchAssetsController,
   updateAssetController,
   updateAssetsBulkController,
-
 } from '../../controllers/assets'
 import {
   addPostAssetVulnerabilityController,
@@ -23,7 +22,6 @@ import {
   searchPostAssetVulnerabilityController,
   updateStatusController,
   updateVulnerabilitiesAssetController,
-
 } from '../../controllers/vulnerabilities'
 
 // Validations

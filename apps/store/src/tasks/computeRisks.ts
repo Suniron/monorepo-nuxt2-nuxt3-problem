@@ -32,7 +32,6 @@ async function calculateCompanyRisk(companyId: any) {
 
   // Ignoring TS error because there is not enum for the asset type and the string cannot match the values specified in the function's definition
   const inheritedRisks = riskScoreComputing(
-
     listUnvisited,
     relations,
     inherentScores.map((inherentScore: any) => ({

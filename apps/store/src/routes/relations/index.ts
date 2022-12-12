@@ -6,7 +6,6 @@ import {
   deleteRelationByAssetsIdsController,
   deleteRelationController,
   updateRelationController,
-
 } from '../../controllers/relations'
 
 const router = express.Router()

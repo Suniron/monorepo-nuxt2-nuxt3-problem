@@ -1,10 +1,10 @@
+import type { company } from '@prisma/client'
 import {
   FORBIDDEN,
   MODEL_ERROR,
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-
 } from '../../../src/common/constants'
 
 import { knex } from '../../../src/common/db'
@@ -87,20 +87,18 @@ export const searchGroupsModel = async (params: any, loggedUserInfo: any) => {
   }
 }
 
-export const createGroupModel = async (params: any, loggedUserInfo = {}) => {
+export const createGroupModel = async (params: { name: string; memberIds: number[] }, { companyId }: { companyId: company['id'] }) => {
   try {
     const { name, memberIds } = params
 
-    const { companyId } = loggedUserInfo
-
-    const { id } = await knex.transaction(async (trx: any) => {
+    const { id } = await knex.transaction(async (trx) => {
       const [{ id }] = await trx('group')
         .insert({ company_id: companyId, name })
         .returning('id')
 
       if (memberIds.length) {
         await trx('user_group').insert(
-          memberIds.map((mId: any) => ({
+          memberIds.map(mId => ({
             group_id: id,
             user_id: mId,
           })),
@@ -126,11 +124,7 @@ export const createGroupModel = async (params: any, loggedUserInfo = {}) => {
  * string}>}
  */
 export const updateGroupModel = async (
-  {
-    id,
-    memberIds,
-    name,
-  }: any,
+  { id, memberIds, name }: any,
   loggedUserInfo: any,
 ) => {
   // TODO: Check if id is a number
@@ -185,7 +179,11 @@ export const updateGroupModel = async (
     return { error: MODEL_ERROR }
   }
 }
-export const deleteGroupModel = async (provider: any, id: any, loggedUserInfo: any) => {
+export const deleteGroupModel = async (
+  provider: any,
+  id: any,
+  loggedUserInfo: any,
+) => {
   const { knex, logger } = provider
   try {
     if (loggedUserInfo.roles.includes('admin')) {

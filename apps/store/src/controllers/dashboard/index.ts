@@ -3,7 +3,6 @@ import {
   chartsDataModel,
   fetchDashboard,
   updateDashboardUserModel,
-
 } from '../../models/dashboard'
 
 /**
@@ -40,7 +39,6 @@ export const chartsDataController = async (req: any, res: any, next: any) => {
       if (!chartIdsResultMap[cid])
         throwValidationError({})
       return res.send({
-
         [chartIdsResultMap[cid]]: chartDataResult[chartIdsResultMap[cid]],
       })
     }
@@ -63,7 +61,11 @@ export const chartsDataController = async (req: any, res: any, next: any) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const fetchDashboardController = async (req: any, res: any, next: any) => {
+export const fetchDashboardController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, dashboard } = await fetchDashboard(req.user.id)
     if (error)
@@ -82,7 +84,11 @@ export const fetchDashboardController = async (req: any, res: any, next: any) =>
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export const updateDashboardUserController = async (req: any, res: any, next: any) => {
+export const updateDashboardUserController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error } = await updateDashboardUserModel(
       req.params.dashId,

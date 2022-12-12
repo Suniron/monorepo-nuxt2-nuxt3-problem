@@ -4,7 +4,6 @@ import {
   createVulnerabilityController,
   searchVulnerabilitiesController,
   searchVulnerabilitiesWithTheirAssetsController,
-
 } from '../../controllers/vulnerabilities'
 
 const router = express.Router()

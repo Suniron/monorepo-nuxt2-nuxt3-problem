@@ -4,7 +4,6 @@ import {
   deleteTagController,
   searchTagsController,
   updateTagController,
-
 } from '../../controllers/tags'
 
 const router = express.Router()

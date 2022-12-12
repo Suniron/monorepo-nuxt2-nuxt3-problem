@@ -4,12 +4,10 @@ import {
   SUCCESS,
   UNAUTHORIZED,
   VALIDATION_ERROR,
-
 } from '../../../src/common/constants'
 import {
   checkRemediationProjectExistsOrIsAuthorised,
   isOwnerOrAssigneeOfRemediationProject,
-
 } from '../../../src/utils/remediationProject.utils'
 
 import { log } from '../../../src/lib/logger'
@@ -111,7 +109,8 @@ export const createRemediationProjectPostsModel = async (
       .insert({
         comment,
         fk_remediation_project_id: remediationProjectId,
-        fk_remediation_project_status_history_id: remediationProjectStatusHistoryId,
+        fk_remediation_project_status_history_id:
+          remediationProjectStatusHistoryId,
         fk_user_id: loggedUserInfo.id,
       })
       .into('comment_remediation_project')

@@ -3,7 +3,6 @@ import { Joi, Segments, celebrate } from 'celebrate'
 import {
   searchProbesController,
   updateProbeController,
-
 } from '../../controllers/probes'
 const router = express.Router()
 

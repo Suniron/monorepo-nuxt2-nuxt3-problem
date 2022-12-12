@@ -52,7 +52,11 @@ export const generateJWTToken = (jwtSign: any, config: any, payload: any) => {
  * @param {any} refreshPayload Payload to be included in a refresh token
  * @returns
  */
-export const generateTokens = (provider: any, accessPayload: any, refreshPayload: any) => {
+export const generateTokens = (
+  provider: any,
+  accessPayload: any,
+  refreshPayload: any,
+) => {
   const { jwtSign, accessConfig, refreshConfig } = provider
 
   const accessToken = generateJWTToken(jwtSign, accessConfig, accessPayload)

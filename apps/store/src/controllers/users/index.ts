@@ -3,7 +3,6 @@ import {
   deleteUserModel,
   searchUsersModel,
   updateUserModel,
-
 } from '../../models/users'
 
 import { knex } from '../../common/db'
@@ -38,13 +37,14 @@ export const searchUsersController = async (req: any, res: any, next: any) => {
 export const createUserController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
-      createPasswordHash: (password: any) => createPasswordHash(
-        {
-          genSaltSync,
-          hashSync,
-        },
-        password,
-      ),
+      createPasswordHash: (password: any) =>
+        createPasswordHash(
+          {
+            genSaltSync,
+            hashSync,
+          },
+          password,
+        ),
       knex,
       logger: console,
     }
@@ -61,13 +61,14 @@ export const createUserController = async (req: any, res: any, next: any) => {
 export const updateUserController = async (req: any, res: any, next: any) => {
   try {
     const provider = {
-      createPasswordHash: (password: any) => createPasswordHash(
-        {
-          genSaltSync,
-          hashSync,
-        },
-        password,
-      ),
+      createPasswordHash: (password: any) =>
+        createPasswordHash(
+          {
+            genSaltSync,
+            hashSync,
+          },
+          password,
+        ),
       knex,
       logger: console,
       passwordsMatch: (password: any, hash: any, salt: any) =>

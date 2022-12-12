@@ -106,7 +106,11 @@ export const searchIpModel = async (
   }
 }
 
-export const updateOrCreateIpModel = async (tx: any, assetId: any, params: any) => {
+export const updateOrCreateIpModel = async (
+  tx: any,
+  assetId: any,
+  params: any,
+) => {
   try {
     const [ipExist] = await tx
       .select()

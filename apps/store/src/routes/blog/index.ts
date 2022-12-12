@@ -3,7 +3,6 @@ import { Joi, Segments, celebrate } from 'celebrate'
 import {
   createRemediationProjectPostsController,
   fetchPostsController,
-
 } from '../../controllers/blog'
 
 const getRemediationProjectByIdValidation = celebrate({

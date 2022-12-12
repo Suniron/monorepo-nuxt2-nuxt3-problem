@@ -73,78 +73,54 @@ export class HTTPError extends Error {
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getBadRequestError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getBadRequestError = ({ errorType, message }: any = {}) =>
   new HTTPError(400, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getUnauthorizedError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getUnauthorizedError = ({ errorType, message }: any = {}) =>
   new HTTPError(401, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getForbiddenError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getForbiddenError = ({ errorType, message }: any = {}) =>
   new HTTPError(403, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getNotFoundError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getNotFoundError = ({ errorType, message }: any = {}) =>
   new HTTPError(404, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getNotAcceptableError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getNotAcceptableError = ({ errorType, message }: any = {}) =>
   new HTTPError(406, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getConflictError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getConflictError = ({ errorType, message }: any = {}) =>
   new HTTPError(409, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getGoneError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getGoneError = ({ errorType, message }: any = {}) =>
   new HTTPError(410, { errorType, message })
 /**
  *
  * @param {ErrorParam} params
  * @returns {HTTPError}
  */
-export const getInternalServerError = ({
-  errorType,
-  message,
-}: any = {}) =>
+export const getInternalServerError = ({ errorType, message }: any = {}) =>
   new HTTPError(500, { errorType, message })

@@ -6,7 +6,6 @@ import {
   deleteTagModel,
   searchTagsModel,
   updateTagModel,
-
 } from '../../models/tags'
 
 export const searchTagsController = async (req: any, res: any, next: any) => {

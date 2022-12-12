@@ -16,7 +16,6 @@ export default async function loadLogger(app: any) {
       const startHrTime = process.hrtime()
 
       req.log = log.child().withContext({
-
         req: {
           body: req.body,
           headers: req.headers,

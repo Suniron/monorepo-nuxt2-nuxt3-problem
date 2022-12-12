@@ -151,32 +151,26 @@ describe('/remediation-projects/summary', () => {
             owner_name: users.find(user => user.id === project.fk_owner)
               ?.username,
             priority: projectPriorities.find(
-
               priority => priority.id === project.fk_priority_id,
             )?.name,
             priority_weight: projectPriorities.find(
-
               priority => priority.id === project.fk_priority_id,
             )?.weight,
             project_id: project.id,
             project_name: project.name,
             status: projectStatus.find(
-
               status =>
                 status.id
                 === projectStatusHistory.find(
-
                   statusHistory =>
                     statusHistory.fk_project_id === project.id
                     && statusHistory.end_date === null,
                 )?.fk_status_id,
             )?.name,
             status_weight: projectStatus.find(
-
               status =>
                 status.id
                 === projectStatusHistory.find(
-
                   statusHistory =>
                     statusHistory.fk_project_id === project.id
                     && statusHistory.end_date === null,
@@ -261,7 +255,6 @@ describe('/remediation-projects/:id', () => {
                   return {
                     user_id: assignee.fk_user_id,
                     username: users.find(
-
                       user => user.id === assignee.fk_user_id,
                     )?.username,
                   }
@@ -274,40 +267,33 @@ describe('/remediation-projects/:id', () => {
               owner_name: users.find(user => user.id === project.fk_owner)
                 ?.username,
               priority: projectPriorities.find(
-
                 priority => priority.id === project.fk_priority_id,
               )?.name,
               project_description: project.description,
               project_id: project.id,
               project_name: project.name,
               status: projectStatus.find(
-
                 status =>
                   status.id
                   === projectStatusHistory.find(
-
                     statusHistory =>
                       statusHistory.fk_project_id === project.id
                       && statusHistory.end_date === undefined,
                   )?.fk_status_id,
               )?.name,
               status_id: projectStatus.find(
-
                 status =>
                   status.id
                   === projectStatusHistory.find(
-
                     statusHistory =>
                       statusHistory.fk_project_id === project.id
                       && statusHistory.end_date === undefined,
                   )?.fk_status_id,
               )?.id,
               status_weight: projectStatus.find(
-
                 status =>
                   status.id
                   === projectStatusHistory.find(
-
                     statusHistory =>
                       statusHistory.fk_project_id === project.id
                       && statusHistory.end_date === undefined,
@@ -321,7 +307,6 @@ describe('/remediation-projects/:id', () => {
           [
             Number(
               remediationProjects.find(
-
                 project => project.id.toString() === projectId.toString(),
               )?.fk_company_id,
             ),
@@ -622,7 +607,6 @@ describe('/remediation-projects/:id/scope', () => {
                 asset =>
                   asset.id
                   === vulnerabilityAssets.find(
-
                     vast => vast.id === scope.fk_vulnerability_asset_id,
                   )?.asset_id,
               )?.name,
@@ -637,29 +621,23 @@ describe('/remediation-projects/:id/scope', () => {
               project_id: scope.fk_project_id,
               project_scope_id: scope.id,
               remediation: vulnerabilities.find(
-
                 vulnerability =>
                   vulnerability.id
                   === vulnerabilityAssets.find(
-
                     vast => vast.id === scope.fk_vulnerability_asset_id,
                   )?.vulnerability_id,
               )?.remediation,
               severity: vulnerabilityAssets.find(
-
                 vast => vast.id === scope.fk_vulnerability_asset_id,
               )?.severity,
               vulnerability_asset_id: scope.fk_vulnerability_asset_id,
               vulnerability_id: vulnerabilityAssets.find(
-
                 vast => vast.id === scope.fk_vulnerability_asset_id,
               )?.vulnerability_id,
               vulnerability_name: vulnerabilities.find(
-
                 vulnerability =>
                   vulnerability.id
                   === vulnerabilityAssets.find(
-
                     vast => vast.id === scope.fk_vulnerability_asset_id,
                   )?.vulnerability_id,
               )?.name,
@@ -687,9 +665,7 @@ describe('/remediation-projects/:id/scope', () => {
     describe('without request body', () => {
       it('should return 400', async () => {
         const response = await request(app)
-          .patch(
-            `/remediation-projects/${remediationProjects[0].id}/scope`,
-          )
+          .patch(`/remediation-projects/${remediationProjects[0].id}/scope`)
           .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
 
         expect(response.status).toBe(400)
@@ -717,9 +693,7 @@ describe('/remediation-projects/:id/scope', () => {
         mockVerifyToken(customUser)
 
         const response = await request(app)
-          .patch(
-            `/remediation-projects/${remediationProjects[0].id}/scope`,
-          )
+          .patch(`/remediation-projects/${remediationProjects[0].id}/scope`)
           .send({
             project_scope: [],
           })
@@ -969,7 +943,6 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           ])
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
-
             rps => rps.fk_project_id === remediationProjects[0].id,
           )
 
@@ -1008,7 +981,6 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
             [],
             // Mock list of assignees witch includes the tested assignee:
             [
-
               ...remediationProjectAssignees.map(rpa => ({
                 fk_user_id: rpa.fk_user_id,
               })),
@@ -1021,7 +993,6 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           ])
           // Find the first scope which corresponds to the first remediation project:
           const goodScope = remediationProjectScopeTable.find(
-
             rps => rps.fk_project_id === remediationProjects[0].id,
           )
 
@@ -1262,7 +1233,6 @@ describe('/posts/remediation-project/:id', () => {
           [{ fk_user_id: 'xrator_test_id' }],
           // Mock status_history_id doesn't match the right remediation project
           projectStatusHistory.filter(
-
             psh =>
               psh.fk_project_id.toString() === projectId.toString()
               && psh.id.toString() === projectStatusHistoryId.toString(),

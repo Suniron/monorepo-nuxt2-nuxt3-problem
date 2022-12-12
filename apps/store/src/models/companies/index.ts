@@ -4,7 +4,6 @@ import {
   NOT_FOUND,
   SUCCESS,
   VALIDATION_ERROR,
-
 } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
@@ -14,7 +13,6 @@ import {
   convertBase64ImageToBuffer,
   convertBufferToBase64Image,
   isValidBase64Image,
-
 } from '../../../src/utils/image.utils'
 
 export const searchCompanyModel = async (params: any) => {
@@ -71,12 +69,7 @@ export const createCompanyModel = async (params: any) => {
  * @returns {Promise<{logo?: string|null, error?: string}>}
  */
 export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
-  if (
-
-    !loggedUserInfo.companyId
-
-    || typeof loggedUserInfo.companyId !== 'number'
-  )
+  if (!loggedUserInfo.companyId || typeof loggedUserInfo.companyId !== 'number')
     return { error: MODEL_ERROR }
 
   try {
@@ -103,11 +96,11 @@ export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
  * @returns {Promise<{error?: string, status?: string}>}
  */
 
-export const updateCompanyLogoModel = async (loggedUserInfo: any, logo: any) => {
-  if (
-    !loggedUserInfo.companyId
-    || typeof loggedUserInfo.companyId !== 'number'
-  )
+export const updateCompanyLogoModel = async (
+  loggedUserInfo: any,
+  logo: any,
+) => {
+  if (!loggedUserInfo.companyId || typeof loggedUserInfo.companyId !== 'number')
     return { error: MODEL_ERROR }
 
   if (!loggedUserInfo.roles.includes('admin'))
@@ -139,12 +132,7 @@ export const updateCompanyLogoModel = async (loggedUserInfo: any, logo: any) => 
  * @returns {Promise<{error?: string, status?: string}>}
  */
 export const deleteCompanyLogoModel = async (loggedUserInfo = {}) => {
-  if (
-
-    !loggedUserInfo.companyId
-
-    || typeof loggedUserInfo.companyId !== 'number'
-  )
+  if (!loggedUserInfo.companyId || typeof loggedUserInfo.companyId !== 'number')
     return { error: MODEL_ERROR }
 
   try {
@@ -220,8 +208,8 @@ export const getCompanyRiskModel = async (loggedUserInfo: any) => {
   try {
     const { companyId } = loggedUserInfo
 
-    const businessMissionsScores = await prismaClient.v_asset_risk_scores.findMany(
-      {
+    const businessMissionsScores
+      = await prismaClient.v_asset_risk_scores.findMany({
         select: {
           compound_score: true,
         },
@@ -232,8 +220,7 @@ export const getCompanyRiskModel = async (loggedUserInfo: any) => {
             not: null,
           },
         },
-      },
-    )
+      })
     /**
      * @type {{
      *  globalScore: number | null

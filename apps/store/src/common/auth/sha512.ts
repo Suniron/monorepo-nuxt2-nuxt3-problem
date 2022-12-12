@@ -9,15 +9,10 @@ export const genSaltSync = (rounds: any) => {
   if (!rounds)
     rounds = 1000
 
-  return (
-    `$6$rounds=${
-    rounds
-    }$${
-    crypto
-      .randomBytes(Math.ceil(15 / 2))
-      .toString('hex')
-      .slice(0, 15)}`
-  )
+  return `$6$rounds=${rounds}$${crypto
+    .randomBytes(Math.ceil(15 / 2))
+    .toString('hex')
+    .slice(0, 15)}`
 }
 
 export const hashSync = (password: any, salt: any) => {

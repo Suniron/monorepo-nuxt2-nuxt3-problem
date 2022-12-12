@@ -4,7 +4,6 @@ import {
   searchBusinessImpactController,
   searchMissionAnalysisController,
   updateBusinessImpactIntoUnit,
-
 } from '../../controllers/missions_analysis'
 
 const router = express.Router()

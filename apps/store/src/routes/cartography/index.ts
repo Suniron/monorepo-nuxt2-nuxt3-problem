@@ -8,7 +8,6 @@ import {
   fetchCartographyElementsController,
   updateCartographyController,
   updateCartographyElementController,
-
 } from '../../controllers/cartography'
 
 const router = express.Router()

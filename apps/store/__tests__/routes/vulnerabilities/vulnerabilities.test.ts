@@ -60,7 +60,10 @@ beforeAll(async () => {
  * @param {object} loggedUserInfo
  * @returns {object[]}
  */
-export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any) => {
+export const getVulnerabilityWithTheirAssets = (
+  params: any,
+  loggedUserInfo: any,
+) => {
   const { companyId, roles, id: userId } = loggedUserInfo
   const groups = userGroups
 
@@ -74,7 +77,6 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
   const { vid, search = '', likelihoods = [], severities = [] } = params
   return vulnerabilities
     .filter(
-
       vuln =>
         (vid ? vuln.id.toString() === vid.toString() : true)
         && (search.length ? vuln.name.includes(search) : true),
@@ -93,7 +95,6 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
         vulndetect: vuln.vulndetect,
         vulnerability_asset: vulnerabilityAssets
           .filter(
-
             vast =>
               vast.vulnerability_id === vuln.id
               && (assetsIds.length ? assetsIds.includes(vast.asset_id) : true)
@@ -114,7 +115,6 @@ export const getVulnerabilityWithTheirAssets = (params: any, loggedUserInfo: any
                     ast.id === vast.asset_id
                     && ast.company_id.toString() === companyId.toString()
                     && groupAssets.find(
-
                       grp =>
                         grp.asset_id === ast.id && groups.includes(grp.group_id),
                     )
@@ -291,7 +291,6 @@ describe('/vulnerabilities/assets', () => {
         expect(vuln).toMatchObject(expectedVulnerability)
         vuln.affectedAssets.forEach((ast: any) => {
           expect(params.severities).toContain(
-
             vulnerabilityAssets.find(vast => vast.id === ast.vastId)?.severity,
           )
         })
@@ -399,7 +398,6 @@ describe('/vulnerabilities/assets', () => {
         vuln.affectedAssets.forEach((ast: any) => {
           expect(groups).toContain(
             groupAssets.find(
-
               ga => ga.asset_id === ast.id && groups.includes(ga.group_id),
             )?.group_id,
           )

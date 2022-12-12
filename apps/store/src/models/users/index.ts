@@ -5,7 +5,6 @@ import {
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-
 } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
@@ -17,7 +16,11 @@ import prismaClient from '../../../src/prismaClient'
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns
  */
-export const searchUsersModel = async (provider: any, params: any, loggedUserInfo: any) => {
+export const searchUsersModel = async (
+  provider: any,
+  params: any,
+  loggedUserInfo: any,
+) => {
   const { logger } = provider
   try {
     const { companyId } = loggedUserInfo
@@ -77,7 +80,10 @@ export const searchUsersModel = async (provider: any, params: any, loggedUserInf
       /**
        * @type {{id: string, username: string|null, first_name: string|null, last_name: string|null, email: string|null, roles: string[], user_group?: {group: {id: number, name: string|null}}[], groups: {id: number, name: string|null}[]}}
        */
-      const formattedUser = { ...u, groups: u.user_group.map((ug: any) => ug.group) }
+      const formattedUser = {
+        ...u,
+        groups: u.user_group.map((ug: any) => ug.group),
+      }
       delete formattedUser.user_group
       return formattedUser
     })
@@ -108,7 +114,11 @@ export const searchUsersModel = async (provider: any, params: any, loggedUserInf
  * @param {object} loggedUserInfo Info of logged in user retrieved from JWT access token
  * @returns
  */
-export const createUser = async (provider: any, params: any, loggedUserInfo = {}) => {
+export const createUser = async (
+  provider: any,
+  params: any,
+  loggedUserInfo = {},
+) => {
   const { knex, logger, createPasswordHash } = provider
   try {
     const {
@@ -186,7 +196,11 @@ export const createUser = async (provider: any, params: any, loggedUserInfo = {}
  * @param {import('@/types/user').LoggedUser} loggedUserInfo
  * @returns {Promise<{error?: string, message?: string}>}
  */
-export const updateUserModel = async (provider: any, params: any, loggedUserInfo: any) => {
+export const updateUserModel = async (
+  provider: any,
+  params: any,
+  loggedUserInfo: any,
+) => {
   const { knex, logger, createPasswordHash, passwordsMatch } = provider
   try {
     const {
@@ -290,7 +304,11 @@ export const updateUserModel = async (provider: any, params: any, loggedUserInfo
   }
 }
 
-export const deleteUserModel = async (provider: any, id: any, loggedUserInfo = {}) => {
+export const deleteUserModel = async (
+  provider: any,
+  id: any,
+  loggedUserInfo = {},
+) => {
   const { knex, logger } = provider
   try {
     if (loggedUserInfo.roles.includes('admin')) {

@@ -5,10 +5,13 @@ import {
   deleteRelationByAssetsIdsModel,
   deleteRelationModel,
   updateRelationModel,
-
 } from '../../models/relations'
 
-export const createRelationController = async (req: any, res: any, next: any) => {
+export const createRelationController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, id } = await createRelationModel(req.body, req.user)
 
@@ -22,7 +25,11 @@ export const createRelationController = async (req: any, res: any, next: any) =>
   }
 }
 
-export const createBulkRelationController = async (req: any, res: any, next: any) => {
+export const createBulkRelationController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, ids } = await createBulkRelationModel(req.body, req.user)
 
@@ -36,7 +43,11 @@ export const createBulkRelationController = async (req: any, res: any, next: any
   }
 }
 
-export const updateRelationController = async (req: any, res: any, next: any) => {
+export const updateRelationController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   // TODO: check permissions
 
   try {
@@ -52,7 +63,11 @@ export const updateRelationController = async (req: any, res: any, next: any) =>
   }
 }
 
-export const deleteRelationController = async (req: any, res: any, next: any) => {
+export const deleteRelationController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, status } = await deleteRelationModel(
       req.params?.relId,
@@ -69,7 +84,11 @@ export const deleteRelationController = async (req: any, res: any, next: any) =>
   }
 }
 
-export const deleteRelationByAssetsIdsController = async (req: any, res: any, next: any) => {
+export const deleteRelationByAssetsIdsController = async (
+  req: any,
+  res: any,
+  next: any,
+) => {
   try {
     const { error, count } = await deleteRelationByAssetsIdsModel({
       fromAssetId: parseInt(req.params.fromAssetId),

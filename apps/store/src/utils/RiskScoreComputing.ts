@@ -28,10 +28,16 @@ import { SUPER_ASSET_TYPES, TECHNICAL_ASSET_TYPES } from './assets'
  * @param {inherentRiskScores[]} inherentScores
  * @returns {{[assetId: string]: number}}
  */
-export function riskScoreComputing(listUnvisited: any, relations: any, inherentScores: any) {
-  const technicalAssets = listUnvisited.filter((asset: any) => TECHNICAL_ASSET_TYPES.includes(asset.type),
+export function riskScoreComputing(
+  listUnvisited: any,
+  relations: any,
+  inherentScores: any,
+) {
+  const technicalAssets = listUnvisited.filter((asset: any) =>
+    TECHNICAL_ASSET_TYPES.includes(asset.type),
   )
-  const superAssets = listUnvisited.filter((asset: any) => SUPER_ASSET_TYPES.includes(asset.type),
+  const superAssets = listUnvisited.filter((asset: any) =>
+    SUPER_ASSET_TYPES.includes(asset.type),
   )
 
   /**
@@ -64,11 +70,7 @@ export function riskScoreComputing(listUnvisited: any, relations: any, inherentS
  */
 function inheritedRiskCalculation(
   risks: any,
-  {
-    listUnvisited,
-    relations,
-    inherentScores,
-  }: any,
+  { listUnvisited, relations, inherentScores }: any,
 ) {
   // 2) For each unvisited asset, initialize the inheritedRisk with the score of the inherentScore or 10 for non scanned assets
   listUnvisited.forEach(async (asset: any) => {
@@ -103,9 +105,10 @@ function inheritedRiskCalculation(
               && unvisitedIds.includes(relation.from_asset_id)))
         )
       })
-      .map((relation: any) => relation.from_asset_id === currentAsset.id
-        ? relation.to_asset_id
-        : relation.from_asset_id,
+      .map((relation: any) =>
+        relation.from_asset_id === currentAsset.id
+          ? relation.to_asset_id
+          : relation.from_asset_id,
       )
 
     listConnected.sort((a: any, b: any) => {
@@ -142,11 +145,7 @@ function inheritedRiskCalculation(
  */
 function compoundRiskCalculation(
   risks: any,
-  {
-    listUnvisited,
-    relations,
-    allAssets,
-  }: any,
+  { listUnvisited, relations, allAssets }: any,
 ) {
   listUnvisited.forEach(async (asset: any) => {
     const technicalAssetsInside = getAllTechnicalDescendantsAssets(
@@ -196,11 +195,16 @@ function compoundRiskCalculation(
  * @param {lightAssetType[]} listAssets
  * @returns {number[]}
  */
-function getAllTechnicalDescendantsAssets(assetId: any, relations: any, listAssets: any) {
+function getAllTechnicalDescendantsAssets(
+  assetId: any,
+  relations: any,
+  listAssets: any,
+) {
   const children = relations
     .filter(
-      (relation: any) => relation.to_asset_id === assetId
-      && (relation.type === 'BELONGS_TO' || relation.type === 'LOCATED_TO'),
+      (relation: any) =>
+        relation.to_asset_id === assetId
+        && (relation.type === 'BELONGS_TO' || relation.type === 'LOCATED_TO'),
     )
     .map((relation: any) => relation.from_asset_id)
 
@@ -213,12 +217,10 @@ function getAllTechnicalDescendantsAssets(assetId: any, relations: any, listAsse
 
     if (TECHNICAL_ASSET_TYPES.includes(asset.type))
       technicalChildren.push(child)
-    else
-      abstractChildren.push(child)
+    else abstractChildren.push(child)
   })
 
   return technicalChildren.concat(
-
     ...abstractChildren.map(childId =>
       getAllTechnicalDescendantsAssets(childId, relations, listAssets).filter(
         (grandChildId: any) => !technicalChildren.includes(grandChildId),

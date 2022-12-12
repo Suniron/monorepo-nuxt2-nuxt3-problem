@@ -1,6 +1,10 @@
 import { knex } from '../../../src/common/db'
 
-import { MODEL_ERROR, SUCCESS, VALIDATION_ERROR } from '../../../src/common/constants'
+import {
+  MODEL_ERROR,
+  SUCCESS,
+  VALIDATION_ERROR,
+} from '../../../src/common/constants'
 
 /**
  * @typedef {import('@/types/severity').Severity} Severity
@@ -11,7 +15,10 @@ import { MODEL_ERROR, SUCCESS, VALIDATION_ERROR } from '../../../src/common/cons
  * @param {{severityId: number}} params
  * @returns {Promise<{status: string} | {error: string}>}
  */
-export const updateFearedEventsModel = async (fearedEventId: any, params: any) => {
+export const updateFearedEventsModel = async (
+  fearedEventId: any,
+  params: any,
+) => {
   try {
     // == Check params ==
     if (

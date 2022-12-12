@@ -332,8 +332,7 @@ export const probe = {
 }
 export function createScanContent(howManyType: any) {
   const typeBasedOnArg = []
-  for (let i = 0; i < howManyType; i++)
-    typeBasedOnArg.push(`test${i}`)
+  for (let i = 0; i < howManyType; i++) typeBasedOnArg.push(`test${i}`)
 
   return {
     endTime: '03:21',
