@@ -356,7 +356,6 @@ db-create-recette-image:
   tags:
     - recettage
   script:
-    - cd apps/db
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
@@ -373,7 +372,6 @@ db-create-prerelease-image:
   tags:
     - recettage
   script:
-    - cd apps/db
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
     - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_db:pre -f ./apps/db/Dockerfile # Create a Docker image with recette tags
@@ -390,7 +388,6 @@ db-create-prod-image:
   tags:
     - recettage
   script:
-    - cd apps/db
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_db -f ./apps/db/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION # Push Docker image with versioned production tag
