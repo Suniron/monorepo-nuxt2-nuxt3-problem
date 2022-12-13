@@ -37,7 +37,6 @@ export default {
       required: true
     }
   },
-
   watch: {
     isOpen(val) {
       if (!val) {
@@ -52,6 +51,7 @@ export default {
         this.timeoutId = setTimeout(() => (this.isOpen = false), this.timeout) // auto close after timeout
     },
   },
+
   mounted() {
     this.isOpen = this.show // to trigger the watch
   }
