@@ -23,16 +23,15 @@ const server
       }
     : undefined
 
-export default {
-
+const nuxtConfig = {
   /*
-   ** Build configuration
-   */
+  ** Build configuration
+  */
   build: {
     /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {
+    ** You can extend webpack config here
+    */
+    extend(config) {
       return {
         ...config,
         plugins: [
@@ -48,8 +47,8 @@ export default {
   },
 
   /*
-   ** Nuxt.js dev-modules
-   */
+  ** Nuxt.js dev-modules
+  */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     ['@nuxtjs/eslint-module', { fix: true, lintDirtyModulesOnly: false }],
@@ -57,13 +56,13 @@ export default {
   ],
 
   /*
-   ** Global CSS
-   */
+  ** Global CSS
+  */
   css: [],
 
   /*
-   ** Headers of the page
-   */
+  ** Headers of the page
+  */
   head: {
     link: [
       { href: '/favicon.ico', rel: 'icon', type: 'image/x-icon' },
@@ -76,23 +75,23 @@ export default {
       { charset: 'utf-8' },
       { content: 'width=device-width, initial-scale=1', name: 'viewport' },
       {
-        content: process.env.npm_package_description || '',
+        content: 'Xrator helps to manage all your company assets and audit their security vulnerabilities',
         hid: 'description',
         name: 'description',
       },
     ],
-    title: process.env.npm_package_name || '',
-    titleTemplate: `%s - ${process.env.npm_package_name}`,
+    title: 'xrator',
+    titleTemplate: '%s - xrator',
   },
 
   /*
-   ** Customize the progress-bar color
-   */
+  ** Customize the progress-bar color
+  */
   loading: { color: '#fff' },
 
   /*
-   ** Nuxt.js modules
-   */
+  ** Nuxt.js modules
+  */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
@@ -116,8 +115,8 @@ export default {
   ],
 
   /*
-   ** Plugins to load before mounting the App
-   */
+  ** Plugins to load before mounting the App
+  */
   plugins: [
     '~/plugins/axios.js',
     '~/plugins/directives.js',
@@ -128,9 +127,9 @@ export default {
 
   publicRuntimeConfig: {
     /*
-     ** Axios module configuration
-     ** See https://axios.nuxtjs.org/options
-     */
+  ** Axios module configuration
+  ** See https://axios.nuxtjs.org/options
+  */
     axios: {
       baseURL: process.env.BACKEND_BASE_URL,
       browserBaseURL: process.env.BACKEND_BROWSER_BASE_URL,
@@ -138,8 +137,8 @@ export default {
   },
 
   /**
-   * Https server for prod
-   */
+  * Https server for prod
+  */
   server,
 
   ssr: false,
@@ -147,9 +146,9 @@ export default {
   target: 'static',
 
   /*
-   ** vuetify module configuration
-   ** https://github.com/nuxt-community/vuetify-module
-   */
+  ** vuetify module configuration
+  ** https://github.com/nuxt-community/vuetify-module
+  */
   vuetify: {
     customVariables: ['~/assets/styles/sass/abstracts/vuetify-variables.scss'],
     theme: {
@@ -166,3 +165,5 @@ export default {
     // }
   },
 }
+
+export default nuxtConfig
