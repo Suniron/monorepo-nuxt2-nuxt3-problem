@@ -2,7 +2,7 @@
   "name": "@xrator-operator/web",
   "version": "1.13.0",
   "description": "Xrator helps to manage all your company assets and audit their security vulnerabilities",
-  "author": "Eli Linares",
+  "author": "",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt -p 3000",
