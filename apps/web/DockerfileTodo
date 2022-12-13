@@ -4,14 +4,20 @@
 # Use precise image to reduce side effects by node / alpine upgrades
 FROM node:18-alpine3.16 AS base
 
-# Create and move into /api folder
-WORKDIR /api
+ARG NODE_ENV
+ENV NUXT_HOST=0.0.0.0\
+    NUXT_PORT=3000\ 
+    NODE_ENV=$NODE_ENV
 
-# Copy package.json and pnpm lock file to /api/ before installation
-COPY ./package.json ./pnpm-lock.yaml /api/
+# Create and move into /web folder
+WORKDIR /web
+
+
+# Copy package.json and pnpm lock file to /web/ before installation
+COPY ./package.json ./pnpm-lock.yaml /web/
 RUN corepack enable
 
-EXPOSE 3001
+EXPOSE 3000
 
 ###############
 # BUILD STAGE # This stage is used to build application before production (Typescript => Javascript)
@@ -20,12 +26,12 @@ FROM node:18-alpine3.16 as builder
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
-WORKDIR /api
+WORKDIR /web
 
 RUN yarn global add turbo@1.5.5
 COPY . .
 
-RUN turbo prune --scope=@xrator-operator/api --docker
+RUN turbo prune --scope=@xrator-operator/web --docker
 
 ###################
 # INSTALLER STAGE # This stage is used to build application before production
@@ -34,42 +40,50 @@ FROM node:18-alpine3.16 as installer
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
-WORKDIR /api
+WORKDIR /web
 
 # First install dependencies (as they change less often)
 COPY .npmrc .gitignore ./
-COPY --from=builder /api/out/json/ .
-COPY --from=builder /api/out/pnpm-*.yaml .
+COPY --from=builder /web/out/json/ .
+COPY --from=builder /web/out/pnpm-*.yaml .
 
 # Activate corepack to use pnpm
 RUN corepack enable
 # RUN pnpm install -r --frozen-lockfile
+# TODO: fix it
+RUN pnpm install --no-frozen-lockfile
 
-COPY --from=builder /api/out/full/ ./
+COPY --from=builder /web/out/full/ ./
 
-# TODO when Typescript will be used, build the project here
-# RUN pnpm turbo build --filter=@xrator-operator/api...
+# # Build the project
+RUN pnpm turbo build --filter=@xrator-operator/web...
 
 ##############
 # PROD STAGE # This stage is used is production
 ##############
 FROM node:18-alpine3.16 as prod
-EXPOSE 3001
+ARG BACKEND_BASE_URL
+ARG BACKEND_BROWSER_BASE_URL
 
-WORKDIR /api
+ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
+    BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL
+
+WORKDIR /web
 ENV NODE_ENV=production
 
-# Copy package.json and pnpm lock file to /api/ before installation
-COPY ./package.json ./pnpm-lock.yaml /api/
+# Copy package.json and pnpm lock file to /web/ before installation
+# COPY ./package.json ./pnpm-*.yaml /web/
 
 RUN corepack enable
-RUN pnpm install --frozen-lockfile --prod
 
-# # Change user to "expressjs" to improve security
+# Change user to "expressjs" to improve security
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs
-USER expressjs
+# USER expressjs
 
-COPY --from=installer /api .
+COPY --from=installer --chown=expressjs:expressjs /web/apps/web/ /web/
+RUN pnpm install --frozen-lockfile --prod
 
-CMD cd /api/apps/api && pnpm start
+CMD ping 8.8.8.8
+
+# CMD pnpm nuxt start

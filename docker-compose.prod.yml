@@ -4,7 +4,7 @@ services:
   xrator_ui:
     container_name: xrator_ui
     build:
-      context: ./apps/web
+      context: ./apps/web/
       dockerfile: Dockerfile
       target: prod
     environment:
@@ -18,8 +18,8 @@ services:
   xrator_api:
     container_name: xrator_api
     build:
-      context: ./apps/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/api/Dockerfile
       target: prod
     environment:
       - PORT=3001
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/store/Dockerfile
-      target: runner
+      target: prod
     environment:
       - NODE_ENV=production
       - PORT=3002

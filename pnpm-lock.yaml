@@ -52,6 +52,8 @@ importers:
       prettier: 2.2.1
       supertest: ^6.1.1
       swagger-ui-express: ^4.3.0
+      typescript: ^4.9.3
+      uuid: ^9.0.0
       yamljs: ^0.3.0
     dependencies:
       axios: 0.21.4
@@ -79,6 +81,7 @@ importers:
       pino-elasticsearch: 6.3.0
       pino-pretty: 9.1.1
       swagger-ui-express: 4.6.0_express@4.18.2
+      uuid: 9.0.0
       yamljs: 0.3.0
     devDependencies:
       '@babel/core': 7.20.5
@@ -92,6 +95,7 @@ importers:
       nodemon: 2.0.20
       prettier: 2.2.1
       supertest: 6.3.2
+      typescript: 4.9.3
 
   apps/db:
     specifiers: {}
@@ -196,6 +200,7 @@ importers:
   apps/web:
     specifiers:
       '@nuxtjs/axios': ^5.13.1
+      '@nuxtjs/eslint-module': ^3.1.0
       '@nuxtjs/vuetify': ^1.11.3
       '@types/leaflet': ^1.9.0
       '@types/lodash': ^4.14.182
@@ -245,6 +250,7 @@ importers:
       vuejs-tree: 2.1.0
       vuex-multi-tab-state: 1.0.17
     devDependencies:
+      '@nuxtjs/eslint-module': 3.1.0_2godrbid5dlikbzpspaxqblgd4
       '@nuxtjs/vuetify': 1.12.3_vue@2.7.14+webpack@5.75.0
       '@types/leaflet': 1.9.0
       '@types/lodash': 4.14.191
@@ -2489,6 +2495,19 @@ packages:
       - debug
     dev: false
 
+  /@nuxtjs/eslint-module/3.1.0_2godrbid5dlikbzpspaxqblgd4:
+    resolution: {integrity: sha512-9bK8AOJBflWmbQeL77SHIsgyGzhiW2b1BdwOtZ53Yyfa7Km3XMMVd8CtLA7z4+03eS+4TVQMxw62yRpJH5icZA==}
+    peerDependencies:
+      eslint: '>=7'
+    dependencies:
+      consola: 2.15.3
+      defu: 6.1.1
+      eslint: 8.29.0
+      eslint-webpack-plugin: 2.7.0_2godrbid5dlikbzpspaxqblgd4
+    transitivePeerDependencies:
+      - webpack
+    dev: true
+
   /@nuxtjs/proxy/2.1.0:
     resolution: {integrity: sha512-/qtoeqXgZ4Mg6LRg/gDUZQrFpOlOdHrol/vQYMnKu3aN3bP90UfOUB3QSDghUUK7OISAJ0xp8Ld78aHyCTcKCQ==}
     dependencies:
@@ -2648,6 +2667,13 @@ packages:
     dependencies:
       '@types/eslint': 8.4.10
       '@types/estree': 1.0.0
+    dev: true
+
+  /@types/eslint/7.29.0:
+    resolution: {integrity: sha512-VNcvioYDH8/FxaeTKkM4/TiTwt6pBV9E3OfGmvaw8tPl0rrHCJ4Ll15HRT+pMiFAf/MLQvAzC+6RzUMEL9Ceng==}
+    dependencies:
+      '@types/estree': 1.0.0
+      '@types/json-schema': 7.0.11
     dev: true
 
   /@types/eslint/8.4.10:
@@ -3672,6 +3698,11 @@ packages:
       es-array-method-boxes-properly: 1.0.0
       is-string: 1.0.7
 
+  /arrify/2.0.1:
+    resolution: {integrity: sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==}
+    engines: {node: '>=8'}
+    dev: true
+
   /asap/2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
     dev: true
@@ -4668,7 +4699,6 @@ packages:
 
   /consola/2.15.3:
     resolution: {integrity: sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==}
-    dev: false
 
   /console-browserify/1.2.0:
     resolution: {integrity: sha512-ZMkYO/LkF17QvCPqM0gxw8yUzigAOZOSWSHg91FH6orS7vcEj5dVZTidN2fQ14yBSdg97RqhSNwLUXInd52OTA==}
@@ -5575,7 +5605,6 @@ packages:
 
   /defu/6.1.1:
     resolution: {integrity: sha512-aA964RUCsBt0FGoNIlA3uFgo2hO+WWC0fiC6DBps/0SFzkKcYoM/3CzVLIa5xSsrFjdioMdYgAIbwo80qp2MoA==}
-    dev: false
 
   /delayed-stream/1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -6481,6 +6510,23 @@ packages:
   /eslint-visitor-keys/3.3.0:
     resolution: {integrity: sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /eslint-webpack-plugin/2.7.0_2godrbid5dlikbzpspaxqblgd4:
+    resolution: {integrity: sha512-bNaVVUvU4srexGhVcayn/F4pJAz19CWBkKoMx7aSQ4wtTbZQCnG5O9LHCE42mM+JSKOUp7n6vd5CIwzj7lOVGA==}
+    engines: {node: '>= 10.13.0'}
+    peerDependencies:
+      eslint: ^7.0.0 || ^8.0.0
+      webpack: ^4.0.0 || ^5.0.0
+    dependencies:
+      '@types/eslint': 7.29.0
+      arrify: 2.0.1
+      eslint: 8.29.0
+      jest-worker: 27.5.1
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      schema-utils: 3.1.1
+      webpack: 5.75.0
     dev: true
 
   /eslint/8.29.0:
@@ -13105,6 +13151,11 @@ packages:
 
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
     dev: false
 
