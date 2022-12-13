@@ -168,7 +168,7 @@ web-create-recette-image:
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:rec -f Dockerfile # Create a Docker image with recette tag
+    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:rec -f ./apps/web/Dockerfile # Create a Docker image with recette tag
     - docker push $DOCKER_REGISTRY/test-xrator_ui:rec # Push Docker image to "rec" tag
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
@@ -183,8 +183,7 @@ web-create-prerelease-image:
   script:
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui:pre -f Dockerfile # Create a Docker image with recette tags
-    - docker build --target prod -t $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui:pre . # Create a Docker image with recette tags
+    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui:pre -f ./apps/web/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION # Push Docker image with versioned recette tag
     - docker push $DOCKER_REGISTRY/test-xrator_ui:pre # Push Docker image to "pre" tag
   rules:
@@ -199,7 +198,7 @@ web-create-prod-image:
     - recettage
   script:
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui -f Dockerfile # Create a Docker image with production tags
+    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui -f ./apps/web/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_ui:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_ui # Push Docker image to "latest" tag
   rules:
@@ -361,7 +360,7 @@ db-create-recette-image:
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
-    - docker build --target prod -t $DOCKER_REGISTRY/test-xrator_db:rec ./apps/db # Create a Docker image with recette tag
+    - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:rec -f ./apps/db/Dockerfile # Create a Docker image with recette tag
     - docker push $DOCKER_REGISTRY/test-xrator_db:rec # Push Docker image to "rec" tag
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
@@ -377,7 +376,7 @@ db-create-prerelease-image:
     - cd apps/db
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
-    - docker build --target prod -t $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_db:pre ./apps/db # Create a Docker image with recette tags
+    - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_db:pre -f ./apps/db/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION # Push Docker image with versioned recette tag
     - docker push $DOCKER_REGISTRY/test-xrator_db:pre # Push Docker image to "pre" tag
   rules:
@@ -393,7 +392,7 @@ db-create-prod-image:
   script:
     - cd apps/db
     - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
-    - docker build --target prod -t $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_db ./apps/db # Create a Docker image with production tags
+    - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_db -f ./apps/db/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_db # Push Docker image to "latest" tag
   rules:
