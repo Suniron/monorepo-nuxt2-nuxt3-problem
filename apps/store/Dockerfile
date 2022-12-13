@@ -39,7 +39,7 @@ WORKDIR /store
 # First install dependencies (as they change less often)
 COPY .npmrc .gitignore ./
 COPY --from=builder /store/out/json/ .
-COPY --from=builder /store/out/pnpm-*.yaml .
+COPY --from=builder /store/out/pnpm-*.yaml ./
 
 # Activate corepack to use pnpm
 RUN corepack enable

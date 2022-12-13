@@ -39,7 +39,7 @@ WORKDIR /api
 # First install dependencies (as they change less often)
 COPY .npmrc .gitignore ./
 COPY --from=builder /api/out/json/ .
-COPY --from=builder /api/out/pnpm-*.yaml .
+COPY --from=builder /api/out/pnpm-*.yaml ./
 
 # Activate corepack to use pnpm
 RUN corepack enable
