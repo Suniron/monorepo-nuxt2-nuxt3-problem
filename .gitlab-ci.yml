@@ -63,9 +63,16 @@ lint-test-job:
 # # =========
 # # =========
 
+# Get the app version from the root package.json
+.get-api-version:
+  before_script:
+    - 'VERSION=v$(cat apps/api/package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "API version: $VERSION"'
+    - node -v
+
 api-create-recette-image:
   extends: 
-    - .get-versions
+    - .get-api-version
   stage: create-image
   tags:
     - recettage
@@ -82,7 +89,7 @@ api-create-recette-image:
 
 api-create-prerelease-image:
   extends: 
-    - .get-versions
+    - .get-api-version
   stage: create-image
   tags:
     - recettage
@@ -99,7 +106,7 @@ api-create-prerelease-image:
 
 api-create-prod-image:
   extends: 
-    - .get-versions
+    - .get-api-version
   stage: create-image
   tags:
     - recettage
@@ -159,13 +166,19 @@ api-start-prerelease:
 # # == WEB ==
 # # =========
 # # =========
+.get-web-version:
+  before_script:
+    - 'VERSION=v$(cat apps/web/package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "WEB version: $VERSION"'
+    - node -v
 
 web-create-recette-image:
   stage: create-image
+  extends: 
+    - .get-web-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
     - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:rec -f ./apps/web/Dockerfile # Create a Docker image with recette tag
@@ -178,10 +191,11 @@ web-create-recette-image:
 
 web-create-prerelease-image:
   stage: create-image
+  extends: 
+    - .get-web-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
     - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui:pre -f ./apps/web/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/test-xrator_ui:pre-$VERSION # Push Docker image with versioned recette tag
@@ -194,10 +208,11 @@ web-create-prerelease-image:
 
 web-create-prod-image:
   stage: create-image
+  extends: 
+    - .get-web-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/test-xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_ui -f ./apps/web/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_ui:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_ui # Push Docker image to "latest" tag
@@ -253,13 +268,19 @@ web-start-prerelease:
 # # == STORE ==
 # # ===========
 # # ===========
+.get-store-version:
+  before_script:
+    - 'VERSION=v$(cat apps/store/package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "STORE version: $VERSION"'
+    - node -v
 
 store-create-recette-image:
   stage: create-image
+  extends: 
+    - .get-store-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
     - docker build . --target prod -t $DOCKER_REGISTRY/test-xrator_store:rec -f ./apps/store/Dockerfile # Create a Docker image with recette tag
@@ -272,10 +293,11 @@ store-create-recette-image:
 
 store-create-prerelease-image:
   stage: create-image
+  extends: 
+    - .get-store-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
     - docker build . --target prod -t $DOCKER_REGISTRY/test-xrator_store:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_store:pre -f ./apps/store/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/test-xrator_store:pre-$VERSION # Push Docker image with versioned recette tag
@@ -288,10 +310,11 @@ store-create-prerelease-image:
 
 store-create-prod-image:
   stage: create-image
+  extends: 
+    - .get-store-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - docker build . --target prod -t $DOCKER_REGISTRY/test-xrator_store:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_store -f ./apps/store/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_store:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_store # Push Docker image to "latest" tag
@@ -350,13 +373,19 @@ store-start-prerelease:
 # # == DB ==
 # # ========
 # # ========
+.get-db-version:
+  before_script:
+    - 'VERSION=v$(cat apps/db/package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+    - 'echo "DB version: $VERSION"'
+    - node -v
 
 db-create-recette-image:
   stage: create-image
+  extends: 
+    - .get-db-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - env
     - echo creating new Recette image for tag $VERSION
     - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:rec -f ./apps/db/Dockerfile # Create a Docker image with recette tag
@@ -369,10 +398,11 @@ db-create-recette-image:
 
 db-create-prerelease-image:
   stage: create-image
+  extends: 
+    - .get-db-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - echo creating new PreRelease image for tag $VERSION
     - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION -t $DOCKER_REGISTRY/test-xrator_db:pre -f ./apps/db/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/test-xrator_db:pre-$VERSION # Push Docker image with versioned recette tag
@@ -385,10 +415,11 @@ db-create-prerelease-image:
 
 db-create-prod-image:
   stage: create-image
+  extends: 
+    - .get-db-version
   tags:
     - recettage
   script:
-    - 'VERSION=v$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
     - docker build ./apps/db/ --target prod -t $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_db -f ./apps/db/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_db:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_db # Push Docker image to "latest" tag
