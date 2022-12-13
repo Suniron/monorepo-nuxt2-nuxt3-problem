@@ -1,7 +1,7 @@
 {
   "name": "@xrator-operator/db",
   "version": "1.13.0",
-  "description": "",
+  "description": "Backend PostgreSQL XRATOR db",
   "main": "",
   "scripts": {},
   "repository": {
