@@ -1,3 +1,27 @@
+<script>
+export default {
+  layout: 'no-nav-bar',
+  name: 'SignupPage',
+  data: () => ({
+    isLoading: false,
+    showErrorSnackbard: false,
+    signupForm: {
+      email: '',
+      password: '',
+      confPassword: ''
+    }
+  }),
+  created() {
+    this.$store.dispatch('changePageTitle', this.$t('action.signup'))
+  },
+  methods: {
+    async signup() {
+      // await console.log('signing up')
+    },
+  },
+}
+</script>
+
 <template>
   <v-container class="signup">
     <v-row>
@@ -26,7 +50,9 @@
               />
 
               <div class="text-right mt-4">
-                <v-btn @click="signup">{{ $t('action.signup') }}</v-btn>
+                <v-btn @click="signup">
+                  {{ $t('action.signup') }}
+                </v-btn>
               </div>
             </v-form>
           </v-card-text>
@@ -43,29 +69,5 @@
     </v-snackbar>
   </v-container>
 </template>
-
-<script>
-export default {
-  name: 'SignupPage',
-  layout: 'no-nav-bar',
-  data: () => ({
-    isLoading: false,
-    signupForm: {
-      email: '',
-      password: '',
-      confPassword: ''
-    },
-    showErrorSnackbard: false
-  }),
-  created() {
-    this.$store.dispatch('changePageTitle', this.$t('action.signup'))
-  },
-  methods: {
-    async signup() {
-      // await console.log('signing up')
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped></style>

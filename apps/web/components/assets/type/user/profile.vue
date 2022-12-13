@@ -1,3 +1,50 @@
+<script>
+import AssetRiskScore from '../../details/AssetRiskScore.vue'
+import AssetIcon from '~/components/assets/AssetIcon.vue'
+
+export default {
+  components: { AssetIcon, AssetRiskScore },
+  name: 'UserProfile',
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      relations: {
+        LOCATED_TO: [],
+      }
+    }
+  },
+  created() {
+    this.fetchRelations()
+  },
+  watch: {
+    asset: {
+      deep: true,
+      handler() {
+        this.fetchRelations()
+      }
+    },
+  },
+  methods: {
+    fetchRelations() {
+      const RELATIONS = Object.keys(this.relations)
+      RELATIONS.forEach((rel) => {
+        const result = this.asset.relations
+          ? this.asset?.relations.filter((elt) => {
+            return elt.type === rel
+          })
+          : []
+        this.relations[rel].splice(0, this.relations[rel].length, ...result)
+      })
+    },
+  },
+}
+</script>
+
 <template>
   <v-row>
     <v-col cols="12" lg="4">
@@ -14,14 +61,14 @@
     </v-col>
     <v-col cols="12" lg="4">
       <div class="asset-profile__details">
-        <h3></h3>
+        <h3 />
         <p v-if="relations.LOCATED_TO.length > 0">
           <strong>Located To:</strong>
-          <v-chip small nuxt :to="'/assets/' + relations.LOCATED_TO[0].id"
-            ><AssetIcon os="BUILDING" :size="15" />&nbsp;{{
+          <v-chip small nuxt :to="`/assets/${relations.LOCATED_TO[0].id}`">
+            <AssetIcon os="BUILDING" :size="15" />&nbsp;{{
               relations.LOCATED_TO[0].name
-            }}</v-chip
-          >
+            }}
+          </v-chip>
         </p>
       </div>
     </v-col>
@@ -32,49 +79,3 @@
     </v-col>
   </v-row>
 </template>
-<script>
-import AssetRiskScore from '../../details/AssetRiskScore.vue'
-import AssetIcon from '~/components/assets/AssetIcon.vue'
-
-export default {
-  name: 'UserProfile',
-  components: { AssetIcon, AssetRiskScore },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      relations: {
-        LOCATED_TO: []
-      }
-    }
-  },
-  watch: {
-    asset: {
-      handler() {
-        this.fetchRelations()
-      },
-      deep: true
-    }
-  },
-  created() {
-    this.fetchRelations()
-  },
-  methods: {
-    fetchRelations() {
-      const RELATIONS = Object.keys(this.relations)
-      RELATIONS.forEach((rel) => {
-        const result = this.asset.relations
-          ? this.asset?.relations.filter((elt) => {
-              return elt.type === rel
-            })
-          : []
-        this.relations[rel].splice(0, this.relations[rel].length, ...result)
-      })
-    }
-  }
-}
-</script>

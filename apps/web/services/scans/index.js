@@ -1,6 +1,6 @@
 const baselines = require('./baselines.json')
 
-export const getScansChartDataService = async (axios, params) => {
+export const getScansChartDataService = async (axios) => {
   const { data } = await axios.get('/dashboard/scanHistory')
   // data.scanHistory = data.scanHistory.concat(scansChartData)
   /* const scans = Object.values(scansData)
@@ -28,7 +28,7 @@ export const getScansListDataService = async (axios, params) => {
 
   const queryParams = {
     page,
-    pageSize
+    pageSize,
   }
 
   // data.scans = data.scans.concat(scansData)
@@ -43,17 +43,17 @@ export const scheduleWebScan = async (axios, params) => {
     startDate,
     endDate,
     startTime,
-    endTime
+    endTime,
   } = params
 
   const payload = {
-    type: 'web',
     assets,
+    endDate,
+    endTime,
     hasInternal,
     startDate,
-    endDate,
     startTime,
-    endTime
+    type: 'web',
   }
   const { data } = await axios.post('scans', payload)
 
@@ -68,18 +68,18 @@ export const scheduleNetworkScan = async (axios, params) => {
     startDate,
     endDate,
     startTime,
-    endTime
+    endTime,
   } = params
 
   const payload = {
-    type: 'network',
-    ips,
     credentials,
-    hasInternal,
-    startDate,
     endDate,
+    endTime,
+    hasInternal,
+    ips,
+    startDate,
     startTime,
-    endTime
+    type: 'network',
   }
 
   const { data } = await axios.post('scans', payload)
@@ -92,7 +92,7 @@ export const scheduleScan = async (axios, params) => {
 }
 
 export const updateScanService = async (axios, id, params) => {
-  await axios.patch('/scans/' + id, params)
+  await axios.patch(`/scans/${id}`, params)
 }
 
 export const parseScanResult = async (axios, params) => {
@@ -131,11 +131,11 @@ export const getScanDetails = async (axios, id) => {
  */
 export const downloadReportFile = async (axios, id) => {
   const response = await axios.get(`/scans/${id}/report/download`, {
-    responseType: 'blob'
+    responseType: 'blob',
   })
   const fileName = response.headers['content-disposition'].match(
-    /filename=(.+)/
+    /filename=(.+)/,
   )[1]
   const { data } = response
-  return { fileName, file: data }
+  return { file: data, fileName }
 }

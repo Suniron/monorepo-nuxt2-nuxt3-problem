@@ -1,29 +1,12 @@
-<template>
-  <v-card class="d-flex flex-column">
-    <v-card-title
-      >Severity Summary<v-spacer></v-spacer
-      ><v-icon @click="$emit('close')">mdi-close</v-icon></v-card-title
-    >
-    <v-card-text class="dash-text d-flex overflow-y-auto">
-      <pie-chart
-        id="severity"
-        :data="chartData"
-        :config="chartConfig"
-        @click="handleChartClicked"
-      />
-    </v-card-text>
-  </v-card>
-</template>
-
 <script>
 import PieChart from '~/components/charts/pie-chart'
 import { severityColor } from '~/utils/color.utils'
 
 export default {
-  name: 'SeveritySummary',
   components: {
     PieChart
   },
+  name: 'SeveritySummary',
   props: {
     data: {
       type: Object,
@@ -38,28 +21,23 @@ export default {
   data: () => ({
     chartData: {
       critical: {
-        value: 1,
-        color: severityColor('CRITICAL')
+        color: severityColor('CRITICAL'),
+        value: 1
       },
       high: {
-        value: 1,
-        color: severityColor('HIGH')
-      },
-      medium: {
-        value: 1,
-        color: severityColor('MEDIUM')
+        color: severityColor('HIGH'),
+        value: 1
       },
       low: {
         value: 1,
         color: severityColor('LOW')
+      },
+      medium: {
+        value: 1,
+        color: severityColor('MEDIUM')
       }
-    }
+    },
   }),
-  watch: {
-    data(newSeverities) {
-      this.populateChartData(newSeverities)
-    }
-  },
   created() {
     // Non-reactive data
     this.chartConfig = {
@@ -94,14 +72,19 @@ export default {
 
     this.populateChartData(this.data)
   },
+  watch: {
+    data(newSeverities) {
+      this.populateChartData(newSeverities)
+    },
+  },
   methods: {
     handleChartClicked({ data }) {
       this.$router.push({
         path: this.localePath('assets'),
         query: {
           severities: data.id,
-          types: 'SERVER,WEB,USER,BUILDING'
-        }
+          types: 'SERVER,WEB,USER,BUILDING',
+        },
       })
     },
     populateChartData(severities) {
@@ -109,9 +92,27 @@ export default {
       this.chartData.medium.value = severities.medium
       this.chartData.high.value = severities.high
       this.chartData.critical.value = severities.critical
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-card class="d-flex flex-column">
+    <v-card-title>
+      Severity Summary<v-spacer /><v-icon @click="$emit('close')">
+        mdi-close
+      </v-icon>
+    </v-card-title>
+    <v-card-text class="dash-text d-flex overflow-y-auto">
+      <PieChart
+        id="severity"
+        :data="chartData"
+        :config="chartConfig"
+        @click="handleChartClicked"
+      />
+    </v-card-text>
+  </v-card>
+</template>
 
 <style></style>

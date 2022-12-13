@@ -1,20 +1,3 @@
-<template>
-  <v-card height="200px" class="d-flex align-center">
-    <v-card-text
-      class="text-center text-body-1"
-      v-if="remediationProjects.length === 0"
-      >{{ $t('projectManagement.noProject') }}</v-card-text
-    >
-    <pie-chart
-      v-else
-      id="status"
-      :data="chartData"
-      :config="chartConfig"
-      @click="handleChartClicked"
-    />
-  </v-card>
-</template>
-
 <script>
 // @ts-check
 /**
@@ -42,36 +25,19 @@ import PieChart from '~/components/charts/pie-chart.vue'
 import { statusColor } from '~/utils/color.utils'
 
 export default {
-  name: 'ProjectsByStatus',
   components: {
     PieChart
   },
-  data() {
-    return {
-      chartConfig: {}
-    }
-  },
+  name: 'ProjectsByStatus',
   computed: {
     ...mapState({
       /**
        * @returns {RemediationProjectSummary[]}
        */
-      remediationProjects: (state) =>
-        state.remediationProject.remediationProjects
+      remediationProjects: state =>
+        state.remediationProject.remediationProjects,
     }),
-    /**
-     * @returns {StatusCodeTranslation}
-     */
-    statusCodeTranslation() {
-      return {
-        overdue: this.$t('projectManagement.statusLevel.overdue'),
-        canceled: this.$t('projectManagement.statusLevel.canceled'),
-        completed: this.$t('projectManagement.statusLevel.completed'),
-        to_review: this.$t('projectManagement.statusLevel.to_review'),
-        in_progress: this.$t('projectManagement.statusLevel.in_progress'),
-        open: this.$t('projectManagement.statusLevel.open')
-      }
-    },
+
     /**
      * Get the chart data
      * @returns {ChartData}
@@ -82,19 +48,36 @@ export default {
           return [
             this.$t(`projectManagement.statusLevel.${status}`),
             {
+              color: statusColor(status),
               value: this.remediationProjects.filter(
-                (rp) => rp.status === status
+                rp => rp.status === status,
               ).length,
-              color: statusColor(status)
-            }
+            },
           ]
-        })
+        }),
       )
-    }
+    },
+
+    /**
+     * @returns {StatusCodeTranslation}
+     */
+    statusCodeTranslation() {
+      return {
+        canceled: this.$t('projectManagement.statusLevel.canceled'),
+        completed: this.$t('projectManagement.statusLevel.completed'),
+        in_progress: this.$t('projectManagement.statusLevel.in_progress'),
+        open: this.$t('projectManagement.statusLevel.open'),
+        overdue: this.$t('projectManagement.statusLevel.overdue'),
+        to_review: this.$t('projectManagement.statusLevel.to_review'),
+      }
+    },
   },
   created() {
     // Non-reactive data
     this.chartConfig = {
+      legend: {
+        position: 'right',
+      },
       pie: {
         label: {
           /**
@@ -102,8 +85,8 @@ export default {
            */
           format(value) {
             return value
-          }
-        }
+          },
+        },
       },
       tooltip: {
         format: {
@@ -112,12 +95,14 @@ export default {
            */
           value(value) {
             return value
-          }
-        }
+          },
+        },
       },
-      legend: {
-        position: 'right'
-      }
+    }
+  },
+  data() {
+    return {
+      chartConfig: {},
     }
   },
   methods: {
@@ -129,7 +114,25 @@ export default {
         return this.statusCodeTranslation[key] === event.data.id
       })
       this.$root.$emit('remediation-project-list:filter-by-status', status)
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <v-card height="200px" class="d-flex align-center">
+    <v-card-text
+      v-if="remediationProjects.length === 0"
+      class="text-center text-body-1"
+    >
+      {{ $t('projectManagement.noProject') }}
+    </v-card-text>
+    <PieChart
+      v-else
+      id="status"
+      :data="chartData"
+      :config="chartConfig"
+      @click="handleChartClicked"
+    />
+  </v-card>
+</template>

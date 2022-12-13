@@ -7,13 +7,15 @@ export const searchProbesController = async (req, res, next) => {
       {
         ...(req.params || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
 
     res.send({ data })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -25,12 +27,14 @@ export const updateProbesController = async (req, res, next) => {
         ...(req.params || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
 
     res.sendStatus(data.status)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

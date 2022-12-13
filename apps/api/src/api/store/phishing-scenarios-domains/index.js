@@ -1,9 +1,8 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 export const getPhishingScenariosDomainsFromStore = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -12,12 +11,13 @@ export const getPhishingScenariosDomainsFromStore = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data, error } = await axios.get('/phishing-scenarios-domains', {
+    const { data } = await axios.get('/phishing-scenarios-domains', {
       ...reqConfig,
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

@@ -1,64 +1,6 @@
-<template>
-  <dashboard :id="'dashExample'">
-    <dash-layout
-      v-for="layout in dlayouts"
-      v-bind="layout"
-      :key="layout.breakpoint"
-      use-css-transforms
-    >
-      <template v-for="item in layout.items">
-        <!-- Adding both `.sync` and update events to ensure the values are correct: https://github.com/bensladden/vue-responsive-dash/issues/231 -->
-        <dash-item
-          v-bind="item"
-          :x.sync="item.x"
-          :y.sync="item.y"
-          v-if="item.visible"
-          :key="item.id"
-          @resizeEnd="resizeEnd($event, item)"
-          @update:x="temporaryMove(item)"
-          @update:y="temporaryMove(item)"
-          @moveEnd="moveEnd"
-        >
-          <component
-            :is="item.name"
-            :data="args[item.prop]"
-            :key="item.ckey"
-            @close="closeItem(item)"
-          />
-        </dash-item>
-      </template>
-      <dash-item
-        id="myaddItem"
-        :y="nextDashboardRow(layout)"
-        :x="11"
-        :width="1"
-        :height="1"
-      >
-        <v-menu offset-y>
-          <template #activator="{ on, attrs }">
-            <button class="add-dash-btn" v-bind="attrs" v-on="on">
-              +
-            </button>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(hid, i) in layout.items.filter((elt) => !elt.visible)"
-              :key="i"
-            >
-              <v-list-item-title @click="addDashItem(hid, layout)">{{
-                hid.name
-              }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </dash-item>
-    </dash-layout>
-  </dashboard>
-</template>
-
 <script>
 // @ts-check
-import { Dashboard, DashLayout, DashItem } from 'vue-responsive-dash'
+import { DashItem, DashLayout, Dashboard } from 'vue-responsive-dash'
 import ProjectAssignment from '~/components/dashboard/project-assignment.vue'
 import SeveritySummary from '~/components/dashboard/severity-summary.vue'
 import GlobalRating from '~/components/dashboard/global-rating.vue'
@@ -71,14 +13,13 @@ import ComplianceSpiderGraphs from '~/components/dashboard/ComplianceSpiderGraph
 
 // Services
 import {
-  getDashboardData,
   fetchDashboards,
-  updateDashboardUser
+  getDashboardData,
+  updateDashboardUser,
 } from '~/services/dashboard'
 import AssetRisk from '~/components/dashboard/asset-risk.vue'
 
 export default {
-  name: 'DashboardDragPage',
   components: {
     SeveritySummary,
     GlobalRating,
@@ -94,10 +35,10 @@ export default {
     DashLayout,
     DashItem
   },
+  name: 'DashboardDragPage',
   middleware: ['auth'],
   data() {
     return {
-      dlayouts: [],
       args: {
         severitiesSummary: {
           low: 0,
@@ -150,7 +91,8 @@ export default {
           title: 'Site locations'
         }
       },
-      itemsTemporarilyMoving: {}
+      dlayouts: [],
+      itemsTemporarilyMoving: {},
     }
   },
   created() {
@@ -159,62 +101,6 @@ export default {
     this.fetchDashboardData()
   },
   methods: {
-    nextDashboardRow(layout) {
-      return layout.items
-        .filter((item) => item.visible)
-        .reduce((acc, elt) => {
-          if (elt.y + elt.height > acc) {
-            return elt.y + elt.height
-          }
-          return acc
-        }, 0)
-    },
-    temporaryMove(item) {
-      this.$set(this.itemsTemporarilyMoving, item.id, {
-        x: item.x,
-        y: item.y,
-        width: item.width,
-        height: item.height
-      })
-    },
-    async resizeEnd(evt, item) {
-      Object.assign(item, evt)
-      item.ckey =
-        item.name +
-        '-' +
-        Math.random()
-          .toString(36)
-          .substring(2, 7)
-      await updateDashboardUser(this.$axios, evt.id, {
-        width: evt.width,
-        height: evt.height
-      })
-      this.$nextTick(async () => {
-        await Object.keys(this.itemsTemporarilyMoving)
-          .filter((itemId) => parseInt(itemId) !== evt.id)
-          .map((itemId) => {
-            return updateDashboardUser(this.$axios, itemId, {
-              x: this.itemsTemporarilyMoving[itemId].x,
-              y: this.itemsTemporarilyMoving[itemId].y
-            })
-          })
-        this.$set(this, 'itemsTemporarilyMoving', {})
-      })
-    },
-    async moveEnd(evt) {
-      await updateDashboardUser(this.$axios, evt.id, { x: evt.x, y: evt.y })
-      this.$nextTick(async () => {
-        await Object.keys(this.itemsTemporarilyMoving)
-          .filter((itemId) => parseInt(itemId) !== evt.id)
-          .map((itemId) => {
-            return updateDashboardUser(this.$axios, itemId, {
-              x: this.itemsTemporarilyMoving[itemId].x,
-              y: this.itemsTemporarilyMoving[itemId].y
-            })
-          })
-        this.$set(this, 'itemsTemporarilyMoving', {})
-      })
-    },
     async addDashItem(item, layout) {
       // Improve to find first empty space that fits the item instead of the bottom row
       const maxYPlusHeight = this.nextDashboardRow(layout)
@@ -224,17 +110,12 @@ export default {
       await updateDashboardUser(this.$axios, item.id, {
         visible: true,
         x: 0,
-        y: maxYPlusHeight
+        y: maxYPlusHeight,
       })
     },
     async closeItem(item) {
       item.visible = false
       await updateDashboardUser(this.$axios, item.id, { visible: false })
-    },
-    async fetchDashboards() {
-      const dashboards = await fetchDashboards(this.$axios)
-      console.log(dashboards)
-      this.dlayouts = dashboards
     },
     async fetchDashboardData() {
       try {
@@ -245,7 +126,7 @@ export default {
           likelihoods,
           scanHistory,
           projectAssignement,
-          riskPerAsset
+          riskPerAsset,
         } = await getDashboardData(this.$axios)
         this.args.severitiesSummary = severitiesSummary
         this.args.global = global
@@ -254,13 +135,136 @@ export default {
         this.args.scanHistory = scanHistory
         this.$set(this.args, 'assignement', projectAssignement)
         this.args.riskPerAsset = riskPerAsset
-      } catch (error) {
+      }
+      catch (error) {
         console.error(error)
       }
-    }
-  }
+    },
+    async fetchDashboards() {
+      const dashboards = await fetchDashboards(this.$axios)
+      console.log(dashboards)
+      this.dlayouts = dashboards
+    },
+    async moveEnd(evt) {
+      await updateDashboardUser(this.$axios, evt.id, { x: evt.x, y: evt.y })
+      this.$nextTick(async () => {
+        await Object.keys(this.itemsTemporarilyMoving)
+          .filter(itemId => parseInt(itemId) !== evt.id)
+          .map((itemId) => {
+            return updateDashboardUser(this.$axios, itemId, {
+              x: this.itemsTemporarilyMoving[itemId].x,
+              y: this.itemsTemporarilyMoving[itemId].y,
+            })
+          })
+        this.$set(this, 'itemsTemporarilyMoving', {})
+      })
+    },
+    nextDashboardRow(layout) {
+      return layout.items
+        .filter(item => item.visible)
+        .reduce((acc, elt) => {
+          if (elt.y + elt.height > acc)
+            return elt.y + elt.height
+
+          return acc
+        }, 0)
+    },
+    async resizeEnd(evt, item) {
+      Object.assign(item, evt)
+      item.ckey
+        = `${item.name
+         }-${
+         Math.random()
+          .toString(36)
+          .substring(2, 7)}`
+      await updateDashboardUser(this.$axios, evt.id, {
+        height: evt.height,
+        width: evt.width,
+      })
+      this.$nextTick(async () => {
+        await Object.keys(this.itemsTemporarilyMoving)
+          .filter(itemId => parseInt(itemId) !== evt.id)
+          .map((itemId) => {
+            return updateDashboardUser(this.$axios, itemId, {
+              x: this.itemsTemporarilyMoving[itemId].x,
+              y: this.itemsTemporarilyMoving[itemId].y,
+            })
+          })
+        this.$set(this, 'itemsTemporarilyMoving', {})
+      })
+    },
+    temporaryMove(item) {
+      this.$set(this.itemsTemporarilyMoving, item.id, {
+        height: item.height,
+        width: item.width,
+        x: item.x,
+        y: item.y,
+      })
+    },
+  },
 }
 </script>
+
+<template>
+  <Dashboard id="dashExample">
+    <DashLayout
+      v-for="layout in dlayouts"
+      v-bind="layout"
+      :key="layout.breakpoint"
+      use-css-transforms
+    >
+      <template v-for="item in layout.items">
+        <!-- Adding both `.sync` and update events to ensure the values are correct: https://github.com/bensladden/vue-responsive-dash/issues/231 -->
+        <DashItem
+          v-if="item.visible"
+          v-bind="item"
+          :key="item.id"
+          v-model:x="item.x"
+          v-model:y="item.y"
+          @resizeEnd="resizeEnd($event, item)"
+          @update:x="temporaryMove(item)"
+          @update:y="temporaryMove(item)"
+          @moveEnd="moveEnd"
+        >
+          <component
+            :is="item.name"
+            :key="item.ckey"
+            :data="args[item.prop]"
+            @close="closeItem(item)"
+          />
+        </DashItem>
+      </template>
+      <DashItem
+        id="myaddItem"
+        :y="nextDashboardRow(layout)"
+        :x="11"
+        :width="1"
+        :height="1"
+      >
+        <v-menu offset-y>
+          <template #activator="{ on, attrs }">
+            <button class="add-dash-btn" v-bind="attrs" v-on="on">
+              +
+            </button>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(hid, i) in layout.items.filter((elt) => !elt.visible)"
+              :key="i"
+            >
+              <v-list-item-title @click="addDashItem(hid, layout)">
+                {{
+                  hid.name
+                }}
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </DashItem>
+    </DashLayout>
+  </Dashboard>
+</template>
+
 <style lang="scss">
 .v-card {
   height: 100%;

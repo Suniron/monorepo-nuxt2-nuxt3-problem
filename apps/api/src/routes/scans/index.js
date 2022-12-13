@@ -1,22 +1,21 @@
 import express from 'express'
-import { celebrate, Segments, Joi } from 'celebrate'
 import {
-  scheduleScanHandler,
-  searchScansHandler,
-  parseScanResultController,
-  searchScanAssetsController,
-  writeTmpContorller,
-  updateScanController,
-  searchPhishingScenariosController,
   generateScanReportController,
   getScanDetailsController,
+  parseScanResultController,
+  scheduleScanHandler,
+  searchPhishingScenariosController,
+  searchScanAssetsController,
+  searchScansHandler,
+  updateScanController,
+  writeTmpContorller,
 } from '@/controllers/scans/crud-controller'
 import { isAuthorizedController } from '@/controllers/auth'
 
 const router = express.Router()
 
 // Validations
-/*const scheduleScanPayloadValidation = celebrate({
+/* const scheduleScanPayloadValidation = celebrate({
   [Segments.BODY]: Joi.object({
     type: Joi.string().required().valid('web', 'network'),
     hasInternal: Joi.boolean().optional(),
@@ -89,7 +88,7 @@ const router = express.Router()
 
 // Single Routes
 router.get('/scans', searchScansHandler)
-router.post('/scans', scheduleScanHandler) //scheduleScanPayloadValidation,
+router.post('/scans', scheduleScanHandler) // scheduleScanPayloadValidation,
 router.patch('/scans/:id', updateScanController)
 router.get('/scans/:id/report/download', generateScanReportController)
 router.get('/scans/:id/report', getScanDetailsController)

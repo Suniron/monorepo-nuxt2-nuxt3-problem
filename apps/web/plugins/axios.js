@@ -11,9 +11,8 @@
 const axiosPlugin = ({ $axios, store, redirect, app }) => {
   // Configure authentification bearer token, on each request:
   $axios.onRequest((config) => {
-    if (store.state.user.accessToken) {
+    if (store.state.user.accessToken)
       config.headers.Authorization = `Bearer ${store.state.user.accessToken}`
-    }
   })
 
   // To avoid multiple "refresh-token" request
@@ -30,14 +29,14 @@ const axiosPlugin = ({ $axios, store, redirect, app }) => {
       // When the access token is expired and the user want to continue use the website.
       // First case : a submit or modify data
       if (
-        error.response &&
-        error.response.status === 401 &&
-        error.response.config.url !== 'refresh-token' &&
-        error.response.config.url !== 'logout' &&
-        (error.response.config.method === 'patch' ||
-          error.response.config.method === 'post' ||
-          error.response.config.method === 'delete') &&
-        !error.response.config._retry
+        error.response
+        && error.response.status === 401
+        && error.response.config.url !== 'refresh-token'
+        && error.response.config.url !== 'logout'
+        && (error.response.config.method === 'patch'
+          || error.response.config.method === 'post'
+          || error.response.config.method === 'delete')
+        && !error.response.config._retry
       ) {
         if (!refresh) {
           refresh = true
@@ -49,35 +48,36 @@ const axiosPlugin = ({ $axios, store, redirect, app }) => {
         return $axios(config)
       } // second case : getter method  with multiple requests
       else if (
-        error.response &&
-        error.response.status === 401 &&
-        error.response.config.url !== 'refresh-token' &&
-        error.response.config.url !== 'logout' &&
-        !error.response.config._retry
+        error.response
+        && error.response.status === 401
+        && error.response.config.url !== 'refresh-token'
+        && error.response.config.url !== 'logout'
+        && !error.response.config._retry
       ) {
         config._retry = true
         await refreshToken()
         if (
-          !app.router.currentRoute.path.startsWith('/sign-in') &&
-          !app.router.currentRoute.path.startsWith('/reset-password')
+          !app.router.currentRoute.path.startsWith('/sign-in')
+          && !app.router.currentRoute.path.startsWith('/reset-password')
         ) {
           if (app.router.currentRoute.fullPath === '/') {
             redirect('/sign-in')
-          } else {
+          }
+          else {
             app.router.push({
               path: '/sign-in',
               query: {
-                redirect: encodeURIComponent(app.router.currentRoute.fullPath)
-              }
+                redirect: encodeURIComponent(app.router.currentRoute.fullPath),
+              },
             })
           }
         }
       }
       // When the refresh token has expired or the user is logout on other page.
       else if (
-        error.response.status === 401 &&
-        error.response.config.url !== 'logout' &&
-        !error.response.config._retry
+        error.response.status === 401
+        && error.response.config.url !== 'logout'
+        && !error.response.config._retry
       ) {
         config._retry = true
         $axios.delete('logout', { withCredentials: true })
@@ -85,7 +85,7 @@ const axiosPlugin = ({ $axios, store, redirect, app }) => {
         redirect('/sign-in')
       }
       return Promise.reject(error)
-    }
+    },
   )
 
   async function refreshToken() {
@@ -93,14 +93,14 @@ const axiosPlugin = ({ $axios, store, redirect, app }) => {
     const response = await $axios.post(
       'refresh-token',
       {},
-      { withCredentials: true, timeout: 4000 }
+      { timeout: 4000, withCredentials: true },
     )
     // when the refresh token is good and the user get a new access token.
     const accessToken = response.data.accessToken
     const user = response.data.user
     await store.dispatch('user/authorize', {
       accessToken,
-      user
+      user,
     })
     return response.status
   }

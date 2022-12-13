@@ -1,0 +1,88 @@
+version: "3.4"
+services:
+  # FRONT
+  xrator_ui:
+    container_name: xrator_ui
+    build:
+      context: ./apps/web/
+      dockerfile: Dockerfile
+      target: prod
+    environment:
+      - BACKEND_BASE_URL=http://${HOSTNAME}.x-rator.lan:3001
+      - BACKEND_BROWSER_BASE_URL=http://${HOSTNAME}.x-rator.lan:3001
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    restart: always
+    
+  xrator_api:
+    container_name: xrator_api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      target: prod
+    environment:
+      - PORT=3001
+      - STORE_BASE_URL=http://xrator_store:3002 #http://store.${HOSTNAME}.x-rator.lan:3002
+      - PUBLIC_DOMAIN=http://${HOSTNAME}.x-rator.lan:3000
+      - NODE_ENV=production
+      - MAIL_SERVER=mail.x-rator.cloud
+      - MAIL_PORT=587
+      - MAIL_LOGIN=no-reply@x-rator.cloud
+      - MAIL_PASSWORD=iAIa[!z|/jIaiu;
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - INSTANCE_NAME=${INSTANCE_NAME}
+    ports:
+      - "3001:3001"
+      - "9229:9229"
+    restart: always
+
+  # BACK
+  xrator_store:
+    container_name: xrator_store
+    depends_on:
+      - xrator_db
+    build:
+      context: .
+      dockerfile: ./apps/store/Dockerfile
+      target: prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - POSTGRES_URI=postgres://postgres:P@ssw0rd@xrator_db:5432/xrator
+      - JWT_ACCESS_SECRET=uW%k02xpw&ukfF0C2!VYAM!WK%76rTSY
+      - JWT_ACCESS_LIFE=30m
+      - JWT_ACCESS_TYPE=access
+      - JWT_ACCESS_AUD=https://xrator.com
+      - JWT_ACCESS_ISS=https://store.xrator.com
+      - JWT_REFRESH_SECRET=ZpfvsB5!&CvCCYba*mWtHXsRVH&0fLrF
+      - JWT_REFRESH_LIFE=90d
+      - JWT_REFRESH_LIFE_MS=7776000000
+      - JWT_REFRESH_TYPE=refresh
+      - JWT_REFRESH_AUD=https://xrator.com
+      - JWT_REFRESH_ISS=https://store.xrator.com
+      - JWT_REFRESH_DOMAIN=
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - INSTANCE_NAME=${INSTANCE_NAME}
+    ports:
+      - "3002:3002"
+      - "9228:9228"
+      - "5432:5432"
+    restart: always
+
+  xrator_db:
+    container_name: xrator_db
+    build:
+      context: ./apps/db
+      target: prod
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=P@ssw0rd
+      - POSTGRES_DB=xrator
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+    name: xrator_operator_pg_data

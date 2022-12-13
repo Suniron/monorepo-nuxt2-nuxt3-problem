@@ -1,0 +1,26 @@
+{
+    "recommendations": [
+        "octref.vetur",
+  
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "atlassian.atlascode",
+        "orta.vscode-jest",
+        "naumovs.color-highlight",
+        "yzhang.markdown-all-in-one",
+        "atlassian.atlascode",
+  
+        "prisma.prisma"
+      ],
+      "unwantedRecommendations": [
+        "vue.volar",
+        "firefox-devtools.vscode-firefox-debug",
+        "ms-edgedevtools.vscode-edge-devtools",
+        "ms-mssql.mssql",
+        "mtxr.sqltools",
+        "googlecloudtools.cloudcode",
+        "oracle.oracledevtools"
+      ]
+}

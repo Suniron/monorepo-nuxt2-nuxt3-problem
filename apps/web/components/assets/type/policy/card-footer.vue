@@ -1,18 +1,3 @@
-<template>
-  <div>
-    <div class="my-4 ws-24">
-      <span><strong>Group:</strong></span>
-      <GroupSelect
-        :value="asset.group"
-        @input="(group) => changeAssetProp('group', group)"
-      />
-    </div>
-    <div class="my-4 ws-8">
-      <span> <strong>Tags:</strong><br /> </span>
-      <tags-multiselect creatable :visible-groups="3" v-model="tags" />
-    </div>
-  </div>
-</template>
 <script>
 // Controls
 import GroupSelect from '~/components/controls/group-select'
@@ -24,7 +9,10 @@ import { updateAssetService } from '~/services/assets'
 export default {
   components: {
     GroupSelect,
-    TagsMultiselect
+    TagsMultiselect,
+  },
+  data() {
+    return {}
   },
   props: {
     asset: {
@@ -32,12 +20,9 @@ export default {
       required: true
     }
   },
-  data() {
-    return {}
-  },
   computed: {
     tagIds() {
-      return this.asset.tags.map((val) => val.id)
+      return this.asset.tags.map(val => val.id)
     },
     tags: {
       get() {
@@ -45,27 +30,45 @@ export default {
       },
       set(newvalues) {
         this.changeAssetProp('tags', newvalues)
-      }
-    }
+      },
+    },
   },
   methods: {
     async changeAssetProp(propName, value) {
       try {
         const updateParams = {}
-        if (propName === 'group') {
+        if (propName === 'group')
           updateParams.groupId = value?.id || null
-        } else if (propName === 'tags') {
-          updateParams.tagIds = value.map((tag) => tag.id)
-        }
+        else if (propName === 'tags')
+          updateParams.tagIds = value.map(tag => tag.id)
+
         await updateAssetService(this.$axios, this.asset.id, updateParams)
         this.$root.$emit('fetchTagsAgain', value)
-      } catch (error) {
+      }
+      catch (error) {
         console.error(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div>
+    <div class="my-4 ws-24">
+      <span><strong>Group:</strong></span>
+      <GroupSelect
+        :value="asset.group"
+        @input="(group) => changeAssetProp('group', group)"
+      />
+    </div>
+    <div class="my-4 ws-8">
+      <span> <strong>Tags:</strong><br> </span>
+      <TagsMultiselect v-model="tags" creatable :visible-groups="3" />
+    </div>
+  </div>
+</template>
+
 <style lang="scss">
 .ws-8 {
   padding-top: 8px;

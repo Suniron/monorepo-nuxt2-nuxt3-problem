@@ -1,300 +1,3 @@
-<template>
-  <v-container class="network-diagram">
-    <v-row id="map-toolbar" class="grey lighten-2 pt-2 pl-2 pr-2 mb-0">
-      <span>
-        <v-btn
-          icon
-          small
-          tile
-          elevation="3"
-          title="Add an existing asset to the network"
-          :outlined="addAssetDrawerOpened"
-          :disabled="reorganizing"
-          class="large-outline no-ripple"
-          @click="addAssetDrawerOpened = !addAssetDrawerOpened"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </span>
-      <span class="mr-5">
-        <v-btn
-          icon
-          small
-          tile
-          elevation="2"
-          title="Select and move"
-          :outlined="selectedTool === 'selector'"
-          class="large-outline no-ripple"
-          @click="selectedTool = 'selector'"
-        >
-          <v-icon small>mdi-cursor-default</v-icon>
-        </v-btn>
-      </span>
-      <span>
-        <p class="text-caption d-inline">Create a new asset:</p>
-        <v-dialog
-          v-for="assetType in assetTypes"
-          :key="assetType"
-          v-model="isSaveModalOpen[assetType]"
-          width="500"
-        >
-          <template #activator="{ on, attrs }">
-            <v-btn
-              icon
-              small
-              tile
-              elevation="2"
-              :title="assetType"
-              :disabled="reorganizing"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <AssetIcon :os="assetType" :size="16" />
-            </v-btn>
-          </template>
-          <template #default>
-            <SaveAssetModal
-              :asset="{ type: assetType }"
-              @saved="createAssetNode"
-              @close="isSaveModalOpen[assetType] = false"
-              :allowed-asset-types="assetTypes"
-            />
-          </template>
-        </v-dialog>
-      </span>
-      <span>
-        <p class="text-caption d-inline">Link assets:</p>
-        <v-btn
-          v-for="linkType in links"
-          :key="linkType.value"
-          icon
-          small
-          tile
-          elevation="2"
-          :title="linkType.text"
-          :outlined="selectedTool === linkType.value"
-          :disabled="reorganizing"
-          class="large-outline no-ripple"
-          @click="
-            selectedTool =
-              selectedTool === linkType.value ? 'selector' : linkType.value
-          "
-        >
-          <v-icon :color="linkType.color">{{ linkType.icon }}</v-icon>
-        </v-btn>
-      </span>
-      <span class="mr-5">
-        <v-text-field
-          v-model="networkFilter"
-          class="ma-0 pa-0"
-          placeholder="Search in the network"
-          hide-details
-          @click.stop=""
-          height="32"
-        ></v-text-field>
-      </span>
-      <span>
-        <p class="text-caption d-inline">Fit map:</p>
-        <v-btn
-          icon
-          small
-          tile
-          elevation="2"
-          class="large-outline no-ripple"
-          title="Adjust map"
-          @click="fitGraph()"
-        >
-          <v-icon>mdi-crosshairs-gps</v-icon>
-        </v-btn>
-      </span>
-      <span class="d-flex align-baseline">
-        <p class="text-caption d-inline">Reorganize:</p>
-        <div class="ml-1">
-          <v-btn
-            icon
-            small
-            tile
-            elevation="2"
-            class="large-outline no-ripple"
-            title="Auto organize map"
-            :disabled="loading"
-            :loading="reorgaAnimating"
-            @click="reorganizeGraph()"
-          >
-            <v-icon>{{ reorganizing ? 'mdi-reload' : 'mdi-auto-fix' }}</v-icon>
-          </v-btn>
-          <div
-            v-if="reorganizing"
-            class="carto-reorga-additional grey lighten-3"
-          >
-            <v-btn
-              icon
-              small
-              tile
-              elevation="2"
-              class="large-outline no-ripple"
-              title="Cancel reorganizing"
-              :disabled="reorgaAnimating"
-              @click="reorganizeGraph('cancel')"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              small
-              tile
-              elevation="2"
-              class="large-outline no-ripple"
-              title="Confirm current reorganization"
-              :disabled="reorgaAnimating"
-              @click="reorganizeGraph('confirm')"
-            >
-              <v-icon>mdi-check-bold</v-icon>
-            </v-btn>
-          </div>
-        </div>
-      </span>
-      <span class="carto-toolbar-separator flex-grow-1" />
-      <span>
-        <p class="text-caption d-inline">Export:</p>
-        <v-btn
-          icon
-          small
-          tile
-          elevation="2"
-          title="Download as image"
-          :loading="exporting"
-          @click="downloadNetwork"
-        >
-          <v-icon>mdi-download-box-outline</v-icon>
-        </v-btn>
-      </span>
-    </v-row>
-
-    <!-- Modal which is openned on "right click > edit" on an map asset -->
-    <v-dialog v-model="isEditAssetDialogOpen" max-width="600px">
-      <SaveAssetModal
-        :asset="assetToEdit"
-        no-asset-info
-        is-update
-        @saved="editAssetNode"
-        @close="closeDialogs"
-      />
-    </v-dialog>
-
-    <!-- Modal which is openned on "right click > Add asset" on map blank area -->
-    <v-dialog v-model="isAddAssetDialogOpen" max-width="600px">
-      <SaveAssetModal
-        no-asset-info
-        @saved="createAssetNodeOnPointerPosition"
-        @close="closeDialogs"
-      />
-    </v-dialog>
-
-    <div
-      class="add-asset-panel"
-      :class="{
-        'panel-open': addAssetDrawerOpened
-      }"
-      :style="{
-        width: addAssetDrawerOpened ? '250px' : '0'
-      }"
-    >
-      <div class="h-100 overflow-y-auto">
-        <v-text-field
-          v-model="addNodeFilter"
-          class="ma-0 pa-1 overflow-y-hidden"
-          placeholder="Search assets to add"
-          prepend-inner-icon="mdi-magnify"
-          hide-details
-          @click.stop=""
-          height="32"
-        ></v-text-field>
-        <v-treeview
-          :items="groupedAssets"
-          :search="addNodeFilter"
-          open-on-click
-        >
-          <template #label="{ item }">
-            <draggable
-              v-if="item.type"
-              :value="assetLists"
-              group="addAssetDragGroup"
-              :id="item.id"
-              :sort="false"
-              :put="false"
-              :pull="false"
-            >
-              <v-chip style="margin: 2px" :title="item.name"
-                ><AssetIcon :os="item.type" :size="20" />&nbsp;{{
-                  item.name
-                }}</v-chip
-              >
-            </draggable>
-            <span v-else>{{ item.name }}</span>
-          </template>
-        </v-treeview>
-      </div>
-    </div>
-    <draggable
-      v-model="assetListsCy"
-      group="addAssetDragGroup"
-      :options="trashOptions"
-      @add="assetMoved"
-      ghost-class="d-none"
-    >
-      <div
-        :id="'cyto-' + cyId"
-        :style="{ width: '100%', height: '700px' }"
-      ></div>
-    </draggable>
-    <asset-edit-drawer
-      v-if="isAssetSelected"
-      ref="editDrawer"
-      :node-selected="isAssetSelected"
-      :asset-id="selectedAsset"
-      @saved="syncSelectedAsset"
-      @close="closeDrawer"
-    />
-    <!-- <relation-edit-drawer
-      v-if="isEdgeSelected"
-      :edge-selected="isEdgeSelected"
-      :from-asset="selectedAssetFrom"
-      :to-asset="selectedAssetTo"
-      :selected-edge="selectedEdge"
-      @saved="fetchGraphData"
-      @close="closeDrawer"
-    />-->
-    <v-dialog v-model="isDeleteDialogOpen" width="500">
-      <template #default>
-        <v-card>
-          <v-card-title>Delete Element/Asset</v-card-title>
-          <v-card-text
-            ><p>
-              What do you want to do ? <br /><strong>"Delete element"</strong>:
-              This action will delete the element from the map ONLY
-              <br /><strong>"Delete asset"</strong>: This will delete the asset
-              from the system
-            </p></v-card-text
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="isDeleteDialogOpen = false">
-              Cancel
-            </v-btn>
-            <v-btn color="error" text @click="removeElement(true)">
-              Delete asset
-            </v-btn>
-            <v-btn color="primary" text @click="removeElement(false)">
-              Delete element
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-dialog>
-  </v-container>
-</template>
-
 <script>
 // Modals
 // import { mapGetters } from 'vuex'
@@ -307,27 +10,26 @@ import AssetEditDrawer from '~/components/assets/asset-edit-drawer.vue'
 import AssetIcon from '~/components/assets/AssetIcon.vue'
 // Services
 import {
-  fetchCartographyElementsService,
   addCartographyElementService,
+  deleteCartographyElementService,
+  fetchCartographyElementsService,
   updateCartographyElementService,
-  deleteCartographyElementService
 } from '~/services/cartography'
 // import { getAssetsGraphService } from '~/services/assets/network'
 import {
-  searchAssetsService,
   createAssetService,
   deleteAssetService,
-  searchAssetByIdService
+  searchAssetByIdService,
+  searchAssetsService,
 } from '~/services/assets'
 import {
   createRelationService,
-  deleteRelationService
+  deleteRelationService,
 } from '~/services/relations'
 import { severityColor } from '~/utils/color.utils'
 import ICONS, { getAssetIcons } from '~/assets/img/icons'
 
 export default {
-  name: 'NetworkMap',
   components: {
     SaveAssetModal,
     AssetEditDrawer,
@@ -335,6 +37,7 @@ export default {
     draggable,
     AssetIcon
   },
+  name: 'NetworkMap',
   props: {
     cyId: {
       type: Number,
@@ -347,26 +50,25 @@ export default {
   },
   data() {
     return {
-      networkFilter: '',
       addNodeFilter: '',
-      name: '',
+      networkFilter: '',
       assetLists: [],
-      assetListsCy: [],
+      name: '',
       assetListsColor: {},
-      isDeleteDialogOpen: false,
+      assetListsCy: [],
       isAddAssetDialogOpen: false,
-      isEditAssetDialogOpen: false,
+      isDeleteDialogOpen: false,
       assetToEdit: null,
+      isEditAssetDialogOpen: false,
       isAssetSelected: false,
       isEdgeSelected: false,
       selected: [],
-      selectedEdges: [],
       selectedAsset: null,
+      selectedEdges: [],
       assetTypes: ['SERVER', 'WEB', 'USER', 'BUILDING'],
-      type: '',
       selectedAssetFrom: { name: '', id: -1 },
-      selectedAssetTo: { name: '', id: -1 },
-      selectedEdge: {},
+      type: '',
+      selectedAssetTo: { id: -1, name: '' },
       links: [
         {
           value: 'CONNECTED_TO',
@@ -393,7 +95,9 @@ export default {
           color: 'blue lighten-2'
         }
       ],
+      selectedEdge: {},
       link: '',
+      isSaveModalOpen: {},
       trashOptions: {
         group: {
           name: 'trash',
@@ -402,13 +106,12 @@ export default {
           pull: false
         }
       },
-      isSaveModalOpen: {},
       exporting: false,
-      selectedTool: 'selector',
       addAssetDrawerOpened: false,
-      reorganizing: false,
+      selectedTool: 'selector',
       reorgaAnimating: false,
-      loading: true
+      reorganizing: false,
+      loading: true,
     }
   },
   computed: {
@@ -419,11 +122,12 @@ export default {
         delete assetCopy.children
         if (grouped[assetCopy.type] === undefined) {
           grouped[assetCopy.type] = {
+            children: [assetCopy],
             id: `group-${Object.keys(grouped).length}`,
             name: assetCopy.type,
-            children: [assetCopy]
           }
-        } else {
+        }
+        else {
           grouped[assetCopy.type].children.push(assetCopy)
         }
       })
@@ -431,10 +135,19 @@ export default {
       return Object.values(grouped).sort((a, b) => {
         return a.name.localeCompare(b.name, undefined, {
           numeric: true,
-          sensitivity: 'base'
+          sensitivity: 'base',
         })
       })
-    }
+    },
+  },
+  created() {
+    this.boundKeyDownHandler = this.keyDownHandler.bind(this)
+    this.cy = null
+
+    this.ctxMenus = null
+    this.edgehandles = null
+
+    this.pointerEvent = null
   },
   watch: {
     networkFilter() {
@@ -485,36 +198,8 @@ export default {
       this.configureContextMenus(this.cy)
     }
   },
-  created() {
-    this.boundKeyDownHandler = this.keyDownHandler.bind(this)
-    this.cy = null
-
-    this.ctxMenus = null
-    this.edgehandles = null
-
-    this.pointerEvent = null
-  },
-  destroyed() {
+  unmounted() {
     document.removeEventListener('keydown', this.boundKeyDownHandler)
-  },
-  async mounted() {
-    const [cytoscapeModule, ...extensionModules] = await Promise.all([
-      import('cytoscape'),
-      // import('cytoscape-node-html-label'),
-      import('cytoscape-context-menus'),
-      import('cytoscape-edgehandles')
-    ])
-
-    this.registerExtensions(
-      cytoscapeModule.default,
-      extensionModules.map((mod) => mod.default)
-    )
-
-    // Other imports
-    await Promise.all([
-      import('cytoscape-context-menus/cytoscape-context-menus.css')
-    ])
-    this.initializeGraph(cytoscapeModule.default)
   },
   methods: {
     /**
@@ -1204,9 +889,325 @@ export default {
           break
       }
     }
-  }
+  },
+  async mounted() {
+    const [cytoscapeModule, ...extensionModules] = await Promise.all([
+      import('cytoscape'),
+      // import('cytoscape-node-html-label'),
+      import('cytoscape-context-menus'),
+      import('cytoscape-edgehandles'),
+    ])
+
+    this.registerExtensions(
+      cytoscapeModule.default,
+      extensionModules.map(mod => mod.default),
+    )
+
+    // Other imports
+    await Promise.all([
+      import('cytoscape-context-menus/cytoscape-context-menus.css'),
+    ])
+    this.initializeGraph(cytoscapeModule.default)
+  },
 }
 </script>
+
+<template>
+  <v-container class="network-diagram">
+    <v-row id="map-toolbar" class="grey lighten-2 pt-2 pl-2 pr-2 mb-0">
+      <span>
+        <v-btn
+          icon
+          small
+          tile
+          elevation="3"
+          title="Add an existing asset to the network"
+          :outlined="addAssetDrawerOpened"
+          :disabled="reorganizing"
+          class="large-outline no-ripple"
+          @click="addAssetDrawerOpened = !addAssetDrawerOpened"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </span>
+      <span class="mr-5">
+        <v-btn
+          icon
+          small
+          tile
+          elevation="2"
+          title="Select and move"
+          :outlined="selectedTool === 'selector'"
+          class="large-outline no-ripple"
+          @click="selectedTool = 'selector'"
+        >
+          <v-icon small>mdi-cursor-default</v-icon>
+        </v-btn>
+      </span>
+      <span>
+        <p class="text-caption d-inline">Create a new asset:</p>
+        <v-dialog
+          v-for="assetType in assetTypes"
+          :key="assetType"
+          v-model="isSaveModalOpen[assetType]"
+          width="500"
+        >
+          <template #activator="{ on, attrs }">
+            <v-btn
+              icon
+              small
+              tile
+              elevation="2"
+              :title="assetType"
+              :disabled="reorganizing"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <AssetIcon :os="assetType" :size="16" />
+            </v-btn>
+          </template>
+          <template #default>
+            <SaveAssetModal
+              :asset="{ type: assetType }"
+              :allowed-asset-types="assetTypes"
+              @saved="createAssetNode"
+              @close="isSaveModalOpen[assetType] = false"
+            />
+          </template>
+        </v-dialog>
+      </span>
+      <span>
+        <p class="text-caption d-inline">Link assets:</p>
+        <v-btn
+          v-for="linkType in links"
+          :key="linkType.value"
+          icon
+          small
+          tile
+          elevation="2"
+          :title="linkType.text"
+          :outlined="selectedTool === linkType.value"
+          :disabled="reorganizing"
+          class="large-outline no-ripple"
+          @click="
+            selectedTool
+              = selectedTool === linkType.value ? 'selector' : linkType.value
+          "
+        >
+          <v-icon :color="linkType.color">{{ linkType.icon }}</v-icon>
+        </v-btn>
+      </span>
+      <span class="mr-5">
+        <v-text-field
+          v-model="networkFilter"
+          class="ma-0 pa-0"
+          placeholder="Search in the network"
+          hide-details
+          height="32"
+          @click.stop=""
+        />
+      </span>
+      <span>
+        <p class="text-caption d-inline">Fit map:</p>
+        <v-btn
+          icon
+          small
+          tile
+          elevation="2"
+          class="large-outline no-ripple"
+          title="Adjust map"
+          @click="fitGraph()"
+        >
+          <v-icon>mdi-crosshairs-gps</v-icon>
+        </v-btn>
+      </span>
+      <span class="d-flex align-baseline">
+        <p class="text-caption d-inline">Reorganize:</p>
+        <div class="ml-1">
+          <v-btn
+            icon
+            small
+            tile
+            elevation="2"
+            class="large-outline no-ripple"
+            title="Auto organize map"
+            :disabled="loading"
+            :loading="reorgaAnimating"
+            @click="reorganizeGraph()"
+          >
+            <v-icon>{{ reorganizing ? 'mdi-reload' : 'mdi-auto-fix' }}</v-icon>
+          </v-btn>
+          <div
+            v-if="reorganizing"
+            class="carto-reorga-additional grey lighten-3"
+          >
+            <v-btn
+              icon
+              small
+              tile
+              elevation="2"
+              class="large-outline no-ripple"
+              title="Cancel reorganizing"
+              :disabled="reorgaAnimating"
+              @click="reorganizeGraph('cancel')"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              tile
+              elevation="2"
+              class="large-outline no-ripple"
+              title="Confirm current reorganization"
+              :disabled="reorgaAnimating"
+              @click="reorganizeGraph('confirm')"
+            >
+              <v-icon>mdi-check-bold</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </span>
+      <span class="carto-toolbar-separator flex-grow-1" />
+      <span>
+        <p class="text-caption d-inline">Export:</p>
+        <v-btn
+          icon
+          small
+          tile
+          elevation="2"
+          title="Download as image"
+          :loading="exporting"
+          @click="downloadNetwork"
+        >
+          <v-icon>mdi-download-box-outline</v-icon>
+        </v-btn>
+      </span>
+    </v-row>
+
+    <!-- Modal which is openned on "right click > edit" on an map asset -->
+    <v-dialog v-model="isEditAssetDialogOpen" max-width="600px">
+      <SaveAssetModal
+        :asset="assetToEdit"
+        no-asset-info
+        is-update
+        @saved="editAssetNode"
+        @close="closeDialogs"
+      />
+    </v-dialog>
+
+    <!-- Modal which is openned on "right click > Add asset" on map blank area -->
+    <v-dialog v-model="isAddAssetDialogOpen" max-width="600px">
+      <SaveAssetModal
+        no-asset-info
+        @saved="createAssetNodeOnPointerPosition"
+        @close="closeDialogs"
+      />
+    </v-dialog>
+
+    <div
+      class="add-asset-panel"
+      :class="{
+        'panel-open': addAssetDrawerOpened,
+      }"
+      :style="{
+        width: addAssetDrawerOpened ? '250px' : '0',
+      }"
+    >
+      <div class="h-100 overflow-y-auto">
+        <v-text-field
+          v-model="addNodeFilter"
+          class="ma-0 pa-1 overflow-y-hidden"
+          placeholder="Search assets to add"
+          prepend-inner-icon="mdi-magnify"
+          hide-details
+          height="32"
+          @click.stop=""
+        />
+        <v-treeview
+          :items="groupedAssets"
+          :search="addNodeFilter"
+          open-on-click
+        >
+          <template #label="{ item }">
+            <draggable
+              v-if="item.type"
+              :id="item.id"
+              :value="assetLists"
+              group="addAssetDragGroup"
+              :sort="false"
+              :put="false"
+              :pull="false"
+            >
+              <v-chip style="margin: 2px" :title="item.name">
+                <AssetIcon :os="item.type" :size="20" />&nbsp;{{
+                  item.name
+                }}
+              </v-chip>
+            </draggable>
+            <span v-else>{{ item.name }}</span>
+          </template>
+        </v-treeview>
+      </div>
+    </div>
+    <draggable
+      v-model="assetListsCy"
+      group="addAssetDragGroup"
+      :options="trashOptions"
+      ghost-class="d-none"
+      @add="assetMoved"
+    >
+      <div
+        :id="`cyto-${cyId}`"
+        :style="{ width: '100%', height: '700px' }"
+      />
+    </draggable>
+    <AssetEditDrawer
+      v-if="isAssetSelected"
+      ref="editDrawer"
+      :node-selected="isAssetSelected"
+      :asset-id="selectedAsset"
+      @saved="syncSelectedAsset"
+      @close="closeDrawer"
+    />
+    <!-- <relation-edit-drawer
+      v-if="isEdgeSelected"
+      :edge-selected="isEdgeSelected"
+      :from-asset="selectedAssetFrom"
+      :to-asset="selectedAssetTo"
+      :selected-edge="selectedEdge"
+      @saved="fetchGraphData"
+      @close="closeDrawer"
+    /> -->
+    <v-dialog v-model="isDeleteDialogOpen" width="500">
+      <template #default>
+        <v-card>
+          <v-card-title>Delete Element/Asset</v-card-title>
+          <v-card-text>
+            <p>
+              What do you want to do ? <br><strong>"Delete element"</strong>:
+              This action will delete the element from the map ONLY
+              <br><strong>"Delete asset"</strong>: This will delete the asset
+              from the system
+            </p>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="primary" text @click="isDeleteDialogOpen = false">
+              Cancel
+            </v-btn>
+            <v-btn color="error" text @click="removeElement(true)">
+              Delete asset
+            </v-btn>
+            <v-btn color="primary" text @click="removeElement(false)">
+              Delete element
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+  </v-container>
+</template>
 
 <style lang="scss">
 #map-toolbar > span {

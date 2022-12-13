@@ -2,48 +2,83 @@
 # BASE STAGE # This stage have common configuration between other stages
 ##############
 # Use precise image to reduce side effects by node / alpine upgrades
-FROM node:16-alpine AS base
+FROM node:18-alpine3.16 AS base
 
 # Create and move into /store folder
 WORKDIR /store
 
-# Copy package.json and yarn.lock to /store/ before installation
-COPY ./package.json ./yarn.lock /store/
+# Copy package.json and pnpm lock file to /store/ before installation
+COPY ./package.json ./pnpm-lock.yaml /store/
+RUN corepack enable
 
 EXPOSE 3002
 
 ###############
-# BUILD STAGE # This stage is used to build application before production
+# BUILD STAGE # This stage is used to build application before production (Typescript => Javascript)
 ###############
-FROM base as build
+FROM node:18-alpine3.16 as builder
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
-# Set to development to ensure have all dependencies + dev dependencies
-ENV NODE_ENV=development
+WORKDIR /store
 
-COPY ./ /store/
+RUN yarn global add turbo@1.5.5
+COPY . .
 
-# Install all dependencies without change lockfile to avoid side effects
-RUN yarn install --frozen-lockfile
+RUN turbo prune --scope=@xrator-operator/store --docker
 
-RUN yarn build
+###################
+# INSTALLER STAGE # This stage is used to build application before production
+###################
+FROM node:18-alpine3.16 as installer
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /store
+
+# First install dependencies (as they change less often)
+COPY .npmrc .gitignore ./
+COPY --from=builder /store/out/json/ .
+COPY --from=builder /store/out/pnpm-*.yaml .
+
+# Activate corepack to use pnpm
+RUN corepack enable
+RUN pnpm install -r --frozen-lockfile
+
+COPY --from=builder /store/out/full/ ./
+
+# Build the project
+
+RUN pnpm turbo build --filter=@xrator-operator/store...
+
+RUN pnpm prisma generate
 
 ##############
 # PROD STAGE # This stage is used is production
 ##############
-FROM base as prod
+FROM node:18-alpine3.16 as prod
+EXPOSE 3002
 
+WORKDIR /store
 ENV NODE_ENV=production
 
-# Pick only wanted files in production from build stage (useful with Typescript built files)
-COPY --from=build /store/out/app.js /store/out/prepare.js /store/out/import_demo.js /store/prisma/schema.prisma /store/
-COPY --from=build /store/package.json /store/
-COPY --from=build /store/src/ /store/src
-COPY --from=build /store/migrations/ /store/migrations
-COPY --from=build /store/out/seeds/ /store/seeds
-COPY --from=build /store/seeds/csv_seed_files/ /store/seeds/csv_seed_files
-COPY --from=build /store/node_modules/.prisma/client/ /.prisma/client
+# Copy package.json and pnpm lock file to /store/ before installation
+COPY ./package.json ./pnpm-lock.yaml /store/
 
-# Change user to "node" to improve security
-USER node
+RUN corepack enable
+RUN pnpm install --frozen-lockfile --prod
 
-CMD ["yarn", "start"]
+# Change user to "expressjs" to improve security
+RUN addgroup --system --gid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
+
+COPY --from=installer /store/apps/store/migrations /store/migrations
+COPY --from=installer /store/apps/store/seeds /store/seeds
+COPY --from=installer /store/apps/store/dist/prisma/* /store/tools/
+COPY --from=installer /store/apps/store/dist/prisma/* /store/tools/
+
+USER expressjs
+
+COPY --from=installer /store .
+
+CMD node apps/store/dist/src/prepare.js && node apps/store/dist/src/app.js

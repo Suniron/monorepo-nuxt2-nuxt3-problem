@@ -1,3 +1,50 @@
+<script>
+// @ts-check
+import AssetIcon from '~/components/assets/AssetIcon.vue'
+import AssetRiskScoreBar from '~/components/assets/details/AssetRiskScoreBar.vue'
+
+export default {
+  components: {
+    AssetIcon,
+    AssetRiskScoreBar
+  },
+  name: 'AssetCard',
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      show: false,
+    }
+  },
+  computed: {
+    /**
+     * @returns {boolean}
+     */
+    showRiskScoreBar() {
+      return ['UNIT', 'MISSION'].includes(this.asset.type)
+    },
+  },
+  methods: {
+    handleCardClick() {
+      this.$router.push(
+        this.localePath({
+          name: 'assets-id',
+          params: { id: this.asset.id },
+        }),
+      )
+    },
+    handleConfirm() {
+      this.$emit('unlinkAsset', this.asset)
+      this.show = false
+    },
+  },
+}
+</script>
+
 <template>
   <v-card
     min-height="150px"
@@ -7,14 +54,16 @@
     <v-hover>
       <template #default="{ hover }">
         <div
-          @click="handleCardClick"
           :class="`elevation-${hover ? 4 : 0}`"
           class="pt-2 pb-1 pointer"
           style="height: 100%"
           :title="`Go on &quot;${asset.name}&quot; details`"
+          @click="handleCardClick"
         >
           <AssetIcon :os="asset.os || asset.language || asset.type" />
-          <h4 class="mb-0 text-center">{{ asset.name }}</h4>
+          <h4 class="mb-0 text-center">
+            {{ asset.name }}
+          </h4>
         </div>
       </template>
     </v-hover>
@@ -26,11 +75,11 @@
       <template #activator="{ on, attrs }">
         <v-btn
           v-bind="attrs"
-          v-on="on"
           class="mt-2"
           width="100%"
           small
           color="error"
+          v-on="on"
         >
           unlink
         </v-btn>
@@ -48,9 +97,9 @@
               ?
             </p>
           </v-card-text>
-          <v-divider></v-divider>
+          <v-divider />
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
 
             <v-btn @click="show = false">
               cancel
@@ -64,53 +113,6 @@
     </v-dialog>
   </v-card>
 </template>
-
-<script>
-// @ts-check
-import AssetIcon from '~/components/assets/AssetIcon.vue'
-import AssetRiskScoreBar from '~/components/assets/details/AssetRiskScoreBar.vue'
-
-export default {
-  name: 'AssetCard',
-  components: {
-    AssetIcon,
-    AssetRiskScoreBar
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      show: false
-    }
-  },
-  computed: {
-    /**
-     * @returns {boolean}
-     */
-    showRiskScoreBar() {
-      return ['UNIT', 'MISSION'].includes(this.asset.type)
-    }
-  },
-  methods: {
-    handleCardClick() {
-      this.$router.push(
-        this.localePath({
-          name: 'assets-id',
-          params: { id: this.asset.id }
-        })
-      )
-    },
-    handleConfirm() {
-      this.$emit('unlinkAsset', this.asset)
-      this.show = false
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .pointer {

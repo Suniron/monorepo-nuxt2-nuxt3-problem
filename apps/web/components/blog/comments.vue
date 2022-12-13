@@ -1,3 +1,74 @@
+<script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
+// import jmessages from '~/services/blog/comments.json'
+import {
+  addPostAssetVulnerabilityService,
+  searchPostAssetVulnerabilityService,
+} from '~/services/vulnerabilities/status'
+
+export default {
+  components: { QuillEditor: quillEditor },
+  data: () => ({
+    messages: [],
+    content: '',
+    editorOption: {
+      // Some Quill options...
+    },
+    editorOptionReadOnly: {
+      modules: {
+        toolbar: false
+      }
+    }
+  }),
+  props: {
+    assetId: {
+      type: Number,
+      required: true
+    },
+    vulnId: {
+      type: Number,
+      required: true
+    }
+  },
+  created() {
+    this.fetchComments()
+  },
+  methods: {
+    async fetchComments() {
+      const comments = await searchPostAssetVulnerabilityService(
+        this.$axios,
+        this.assetId,
+        this.vulnId,
+      )
+      this.messages = comments
+    },
+    onEditorChange({ quill, html, text }) {
+      console.log(quill)
+      this.content = html
+    },
+    async updatePost() {
+      await addPostAssetVulnerabilityService(
+        this.$axios,
+        this.assetId,
+        this.vulnId,
+        { comment: this.content },
+      )
+      this.content = ''
+      this.fetchComments()
+    },
+    verifyNotEmpty() {
+      const regexTags = /(<[^>]+>|<[^>]>|<\/[^>]>)/g
+      const contentWithoutHtml = this.content.replace(regexTags, '')
+      return contentWithoutHtml.match(/\S/) || this.content.includes('src')
+    },
+  },
+}
+</script>
+
 <template>
   <v-container fluid>
     <v-row class="space-around">
@@ -16,7 +87,7 @@
             </v-avatar>
           </template>
           <v-card>
-            <quill-editor
+            <QuillEditor
               :content="content"
               :options="editorOption"
               @change="onEditorChange($event)"
@@ -29,8 +100,8 @@
                 <v-btn
                   class="mx-0"
                   depressed
-                  @click="updatePost"
                   :disabled="!verifyNotEmpty()"
+                  @click="updatePost"
                 >
                   Post
                 </v-btn>
@@ -49,10 +120,8 @@
         >
           <template #icon>
             <v-avatar color="black" :size="50">
-              <span class="white--text text-h5"
-                >{{ message.firstName.charAt(0)
-                }}{{ message.lastName.charAt(0) }}</span
-              >
+              <span class="white--text text-h5">{{ message.firstName.charAt(0)
+              }}{{ message.lastName.charAt(0) }}</span>
             </v-avatar>
           </template>
           <v-card color="black" dark>
@@ -60,16 +129,16 @@
               <strong>{{ message.firstName }}</strong> @{{ message.createdAt }}
             </v-card-title>
             <v-card-text class="white text--primary">
-              <quill-editor
+              <QuillEditor
                 :content="message.comment"
                 :options="editorOptionReadOnly"
                 disabled
                 class="quill-display"
               />
-              <!--<div
+              <!-- <div
                     v-html="message.message"
                     class="ql-container ql-show"
-                  ></div>-->
+                  ></div> -->
             </v-card-text>
           </v-card>
         </v-timeline-item>
@@ -79,76 +148,7 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
-import { quillEditor } from 'vue-quill-editor'
-// import jmessages from '~/services/blog/comments.json'
-import {
-  searchPostAssetVulnerabilityService,
-  addPostAssetVulnerabilityService
-} from '~/services/vulnerabilities/status'
-
-export default {
-  components: { quillEditor },
-  props: {
-    assetId: {
-      type: Number,
-      required: true
-    },
-    vulnId: {
-      type: Number,
-      required: true
-    }
-  },
-  data: () => ({
-    messages: [],
-    content: '',
-    editorOption: {
-      // Some Quill options...
-    },
-    editorOptionReadOnly: {
-      modules: {
-        toolbar: false
-      }
-    }
-  }),
-  created() {
-    this.fetchComments()
-  },
-  methods: {
-    async fetchComments() {
-      const comments = await searchPostAssetVulnerabilityService(
-        this.$axios,
-        this.assetId,
-        this.vulnId
-      )
-      this.messages = comments
-    },
-    onEditorChange({ quill, html, text }) {
-      console.log(quill)
-      this.content = html
-    },
-    verifyNotEmpty() {
-      const regexTags = /(<[^>]+>|<[^>]>|<\/[^>]>)/g
-      const contentWithoutHtml = this.content.replace(regexTags, '')
-      return contentWithoutHtml.match(/\S/) || this.content.includes('src')
-    },
-    async updatePost() {
-      await addPostAssetVulnerabilityService(
-        this.$axios,
-        this.assetId,
-        this.vulnId,
-        { comment: this.content }
-      )
-      this.content = ''
-      this.fetchComments()
-    }
-  }
-}
-</script>
 <style lang="scss">
 .ql-disabled {
   border: none !important;

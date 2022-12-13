@@ -1,3 +1,30 @@
+<script>
+export default {
+  name: 'VulnerabilitiesListing',
+  methods: {
+    getAffectedAssetUrl(asset, vuln) {
+      const location = {
+        name: 'assets-id',
+        params: {
+          id: asset.id
+        },
+        query: {
+          search: vuln.name
+        }
+      }
+
+      return this.localePath(location)
+    }
+  },
+  props: {
+    vulnerabilities: {
+      default: () => [],
+      type: Array,
+    },
+  },
+}
+</script>
+
 <template>
   <v-data-iterator
     :items="vulnerabilities"
@@ -31,33 +58,6 @@
     </template>
   </v-data-iterator>
 </template>
-
-<script>
-export default {
-  name: 'VulnerabilitiesListing',
-  props: {
-    vulnerabilities: {
-      type: Array,
-      default: () => []
-    }
-  },
-  methods: {
-    getAffectedAssetUrl(asset, vuln) {
-      const location = {
-        name: 'assets-id',
-        params: {
-          id: asset.id
-        },
-        query: {
-          search: vuln.name
-        }
-      }
-
-      return this.localePath(location)
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .vulnerability-header {

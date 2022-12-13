@@ -1,3 +1,114 @@
+<script>
+import updateStatus from '~/components/vulnerabilities/update-status.vue'
+import comments from '~/components/blog/comments.vue'
+
+export default {
+  components: {
+    updateStatus,
+    comments
+    // AssetInfo: () => import('~/components/assets/type/asset-info.vue')
+  },
+  name: 'HardeningList',
+  props: {
+    hardening: {
+      type: Array,
+      required: true
+    },
+    asset: {
+      type: Object,
+      required: true
+    },
+    tabProp: {
+      type: Number,
+      default: 0
+    },
+    panelProp: {
+      type: Number,
+      default: 0
+    }
+  },
+  data() {
+    return {
+      isModalOpen: false,
+      panel: null,
+      tab: null,
+      modalData: {
+        hardening: null,
+        hardenings: null,
+      }
+    }
+  },
+  mounted() {
+    this.tab = this.tabProp
+    this.panel = this.panelProp
+  },
+  watch: {
+    panelProp(newVal, oldVal) {
+      this.panel = newVal
+    },
+  },
+  methods: {
+    displayStatus(details) {
+      let open = false
+      let accepted = false
+      let closed = false
+      let status = ''
+      details.forEach((element) => {
+        if (!element.status || element.status.toLowerCase() === 'open')
+          open = true
+        else if (element.status.toLowerCase() === 'accepted')
+          accepted = true
+        else if (element.status.toLowerCase() === 'remediated')
+          closed = true
+      })
+      if (open && accepted && closed)
+        status = 'Open, Accepted & Remediated'
+      else if (open && accepted)
+        status = 'Open & Accepted'
+      else if (open && closed)
+        status = 'Open & Remediated'
+      else if (accepted && closed)
+        status = 'Accepted & Remediated'
+      else if (open)
+        status = 'Open'
+      else if (accepted)
+        status = 'Accepted'
+      else status = 'Remediated'
+      return status
+    },
+    getBase64Img(data) {
+      return `data:image/png;base64, ${data}`
+    },
+    getHighlighyTextParts(text = '') {
+      const X_TAG = '@@X_HIGHLIGHT@@'
+      return text.split(X_TAG)
+    },
+    openModal(item) {
+      this.modalData.hardening = item
+      this.modalData.hardenings = item.details
+      this.isModalOpen = true
+    },
+    severityColor(severity) {
+      if (severity === 'low')
+        return '#f0d802'
+      if (severity === 'medium')
+        return '#ed9b0e'
+      if (severity === 'high')
+        return '#d92b2b'
+      if (severity === 'critical')
+        return '#941e1e'
+      return '#b0b0b0'
+    },
+    toHtml2(details) {
+      return details // .replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
+    },
+    updateStatus() {
+      console.log('UPDATE')
+    },
+  },
+}
+</script>
+
 <template>
   <div>
     <v-data-iterator
@@ -26,18 +137,20 @@
                     {{ item.details[0].severity }}
                   </v-chip>
                 </div>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <!-- Modal Activator -->
 
                 <v-btn
                   small
                   icon
-                  @click.stop="openModal(item)"
                   class="justify-end"
+                  @click.stop="openModal(item)"
                 >
                   <v-chip small>
                     {{ displayStatus(item.details) }}
-                    <v-icon small right>mdi-file-document-edit-outline</v-icon>
+                    <v-icon small right>
+                      mdi-file-document-edit-outline
+                    </v-icon>
                   </v-chip>
                 </v-btn>
               </div>
@@ -78,7 +191,7 @@
                           <img
                             v-else-if="item.tracking.type === 'img'"
                             :src="getBase64Img(item.tracking.value)"
-                          />
+                          >
                         </template>
                       </div>
                     </v-col>
@@ -120,105 +233,6 @@
     </v-dialog>
   </div>
 </template>
-
-<script>
-import updateStatus from '~/components/vulnerabilities/update-status.vue'
-import comments from '~/components/blog/comments.vue'
-
-export default {
-  name: 'HardeningList',
-  components: {
-    updateStatus,
-    comments
-    // AssetInfo: () => import('~/components/assets/type/asset-info.vue')
-  },
-  props: {
-    hardening: {
-      type: Array,
-      required: true
-    },
-    asset: {
-      type: Object,
-      required: true
-    },
-    tabProp: {
-      type: Number,
-      default: 0
-    },
-    panelProp: {
-      type: Number,
-      default: 0
-    }
-  },
-  data() {
-    return {
-      isModalOpen: false,
-      tab: null,
-      panel: null,
-      modalData: {
-        hardening: null,
-        hardenings: null
-      }
-    }
-  },
-  watch: {
-    panelProp(newVal, oldVal) {
-      this.panel = newVal
-    }
-  },
-  mounted() {
-    this.tab = this.tabProp
-    this.panel = this.panelProp
-  },
-  methods: {
-    openModal(item) {
-      this.modalData.hardening = item
-      this.modalData.hardenings = item.details
-      this.isModalOpen = true
-    },
-    severityColor(severity) {
-      if (severity === 'low') return '#f0d802'
-      if (severity === 'medium') return '#ed9b0e'
-      if (severity === 'high') return '#d92b2b'
-      if (severity === 'critical') return '#941e1e'
-      return '#b0b0b0'
-    },
-    getBase64Img(data) {
-      return `data:image/png;base64, ${data}`
-    },
-    getHighlighyTextParts(text = '') {
-      const X_TAG = '@@X_HIGHLIGHT@@'
-      return text.split(X_TAG)
-    },
-    updateStatus() {
-      console.log('UPDATE')
-    },
-    toHtml2(details) {
-      return details // .replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
-    },
-    displayStatus(details) {
-      let open = false
-      let accepted = false
-      let closed = false
-      let status = ''
-      details.forEach((element) => {
-        if (!element.status || element.status.toLowerCase() === 'open')
-          open = true
-        else if (element.status.toLowerCase() === 'accepted') accepted = true
-        else if (element.status.toLowerCase() === 'remediated') closed = true
-      })
-      if (open && accepted && closed) status = 'Open, Accepted & Remediated'
-      else if (open && accepted) status = 'Open & Accepted'
-      else if (open && closed) status = 'Open & Remediated'
-      else if (accepted && closed) status = 'Accepted & Remediated'
-      else if (open) status = 'Open'
-      else if (accepted) status = 'Accepted'
-      else status = 'Remediated'
-      return status
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .vulnerability-header {

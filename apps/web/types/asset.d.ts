@@ -26,8 +26,13 @@ export interface BelongedAsset {
   parentsIds: number[]
   risk: {
     hasVulnerability: boolean
-    vulnerabilitiesCount?: {low: number, medium: number, high: number, critical: number}
-    lastScanDate?: string,
+    vulnerabilitiesCount?: {
+      low: number
+      medium: number
+      high: number
+      critical: number
+    }
+    lastScanDate?: string
     scores: {
       /**
        * 0 - 10

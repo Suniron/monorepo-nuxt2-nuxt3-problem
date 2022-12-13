@@ -11,11 +11,13 @@ export const searchSeveritiesController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -28,10 +30,11 @@ export const updateSeveritiesController = async (req, res, next) => {
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

@@ -6,7 +6,7 @@ export const searchSeveritiesService = async (params, accessToken = '') => {
     {
       id,
     },
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -15,7 +15,7 @@ export const updateSeveritiesService = async (id, body, accessToken = '') => {
   const data = await missionsAPIs.updateSeveritiesToFearedEventService(
     id,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }

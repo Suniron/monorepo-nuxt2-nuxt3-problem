@@ -1,9 +1,27 @@
+<script>
+import TagsList from '~/components/settings/tags/tags-list.vue'
+import CreateTagModal from '~/components/settings/tags/create-edit-tags-modal.vue'
+
+export default {
+  components: { TagsList, CreateTagModal },
+  name: 'TagsSettings',
+  props: {
+    tags: {
+      default: () => [],
+      type: Array,
+    },
+  },
+}
+</script>
+
 <template>
   <div class="tag-settings">
     <div class="create-wrapper">
       <v-dialog width="500" persistent>
         <template #activator="{ on, attrs }">
-          <v-btn color="primary" v-bind="attrs" v-on="on">Add tag</v-btn>
+          <v-btn color="primary" v-bind="attrs" v-on="on">
+            Add tag
+          </v-btn>
         </template>
         <template #default="dialog">
           <CreateTagModal
@@ -14,25 +32,9 @@
         </template>
       </v-dialog>
     </div>
-    <tags-list :tags="tags" @update="$emit('update')" />
+    <TagsList :tags="tags" @update="$emit('update')" />
   </div>
 </template>
-
-<script>
-import TagsList from '~/components/settings/tags/tags-list.vue'
-import CreateTagModal from '~/components/settings/tags/create-edit-tags-modal.vue'
-
-export default {
-  name: 'TagsSettings',
-  components: { TagsList, CreateTagModal },
-  props: {
-    tags: {
-      type: Array,
-      default: () => []
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .tag-settings {

@@ -19,9 +19,8 @@ export const getCompanyLogo = async (axios) => {
 export const setCompanyLogo = async (axios, base64Image) => {
   const result = await axios.patch('/company/logo', { logo: base64Image })
 
-  if (![200, 204].includes(result.status)) {
+  if (![200, 204].includes(result.status))
     throw new Error('Error while setting company logo')
-  }
 }
 
 /**

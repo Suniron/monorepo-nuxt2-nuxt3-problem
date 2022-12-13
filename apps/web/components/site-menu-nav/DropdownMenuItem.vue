@@ -1,9 +1,50 @@
+<script>
+// @ts-check
+import { mapState } from 'vuex'
+
+export default {
+  data() {
+    return {
+      isOpen: false
+    }
+  },
+  props: {
+    /**
+     * @type {import('vue').PropOptions<import('~/types/components/siteMenuNav').DropdownMenuItem>}
+     */
+    item: { type: Object, required: true }
+  },
+  computed: {
+    ...mapState('assets', ['assetSummary']),
+    /**
+     * @returns {{ [assetType: string]: string }}
+     */
+    assetTypeCount() {
+      return {
+        ...this.assetSummary,
+        ALL: this.assetSummary?.technicalAssets + this.assetSummary?.superAssets,
+      }
+    },
+  },
+  watch: {
+    isOpen(becomeOpen) {
+      if (!becomeOpen) {
+        this.$emit('close')
+        return
+      }
+
+      this.$emit('open')
+    },
+  },
+}
+</script>
+
 <template>
   <v-list-group
     :key="item.title"
+    v-model="isOpen"
     v-test="`navbar-${item.title}`"
     :prepend-icon="item.action"
-    v-model="isOpen"
     no-action
   >
     <template #activator>
@@ -23,71 +64,32 @@
       link
     >
       <!-- subitem icon -->
-      <v-icon v-if="child.icon" small class="mr-2">{{ child.icon }}</v-icon>
+      <v-icon v-if="child.icon" small class="mr-2">
+        {{ child.icon }}
+      </v-icon>
 
       <v-list-item-icon
+        v-if="child.customImg"
         class="mr-0"
         style="align-items: center"
-        v-if="child.customImg"
       >
         <img
           width="16"
           height="16"
           :src="child.customImg.src"
           :alt="child.customImg.alt"
-        />
+        >
       </v-list-item-icon>
 
       <!-- subitem content -->
       <v-list-item-content>
-        <v-list-item-title
-          >{{ child.title
+        <v-list-item-title>
+          {{ child.title
           }}<template v-if="assetTypeCount[child.assetType] !== undefined">
-            ({{ assetTypeCount[child.assetType] }})</template
-          ></v-list-item-title
-        >
+            ({{ assetTypeCount[child.assetType] }})
+          </template>
+        </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
   </v-list-group>
 </template>
-
-<script>
-// @ts-check
-import { mapState } from 'vuex'
-
-export default {
-  props: {
-    /**
-     * @type {import('vue').PropOptions<import('~/types/components/siteMenuNav').DropdownMenuItem>}
-     */
-    item: { type: Object, required: true }
-  },
-  data() {
-    return {
-      isOpen: false
-    }
-  },
-  computed: {
-    ...mapState('assets', ['assetSummary']),
-    /**
-     * @returns {{ [assetType: string]: string }}
-     */
-    assetTypeCount() {
-      return {
-        ...this.assetSummary,
-        ALL: this.assetSummary?.technicalAssets + this.assetSummary?.superAssets
-      }
-    }
-  },
-  watch: {
-    isOpen(becomeOpen) {
-      if (!becomeOpen) {
-        this.$emit('close')
-        return
-      }
-
-      this.$emit('open')
-    }
-  }
-}
-</script>

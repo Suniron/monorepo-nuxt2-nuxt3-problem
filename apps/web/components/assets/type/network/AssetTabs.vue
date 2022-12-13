@@ -1,3 +1,25 @@
+<script>
+// @ts-check
+import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
+
+export default {
+  components: {
+    AssetRelationsList,
+  },
+  data() {
+    return {
+      tab: 0
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+
 <template>
   <v-col cols="12">
     <v-tabs v-model="tab" show-arrows>
@@ -15,24 +37,3 @@
     </v-tabs-items>
   </v-col>
 </template>
-<script>
-// @ts-check
-import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
-
-export default {
-  components: {
-    AssetRelationsList
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      tab: 0
-    }
-  }
-}
-</script>

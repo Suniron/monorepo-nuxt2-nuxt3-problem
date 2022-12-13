@@ -1,0 +1,19 @@
+{
+  "name": "eslint-config-custom",
+  "version": "0.0.0",
+  "main": "index.cjs",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.31.0",
+    "eslint": "^8.27.0",
+    "eslint-config-turbo": "^0.0.4",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-vue": "^9.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

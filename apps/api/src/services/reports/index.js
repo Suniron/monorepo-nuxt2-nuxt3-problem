@@ -1,10 +1,10 @@
 import {
   Document,
   HeadingLevel,
+  ImageRun,
   Packer,
   Paragraph,
   TextRun,
-  ImageRun,
 } from 'docx'
 
 import { reportsAPIs } from '@/api/store'
@@ -13,17 +13,18 @@ const regex = /(<p><img src="data:image\/png;base64,(?<img>.*?)"><\/p>|<p>(?<t1>
 const convertHTML = (str) => {
   let m
   const res = []
+  // TODO: fix this
+  // eslint-disable-next-line no-cond-assign
   while ((m = regex.exec(str)) !== null) {
     // This is necessary to avoid infinite loops with zero-width matches
-    if (m.index === regex.lastIndex) {
+    if (m.index === regex.lastIndex)
       regex.lastIndex++
-    }
+
     if (m.groups) {
-      if (m.groups.img) {
+      if (m.groups.img)
         res.push({ type: 'img', value: m.groups.img })
-      } else if (m.groups.t1) {
+      else if (m.groups.t1)
         res.push({ type: 'text', value: m.groups.t1 })
-      }
     }
   }
   return res
@@ -33,9 +34,9 @@ const convert = (str) => {
   return str.includes('<p>')
     ? convertHTML(str)
     : str.split('\n').reduce((arr3, elt3) => {
-        arr3.push({ type: 'text', value: elt3 })
-        return arr3
-      }, [])
+      arr3.push({ type: 'text', value: elt3 })
+      return arr3
+    }, [])
 }
 
 const makeText = (obj) => {
@@ -43,19 +44,20 @@ const makeText = (obj) => {
     if (elt2.type === 'text') {
       arr2.push(
         new TextRun({
-          text: elt2.value,
           break: 1,
-        })
+          text: elt2.value,
+        }),
       )
-    } else if (elt2.type === 'img') {
+    }
+    else if (elt2.type === 'img') {
       arr2.push(
         new ImageRun({
           data: Buffer.from(elt2.value, 'base64'),
           transformation: {
-            width: 100,
             height: 100,
+            width: 100,
           },
-        })
+        }),
       )
     }
     return arr2
@@ -64,9 +66,9 @@ const makeText = (obj) => {
 
 export const generateService = async (accessToken) => {
   const vast = await reportsAPIs.generate(accessToken)
-  if (vast.error) {
+  if (vast.error)
     return vast
-  }
+
   const docx = new Document({
     /* styles: {
             paragraphStyles: [
@@ -99,73 +101,73 @@ export const generateService = async (accessToken) => {
           // Vuln name
           arr.push(
             new Paragraph({
-              text: elt.name,
               heading: HeadingLevel.HEADING_1,
-            })
+              text: elt.name,
+            }),
           )
           // Affected IP
           arr.push(
             new Paragraph({
               children: [
                 new TextRun({
-                  text: 'Severity : ' + elt.affected[0].severity,
                   bold: true,
                   break: 1,
+                  text: `Severity : ${elt.affected[0].severity}`,
                 }),
                 new TextRun({
+                  bold: true,
+                  break: 1,
                   text:
-                    'CVSS : ' +
-                    elt.affected[0].code +
-                    '(' +
-                    elt.affected[0].score +
-                    ')',
-                  bold: true,
-                  break: 1,
+                    `CVSS : ${
+                    elt.affected[0].code
+                    }(${
+                    elt.affected[0].score
+                    })`,
                 }),
                 new TextRun({
-                  text: 'Affected IP : ',
                   bold: true,
                   break: 1,
+                  text: 'Affected IP : ',
                 }),
               ]
                 .concat(
                   elt.affected.reduce((arr1, elt1) => {
                     arr1.push(
                       new TextRun({
-                        text:
-                          '    ' +
-                          elt1.astName +
-                          ' - ' +
-                          (elt1.ip
-                            ? elt1.ip + ' (' + elt1.port + ')'
-                            : elt1.uri),
                         break: 1,
-                      })
+                        text:
+                          `    ${
+                          elt1.astName
+                          } - ${
+                          elt1.ip
+                            ? `${elt1.ip} (${elt1.port})`
+                            : elt1.uri}`,
+                      }),
                     )
                     return arr1
-                  }, [])
+                  }, []),
                 )
                 .concat([
                   new TextRun({
-                    text: 'Description : ',
                     bold: true,
                     break: 2,
+                    text: 'Description : ',
                   }),
                 ])
                 .concat(makeText(description))
                 .concat([
                   new TextRun({
-                    text: 'Remediation : ',
                     bold: true,
                     break: 2,
+                    text: 'Remediation : ',
                   }),
                 ])
                 .concat(makeText(remediation))
                 .concat([
                   new TextRun({
-                    text: 'Evidence : ',
                     bold: true,
                     break: 2,
+                    text: 'Evidence : ',
                   }),
                 ])
                 .concat(
@@ -173,25 +175,26 @@ export const generateService = async (accessToken) => {
                     if (elt2.type === 'text') {
                       arr2.push(
                         new TextRun({
-                          text: elt2.value,
                           break: 1,
-                        })
+                          text: elt2.value,
+                        }),
                       )
-                    } else if (elt2.type === 'img') {
+                    }
+                    else if (elt2.type === 'img') {
                       arr2.push(
                         new ImageRun({
                           data: Buffer.from(elt2.value, 'base64'),
                           transformation: {
-                            width: 100,
                             height: 100,
+                            width: 100,
                           },
-                        })
+                        }),
                       )
                     }
                     return arr2
-                  }, [])
+                  }, []),
                 ),
-            })
+            }),
           )
           return arr
         }, []),

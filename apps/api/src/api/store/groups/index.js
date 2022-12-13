@@ -1,7 +1,7 @@
 import { createAPIError } from '@/common/errors/api'
 
-const getEndpoint = (id) => (id ? '/groups/' + id : '/groups')
-const getReqConfig = (accessToken) => ({
+const getEndpoint = id => (id ? `/groups/${id}` : '/groups')
+const getReqConfig = accessToken => ({
   ...(accessToken && {
     headers: { Authorization: `Bearer ${accessToken}` },
   }),
@@ -10,15 +10,16 @@ const getReqConfig = (accessToken) => ({
 export const requestSearchGroups = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
-    const { id, sort = 'name' } = params
+    const { id } = params
     const reqConfig = getReqConfig(accessToken)
 
     // Group by id
-    if (id) return { group: (await axios.get(getEndpoint(id), reqConfig)).data }
+    if (id)
+      return { group: (await axios.get(getEndpoint(id), reqConfig)).data }
 
     // Search groups
     const queryParams = {}
@@ -27,7 +28,8 @@ export const requestSearchGroups = async (
       params: queryParams,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
 
     return createAPIError(error)
@@ -38,7 +40,7 @@ export const requestCreateGroup = async (provider, params, accessToken) => {
   const { axios, logger } = provider
   try {
     const { name, memberIds } = params
-    const bodyPayload = { name, memberIds }
+    const bodyPayload = { memberIds, name }
     const reqConfig = getReqConfig(accessToken)
 
     const {
@@ -46,7 +48,8 @@ export const requestCreateGroup = async (provider, params, accessToken) => {
     } = await axios.post(getEndpoint(), bodyPayload, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -55,22 +58,23 @@ export const requestCreateGroup = async (provider, params, accessToken) => {
 export const requestUpdateGroup = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
     const { id, name, memberIds } = params
-    const bodyPayload = { name, memberIds }
+    const bodyPayload = { memberIds, name }
     const reqConfig = getReqConfig(accessToken)
 
     const { data: group } = await axios.patch(
       getEndpoint(id),
       bodyPayload,
-      reqConfig
+      reqConfig,
     )
 
     return { group }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -81,7 +85,8 @@ export const requestDeleteGroup = async (provider, id, accessToken = '') => {
     const reqConfig = getReqConfig(accessToken)
     const data = await axios.delete(getEndpoint(id), reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

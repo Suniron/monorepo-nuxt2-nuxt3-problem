@@ -2,16 +2,16 @@
 import { throwHTTPError } from '@/common/errors'
 import {
   scheduleScanService,
-  searchScanAssetsService,
   searchPhishingScenariosService,
+  searchScanAssetsService,
 } from '@/services/scans/schedule-service'
 import {
-  searchScansService,
-  parseScanResultService,
-  updateScanService,
-  writeTmp,
   generateScanReportService,
   getScanDetailsService,
+  parseScanResultService,
+  searchScansService,
+  updateScanService,
+  writeTmp,
 } from '@/services/scans'
 
 /**
@@ -24,12 +24,14 @@ export const searchScansHandler = async (req, res, next) => {
   try {
     const { error, scans, total } = await searchScansService(
       req.query,
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
     res.send({ scans, total })
-  } catch (error) {
+  }
+  catch (error) {
     req.log.withError(error).error('Error searching scans')
     next(error)
   }
@@ -45,10 +47,12 @@ export const scheduleScanHandler = async (req, res, next) => {
   try {
     const { error, id } = await scheduleScanService(req.body, req.accessToken)
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ id })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -61,17 +65,19 @@ export const scheduleScanHandler = async (req, res, next) => {
  */
 export const parseScanResultController = async (req, res, next) => {
   try {
-    if (!req.files)
+    if (!req.files) {
       res.send({
-        status: false,
         message: 'No file uploaded',
+        status: false,
       })
+    }
     const { status } = await parseScanResultService(
       { file: req.files.files, ...req.body },
-      req.accessToken
+      req.accessToken,
     )
     res.status(201).send({ status })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -85,9 +91,11 @@ export const parseScanResultController = async (req, res, next) => {
 export const searchScanAssetsController = async (req, res, next) => {
   try {
     const data = await searchScanAssetsService(req.accessToken)
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send({ data })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -101,9 +109,11 @@ export const searchScanAssetsController = async (req, res, next) => {
 export const searchPhishingScenariosController = async (req, res, next) => {
   try {
     const data = await searchPhishingScenariosService(req.accessToken)
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send({ data })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -119,11 +129,13 @@ export const updateScanController = async (req, res, next) => {
     const data = await updateScanService(
       req.params.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data?.error) throwHTTPError(data.error)
+    if (data?.error)
+      throwHTTPError(data.error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -138,9 +150,11 @@ export const getScanDetailsController = async (req, res, next) => {
   try {
     const data = await getScanDetailsService(req.params.id, req.accessToken)
 
-    if ('error' in data) throwHTTPError(data.error)
+    if ('error' in data)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -156,30 +170,32 @@ export const generateScanReportController = async (req, res, next) => {
     const { error, data, file } = await generateScanReportService(
       req.params.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.setHeader('Content-Length', file.length)
     res.setHeader('Content-Type', 'application/docx')
     res.setHeader(
       'Content-Disposition',
-      'attachment; filename=' + data.fileName
+      `attachment; filename=${data.fileName}`,
     )
     res.send(file)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
 
 /**
+ * // TODO: handle error with next()
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
  */
-export const writeTmpContorller = async (req, res, next) => {
+export const writeTmpContorller = async (req, res) => {
   writeTmp(req.body)
   res.status(201)
 }

@@ -1,3 +1,48 @@
+<script>
+// @ts-check
+import comments from '~/components/blog/comments.vue'
+import { startDownloadFile } from '~/services/file_upload'
+
+export default {
+  components: { comments },
+  name: 'RevisionsList',
+  props: {
+    revisions: {
+      type: Array,
+      required: true
+    },
+    assetId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      showDownloadFileError: false,
+      tab: null
+    }
+  },
+  methods: {
+    async dlFile(uuid) {
+      try {
+        await startDownloadFile(this.$axios, uuid)
+      }
+      catch (err) {
+        this.showDownloadFileError = true
+      }
+    },
+    toHtml(details) {
+      return details
+        .replaceAll('\n', '<br />')
+        .replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
+    },
+    toHtml2(details) {
+      return details.replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
+    },
+  },
+}
+</script>
+
 <template>
   <v-data-iterator
     :items="revisions"
@@ -7,9 +52,9 @@
   >
     <template #default="{ items }">
       <v-snackbar
+        v-model="showDownloadFileError"
         :timeout="4000"
         :vertical="true"
-        v-model="showDownloadFileError"
         color="error"
       >
         An error occurred while downloading the file
@@ -22,14 +67,14 @@
               <div class="revisions-header__name">
                 Revision: {{ item.revision }}
               </div>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
-                @click.stop="dlFile(item.fileUUID)"
                 small
                 color="primary"
                 download
                 icon
                 outlined
+                @click.stop="dlFile(item.fileUUID)"
               >
                 <v-icon>mdi-download</v-icon>
               </v-btn>
@@ -83,50 +128,6 @@
     </template>
   </v-data-iterator>
 </template>
-
-<script>
-// @ts-check
-import comments from '~/components/blog/comments.vue'
-import { startDownloadFile } from '~/services/file_upload'
-
-export default {
-  name: 'RevisionsList',
-  components: { comments },
-  props: {
-    revisions: {
-      type: Array,
-      required: true
-    },
-    assetId: {
-      type: Number,
-      required: true
-    }
-  },
-  data() {
-    return {
-      tab: null,
-      showDownloadFileError: false
-    }
-  },
-  methods: {
-    toHtml(details) {
-      return details
-        .replaceAll('\n', '<br />')
-        .replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
-    },
-    toHtml2(details) {
-      return details.replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
-    },
-    async dlFile(uuid) {
-      try {
-        await startDownloadFile(this.$axios, uuid)
-      } catch (err) {
-        this.showDownloadFileError = true
-      }
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .revisions-header {

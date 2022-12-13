@@ -5,7 +5,7 @@ import { log } from '@/lib/logger'
 export const requestSearchVulnerabilities = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios } = provider
   try {
@@ -17,21 +17,24 @@ export const requestSearchVulnerabilities = async (
     }
 
     // Vulnerability by id
-    if (vid)
+    if (vid) {
       return {
-        vulnerability: (await axios.get('/vulnerabilities/' + vid, reqConfig))
+        vulnerability: (await axios.get(`/vulnerabilities/${vid}`, reqConfig))
           .data,
       }
+    }
 
     // Search vulnerabilities
-    const queryParams = { search, severities, likelihoods }
+    const queryParams = { likelihoods, search, severities }
     const { data } = await axios.get('/vulnerabilities', {
       ...reqConfig,
       params: queryParams,
     })
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('requestSearchVulnerabilities')
     return createAPIError(error)
   }
@@ -40,7 +43,7 @@ export const requestSearchVulnerabilities = async (
 export const requestSearchVulnerabilitiesWithTheirAssets = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios } = provider
   try {
@@ -55,7 +58,7 @@ export const requestSearchVulnerabilitiesWithTheirAssets = async (
     if (vid) {
       const result = await axios.get(
         `/vulnerabilities/${vid}/assets`,
-        reqConfig
+        reqConfig,
       )
       return {
         vulnerability: result.data,
@@ -68,7 +71,8 @@ export const requestSearchVulnerabilitiesWithTheirAssets = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('requestSearchVulnerabilitiesWithTheirAssets')
     return createAPIError(error)
   }
@@ -78,7 +82,7 @@ export const requestUpdatePortVuln = async (
   provider,
   body,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios } = provider
   try {
@@ -90,11 +94,12 @@ export const requestUpdatePortVuln = async (
     const { data } = await axios.post(
       'assets/vulnerabilities_asset',
       body,
-      reqConfig
+      reqConfig,
     )
 
     return data
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('requestUpdatePortVuln')
     return createAPIError(error)
   }
@@ -103,7 +108,7 @@ export const requestDeleteVuln = async (
   provider,
   _body,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios } = provider
   try {
@@ -114,7 +119,8 @@ export const requestDeleteVuln = async (
     }
     const { data } = await axios.post('assets/vuln', params, reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('requestDeleteVuln')
     return createAPIError(error)
   }
@@ -122,7 +128,7 @@ export const requestDeleteVuln = async (
 export const requestCreateVulnerability = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios } = provider
   try {
@@ -133,7 +139,8 @@ export const requestCreateVulnerability = async (
     }
     const { data } = await axios.post('/vulnerabilities', params, reqConfig)
     return { id: data.id }
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('requestCreateVulnerability')
     return createAPIError(error)
   }

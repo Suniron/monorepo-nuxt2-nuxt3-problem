@@ -4,31 +4,32 @@ import { PASSWORD_VALIDATION_REGEXP } from '@/common/regexps/users'
 
 const formatUser = (user) => {
   return {
-    id: user.id,
-    username: user.username,
-    firstName: user.first_name,
-    lastName: user.last_name,
     email: user.email,
+    firstName: user.first_name,
+    groups: user.groups.map(g => ({ id: g.id, name: g.name })),
+    id: user.id,
+    lastName: user.last_name,
     roles: user.roles,
-    groups: user.groups.map((g) => ({ id: g.id, name: g.name })),
+    username: user.username,
   }
 }
 
 export const searchUsersService = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { userAPIs } = provider
   const { error, user, users, total } = await userAPIs.searchUsers(
     params,
-    accessToken
+    accessToken,
   )
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
 
   return user
     ? { user: formatUser(user) }
-    : { users: users.map(formatUser), total }
+    : { total, users: users.map(formatUser) }
 }
 
 export const createUserService = async (provider, params, accessToken = '') => {
@@ -37,7 +38,8 @@ export const createUserService = async (provider, params, accessToken = '') => {
   if (PASSWORD_VALIDATION_REGEXP.test(password)) {
     const { error, id } = await userAPIs.createUser(params, accessToken)
     return error ? createServiceError(error) : { id }
-  } else {
+  }
+  else {
     return createServiceError(VALIDATION_ERROR, 'Invalid password')
   }
 }
@@ -45,9 +47,10 @@ export const createUserService = async (provider, params, accessToken = '') => {
 export const updateUserService = async (provider, params, accessToken = '') => {
   const { userAPIs } = provider
   const { oldPassword, password1, password2 } = params
-  if (!oldPassword && !password1 && !password2)
+  if (!oldPassword && !password1 && !password2) {
     if (password1 !== password2 && !PASSWORD_VALIDATION_REGEXP.test(password1))
       return createServiceError('Invalid password')
+  }
   const { error, user } = await userAPIs.updateUser(params, accessToken)
 
   return error ? createServiceError(error) : { user: formatUser(user) }

@@ -1,9 +1,9 @@
-import env from '@/config/env'
-import addLoaders from '@/loaders'
-import express from 'express'
 import path from 'path'
+import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import YAML from 'yamljs'
+import addLoaders from '@/loaders'
+import env from '@/config/env'
 
 /**
  * Initializes and returns an express app ready to listen
@@ -18,7 +18,8 @@ export default async function initServer() {
     try {
       const swaggerDocument = YAML.load(path.join(__dirname, '../api.yml'))
       app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-    } catch (error) {}
+    }
+    catch (error) {}
   }
 
   await addLoaders(app)

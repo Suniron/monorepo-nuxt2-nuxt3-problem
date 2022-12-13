@@ -1,3 +1,43 @@
+<script>
+import { updateAssetService } from '~/services/assets'
+
+export default {
+  components: {
+    AssetInfo: () => import('~/components/assets/type/AssetInfo.vue'),
+  },
+  data() {
+    return {
+      isFormValid: false,
+      isLoading: false,
+      formData: {}
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
+  created() {},
+  methods: {
+    assetChanged(assetData) {
+      this.formData = assetData
+    },
+    async saveAsset() {
+      await updateAssetService(this.$axios, this.asset.id, {
+        assetData: this.formData,
+        name: this.formData.name,
+        type: this.asset.type,
+      })
+      this.$root.$emit('fetchDataAgain')
+    },
+    saveAssetDataChange(assetData) {
+      this.assetData = assetData
+    },
+  },
+}
+</script>
+
 <template>
   <v-card>
     <v-card-title> Edit asset details </v-card-title>
@@ -20,9 +60,9 @@
               </v-btn>
               <v-btn
                 color="primary"
-                @click.stop="saveAsset"
                 :disabled="!isFormValid"
                 :loading="isLoading"
+                @click.stop="saveAsset"
               >
                 Save
               </v-btn>
@@ -33,42 +73,3 @@
     </v-card-text>
   </v-card>
 </template>
-<script>
-import { updateAssetService } from '~/services/assets'
-
-export default {
-  components: {
-    AssetInfo: () => import('~/components/assets/type/AssetInfo.vue')
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isFormValid: false,
-      isLoading: false,
-      formData: {}
-    }
-  },
-  created() {},
-  methods: {
-    async saveAsset() {
-      await updateAssetService(this.$axios, this.asset.id, {
-        name: this.formData.name,
-        type: this.asset.type,
-        assetData: this.formData
-      })
-      this.$root.$emit('fetchDataAgain')
-    },
-    assetChanged(assetData) {
-      this.formData = assetData
-    },
-    saveAssetDataChange(assetData) {
-      this.assetData = assetData
-    }
-  }
-}
-</script>

@@ -12,23 +12,22 @@
 export const updateFearedEventSeverity = async (
   axios,
   severityName,
-  fearedEventId
+  fearedEventId,
 ) => {
   /**
    * @type {{data: import('@/types/businessImpactAnalysis').Severity[]}} severities
    */
-  const { data: allSeverities } = await axios.get(`/severities/`)
+  const { data: allSeverities } = await axios.get('/severities/')
 
   const severity = allSeverities.find(
-    (severity) => severity.name.toUpperCase() === severityName.toUpperCase()
+    severity => severity.name.toUpperCase() === severityName.toUpperCase(),
   )
 
-  if (!severity) {
+  if (!severity)
     throw new Error(`Severity ${severityName} not found`)
-  }
 
-  const { data } = await axios.patch('/feared-events/' + fearedEventId, {
-    severityId: severity.id
+  const { data } = await axios.patch(`/feared-events/${fearedEventId}`, {
+    severityId: severity.id,
   })
   return data
 }

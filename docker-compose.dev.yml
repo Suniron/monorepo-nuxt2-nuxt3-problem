@@ -13,7 +13,7 @@ services:
       - NODE_ENV=development
     volumes:
       - ./apps/web/:/app/
-      - ./apps/web/node_modules/:/app/node_modules/
+      - ./.pnpm-store-docker/:/app/.pnpm-store
     ports:
       - "3000:3000"
     # networks:
@@ -38,12 +38,12 @@ services:
       - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
       - INSTANCE_NAME=${INSTANCE_NAME}
     volumes:
+      - ./.pnpm-store-docker/:/api/.pnpm-store
       - ./apps/api:/api/
-      - ./apps/api/node_modules/:/api/node_modules/
     ports:
       - "3001:3001"
       - "9229:9229"
-    # networks:
+    # networks:&
     #   xrator.main:
     #     ipv4_address: 169.254.254.3
     restart: always
@@ -76,7 +76,7 @@ services:
       - INSTANCE_NAME=${INSTANCE_NAME}
     volumes:
       - ./apps/store:/store/
-      - ./apps/store/node_modules/:/store/node_modules/
+      - ./.pnpm-store-docker/:/store/.pnpm-store
     ports:
       - "3002:3002"
       - "5555:5555" # Prisma Studio
@@ -84,7 +84,7 @@ services:
     # networks:
     #   xrator.main:
     #     ipv4_address: 169.254.254.4
-    command: yarn docker:dev
+    command: pnpm dev:docker
     restart: always
   xrator_db:
     container_name: xrator_db

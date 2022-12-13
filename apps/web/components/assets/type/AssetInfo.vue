@@ -1,23 +1,3 @@
-<template>
-  <component
-    v-if="details"
-    :is="assetComponent"
-    :asset="asset"
-    :details="details"
-    :quickedit="quickEdit"
-    @change="changed"
-    :itemvul-n="item"
-    :is-update="isUpdate"
-  ></component>
-  <component
-    v-else
-    :is="assetComponent"
-    :asset="asset"
-    @change="changed"
-    :quickedit="quickEdit"
-    :is-update="isUpdate"
-  ></component>
-</template>
 <script>
 // Profile
 import BuildingProfile from '~/components/assets/type/building/profile.vue'
@@ -90,36 +70,6 @@ import UserGroupBulkEdit from '~/components/assets/type/usergroup/bulk-edit.vue'
 
 export default {
   name: 'AssetInfo',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    section: {
-      type: String,
-      required: true
-    },
-    item: {
-      type: Object,
-      required: false
-    },
-    details: {
-      type: Array,
-      default: () => {
-        return null
-      }
-    },
-    isUpdate: {
-      type: Boolean,
-      default: false
-    },
-    quickEdit: {
-      type: Boolean,
-      default: () => {
-        return true
-      }
-    }
-  },
   data() {
     return {
       info: {}
@@ -133,105 +83,156 @@ export default {
      */
     assetComponent() {
       return this.info[this.asset.type.toUpperCase()][this.section]
-    }
+    },
   },
   created() {
     this.info = {
+      BUILDING: {
+        bulkEdit: BuildingBulkEdit,
+        cardDetails: BuildingCardDetails,
+        cardFooter: GenericCardFooter,
+        editDetails: BuildingEditDetails,
+        newAsset: BuildingNewAsset,
+        profile: BuildingProfile,
+        tabs: BuildingTabs,
+      },
+      MISSION: {
+        bulkEdit: BusinessMissionBulkEdit,
+        cardDetails: UnitCardDetails,
+        cardFooter: GenericCardFooter,
+        newAsset: BusinessMissionNewAsset,
+        profile: BusinessMissionProfile,
+        tabs: BusinessMissionTabs,
+      },
+      NETWORK: {
+        bulkEdit: NetworkBulkEdit,
+        cardDetails: NetworkCardDetails,
+        cardFooter: GenericCardFooter,
+        newAsset: NetworkNewAsset,
+        profile: NetworkProfile,
+        tabs: NetworkTabs,
+      },
+      POLICY: {
+        bulkEdit: PolicyBulkEdit,
+        cardDetails: PolicyCardDetails,
+        cardFooter: GenericCardFooter,
+        editDetails: PolicyEditDetails,
+        newAsset: PolicyNewAsset,
+        profile: PolicyProfile,
+        tabs: PolicyTabs,
+      },
+      PROCEDURE: {
+        bulkEdit: PolicyBulkEdit,
+        cardDetails: PolicyCardDetails,
+        cardFooter: GenericCardFooter,
+        editDetails: PolicyEditDetails,
+        newAsset: PolicyNewAsset,
+        profile: PolicyProfile,
+        tabs: PolicyTabs,
+      },
+      SERVER: {
+        bulkEdit: ServerBulkEdit,
+        cardDetails: ServerCardDetails,
+        cardFooter: GenericCardFooter,
+        detailsTable: ServerTableDetails,
+        editDetails: ServerEditDetails,
+        newAsset: ServerNewAsset,
+        profile: ServerProfile,
+        tabs: ServerTabs,
+      },
+      UNIT: {
+        bulkEdit: UnitBulkEdit,
+        cardDetails: UnitCardDetails,
+        cardFooter: GenericCardFooter,
+        newAsset: UnitNewAsset,
+        profile: BusinessUnitProfile,
+        tabs: BusinessUnitTabs,
+      },
+      USER: {
+        bulkEdit: UserBulkEdit,
+        cardDetails: UserCardDetails,
+        cardFooter: GenericCardFooter,
+        detailsTable: UserTableDetails,
+        editDetails: UserEditDetails,
+        newAsset: UserNewAsset,
+        profile: UserProfile,
+        tabs: UserTabs,
+      },
       USERGROUP: {
-        profile: UserGroupProfile,
-        tabs: UsergroupTabs,
+        bulkEdit: UserGroupBulkEdit,
         cardDetails: UserGroupCardDetails,
         cardFooter: GenericCardFooter,
         newAsset: UserGroupNewAsset,
-        bulkEdit: UserGroupBulkEdit
-      },
-      UNIT: {
-        profile: BusinessUnitProfile,
-        tabs: BusinessUnitTabs,
-        newAsset: UnitNewAsset,
-        cardDetails: UnitCardDetails,
-        cardFooter: GenericCardFooter,
-        bulkEdit: UnitBulkEdit
-      },
-      MISSION: {
-        profile: BusinessMissionProfile,
-        tabs: BusinessMissionTabs,
-        newAsset: BusinessMissionNewAsset,
-        cardDetails: UnitCardDetails,
-        cardFooter: GenericCardFooter,
-        bulkEdit: BusinessMissionBulkEdit
-      },
-      BUILDING: {
-        cardDetails: BuildingCardDetails,
-        profile: BuildingProfile,
-        tabs: BuildingTabs,
-        cardFooter: GenericCardFooter,
-        newAsset: BuildingNewAsset,
-        editDetails: BuildingEditDetails,
-        bulkEdit: BuildingBulkEdit
-      },
-      NETWORK: {
-        newAsset: NetworkNewAsset,
-        tabs: NetworkTabs,
-        profile: NetworkProfile,
-        cardFooter: GenericCardFooter,
-        cardDetails: NetworkCardDetails,
-        bulkEdit: NetworkBulkEdit
-      },
-      POLICY: {
-        cardDetails: PolicyCardDetails,
-        profile: PolicyProfile,
-        tabs: PolicyTabs,
-        cardFooter: GenericCardFooter,
-        newAsset: PolicyNewAsset,
-        editDetails: PolicyEditDetails,
-        bulkEdit: PolicyBulkEdit
-      },
-      PROCEDURE: {
-        cardDetails: PolicyCardDetails,
-        profile: PolicyProfile,
-        tabs: PolicyTabs,
-        cardFooter: GenericCardFooter,
-        newAsset: PolicyNewAsset,
-        editDetails: PolicyEditDetails,
-        bulkEdit: PolicyBulkEdit
-      },
-      SERVER: {
-        cardDetails: ServerCardDetails,
-        profile: ServerProfile,
-        tabs: ServerTabs,
-        cardFooter: GenericCardFooter,
-        detailsTable: ServerTableDetails,
-        newAsset: ServerNewAsset,
-        editDetails: ServerEditDetails,
-        bulkEdit: ServerBulkEdit
-      },
-      USER: {
-        cardDetails: UserCardDetails,
-        profile: UserProfile,
-        tabs: UserTabs,
-        cardFooter: GenericCardFooter,
-        newAsset: UserNewAsset,
-        editDetails: UserEditDetails,
-        bulkEdit: UserBulkEdit,
-        detailsTable: UserTableDetails
+        profile: UserGroupProfile,
+        tabs: UsergroupTabs,
       },
       WEB: {
+        bulkEdit: WebBulkEdit,
         cardDetails: WebCardDetails,
-        profile: WebProfile,
-        tabs: WebTabs,
         cardFooter: GenericCardFooter,
         detailsTable: WebTableDetails,
-        newAsset: WebNewAsset,
         editDetails: WebEditDetails,
-        bulkEdit: WebBulkEdit
-      }
+        newAsset: WebNewAsset,
+        profile: WebProfile,
+        tabs: WebTabs,
+      },
     }
   },
   methods: {
     changed(data) {
       this.$emit('change', data)
-    }
-  }
+    },
+  },
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+    details: {
+      default: () => {
+        return null
+      },
+      type: Array,
+    },
+    isUpdate: {
+      default: false,
+      type: Boolean,
+    },
+    item: {
+      required: false,
+      type: Object,
+    },
+    quickEdit: {
+      default: () => {
+        return true
+      },
+      type: Boolean,
+    },
+    section: {
+      required: true,
+      type: String,
+    },
+  },
 }
 </script>
+
+<template>
+  <component
+    :is="assetComponent"
+    v-if="details"
+    :asset="asset"
+    :details="details"
+    :quickedit="quickEdit"
+    :itemvul-n="item"
+    :is-update="isUpdate"
+    @change="changed"
+  />
+  <component
+    :is="assetComponent"
+    v-else
+    :asset="asset"
+    :quickedit="quickEdit"
+    :is-update="isUpdate"
+    @change="changed"
+  />
+</template>

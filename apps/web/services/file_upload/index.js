@@ -1,4 +1,4 @@
-const getEndpoint = (id) => (id ? '/files/' + id : '/files')
+const getEndpoint = id => (id ? `/files/${id}` : '/files')
 
 export const uploadFiles = async (axios, params) => {
   const { data } = await axios.post(getEndpoint(), params)
@@ -8,8 +8,8 @@ export const uploadFiles = async (axios, params) => {
 export const downloadFile = async (axios, id) => {
   const response = await axios({
     method: 'GET',
+    responseType: 'blob',
     url: getEndpoint(id),
-    responseType: 'blob'
   })
   return response
 }
@@ -27,7 +27,7 @@ export const startDownloadFile = async (axios, uuid) => {
   fileLink.href = fileUrl
   fileLink.setAttribute(
     'download',
-    resp.headers['content-disposition'].split('=')[1]
+    resp.headers['content-disposition'].split('=')[1],
   )
   document.body.appendChild(fileLink)
   fileLink.click()
@@ -36,8 +36,8 @@ export const startDownloadFile = async (axios, uuid) => {
 export const processCSV = async (axios, params) => {
   const { data } = await axios.get('/files/processCSV', params)
   return {
-    headers: data.headers,
     csvData: data.csvData,
-    csvHeaders: data.csvHeaders
+    csvHeaders: data.csvHeaders,
+    headers: data.headers,
   }
 }

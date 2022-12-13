@@ -1,3 +1,30 @@
+<script>
+export default {
+  data() {
+    return {
+      error: '',
+      isLoading: false
+    }
+  },
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    whatisDeleting: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    emitMyEvents(item) {
+      this.$emit('delete', item)
+      this.$emit('close')
+    },
+  },
+}
+</script>
+
 <template>
   <v-card>
     <v-card-title> Remove {{ whatisDeleting }} </v-card-title>
@@ -5,9 +32,7 @@
       <v-container class="text-center">
         <v-row>
           <v-card-text>
-            Do you confirm to remove the {{ whatisDeleting }}? <br /><strong
-              >This action cannot be undone!</strong
-            ><br /><br />
+            Do you confirm to remove the {{ whatisDeleting }}? <br><strong>This action cannot be undone!</strong><br><br>
           </v-card-text>
         </v-row>
         <v-row>
@@ -37,29 +62,3 @@
     </v-card-text>
   </v-card>
 </template>
-<script>
-export default {
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    whatisDeleting: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      error: '',
-      isLoading: false
-    }
-  },
-  methods: {
-    emitMyEvents(item) {
-      this.$emit('delete', item)
-      this.$emit('close')
-    }
-  }
-}
-</script>

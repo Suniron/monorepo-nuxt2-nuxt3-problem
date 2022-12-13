@@ -1,3 +1,14 @@
+<script>
+export default {
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <div>
     <span v-if="asset.ips.length">
@@ -10,14 +21,3 @@
     <span v-if="asset.mail"><strong>Mail: </strong>{{ asset.mail }}</span>
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  }
-}
-</script>

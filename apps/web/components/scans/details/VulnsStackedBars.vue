@@ -1,19 +1,21 @@
-<template>
-  <div class="vulns-stacked-bar" :id="chartId"></div>
-</template>
-
 <script>
-import { bb, bar } from 'billboard.js'
+import { bar, bb } from 'billboard.js'
 import { severityColor } from '~/utils/color.utils'
 
 const SEVERITY_BACKGROUNDS = {
   critical: '#ffffff',
   high: '#ffffff',
+  low: '#000000',
   medium: '#000000',
-  low: '#000000'
 }
 
 export default {
+  data() {
+    return {
+      chartId: `vulns-stacked-bar-${Math.round(Math.random() * 1e10)}`,
+      chart: null
+    }
+  },
   props: {
     assetWithVuln: {
       type: Object,
@@ -22,12 +24,6 @@ export default {
     maxVulns: {
       type: Number,
       required: true
-    }
-  },
-  data() {
-    return {
-      chartId: `vulns-stacked-bar-${Math.round(Math.random() * 1e10)}`,
-      chart: null
     }
   },
   computed: {
@@ -39,22 +35,9 @@ export default {
         ['critical', this.assetWithVuln.vulnerabilities.critical ?? 0],
         ['high', this.assetWithVuln.vulnerabilities.high ?? 0],
         ['medium', this.assetWithVuln.vulnerabilities.medium ?? 0],
-        ['low', this.assetWithVuln.vulnerabilities.low ?? 0]
+        ['low', this.assetWithVuln.vulnerabilities.low ?? 0],
       ]
-    }
-  },
-  watch: {
-    assetWithVuln: {
-      handler() {
-        this.chart.load({
-          columns: this.chartData,
-          done: () => {
-            this.chart.resize()
-          }
-        })
-      },
-      deep: true
-    }
+    },
   },
   mounted() {
     // Generate bar chart aggregating the missions severities
@@ -129,9 +112,26 @@ export default {
         }
       }
     })
+  },
+  watch: {
+    assetWithVuln: {
+      handler() {
+        this.chart.load({
+          columns: this.chartData,
+          done: () => {
+            this.chart.resize()
+          }
+        })
+      },
+      deep: true
+    }
   }
 }
 </script>
+
+<template>
+  <div :id="chartId" class="vulns-stacked-bar" />
+</template>
 
 <style lang="scss">
 .vulns-stacked-bar .bb-tooltip-container {

@@ -16,17 +16,17 @@ export const scheduleScanService = async (params, accessToken = '') => {
 
   const { id, error } = await scanAPIs.scheduleScanStoreAPI(
     {
-      type,
-      name,
-      hasInternal,
-      startDate,
       endDate,
-      startTime,
       endTime,
+      hasInternal,
+      name,
       probe,
       scanParams,
+      startDate,
+      startTime,
+      type,
     },
-    accessToken
+    accessToken,
   )
   return error ? createServiceError(error) : { id }
 

@@ -9,11 +9,13 @@ export const updateFearedEventsController = async (req, res, next) => {
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

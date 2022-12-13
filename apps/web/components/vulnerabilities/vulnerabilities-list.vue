@@ -1,3 +1,72 @@
+<script>
+import _ from 'lodash'
+import { severityColor } from '~/utils/color.utils'
+
+export default {
+  name: 'VulnerabilitiesList',
+  data() {
+    return {
+      panel: []
+    }
+  },
+  computed: {
+    mergeAffectedAssetsVulnerabilities() {
+      return this.vulnerabilities.map((vuln) => {
+        vuln.mergeAffectedAssets = _.chain(vuln.affectedAssets)
+          .groupBy('id')
+          .map((objs, key) => ({
+            countAffected: objs.length,
+            id: key,
+            name: objs[0].name,
+          }))
+          .value()
+        return vuln
+      })
+    },
+  },
+  watch: {
+    vulnerabilities() {
+      this.panel = []
+
+      // Automatically open the panel if there is only one vulnerability displayed
+      if (this.vulnerabilities.length === 1) {
+        this.panel = 0
+      }
+    }
+  },
+  created() {
+    console.log('VULN', this.vulnerabilities)
+  },
+  methods: {
+    getAffectedAssetUrl(asset, vuln) {
+      const location = {
+        name: 'assets-id',
+        params: {
+          id: asset.id,
+        },
+        query: {
+          search: vuln.name,
+        },
+      }
+
+      return this.localePath(location)
+    },
+    getMaxSeverityColor(assets) {
+      const maxSeverity = [...assets]
+        .sort((a, b) => b.cvssScore - a.cvssScore || 0)
+        .find(asset => asset.severity)?.severity
+      return severityColor(maxSeverity)
+    },
+  },
+  props: {
+    vulnerabilities: {
+      default: () => [],
+      type: Array,
+    },
+  },
+}
+</script>
+
 <template>
   <v-data-iterator
     v-if="mergeAffectedAssetsVulnerabilities.length > 0"
@@ -27,11 +96,11 @@
           <v-expansion-panel-content>
             <div>
               <h4>Description:</h4>
-              <p v-html="vuln.description"></p>
+              <p v-html="vuln.description" />
             </div>
             <div>
               <h4>Remediation:</h4>
-              <p v-html="vuln.remediation"></p>
+              <p v-html="vuln.remediation" />
             </div>
             <div>
               <h4>Assets affected:</h4>
@@ -40,12 +109,12 @@
                   <v-btn text nuxt :to="getAffectedAssetUrl(asset, vuln)">
                     {{ asset.name }}
                   </v-btn>
-                  <v-chip small v-if="asset.countAffected > 1"
-                    >{{ asset.countAffected }} Affected interfaces</v-chip
-                  >
-                  <v-chip small v-else
-                    >{{ asset.countAffected }} Affected interface</v-chip
-                  >
+                  <v-chip v-if="asset.countAffected > 1" small>
+                    {{ asset.countAffected }} Affected interfaces
+                  </v-chip>
+                  <v-chip v-else small>
+                    {{ asset.countAffected }} Affected interface
+                  </v-chip>
                 </li>
               </ul>
             </div>
@@ -55,75 +124,6 @@
     </template>
   </v-data-iterator>
 </template>
-
-<script>
-import _ from 'lodash'
-import { severityColor } from '~/utils/color.utils'
-
-export default {
-  name: 'VulnerabilitiesList',
-  props: {
-    vulnerabilities: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      panel: []
-    }
-  },
-  computed: {
-    mergeAffectedAssetsVulnerabilities() {
-      return this.vulnerabilities.map((vuln) => {
-        vuln.mergeAffectedAssets = _.chain(vuln.affectedAssets)
-          .groupBy('id')
-          .map((objs, key) => ({
-            id: key,
-            name: objs[0].name,
-            countAffected: objs.length
-          }))
-          .value()
-        return vuln
-      })
-    }
-  },
-  watch: {
-    vulnerabilities() {
-      this.panel = []
-
-      // Automatically open the panel if there is only one vulnerability displayed
-      if (this.vulnerabilities.length === 1) {
-        this.panel = 0
-      }
-    }
-  },
-  created() {
-    console.log('VULN', this.vulnerabilities)
-  },
-  methods: {
-    getAffectedAssetUrl(asset, vuln) {
-      const location = {
-        name: 'assets-id',
-        params: {
-          id: asset.id
-        },
-        query: {
-          search: vuln.name
-        }
-      }
-
-      return this.localePath(location)
-    },
-    getMaxSeverityColor(assets) {
-      const maxSeverity = [...assets]
-        .sort((a, b) => b.cvssScore - a.cvssScore || 0)
-        .find((asset) => asset.severity)?.severity
-      return severityColor(maxSeverity)
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .vulnerability-header {

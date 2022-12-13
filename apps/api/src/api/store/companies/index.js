@@ -4,7 +4,7 @@ import { createAPIError } from '@/common/errors/api'
 export const requestSearchCompanies = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -15,17 +15,19 @@ export const requestSearchCompanies = async (
       }),
     }
 
-    if (cid)
+    if (cid) {
       return {
-        company: (await axios.get('/companies/' + cid), reqConfig).data,
+        company: (await axios.get(`/companies/${cid}`), reqConfig).data,
       }
+    }
 
     const queryParams = { search }
     const {
       data: { companies, total },
     } = await axios.get('/companies', { ...reqConfig, params: queryParams })
     return { companies, total }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -34,7 +36,7 @@ export const requestSearchCompanies = async (
 export const requestCreateCompany = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -51,7 +53,8 @@ export const requestCreateCompany = async (
     } = await axios.post('/companies', bodyParams, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -67,7 +70,7 @@ export const requestCreateCompany = async (
 export const requestSearchCompanyLogo = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -80,7 +83,8 @@ export const requestSearchCompanyLogo = async (
       data: { logo },
     } = await axios.get('/company/logo', { ...reqConfig })
     return { logo }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -96,7 +100,7 @@ export const requestSearchCompanyLogo = async (
 export const requestUpdateCompanyLogo = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -107,7 +111,8 @@ export const requestUpdateCompanyLogo = async (
     }
     await axios.patch('/company/logo', params, reqConfig)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -123,7 +128,7 @@ export const requestUpdateCompanyLogo = async (
 export const requestDeleteCompanyLogo = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -134,7 +139,8 @@ export const requestDeleteCompanyLogo = async (
     }
     await axios.delete('/company/logo', reqConfig)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -143,7 +149,7 @@ export const requestDeleteCompanyLogo = async (
 export const requestUpdateCompany = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -154,7 +160,8 @@ export const requestUpdateCompany = async (
     }
     await axios.patch('/company', params, reqConfig)
     return { status: SUCCESS }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -170,7 +177,8 @@ export const requestGetCompanyRisk = async (provider, accessToken = '') => {
     }
     const { data } = await axios.get('/company/risk', { ...reqConfig })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

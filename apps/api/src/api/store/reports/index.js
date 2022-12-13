@@ -1,4 +1,3 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestGenerate = async (provider, accessToken) => {
@@ -11,9 +10,11 @@ export const requestGenerate = async (provider, accessToken) => {
     }
     const result = await axios.get('/reports', reqConfig)
 
-    if (result.error) return result
+    if (result.error)
+      return result
     return result.data.vast
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

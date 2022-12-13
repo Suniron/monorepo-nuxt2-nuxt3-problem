@@ -1,3 +1,40 @@
+<script>
+// Services
+import { deleteAssetService } from '~/services/assets'
+
+export default {
+  name: 'RemoveAssetModal',
+  data() {
+    return {
+      isLoading: false
+    }
+  },
+  methods: {
+    async removeAsset() {
+      try {
+        this.isLoading = true
+        await deleteAssetService(this.$axios, this.asset.id)
+
+        this.$emit('delete')
+        this.$emit('close')
+      }
+      catch (error) {
+        console.error(error)
+      }
+      finally {
+        this.isLoading = false
+      }
+    },
+  },
+  props: {
+    asset: {
+      default: null,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <v-card class="remove-asset-modal">
     <v-card-title>
@@ -8,7 +45,7 @@
         <v-row>
           <v-card-text>
             Do you confirm to remove the asset?
-            <br /><strong>This action cannot be undone!</strong><br /><br />
+            <br><strong>This action cannot be undone!</strong><br><br>
           </v-card-text>
         </v-row>
         <v-row>
@@ -33,41 +70,6 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-// Services
-import { deleteAssetService } from '~/services/assets'
-
-export default {
-  name: 'RemoveAssetModal',
-  props: {
-    asset: {
-      type: Object,
-      default: null
-    }
-  },
-  data() {
-    return {
-      isLoading: false
-    }
-  },
-  methods: {
-    async removeAsset() {
-      try {
-        this.isLoading = true
-        await deleteAssetService(this.$axios, this.asset.id)
-
-        this.$emit('delete')
-        this.$emit('close')
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.isLoading = false
-      }
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .remove-asset-modal {

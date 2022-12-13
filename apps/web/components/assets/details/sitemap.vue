@@ -1,20 +1,9 @@
-<template>
-  <div>
-    <tree
-      id="sitemap"
-      ref="sitemap"
-      :custom-styles="myCustomStyles"
-      :nodes="treeData"
-    />
-  </div>
-</template>
-
 <script>
 import Tree from 'vuejs-tree'
 
 export default {
-  name: 'AssetSiteMap',
   components: { Tree },
+  name: 'AssetSiteMap',
   props: {
     sitemap: {
       type: [Object, Array],
@@ -23,23 +12,20 @@ export default {
   },
   data() {
     return {
-      treeData: {}
+      treeData: {},
     }
   },
   computed: {
     myCustomStyles() {
       return {
         expanded: {
-          class: 'x-folder-icon'
-        }
+          class: 'x-folder-icon',
+        },
       }
-    }
+    },
   },
   created() {
     this.createTreeData(this.sitemap)
-  },
-  mounted() {
-    this.$refs.sitemap.expandNode('root')
   },
   methods: {
     createTreeData(sitemap) {
@@ -57,9 +43,23 @@ export default {
 
       this.treeData = [createTreeNode(root, true)]
     }
+  },
+  mounted() {
+    this.$refs.sitemap.expandNode('root')
   }
 }
 </script>
+
+<template>
+  <div>
+    <Tree
+      id="sitemap"
+      ref="sitemap"
+      :custom-styles="myCustomStyles"
+      :nodes="treeData"
+    />
+  </div>
+</template>
 
 <style lang="scss">
 @import '~/assets/styles/sass/main';

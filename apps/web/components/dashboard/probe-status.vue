@@ -1,9 +1,30 @@
+<script>
+import { searchProbesService } from '~/services/probes'
+
+export default {
+  created() {
+    this.fetchProbes()
+  },
+  data() {
+    return {
+      probes: []
+    }
+  },
+  methods: {
+    async fetchProbes() {
+      this.probes = await searchProbesService(this.$axios)
+    },
+  },
+}
+</script>
+
 <template>
   <v-card class="d-flex flex-column">
-    <v-card-title
-      >Probes Status<v-spacer></v-spacer
-      ><v-icon @click="$emit('close')">mdi-close</v-icon></v-card-title
-    >
+    <v-card-title>
+      Probes Status<v-spacer /><v-icon @click="$emit('close')">
+        mdi-close
+      </v-icon>
+    </v-card-title>
     <v-card-text class="dash-text d-flex overflow-y-auto">
       <v-responsive class="overflow-y-auto">
         <v-row style="margin-top: -15px;">
@@ -28,30 +49,12 @@
             <v-chip
               :color="probe.status.toLowerCase() === 'up' ? 'primary' : 'error'"
               small
-              >{{ probe.status }}</v-chip
             >
+              {{ probe.status }}
+            </v-chip>
           </v-col>
         </v-row>
       </v-responsive>
     </v-card-text>
   </v-card>
 </template>
-<script>
-import { searchProbesService } from '~/services/probes'
-
-export default {
-  data() {
-    return {
-      probes: []
-    }
-  },
-  created() {
-    this.fetchProbes()
-  },
-  methods: {
-    async fetchProbes() {
-      this.probes = await searchProbesService(this.$axios)
-    }
-  }
-}
-</script>

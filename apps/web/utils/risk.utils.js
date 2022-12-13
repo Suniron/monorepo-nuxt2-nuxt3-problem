@@ -11,18 +11,18 @@ export function severityLevelString(score) {
   // [4; 7[: MEDIUM
   // [7; 9[: HIGH
   // [9; 10]: CRITICAL
-  if (score > 0 && score < 4) {
+  if (score > 0 && score < 4)
     return 'low'
-  }
-  if (score >= 4 && score < 7) {
+
+  if (score >= 4 && score < 7)
     return 'medium'
-  }
-  if (score >= 7 && score < 9) {
+
+  if (score >= 7 && score < 9)
     return 'high'
-  }
-  if (score >= 9 && score <= 10) {
+
+  if (score >= 9 && score <= 10)
     return 'critical'
-  }
+
   return 'info'
 }
 
@@ -39,21 +39,20 @@ export function riskScoreColor(score, hasVuln = false, scanned = false) {
   // [7; 9[: HIGH or D
   // [9; 10]: CRITICAL or E
   if (hasVuln || scanned) {
-    if (score === 0) {
+    if (score === 0)
       return severityColor('STATE_OF_THE_ART')
-    }
-    if (score > 0 && score < 4) {
+
+    if (score > 0 && score < 4)
       return severityColor('LOW')
-    }
-    if (score >= 4 && score < 7) {
+
+    if (score >= 4 && score < 7)
       return severityColor('MEDIUM')
-    }
-    if (score >= 7 && score < 9) {
+
+    if (score >= 7 && score < 9)
       return severityColor('HIGH')
-    }
-    if (score >= 9 && score <= 10) {
+
+    if (score >= 9 && score <= 10)
       return severityColor('CRITICAL')
-    }
   }
   return severityColor('CATASTROPHIC')
 }
@@ -87,7 +86,7 @@ export function riskScoreLetter(score, hasVuln = false, scanned = false) {
       return 'E'
     default:
       // TODO: send by Elastic
-      console.error('riskScoreLetter: score out of range: ' + score)
+      console.error(`riskScoreLetter: score out of range: ${score}`)
   }
 }
 
@@ -104,50 +103,50 @@ export function globalRiskScoreDisplays(score) {
   // [10]: CATASTROPHIC or F
   if (score === 0) {
     return {
-      letter: 'A',
       color: severityColor('STATE_OF_THE_ART'),
-      subtitle: 'Good Compliance'
+      letter: 'A',
+      subtitle: 'Good Compliance',
     }
   }
   if (score > 0 && score < 4) {
     return {
-      letter: 'B',
       color: severityColor('LOW'),
-      subtitle: 'Low Risk'
+      letter: 'B',
+      subtitle: 'Low Risk',
     }
   }
   if (score >= 4 && score < 7) {
     return {
-      letter: 'C',
       color: severityColor('MEDIUM'),
-      subtitle: 'Medium Risk'
+      letter: 'C',
+      subtitle: 'Medium Risk',
     }
   }
   if (score >= 7 && score < 9) {
     return {
-      letter: 'D',
       color: severityColor('HIGH'),
-      subtitle: 'High Risk'
+      letter: 'D',
+      subtitle: 'High Risk',
     }
   }
   if (score >= 9 && score < 10) {
     return {
-      letter: 'E',
       color: severityColor('CRITICAL'),
-      subtitle: 'Critical Risk'
+      letter: 'E',
+      subtitle: 'Critical Risk',
     }
   }
   if (score >= 10) {
     return {
-      letter: 'F',
       color: severityColor('CATASTROPHIC'),
-      subtitle: 'Catastrophic Risk'
+      letter: 'F',
+      subtitle: 'Catastrophic Risk',
     }
   }
   return {
-    letter: 'N/A',
     color: severityColor('OPEN'),
-    subtitle: 'No Business Mission Score'
+    letter: 'N/A',
+    subtitle: 'No Business Mission Score',
   }
 }
 
@@ -164,9 +163,8 @@ export function globalRiskScoreDisplays(score) {
  * @returns number
  */
 export const roundScore = (score) => {
-  if (!score || score < 0 || score > 10) {
+  if (!score || score < 0 || score > 10)
     return -1
-  }
 
   return Math.round(score * 1e2) / 1e2
 }

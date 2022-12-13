@@ -2,22 +2,22 @@ import { remediationProjectsAPIs } from '@/api/store'
 
 export const getRemediationProjectsSummaryService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.getRemediationProjectsSummaryService(
     params,
-    accessToken
+    accessToken,
   )
   return data
 }
 
 export const getRemediationProjectsService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.getRemediationProjectsService(
     params,
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -25,12 +25,12 @@ export const getRemediationProjectsService = async (
 export const getRemediationProjectStatusHistoryService = async (
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.getRemediationProjectStatusHistoryService(
     id,
     params,
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -38,23 +38,23 @@ export const getRemediationProjectStatusHistoryService = async (
 export const updateRemediationProjectsService = async (
   id,
   body,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.updateRemediationProjectsService(
     id,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }
 
 export const getRemediationProjectsScopeService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.getRemediationProjectsScopeService(
     params,
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -62,12 +62,12 @@ export const getRemediationProjectsScopeService = async (
 export const updateRemediationProjectScopeService = async (
   params,
   body,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.updateRemediationProjectScopeService(
     params,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -75,12 +75,12 @@ export const updateRemediationProjectScopeService = async (
 export const updateRemediationProjectScopeItemService = async (
   params,
   body,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.updateRemediationProjectScopeItemService(
     params,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }
@@ -88,23 +88,23 @@ export const updateRemediationProjectScopeItemService = async (
 export const getRemediationProjectCommentsService = async (
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.getRemediationProjectCommentsService(
     id,
     params,
-    accessToken
+    accessToken,
   )
   return data
 }
 
 export const createRemediationProjectsService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await remediationProjectsAPIs.createRemediationProjectsService(
     params,
-    accessToken
+    accessToken,
   )
   return data
 }

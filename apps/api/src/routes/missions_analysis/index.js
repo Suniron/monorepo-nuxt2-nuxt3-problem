@@ -1,7 +1,7 @@
 import express from 'express'
 import {
-  searchMissionAnalysis,
   searchBusinessImpact,
+  searchMissionAnalysis,
   updateBusinessImpactIntoUnit,
 } from '@/controllers/missions_analysis'
 
@@ -12,6 +12,6 @@ router.get('/missions_analysis/:id', searchMissionAnalysis)
 router.get('/business_impact', searchBusinessImpact)
 router.patch(
   '/missions_analysis/:fearedEventId/business_impact',
-  updateBusinessImpactIntoUnit
+  updateBusinessImpactIntoUnit,
 )
 export default router

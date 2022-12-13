@@ -28,9 +28,9 @@ export const requestChartsData = async (provider, params, accessToken = '') => {
       }),
     }
 
-    if (cid)
+    if (cid) {
       return (
-        await axios.get('/dashboard/' + cid, {
+        await axios.get(`/dashboard/${cid}`, {
           ...reqConfig,
           params: {
             ...params,
@@ -38,9 +38,11 @@ export const requestChartsData = async (provider, params, accessToken = '') => {
           },
         })
       ).data
+    }
 
     return (await axios.get('/dashboard', { ...reqConfig, params })).data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -56,7 +58,8 @@ export const requestFetchDashboard = async (provider, accessToken = '') => {
     }
     const { data } = await axios.get('/dashview', reqConfig)
     return data.dashboard
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -66,7 +69,7 @@ export const requestUpdateDashboardUser = async (
   provider,
   id,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -75,8 +78,9 @@ export const requestUpdateDashboardUser = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    await axios.post('/dashview/' + id, params, reqConfig)
-  } catch (error) {
+    await axios.post(`/dashview/${id}`, params, reqConfig)
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

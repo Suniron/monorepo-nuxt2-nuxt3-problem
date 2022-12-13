@@ -1,3 +1,124 @@
+<script>
+// @ts-check
+import { mapActions, mapState } from 'vuex'
+import {
+  getCompanyLogo,
+  removeCompanyLogo,
+  setCompanyLogo,
+} from '~/services/companies/index.js'
+import AlertPopup from '~/components/utils/AlertPopup.vue'
+import { extractDataFromImage } from '~/utils/image.utils.js'
+
+const AUTHORIZED_LOGO_FORMATS = ['image/png', 'image/jpeg', 'image/jpg']
+/**
+ * Divide by 1000 to obtain the size in kB
+ */
+const MAX_LOGO_SIZE = 100000
+
+export default {
+  components: { AlertPopup },
+  computed: {
+    ...mapState('company', {
+      companyLogoInStore: 'logo',
+    }),
+  },
+  data() {
+    return {
+      errorMessage: null,
+      newLogo: null,
+    }
+  },
+  methods: {
+    ...mapActions('company', { updateCompanyLogoInStore: 'updateLogo' }),
+    async fetchCompanyLogo() {
+      try {
+        const logo = await getCompanyLogo(this.$axios)
+
+        if (logo === '') {
+          this.updateCompanyLogoInStore(null)
+          return
+        }
+
+        this.updateCompanyLogoInStore(logo)
+      }
+      catch (error) {
+        // TODO: handle request fail
+      }
+    },
+
+    async handleConfirmNewLogo() {
+      if (!this.newLogo)
+        return
+
+      try {
+        await setCompanyLogo(this.$axios, this.newLogo)
+        this.updateCompanyLogoInStore(this.newLogo)
+        this.newLogo = null // to hide preview logo
+      }
+      catch (error) {
+        // TODO: handle request fail
+      }
+    },
+
+    async handleDeleteCurrentLogo() {
+      if (
+        !window.confirm('Are you sure you want to delete your current logo?')
+      )
+        return
+
+      try {
+        await removeCompanyLogo(this.$axios)
+        this.updateCompanyLogoInStore(null)
+      }
+      catch (error) {
+        // TODO: handle request fail
+      }
+    },
+
+    /**
+     * Reset upload state and uploaded file infos
+     */
+    resetUpload() {
+      this.newLogo = null
+    },
+
+    /**
+     * @param {File} file uploaded file
+     */
+    async uploadFile(file) {
+      if (!file) {
+        this.resetUpload()
+        return
+      }
+      if (!AUTHORIZED_LOGO_FORMATS.includes(file.type)) {
+        this.resetUpload()
+        this.errorMessage = 'Only .png, .jpg and .jpeg are authorized'
+        return
+      }
+      if (file.size > MAX_LOGO_SIZE) {
+        this.resetUpload()
+        this.errorMessage = `File size is too heavy: ${Math.floor(
+          file.size / 1000,
+        )}kB. Max: 100kB`
+        return
+      }
+      const imageInfos = await extractDataFromImage(file)
+
+      if (imageInfos.width > 512 || imageInfos.height > 512) {
+        this.resetUpload()
+        this.errorMessage = `File dimensions are too big: ${imageInfos.width}x${imageInfos.height}. Max: 512x512`
+        return
+      }
+
+      this.newLogo = imageInfos.base64
+    },
+  },
+  mounted() {
+    this.fetchCompanyLogo()
+  },
+}
+</script>
+
 <template>
   <v-col>
     <p class="text-caption">
@@ -20,7 +141,7 @@
           <v-img :src="newLogo" alt="preview-company-logo" />
         </v-card-text>
         <v-card-actions class="justify-center">
-          <v-btn @click="handleConfirmNewLogo" color="success" outlined>
+          <v-btn color="success" outlined @click="handleConfirmNewLogo">
             <v-icon>mdi-plus-circle</v-icon>
             <span>Save new logo</span>
           </v-btn>
@@ -48,127 +169,11 @@
     <!-- ERROR MESSAGE POPUP -->
     <AlertPopup
       v-if="errorMessage"
-      @close="errorMessage = ''"
       show
       type="error"
+      @close="errorMessage = ''"
     >
       {{ errorMessage }}
     </AlertPopup>
   </v-col>
 </template>
-
-<script>
-// @ts-check
-import { mapState, mapActions } from 'vuex'
-import {
-  getCompanyLogo,
-  removeCompanyLogo,
-  setCompanyLogo
-} from '~/services/companies/index.js'
-import AlertPopup from '~/components/utils/AlertPopup.vue'
-import { extractDataFromImage } from '~/utils/image.utils.js'
-
-const AUTHORIZED_LOGO_FORMATS = ['image/png', 'image/jpeg', 'image/jpg']
-/**
- * Divide by 1000 to obtain the size in kB
- */
-const MAX_LOGO_SIZE = 100000
-
-export default {
-  components: { AlertPopup },
-  data() {
-    return {
-      newLogo: null,
-      errorMessage: null
-    }
-  },
-  mounted() {
-    this.fetchCompanyLogo()
-  },
-  computed: {
-    ...mapState('company', {
-      companyLogoInStore: 'logo'
-    })
-  },
-  methods: {
-    ...mapActions('company', { updateCompanyLogoInStore: 'updateLogo' }),
-    async fetchCompanyLogo() {
-      try {
-        const logo = await getCompanyLogo(this.$axios)
-
-        if (logo === '') {
-          this.updateCompanyLogoInStore(null)
-          return
-        }
-
-        this.updateCompanyLogoInStore(logo)
-      } catch (error) {
-        // TODO: handle request fail
-      }
-    },
-    /**
-     * @param {File} file uploaded file
-     */
-    async uploadFile(file) {
-      if (!file) {
-        this.resetUpload()
-        return
-      }
-      if (!AUTHORIZED_LOGO_FORMATS.includes(file.type)) {
-        this.resetUpload()
-        this.errorMessage = 'Only .png, .jpg and .jpeg are authorized'
-        return
-      }
-      if (file.size > MAX_LOGO_SIZE) {
-        this.resetUpload()
-        this.errorMessage = `File size is too heavy: ${Math.floor(
-          file.size / 1000
-        )}kB. Max: 100kB`
-        return
-      }
-      const imageInfos = await extractDataFromImage(file)
-
-      if (imageInfos.width > 512 || imageInfos.height > 512) {
-        this.resetUpload()
-        this.errorMessage = `File dimensions are too big: ${imageInfos.width}x${imageInfos.height}. Max: 512x512`
-        return
-      }
-
-      this.newLogo = imageInfos.base64
-    },
-    async handleDeleteCurrentLogo() {
-      if (
-        !window.confirm('Are you sure you want to delete your current logo?')
-      ) {
-        return
-      }
-
-      try {
-        await removeCompanyLogo(this.$axios)
-        this.updateCompanyLogoInStore(null)
-      } catch (error) {
-        // TODO: handle request fail
-      }
-    },
-    async handleConfirmNewLogo() {
-      if (!this.newLogo) {
-        return
-      }
-
-      try {
-        await setCompanyLogo(this.$axios, this.newLogo)
-        this.updateCompanyLogoInStore(this.newLogo)
-        this.newLogo = null // to hide preview logo
-      } catch (error) {
-        // TODO: handle request fail
-      }
-    },
-    /**
-     * Reset upload state and uploaded file infos
-     */
-    resetUpload() {
-      this.newLogo = null
-    }
-  }
-}
-</script>

@@ -8,15 +8,16 @@ export const searchTagsService = async (params, accessToken = '') => {
     {
       id,
     },
-    accessToken
+    accessToken,
   )
 
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
 
-  const formatTag = (tag) => ({
+  const formatTag = tag => ({
+    color: tag.color,
     id: tag.id,
     name: tag.name,
-    color: tag.color,
   })
 
   return tag
@@ -30,15 +31,17 @@ export const searchTagsService = async (params, accessToken = '') => {
 export const createTagService = async (params, accessToken = '') => {
   const { name, color = getRandomColor() } = params
 
-  const { error, id } = await tagsAPIs.createTag({ name, color }, accessToken)
-  if (error) return createServiceError(error)
+  const { error, id } = await tagsAPIs.createTag({ color, name }, accessToken)
+  if (error)
+    return createServiceError(error)
 
   return { id }
 }
 
 export const deleteTagService = async (id, accessToken = '') => {
   const { error, status } = await tagsAPIs.deleteTag(id, accessToken)
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
 
   return { status }
 }

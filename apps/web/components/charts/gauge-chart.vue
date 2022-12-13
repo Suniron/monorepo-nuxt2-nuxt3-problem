@@ -1,61 +1,8 @@
-<template>
-  <div :id="id" class="gauge-chart"></div>
-</template>
-
 <script>
 import 'billboard.js/dist/billboard.css'
 import 'billboard.js/dist/theme/insight.css'
 
 export default {
-  name: 'GaugeChart',
-  props: {
-    /**
-     * ID used to bind the chart element
-     */
-    id: {
-      type: String,
-      required: true
-    },
-    /**
-     * Data that will be rendered in the pie chart.
-     * It should have the following structure:
-     *
-     * {
-     *   data1: {
-     *     value: number, // Value at pie chart
-     *     color: string? // Optional. Hexadecimal color i.e. '#b0c2d1'
-     *   },
-     *   data2: {},
-     *   data3: {}
-     * }
-     */
-    data: {
-      type: Object,
-      required: true,
-      validator(chartData) {
-        // All data points should have a numeric value
-        return Object.values(chartData).every(
-          (dataObj) => !isNaN(dataObj.value)
-        )
-      }
-    },
-    /**
-     * Configuration object that overrides certain default configurations
-     * of this chart
-     */
-    config: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.reloadChartData()
-      }
-    }
-  },
   created() {
     // Non-reactive data
     this.chart = null
@@ -67,6 +14,7 @@ export default {
       green: '#60B044'
     }
   },
+  name: 'GaugeChart',
   mounted() {
     // Import billboard here, so it's only imported in client-side
     const { bb, gauge } = require('billboard.js')
@@ -82,10 +30,7 @@ export default {
     this.chart = bb.generate({
       // Overridable configuration
       legend: {
-        show: false
-      },
-      tooltip: {
-        show: false
+        show: false,
       },
       color: {
         pattern: [
@@ -99,17 +44,21 @@ export default {
           values: [9, 29, 69, 89, 100]
         }
       },
+      tooltip: {
+        show: false
+      },
       ...this.config,
 
+      
+      bindto: `#${this.id}`,
       // Non-overridable configuration
-      data: {
+data: {
         ...data,
         onclick: (data, el) => {
           this.$emit('click', { data, el })
         },
         type: gauge()
-      },
-      bindto: `#${this.id}`
+      }
     })
     this.chart.resize()
   },
@@ -121,9 +70,10 @@ export default {
         if (data.hasOwnProperty(name)) {
           if (!isNaN(data[name].value)) {
             columns.push([name, Number(data[name].value)])
-          } else {
+          }
+ else {
             throw new TypeError(
-              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`
+              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`,
             )
           }
         }
@@ -132,21 +82,21 @@ export default {
       // Colors
       let colors
       // If a color is defined for any of the data points
-      if (Object.values(data).some((config) => !!config.color)) {
+      if (Object.values(data).some(config => !!config.color)) {
         colors = {}
 
         for (const name in data) {
           if (data.hasOwnProperty(name)) {
             const config = data[name]
 
-            if (config.color) {
+            if (config.color) 
               colors[name] = config.color
-            }
+            
           }
         }
       }
 
-      const chartData = { columns, colors }
+      const chartData = { colors, columns }
 
       return chartData
     },
@@ -160,13 +110,68 @@ export default {
           done: () => {
             this.chart.resize()
             self.$emit('loaded')
-          }
+          },
         })
       }
-    }
-  }
+    },
+  },
+  props: {
+
+    /**
+     * Configuration object that overrides certain default configurations
+     * of this chart
+     */
+    config: {
+      default: () => ({}),
+      type: Object,
+    },
+
+    /**
+     * Data that will be rendered in the pie chart.
+     * It should have the following structure:
+     *
+     * {
+     *   data1: {
+     *     value: number, // Value at pie chart
+     *     color: string? // Optional. Hexadecimal color i.e. '#b0c2d1'
+     *   },
+     *   data2: {},
+     *   data3: {}
+     * }
+     */
+    data: {
+      required: true,
+      type: Object,
+      validator(chartData) {
+        // All data points should have a numeric value
+        return Object.values(chartData).every(
+          dataObj => !isNaN(dataObj.value),
+        )
+      },
+    },
+
+    /**
+     * ID used to bind the chart element
+     */
+    id: {
+      required: true,
+      type: String,
+    },
+  },
+  watch: {
+    data: {
+      deep: true,
+      handler() {
+        this.reloadChartData()
+      },
+    },
+  },
 }
 </script>
+
+<template>
+  <div :id="id" class="gauge-chart" />
+</template>
 
 <style lang="scss">
 .gauge-chart {

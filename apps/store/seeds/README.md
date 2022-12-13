@@ -5,7 +5,7 @@
 Seeders will always folow this order:
 
 1. Init seed
-2. Demo seed 
+2. Demo seed
 
 **Warning** order of data injection is _very important_ because sometimes it should be break. For exemple: if user is inserted before his company.
 

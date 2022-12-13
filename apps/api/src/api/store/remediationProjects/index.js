@@ -3,7 +3,7 @@ import { createAPIError } from '@/common/errors/api'
 export const requestGetRemediationProjectsSummary = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -17,7 +17,8 @@ export const requestGetRemediationProjectsSummary = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -26,7 +27,7 @@ export const requestGetRemediationProjectsSummary = async (
 export const requestGetRemediationProjects = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -41,7 +42,8 @@ export const requestGetRemediationProjects = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -51,7 +53,7 @@ export const requestGetRemediationProjectStatusHistory = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -65,10 +67,11 @@ export const requestGetRemediationProjectStatusHistory = async (
       {
         ...reqConfig,
         params,
-      }
+      },
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -78,7 +81,7 @@ export const requestUpdateRemediationProjects = async (
   provider,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   const { id } = query
@@ -92,10 +95,11 @@ export const requestUpdateRemediationProjects = async (
     const { data } = await axios.patch(
       `/remediation-projects/${Number(id)}`,
       body,
-      reqConfig
+      reqConfig,
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -104,7 +108,7 @@ export const requestUpdateRemediationProjects = async (
 export const requestGetRemediationProjectsScope = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -119,7 +123,8 @@ export const requestGetRemediationProjectsScope = async (
       params,
     })
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -129,7 +134,7 @@ export const requestUpdateRemediationProjectScopeService = async (
   provider,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   const { id } = query
@@ -143,10 +148,11 @@ export const requestUpdateRemediationProjectScopeService = async (
     const { data } = await axios.patch(
       `/remediation-projects/${Number(id)}/scope`,
       body,
-      reqConfig
+      reqConfig,
     )
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -156,7 +162,7 @@ export const requestUpdateRemediationProjectScopeItemService = async (
   provider,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   const { id, scopeId } = query
@@ -170,10 +176,11 @@ export const requestUpdateRemediationProjectScopeItemService = async (
     const { data } = await axios.patch(
       `/remediation-projects/${Number(id)}/scope/${Number(scopeId)}`,
       body,
-      reqConfig
+      reqConfig,
     )
     return { data }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -182,7 +189,7 @@ export const requestUpdateRemediationProjectScopeItemService = async (
 export const requestCreateRemediationProjects = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -194,10 +201,11 @@ export const requestCreateRemediationProjects = async (
     const { data } = await axios.post(
       '/remediation-projects',
       params,
-      reqConfig
+      reqConfig,
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -207,7 +215,7 @@ export const requestGetRemediationProjectComments = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -221,10 +229,11 @@ export const requestGetRemediationProjectComments = async (
       {
         ...reqConfig,
         params,
-      }
+      },
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -233,7 +242,7 @@ export const requestGetRemediationProjectComments = async (
 export const requestSearchProjectPrioritiesService = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -248,10 +257,11 @@ export const requestSearchProjectPrioritiesService = async (
       {
         ...reqConfig,
         params,
-      }
+      },
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

@@ -1,4 +1,4 @@
-const getEndpoint = (id) => (id ? '/vulnerabilities/' + id : '/vulnerabilities')
+const getEndpoint = id => (id ? `/vulnerabilities/${id}` : '/vulnerabilities')
 
 /**
  * Search and returns vulnerabilities
@@ -29,19 +29,19 @@ export const searchVulnerabilitiesService = async (axios, params) => {
  */
 export const searchVulnerabilitiesWithTheirAssetsService = async (
   axios,
-  params = {}
+  params = {},
 ) => {
   const formattedParams = {
-    search: params.search,
-    severities: params.severities,
-    likelihoods: params.likelihoods,
     assets_ids: params.assetsIds?.join(','),
     clusters_ids: params.clustersIds?.join(','),
+    likelihoods: params.likelihoods,
     page: params.page,
-    page_size: params.pageSize
+    page_size: params.pageSize,
+    search: params.search,
+    severities: params.severities,
   }
-  const result = await axios.get(getEndpoint() + '/assets', {
-    params: formattedParams
+  const result = await axios.get(`${getEndpoint()}/assets`, {
+    params: formattedParams,
   })
 
   result.data.vulnerabilities.forEach((vulnerability) => {
@@ -59,9 +59,9 @@ export const searchVulnerabilityByIdService = async (axios, id) => {
 
 export const searchVulnerabilityByIdWithItsAssetsService = async (
   axios,
-  id
+  id,
 ) => {
-  const { data } = await axios.get(getEndpoint(id) + '/assets')
+  const { data } = await axios.get(`${getEndpoint(id)}/assets`)
   return data
 }
 

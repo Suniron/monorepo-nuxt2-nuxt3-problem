@@ -1,0 +1,89 @@
+##############
+# BASE STAGE # This stage have common configuration between other stages
+##############
+# Use precise image to reduce side effects by node / alpine upgrades
+FROM node:18-alpine3.16 AS base
+
+ARG NODE_ENV
+ENV NUXT_HOST=0.0.0.0\
+    NUXT_PORT=3000\ 
+    NODE_ENV=$NODE_ENV
+
+# Create and move into /web folder
+WORKDIR /web
+
+
+# Copy package.json and pnpm lock file to /web/ before installation
+COPY ./package.json ./pnpm-lock.yaml /web/
+RUN corepack enable
+
+EXPOSE 3000
+
+###############
+# BUILD STAGE # This stage is used to build application before production (Typescript => Javascript)
+###############
+FROM node:18-alpine3.16 as builder
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /web
+
+RUN yarn global add turbo@1.5.5
+COPY . .
+
+RUN turbo prune --scope=@xrator-operator/web --docker
+
+###################
+# INSTALLER STAGE # This stage is used to build application before production
+###################
+FROM node:18-alpine3.16 as installer
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /web
+
+# First install dependencies (as they change less often)
+COPY .npmrc .gitignore ./
+COPY --from=builder /web/out/json/ .
+COPY --from=builder /web/out/pnpm-*.yaml .
+
+# Activate corepack to use pnpm
+RUN corepack enable
+# RUN pnpm install -r --frozen-lockfile
+# TODO: fix it
+RUN pnpm install --no-frozen-lockfile
+
+COPY --from=builder /web/out/full/ ./
+
+# # Build the project
+RUN pnpm turbo build --filter=@xrator-operator/web...
+
+##############
+# PROD STAGE # This stage is used is production
+##############
+FROM node:18-alpine3.16 as prod
+ARG BACKEND_BASE_URL
+ARG BACKEND_BROWSER_BASE_URL
+
+ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
+    BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL
+
+WORKDIR /web
+ENV NODE_ENV=production
+
+# Copy package.json and pnpm lock file to /web/ before installation
+# COPY ./package.json ./pnpm-*.yaml /web/
+
+RUN corepack enable
+
+# Change user to "expressjs" to improve security
+RUN addgroup --system --gid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
+# USER expressjs
+
+COPY --from=installer --chown=expressjs:expressjs /web/apps/web/ /web/
+RUN pnpm install --frozen-lockfile --prod
+
+CMD ping 8.8.8.8
+
+# CMD pnpm nuxt start

@@ -1,4 +1,4 @@
-const getEndpoint = (id = '') => (id ? 'ips/' + id : 'ips')
+const getEndpoint = (id = '') => (id ? `ips/${id}` : 'ips')
 /**
  *
  * @param {Axios} axios Axios instance to use
@@ -18,9 +18,9 @@ export const updateIpService = async (axios, item) => {
   const { id, address, mask, mac, iface } = item
   const requestBody = {
     address,
-    mask,
+    iface,
     mac,
-    iface
+    mask,
   }
   const response = await axios.patch(getEndpoint(id), requestBody)
   return response
@@ -30,9 +30,9 @@ export const createIpService = async (axios, item) => {
   const { assetId, address, mask, mac, iface } = item
   const requestBody = {
     address,
-    mask,
+    iface,
     mac,
-    iface
+    mask,
   }
   const response = await axios.post(getEndpoint(assetId), requestBody)
   return response

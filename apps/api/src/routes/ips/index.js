@@ -1,11 +1,11 @@
 import express from 'express'
 
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
+  createIpController,
   deleteIpController,
   updateIpController,
-  createIpController,
 } from '@/controllers/ips'
-import { celebrate, Segments, Joi } from 'celebrate'
 const router = express.Router()
 
 const updateValidation = celebrate({
@@ -14,8 +14,8 @@ const updateValidation = celebrate({
   }),
   [Segments.BODY]: Joi.object({
     address: Joi.string().required(),
-    mac: Joi.string().allow(null, '').required(),
     iface: Joi.string().allow(null, '').required(),
+    mac: Joi.string().allow(null, '').required(),
     mask: Joi.string().allow(null, '').required(),
   }),
 })
@@ -26,8 +26,8 @@ const createValidation = celebrate({
   }),
   [Segments.BODY]: Joi.object({
     address: Joi.string().required(),
-    mac: Joi.string().allow(null, '').required(),
     iface: Joi.string().allow(null, '').required(),
+    mac: Joi.string().allow(null, '').required(),
     mask: Joi.string().allow(null, '').required(),
   }),
 })

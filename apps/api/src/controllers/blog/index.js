@@ -1,15 +1,17 @@
 import { throwHTTPError } from '@/common/errors'
 import {
-  fetchPostsService,
   CreateRemediationProjectPostsService,
+  fetchPostsService,
 } from '@/services/blog'
 
 export const fetchPostsConroller = async (req, res, next) => {
   try {
     const data = await fetchPostsService(req.accessToken)
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.status(201).send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -17,7 +19,7 @@ export const fetchPostsConroller = async (req, res, next) => {
 export const CreateRemediationProjectPostsController = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const data = await CreateRemediationProjectPostsService(
@@ -26,11 +28,13 @@ export const CreateRemediationProjectPostsController = async (
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

@@ -3,8 +3,8 @@ import { ProjectPriorityName, ProjectPriorityWeight } from './project'
 import { BaseUser } from './user'
 import { VulnerabilitySeverityName } from './vulnerability'
 
-export type RemediationProjectStatus = 
-  'open'
+export type RemediationProjectStatus =
+  | 'open'
   | 'in_progress'
   | 'to_review'
   | 'completed'
@@ -65,8 +65,8 @@ export interface RemediationProjectScopeItem {
 
 export interface StatusTransition {
   project_status_workflow_id: number
-  transition: 
-    'start'
+  transition:
+    | 'start'
     | 'accept'
     | 'refuse'
     | 'send_for_review'

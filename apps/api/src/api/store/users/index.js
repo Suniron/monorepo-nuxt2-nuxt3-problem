@@ -1,9 +1,9 @@
 import { VALIDATION_ERROR } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
-const getEndpoint = (id = '') => (id ? 'users/' + id : 'users')
+const getEndpoint = (id = '') => (id ? `users/${id}` : 'users')
 
-const getRequestConfig = (accessToken) => ({
+const getRequestConfig = accessToken => ({
   ...(accessToken && {
     headers: { Authorization: `Bearer ${accessToken}` },
   }),
@@ -12,24 +12,26 @@ const getRequestConfig = (accessToken) => ({
 export const requestSearchUsers = async (
   provider,
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
     const reqConfig = getRequestConfig(accessToken)
     const { id } = params
 
-    if (id) return { user: (await axios.get(getEndpoint(id), reqConfig)).data }
+    if (id)
+      return { user: (await axios.get(getEndpoint(id), reqConfig)).data }
 
     const {
       data: { users, total },
     } = await axios.get(getEndpoint(), {
       ...reqConfig,
-      params: params,
+      params,
     })
 
-    return { users, total }
-  } catch (error) {
+    return { total, users }
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -39,7 +41,7 @@ export const createUser = async (provider, params, accessToken = '') => {
   const { axios, logger } = provider
   try {
     const { email, username, password, firstName, lastName, roles } = params
-    const payload = { email, username, password, firstName, lastName, roles }
+    const payload = { email, firstName, lastName, password, roles, username }
     const reqConfig = getRequestConfig(accessToken)
 
     const {
@@ -47,7 +49,8 @@ export const createUser = async (provider, params, accessToken = '') => {
     } = await axios.post(getEndpoint(), payload, reqConfig)
 
     return { id }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -74,27 +77,27 @@ export const requestUpdateUser = async (provider, params, accessToken = '') => {
     }
 
     const payload = {
-      username,
       email,
-      roles,
-      groupIds,
       firstName,
-      lastName,
+      groupIds,
       lastName,
       oldPassword,
       password1,
       password2,
+      roles,
+      username,
     }
     const reqConfig = getRequestConfig(accessToken)
 
     const { data: user } = await axios.patch(
       getEndpoint(id),
       payload,
-      reqConfig
+      reqConfig,
     )
 
     return { user }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -106,7 +109,8 @@ export const requestDeleteUser = async (provider, id, accessToken = '') => {
     const reqConfig = getRequestConfig(accessToken)
     const data = await axios.delete(getEndpoint(id), reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

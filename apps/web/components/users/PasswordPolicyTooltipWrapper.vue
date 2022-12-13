@@ -1,47 +1,9 @@
-<template>
-  <div>
-    <v-menu
-      v-model="show"
-      offset-x
-      left
-      nudge-left="20"
-      open-on-focus
-      class="ma-2"
-    >
-      <template #activator="{ on, attrs }">
-        <div v-on="on" v-bind="attrs" class="password-with-tooltip">
-          <slot />
-        </div>
-      </template>
-      <v-card class="pa-2">
-        <v-card-subtitle>
-          Your password must contain at least:
-        </v-card-subtitle>
-        <v-card-text>
-          <span v-for="check in checks" :key="check.name">
-            <v-icon :color="getIconColor(check.name)">{{
-              getIcon(check.name)
-            }}</v-icon>
-            {{ check.text }}<br />
-          </span>
-        </v-card-text>
-      </v-card>
-    </v-menu>
-  </div>
-</template>
-
 <script>
 /**
  * @typedef {'length'|'digit'|'lowercase'|'uppercase'|'special'} CHECKS_ENUM
  */
 
 export default {
-  props: {
-    password: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
       show: false,
@@ -72,7 +34,21 @@ export default {
       ]
     }
   },
+  props: {
+    password: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
+
+    /**
+     * @returns {string}
+     */
+    checkDigit() {
+      return /[0-9]/.test(this.password)
+    },
+
     /**
      * @returns {string}
      */
@@ -82,27 +58,23 @@ export default {
     /**
      * @returns {string}
      */
-    checkDigit() {
-      return /[0-9]/.test(this.password)
-    },
-    /**
-     * @returns {string}
-     */
     checkLowercase() {
       return /[a-z]/.test(this.password)
     },
+
+    /**
+     * @returns {string}
+     */
+    checkSpecialChar() {
+      return /[^0-9a-zA-Z]/.test(this.password)
+    },
+
     /**
      * @returns {string}
      */
     checkUppercase() {
       return /[A-Z]/.test(this.password)
     },
-    /**
-     * @returns {string}
-     */
-    checkSpecialChar() {
-      return /[^0-9a-zA-Z]/.test(this.password)
-    }
   },
   methods: {
     /**
@@ -140,7 +112,39 @@ export default {
         case 'special':
           return this.checkSpecialChar ? 'green' : 'red'
       }
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div>
+    <v-menu
+      v-model="show"
+      offset-x
+      left
+      nudge-left="20"
+      open-on-focus
+      class="ma-2"
+    >
+      <template #activator="{ on, attrs }">
+        <div v-bind="attrs" class="password-with-tooltip" v-on="on">
+          <slot />
+        </div>
+      </template>
+      <v-card class="pa-2">
+        <v-card-subtitle>
+          Your password must contain at least:
+        </v-card-subtitle>
+        <v-card-text>
+          <span v-for="check in checks" :key="check.name">
+            <v-icon :color="getIconColor(check.name)">{{
+              getIcon(check.name)
+            }}</v-icon>
+            {{ check.text }}<br>
+          </span>
+        </v-card-text>
+      </v-card>
+    </v-menu>
+  </div>
+</template>
