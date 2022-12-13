@@ -1,3 +1,4 @@
+import type { P } from 'pino'
 import pino from 'pino'
 import { LogLayer, LoggerType } from 'loglayer'
 import PinoPretty from 'pino-pretty'
@@ -71,3 +72,5 @@ export const log = new LogLayer({
     name: INSTANCE_NAME,
   },
 })
+
+export type Logger = LogLayer<P.Logger>
