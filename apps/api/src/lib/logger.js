@@ -2,13 +2,13 @@
 import pino from 'pino'
 import { LogLayer, LoggerType } from 'loglayer'
 import PinoPretty from 'pino-pretty'
+import pinosEs from 'pino-elasticsearch'
 import {
-  appVersion,
   ELASTICSEARCH_URL,
   INSTANCE_NAME,
+  appVersion,
   isProd,
 } from '@/config/env'
-import pinosEs from 'pino-elasticsearch'
 
 /**
  * @type {(pino.DestinationStream | pino.StreamEntry)[]}
@@ -23,12 +23,13 @@ const streams = [
 ]
 
 if (ELASTICSEARCH_URL) {
+  // eslint-disable-next-line no-console
   console.log('Log will be sent to Elasticsearch')
   streams.push({
     level: 'trace',
     stream: pinosEs({
-      node: ELASTICSEARCH_URL,
-      index: isProd ? 'operator' : 'dev-operator', // Index is needed to sort logs
+      index: isProd ? 'operator' : 'dev-operator',
+      node: ELASTICSEARCH_URL, // Index is needed to sort logs
     }),
   })
 }
@@ -46,7 +47,7 @@ const p = pino(
       'req.headers.cookie',
     ],
   },
-  pino.multistream(streams)
+  pino.multistream(streams),
 )
 
 export const log = new LogLayer({
@@ -65,10 +66,11 @@ export const log = new LogLayer({
     name: 'api',
     version: appVersion,
   },
+
+  date: new Date().toISOString(),
   // let's also add in some additional details about the server
   env: process.env.NODE_ENV,
   instance: {
     name: INSTANCE_NAME,
   },
-  date: new Date().toISOString(),
 })

@@ -12,15 +12,15 @@ export const createServiceError = (errorName = '', details) => {
     case VALIDATION_ERROR:
     case UNAUTHORIZED:
       return {
-        error: details ? { name: errorName, details } : errorName,
+        error: details ? { details, name: errorName } : errorName,
       }
     case STORE_API_ERROR:
       return {
-        error: details ? { name: SERVICE_ERROR, details } : SERVICE_ERROR,
+        error: details ? { details, name: SERVICE_ERROR } : SERVICE_ERROR,
       }
     default:
       return {
-        error: details ? { name: errorName, details } : errorName,
+        error: details ? { details, name: errorName } : errorName,
       }
   }
 }

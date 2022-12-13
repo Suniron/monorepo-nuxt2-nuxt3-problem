@@ -1,6 +1,6 @@
 export type Severity = {
-  id: number,
-  name: string,
+  id: number
+  name: string
 }
 
 export type BusinessImpactSeverityInfos = {
@@ -64,8 +64,8 @@ export type BusinessMission = {
 }
 
 export type BusinessMissionAnalysis = {
-  id: number,
-  name: string,
-  type: string,
-  units: BusinessUnit[],
+  id: number
+  name: string
+  type: string
+  units: BusinessUnit[]
 }

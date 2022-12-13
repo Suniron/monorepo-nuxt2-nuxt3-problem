@@ -1,3 +1,26 @@
+<script>
+// import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
+import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
+
+export default {
+  components: {
+    // AssetVulnerabilities,
+    AssetDetailsForm,
+  },
+  data() {
+    return {
+      tab: null
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+
 <template>
   <v-col cols="12">
     <v-tabs v-model="tab" show-arrows>
@@ -11,30 +34,8 @@
         <asset-vulnerabilities :asset="asset" />
       </v-tab-item> -->
       <v-tab-item>
-        <asset-details-form :asset="asset" />
+        <AssetDetailsForm :asset="asset" />
       </v-tab-item>
     </v-tabs-items>
   </v-col>
 </template>
-<script>
-// import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
-import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
-
-export default {
-  components: {
-    // AssetVulnerabilities,
-    AssetDetailsForm
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      tab: null
-    }
-  }
-}
-</script>

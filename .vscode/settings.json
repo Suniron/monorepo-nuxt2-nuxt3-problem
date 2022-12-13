@@ -1,0 +1,59 @@
+{
+  "vetur.validation.interpolation": true,
+  "vetur.experimental.templateInterpolationService": true,
+  "vetur.validation.templateProps": true,
+  "vetur.completion.tagCasing": "initial",
+
+  "atlascode.jira.todoIssues.enabled": false,
+  "atlascode.jira.startWorkBranchTemplate.customPrefixes": [
+    "feature/",
+    "bugfix/",
+    "hotfix/"
+  ],
+  "jest.nodeEnv": {
+    "JWT_REFRESH_LIFE_MS": "7776000000"
+  },
+  "jest.disabledWorkspaceFolders": [
+    "apps/api",
+    "apps/web",
+    "apps/store",
+    "apps/db"
+  ],
+  "jest.autoRun": {
+    "watch": false,
+    "onSave": "test-file",
+    "onStartup": ["all-tests"]
+  },
+
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.hg/store/**": true,
+    "**/node_modules/*/**": true
+  },
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "files.autoSave": "onFocusChange",
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.rulers": [80],
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "eslint.alwaysShowStatus": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue",
+    "vue-html"
+  ],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}

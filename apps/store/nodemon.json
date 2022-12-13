@@ -1,4 +1,0 @@
-{
-    "exec": "babel-node --inspect=0.0.0.0:9228 --enable-source-maps src/app.js || exit 1",
-    "ext": "js,json,yml"
-}

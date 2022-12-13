@@ -10,7 +10,8 @@ export const requestFetchCartographies = async (provider, accessToken = '') => {
     }
     const { data } = await axios.get('/cartographies', reqConfig)
     return { cartographies: data.cartographies }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -19,7 +20,7 @@ export const requestFetchCartographies = async (provider, accessToken = '') => {
 export const requestFetchCartographyElements = async (
   provider,
   id,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const { axios, logger } = provider
   try {
@@ -28,9 +29,10 @@ export const requestFetchCartographyElements = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data } = await axios.get('/cartographies/' + id, reqConfig)
+    const { data } = await axios.get(`/cartographies/${id}`, reqConfig)
     return { elements: data.elements }
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -40,7 +42,7 @@ export const requestUpdateCartography = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -49,8 +51,9 @@ export const requestUpdateCartography = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    await axios.patch('/cartographies/' + id, params, reqConfig)
-  } catch (error) {
+    await axios.patch(`/cartographies/${id}`, params, reqConfig)
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -59,7 +62,7 @@ export const requestUpdateCartography = async (
 export const requestCreateCartography = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -70,7 +73,8 @@ export const requestCreateCartography = async (
     }
     const { data } = await axios.post('/cartographies', params, reqConfig)
     return data.id
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -84,8 +88,9 @@ export const requestDeleteCartography = async (provider, id, accessToken) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    await axios.delete('/cartographies/' + id, reqConfig)
-  } catch (error) {
+    await axios.delete(`/cartographies/${id}`, reqConfig)
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -95,7 +100,7 @@ export const requestDeleteCartographyElement = async (
   provider,
   id,
   eid,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -104,8 +109,9 @@ export const requestDeleteCartographyElement = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    await axios.delete('/cartographies/' + id + '/elements/' + eid, reqConfig)
-  } catch (error) {
+    await axios.delete(`/cartographies/${id}/elements/${eid}`, reqConfig)
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -115,7 +121,7 @@ export const requestAddCartographyElement = async (
   provider,
   id,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -125,12 +131,13 @@ export const requestAddCartographyElement = async (
       }),
     }
     const { data } = await axios.post(
-      '/cartographies/' + id + '/elements',
+      `/cartographies/${id}/elements`,
       params,
-      reqConfig
+      reqConfig,
     )
     return data.id
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -141,7 +148,7 @@ export const requestUpdateCartographyElement = async (
   id,
   eid,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -151,11 +158,12 @@ export const requestUpdateCartographyElement = async (
       }),
     }
     await axios.patch(
-      '/cartographies/' + id + '/elements/' + eid,
+      `/cartographies/${id}/elements/${eid}`,
       params,
-      reqConfig
+      reqConfig,
     )
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

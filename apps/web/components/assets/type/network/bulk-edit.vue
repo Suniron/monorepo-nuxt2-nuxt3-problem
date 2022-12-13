@@ -1,54 +1,3 @@
-<template>
-  <v-data-table
-    :headers="tableHeaders"
-    :items="details"
-    v-model="formData.selected"
-    class="elevation-1"
-    disable-pagination
-    hide-default-footer
-    show-select
-    @input="changed"
-  >
-    <template #[`body.prepend`]="{ headers }">
-      <tr>
-        <td v-for="(elt, i) in headers" :key="i">
-          <component
-            :is="elt.component"
-            v-model="formData[elt.vmodel]"
-            :items="eval(elt.items)"
-            :item-value="elt.itemValue"
-            :item-text="elt.itemText"
-            :item-placeholder="elt.itemText"
-            :creatable="elt.creatable"
-            :multiple="elt.multiple"
-            chips
-            deletable-chips
-            @input="changed"
-          ></component>
-        </td>
-      </tr>
-    </template>
-    <template #[`item.groups`]="{ item }">
-      <v-chip
-        v-for="(elt, i) in item.groups"
-        :key="i"
-        style="margin: 2px;"
-        small
-        >{{ elt.name }}</v-chip
-      >
-    </template>
-    <template #[`item.tags`]="{ item }">
-      <v-chip
-        v-for="(elt, i) in item.tags"
-        :key="i"
-        style="margin: 2px;"
-        small
-        :color="elt.color"
-        >{{ elt.name }}</v-chip
-      >
-    </template>
-  </v-data-table>
-</template>
 <script>
 /* eslint no-eval: 0 */
 import { VTextField } from 'vuetify/lib'
@@ -56,21 +5,9 @@ import TagsMultiselect from '~/components/controls/tags-multiselect.vue'
 import GroupsMultiselect from '~/components/controls/groups-multiselect'
 export default {
   components: {
-    TagsMultiselect,
     GroupsMultiselect,
-    VTextField
-  },
-  props: {
-    asset: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    details: {
-      type: Array,
-      required: true
-    }
+    TagsMultiselect,
+    VTextField,
   },
   data() {
     return {
@@ -145,14 +82,80 @@ export default {
       assetsRelation: []
     }
   },
+  props: {
+    asset: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    details: {
+      type: Array,
+      required: true
+    }
+  },
   created() {},
   methods: {
+    changed() {
+      this.$emit('change', this.formData)
+    },
     eval(str) {
       return eval(str)
     },
-    changed() {
-      this.$emit('change', this.formData)
-    }
-  }
+  },
 }
 </script>
+
+<template>
+  <v-data-table
+    v-model="formData.selected"
+    :headers="tableHeaders"
+    :items="details"
+    class="elevation-1"
+    disable-pagination
+    hide-default-footer
+    show-select
+    @input="changed"
+  >
+    <template #[`body.prepend`]="{ headers }">
+      <tr>
+        <td v-for="(elt, i) in headers" :key="i">
+          <component
+            :is="elt.component"
+            v-model="formData[elt.vmodel]"
+            :items="eval(elt.items)"
+            :item-value="elt.itemValue"
+            :item-text="elt.itemText"
+            :item-placeholder="elt.itemText"
+            :creatable="elt.creatable"
+            :multiple="elt.multiple"
+            chips
+            deletable-chips
+            @input="changed"
+          />
+        </td>
+      </tr>
+    </template>
+    <template #[`item.groups`]="{ item }">
+      <v-chip
+        v-for="(elt, i) in item.groups"
+        :key="i"
+        style="margin: 2px;"
+        small
+      >
+        {{ elt.name }}
+      </v-chip>
+    </template>
+    <template #[`item.tags`]="{ item }">
+      <v-chip
+        v-for="(elt, i) in item.tags"
+        :key="i"
+        style="margin: 2px;"
+        small
+        :color="elt.color"
+      >
+        {{ elt.name }}
+      </v-chip>
+    </template>
+  </v-data-table>
+</template>

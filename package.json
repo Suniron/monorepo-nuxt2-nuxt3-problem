@@ -1,6 +1,6 @@
 {
   "name": "xrator-operator",
-  "version": "0.0.0",
+  "version": "1.13.0",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,14 +8,22 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:docker": "docker-compose -f docker-compose.prod.yml build",
+    "clean": "turbo run clean",
     "dev": "turbo run dev --parallel",
     "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
     "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
     "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
+    "format": "prettier --write \"**/*.{ts,md}\"",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "prisma:generate": "prisma generate",
+    "start": "turbo run start",
+    "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
+    "start:docker:db": "docker compose -f docker-compose.dev.yml up -d xrator_db",
+    "test": "turbo run test"
   },
   "devDependencies": {
+    "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
     "turbo": "latest"
@@ -23,6 +31,8 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
-  "packageManager": "pnpm@7.14.2"
+  "packageManager": "pnpm@7.14.2",
+  "prisma": {
+    "schema": "apps/store/prisma/schema.prisma"
+  }
 }

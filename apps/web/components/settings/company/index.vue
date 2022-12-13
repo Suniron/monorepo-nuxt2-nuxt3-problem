@@ -1,3 +1,12 @@
+<script>
+// @ts-check
+import CompanyLogoPicker from './CompanyLogoPicker.vue'
+import CompanyDomainPicker from './CompanyDomainPicker.vue'
+export default {
+  components: { CompanyDomainPicker, CompanyLogoPicker },
+}
+</script>
+
 <template>
   <v-container>
     <h4>
@@ -19,12 +28,3 @@
     <CompanyLogoPicker />
   </v-container>
 </template>
-
-<script>
-// @ts-check
-import CompanyLogoPicker from './CompanyLogoPicker.vue'
-import CompanyDomainPicker from './CompanyDomainPicker.vue'
-export default {
-  components: { CompanyLogoPicker, CompanyDomainPicker }
-}
-</script>

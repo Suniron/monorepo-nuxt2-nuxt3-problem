@@ -1,3 +1,93 @@
+<script>
+// Service
+import CreateEditTagModal from './create-edit-tags-modal.vue'
+import { deleteTagService /* updateTagService */ } from '~/services/tags'
+import DeleteModal from '~/components/settings/delete-modal.vue'
+import { searchAssetsService } from '~/services/assets'
+export default {
+  name: 'TagsList',
+  components: { CreateEditTagModal, DeleteModal },
+  data() {
+    return {
+      assetsWithTags: [],
+      headers: [
+        {
+          text: 'Name',
+          value: 'name',
+          width: '30%',
+          sortable: false
+        },
+        {
+          text: 'Assets count',
+          value: 'assets',
+          sortable: false
+        },
+        {
+          text: 'Edit',
+          value: 'edit',
+          class: 'edit-column',
+          width: '10%',
+          sortable: false
+        }
+      ],
+      isTagsLoading: false,
+    }
+  },
+  props: {
+    tags: {
+      type: Array,
+      default: () => []
+    }
+  },
+  computed: {
+    /**
+     * @returns {Array} - Array of tags with assets count
+     */
+    tagsWithAssets() {
+      return this.tags.map(tag => ({
+        ...tag,
+        assets: this.assetsWithTags.filter(asset =>
+          asset.tags.some(assetTag => assetTag.id === tag.id),
+        ),
+      }))
+    },
+  },
+  async mounted() {
+    const assets = (
+      await searchAssetsService(this.$axios, {
+        tagIds: this.tags.map((tag) => tag.id)
+      })
+    ).assets
+    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
+  },
+  methods: {
+    // async changeTagColor(tagId, color) {
+    //   try {
+    //     this.isTagsLoading = true
+
+    //     await updateTagService(this.$axios, tagId, {
+    //       color
+    //     })
+
+    //     this.$emit('update')
+    //   } catch (error) {
+    //     console.error(error)
+    //   } finally {
+    //     this.isTagsLoading = false
+    //   }
+    // },
+    async removeTag(tag) {
+      const res = await deleteTagService(this.$axios, tag.id)
+      if (res.status >= 300) {
+        this.error = 'An error has occured'
+      } else {
+        this.$emit('update')
+      }
+    }
+  }
+}
+</script>
+
 <template>
   <v-data-table
     :headers="headers"
@@ -20,12 +110,12 @@
     <template #[`item.edit`]="{ item: itemEdit }">
       <v-dialog width="500" persistent :retain-focus="false">
         <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-pencil</v-icon
-          >
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-pencil
+          </v-icon>
         </template>
         <template #default="dialog">
-          <create-edit-tag-modal
+          <CreateEditTagModal
             :tag="itemEdit"
             :tags="tags"
             @created="$emit('update')"
@@ -35,12 +125,12 @@
       </v-dialog>
       <v-dialog width="500" persistent :retain-focus="false">
         <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-delete</v-icon
-          >
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-delete
+          </v-icon>
         </template>
         <template #default="dialog">
-          <delete-modal
+          <DeleteModal
             style="background-color:white"
             :item="itemEdit"
             whatis-deleting="Tag"
@@ -52,96 +142,6 @@
     </template>
   </v-data-table>
 </template>
-
-<script>
-// Service
-import CreateEditTagModal from './create-edit-tags-modal.vue'
-import { updateTagService, deleteTagService } from '~/services/tags'
-import DeleteModal from '~/components/settings/delete-modal.vue'
-import { searchAssetsService } from '~/services/assets'
-export default {
-  name: 'TagsList',
-  components: { CreateEditTagModal, DeleteModal },
-  props: {
-    tags: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      headers: [
-        {
-          text: 'Name',
-          value: 'name',
-          width: '30%',
-          sortable: false
-        },
-        {
-          text: 'Assets count',
-          value: 'assets',
-          sortable: false
-        },
-        {
-          text: 'Edit',
-          value: 'edit',
-          class: 'edit-column',
-          width: '10%',
-          sortable: false
-        }
-      ],
-      assetsWithTags: [],
-      isTagsLoading: false
-    }
-  },
-  computed: {
-    /**
-     * @returns {Array} - Array of tags with assets count
-     */
-    tagsWithAssets() {
-      return this.tags.map((tag) => ({
-        ...tag,
-        assets: this.assetsWithTags.filter((asset) =>
-          asset.tags.some((assetTag) => assetTag.id === tag.id)
-        )
-      }))
-    }
-  },
-  async mounted() {
-    const assets = (
-      await searchAssetsService(this.$axios, {
-        tagIds: this.tags.map((tag) => tag.id)
-      })
-    ).assets
-    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
-  },
-  methods: {
-    async changeTagColor(tagId, color) {
-      try {
-        this.isTagsLoading = true
-
-        await updateTagService(this.$axios, tagId, {
-          color
-        })
-
-        this.$emit('update')
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.isTagsLoading = false
-      }
-    },
-    async removeTag(tag) {
-      const res = await deleteTagService(this.$axios, tag.id)
-      if (res.status >= 300) {
-        this.error = 'An error has occured'
-      } else {
-        this.$emit('update')
-      }
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .tags-list-table {

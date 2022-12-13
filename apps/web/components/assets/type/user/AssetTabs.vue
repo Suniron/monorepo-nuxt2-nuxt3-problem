@@ -1,3 +1,28 @@
+<script>
+import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
+import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
+import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
+
+export default {
+  components: {
+    AssetDetailsForm,
+    AssetRelationsList,
+    AssetVulnerabilities,
+  },
+  data() {
+    return {
+      tab: null
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+
 <template>
   <v-col cols="12">
     <v-tabs v-model="tab" show-arrows>
@@ -11,10 +36,10 @@
     </v-tabs>
     <v-tabs-items v-model="tab" class="px-5">
       <v-tab-item>
-        <asset-vulnerabilities :asset="asset" />
+        <AssetVulnerabilities :asset="asset" />
       </v-tab-item>
       <v-tab-item>
-        <asset-details-form :asset="asset" />
+        <AssetDetailsForm :asset="asset" />
       </v-tab-item>
       <v-tab-item>
         <AssetRelationsList :asset="asset" parents :types="['USERGROUP']" />
@@ -36,27 +61,3 @@
     </v-tabs-items>
   </v-col>
 </template>
-<script>
-import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
-import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
-import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
-
-export default {
-  components: {
-    AssetVulnerabilities,
-    AssetDetailsForm,
-    AssetRelationsList
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      tab: null
-    }
-  }
-}
-</script>

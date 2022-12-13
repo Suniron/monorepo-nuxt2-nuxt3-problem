@@ -7,7 +7,7 @@ export const requestPassThroughService = async (
   method,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   /**
    * @type {{
@@ -23,17 +23,19 @@ export const requestPassThroughService = async (
       }),
     }
     const { error, status, data } = await axios.request({
-      url: axios.defaults.baseURL + path, // Using the concatenation syntax to preserve arguments autocompletion
+      // Using the concatenation syntax to preserve arguments autocompletion
       method,
+      url: axios.defaults.baseURL + path,
       ...reqConfig,
-      params: query,
       data: body,
+      params: query,
     })
-    if (error) {
+    if (error)
       throwHTTPError(error)
-    }
-    return { status, data }
-  } catch (error) {
+
+    return { data, status }
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

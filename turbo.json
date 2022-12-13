@@ -3,13 +3,24 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".nuxt/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false
     },
     "lint": {
       "outputs": []
     },
-    "dev": {
-      "cache": false
+    "lint:fix": {
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
     }
-  }
+  },
+  "globalEnv": ["NODE_ENV", "POSTGRES_URI", "INSTANCE_NAME", "ELASTICSEARCH_URL", "BACKEND_BASE_URL", "BACKEND_BROWSER_BASE_URL"]
 }

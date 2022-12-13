@@ -1,3 +1,18 @@
+<script>
+import AssetRiskScore from '../../details/AssetRiskScore.vue'
+
+export default {
+  components: { AssetRiskScore },
+  name: 'UserGroupProfile',
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <v-row>
     <v-col cols="12" lg="6">
@@ -16,18 +31,3 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-import AssetRiskScore from '../../details/AssetRiskScore.vue'
-
-export default {
-  name: 'UserGroupProfile',
-  components: { AssetRiskScore },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  }
-}
-</script>

@@ -1,3 +1,41 @@
+<script>
+import AssetRelationModal from '~/components/assets/AssetRelationModal.vue'
+export default {
+  components: {
+    AssetRelationModal,
+  },
+  data() {
+    return {
+      isSaveModalOpen: false
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    },
+    relationWanted: {
+      type: String,
+      required: true
+    },
+    allowedTypes: {
+      type: Array,
+      required: true
+    },
+    relationType: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    closeModalAndEmitSaved() {
+      this.isSaveModalOpen = false
+      this.$emit('saved')
+    },
+  },
+}
+</script>
+
 <template>
   <v-card min-height="150px" height="100%">
     <v-dialog
@@ -5,11 +43,10 @@
       style="background-color: white;"
       width="1000"
     >
-      <template #activator="{on, attrs}">
+      <template #activator="{ on, attrs }">
         <v-btn
           class="d-flex flex-col"
           height="100%"
-          v-on="on"
           plain
           tile
           block
@@ -17,6 +54,7 @@
           small
           icon
           v-bind="attrs"
+          v-on="on"
         >
           <v-icon x-large class="activator-icon" color="green lighten-2">
             mdi-plus
@@ -37,43 +75,6 @@
     </v-dialog>
   </v-card>
 </template>
-<script>
-import AssetRelationModal from '~/components/assets/AssetRelationModal.vue'
-export default {
-  components: {
-    AssetRelationModal
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    relationWanted: {
-      type: String,
-      required: true
-    },
-    allowedTypes: {
-      type: Array,
-      required: true
-    },
-    relationType: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isSaveModalOpen: false
-    }
-  },
-  methods: {
-    closeModalAndEmitSaved() {
-      this.isSaveModalOpen = false
-      this.$emit('saved')
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .activator {

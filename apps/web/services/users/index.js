@@ -1,5 +1,5 @@
 // @ts-check
-const getEndpoint = (id = '') => (id ? 'users/' + id : 'users')
+const getEndpoint = (id = '') => (id ? `users/${id}` : 'users')
 
 /**
  *
@@ -14,17 +14,18 @@ export const searchUsersService = async (axios, params = {}) => {
 
 export const createUserService = async (axios, params = {}) => {
   const bodyParams = {
+    email: params.email,
     firstName: params.firstName,
     lastName: params.lastName,
-    username: params.username,
-    email: params.email,
     password: params.password,
-    roles: [params.role]
+    roles: [params.role],
+    username: params.username,
   }
   try {
     const { data } = await axios.post(getEndpoint(), bodyParams)
     return data
-  } catch (e) {
+  }
+  catch (e) {
     return false
   }
 }
@@ -40,21 +41,22 @@ export const updateUserService = async (axios, params) => {
     lastName,
     oldPassword,
     password1,
-    password2
+    password2,
   } = params
-  if (!id) throw new Error('Param "id" required to update user')
+  if (!id)
+    throw new Error('Param "id" required to update user')
   // if (!groups && !roles) throw new Error('There is nothing to update')
 
   const bodyPayload = {
-    roles,
-    username,
     email,
-    groupIds: Array.isArray(groups) ? groups.map((g) => g.id) : undefined,
     firstName,
+    groupIds: Array.isArray(groups) ? groups.map(g => g.id) : undefined,
     lastName,
     oldPassword,
     password1,
-    password2
+    password2,
+    roles,
+    username,
   }
   const { data } = await axios.patch(getEndpoint(id), bodyPayload)
 

@@ -1,3 +1,116 @@
+<script>
+import _ from 'lodash'
+import VulnsStackedBars from '../VulnsStackedBars.vue'
+import { severityLevelString } from '~/utils/risk.utils'
+
+export default {
+  components: { VulnsStackedBars },
+  data() {
+    return {
+      search: '',
+      headers: [
+        {
+          text: 'Asset name',
+          width: '20%',
+          value: 'asset_name'
+        },
+        {
+          text: 'Vulnerabilitiy',
+          width: '80%',
+          sort: this.sortVulns,
+          value: 'vulnerabilities'
+        }
+      ]
+    }
+  },
+  props: {
+    assetVulnerabilities: {
+      type: Array,
+      required: true
+    }
+  },
+  computed: {
+
+    /**
+     * @returns {Array}
+     */
+    assetsVulnsGroupedBySeverity() {
+      return this.items.map(item => ({
+        ...item,
+        vulnerabilities: _.countBy(item.vulnerabilities, 'severity'),
+      }))
+    },
+
+    /**
+     * @returns {Array}
+     */
+    items() {
+      return this.assetVulnerabilities.reduce((acc, av) => {
+        const index = acc.findIndex(a => a.asset_id === av.asset_id)
+        if (acc[index]) {
+          acc[index].vulnerabilities.push({
+            severity: av.severity || severityLevelString(av.cvss_score),
+            vulnerability_id: av.vulnerability_id,
+          })
+        }
+        else {
+          acc.push({
+            asset_id: av.asset_id,
+            asset_name: av.asset_name,
+            vulnerabilities: [
+              {
+                severity: av.severity || severityLevelString(av.cvss_score),
+                vulnerability_id: av.vulnerability_id,
+              },
+            ],
+          })
+        }
+        return acc
+      }, [])
+    },
+    /**
+     * @returns {Number}
+     */
+    maxVulnOnSingleAsset() {
+      return this.items.reduce(
+        (acc, asset) =>
+          Math.max(
+            acc,
+            asset.vulnerabilities.filter(vuln => vuln.severity !== 'info')
+              .length,
+          ),
+        0,
+      )
+    },
+  },
+  methods: {
+
+    goToAsset(item) {
+      this.$router.push(
+        this.localePath({
+          name: 'assets-id',
+          params: { id: item.asset_id },
+        }),
+      )
+    },
+    /**
+     * @param {{critical: number, high: number, medium: number, low: number, info: number}} a
+     * @param {{critical: number, high: number, medium: number, low: number, info: number}} b
+     */
+    sortVulns(a, b) {
+      // A bit verbose, but useful to ignore the other unwanted severities like "info"
+      return (
+        (a.critical ?? 0)
+        + (a.high ?? 0)
+        + (a.medium ?? 0)
+        + (a.low ?? 0)
+        - ((b.critical ?? 0) + (b.high ?? 0) + (b.medium ?? 0) + (b.low ?? 0))
+      )
+    },
+  },
+}
+</script>
+
 <template>
   <v-container>
     <v-row>
@@ -20,8 +133,8 @@
       sort-desc
       :items-per-page="5"
       :item-class="() => 'scan-asset-row'"
-      @click:row="goToAsset"
       class="elevation-1 scan-assets-table"
+      @click:row="goToAsset"
     >
       <template #[`item.vulnerabilities`]="{ item }">
         <v-row @click.stop>
@@ -35,115 +148,6 @@
     </v-data-table>
   </v-container>
 </template>
-
-<script>
-import _ from 'lodash'
-import VulnsStackedBars from '../VulnsStackedBars.vue'
-import { severityLevelString } from '~/utils/risk.utils'
-
-export default {
-  components: { VulnsStackedBars },
-  props: {
-    assetVulnerabilities: {
-      type: Array,
-      required: true
-    }
-  },
-  data() {
-    return {
-      search: '',
-      headers: [
-        {
-          text: 'Asset name',
-          width: '20%',
-          value: 'asset_name'
-        },
-        {
-          text: 'Vulnerabilitiy',
-          width: '80%',
-          sort: this.sortVulns,
-          value: 'vulnerabilities'
-        }
-      ]
-    }
-  },
-  computed: {
-    /**
-     * @returns {Array}
-     */
-    items() {
-      return this.assetVulnerabilities.reduce((acc, av) => {
-        const index = acc.findIndex((a) => a.asset_id === av.asset_id)
-        if (acc[index]) {
-          acc[index].vulnerabilities.push({
-            vulnerability_id: av.vulnerability_id,
-            severity: av.severity || severityLevelString(av.cvss_score)
-          })
-        } else {
-          acc.push({
-            asset_id: av.asset_id,
-            asset_name: av.asset_name,
-            vulnerabilities: [
-              {
-                vulnerability_id: av.vulnerability_id,
-                severity: av.severity || severityLevelString(av.cvss_score)
-              }
-            ]
-          })
-        }
-        return acc
-      }, [])
-    },
-    /**
-     * @returns {Array}
-     */
-    assetsVulnsGroupedBySeverity() {
-      return this.items.map((item) => ({
-        ...item,
-        vulnerabilities: _.countBy(item.vulnerabilities, 'severity')
-      }))
-    },
-    /**
-     * @returns {Number}
-     */
-    maxVulnOnSingleAsset() {
-      return this.items.reduce(
-        (acc, asset) =>
-          Math.max(
-            acc,
-            asset.vulnerabilities.filter((vuln) => vuln.severity !== 'info')
-              .length
-          ),
-        0
-      )
-    }
-  },
-  methods: {
-    /**
-     * @param {{critical: number, high: number, medium: number, low: number, info: number}} a
-     * @param {{critical: number, high: number, medium: number, low: number, info: number}} b
-     */
-    sortVulns(a, b) {
-      // A bit verbose, but useful to ignore the other unwanted severities like "info"
-      return (
-        (a.critical ?? 0) +
-        (a.high ?? 0) +
-        (a.medium ?? 0) +
-        (a.low ?? 0) -
-        ((b.critical ?? 0) + (b.high ?? 0) + (b.medium ?? 0) + (b.low ?? 0))
-      )
-    },
-    goToAsset(item) {
-      this.$router.push(
-        this.localePath({
-          name: 'assets-id',
-          params: { id: item.asset_id }
-        })
-      )
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .scan-assets-table {

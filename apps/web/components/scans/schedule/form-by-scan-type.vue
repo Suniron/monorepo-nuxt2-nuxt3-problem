@@ -1,74 +1,3 @@
-<template>
-  <v-container class="pa-0">
-    <probes-picker
-      v-if="
-        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
-          scanTypes.includes(el)
-        )
-      "
-      :rules="formRules.probes"
-      @validateProbe="validateProbe"
-    />
-    <assets-picker
-      v-if="
-        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
-          scanTypes.includes(el)
-        )
-      "
-      :scan-type="scanTypes"
-      asset-type="server"
-      key="server"
-      allow-user-input
-      :rules="formRules.assets"
-      @validateAssets="validateAssets"
-    />
-    <baselines-picker
-      v-if="scanTypes.includes('nessus_hardening')"
-      :rules="formRules.baselines"
-      @validateBaselines="validateBaselines"
-    />
-    <phishing-scenarios-picker
-      v-if="scanTypes.includes('phish')"
-      :rules="formRules.scenario"
-      @validateScenarios="validateScenarios"
-    />
-    <assets-picker
-      v-if="scanTypes.includes('phish')"
-      asset-type="user"
-      :scan-type="scanTypes"
-      key="user"
-      :rules="formRules.assets"
-      @validateUserAssets="validateUserAssets"
-    />
-    <credential-item
-      v-for="cred of formData.credentials"
-      :key="cred.id"
-      :data="cred"
-      :rules="formRules.credentials"
-      @change="updateCredential"
-      @delete="deleteCredential(cred)"
-      class="mt-4"
-    />
-    <div
-      v-if="
-        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
-          scanTypes.includes(el)
-        )
-      "
-      class="mt-4"
-    >
-      <button
-        @click="addCredential"
-        :disabled="formData.credentials.length >= 5"
-        class="add-credential-btn"
-      >
-        + Add Credential (You must select a scan type that support credentials
-        first)
-      </button>
-    </div>
-  </v-container>
-</template>
-
 <script>
 import { uuid } from 'vue-uuid'
 import _ from 'lodash'
@@ -79,7 +8,6 @@ import phishingScenariosPicker from './form-components/phishing-scenarios-picker
 import credentialItem from './form-components/schedule-credential-item.vue'
 
 export default {
-  name: 'FormByScanType',
   components: {
     probesPicker,
     assetsPicker,
@@ -87,6 +15,7 @@ export default {
     phishingScenariosPicker,
     credentialItem
   },
+  name: 'FormByScanType',
   props: {
     scanTypes: {
       type: Array,
@@ -107,14 +36,6 @@ export default {
   },
   data() {
     return {
-      formData: {
-        assets: [],
-        userAssets: [],
-        probe: null,
-        baselines: [],
-        scenario: null,
-        credentials: []
-      },
       creds: {
         nmap: [],
         nessus: [
@@ -139,6 +60,14 @@ export default {
           { text: 'Active Directory', value: 'bloodhound', required: true }
         ],
         edr: [{ text: 'Oauth2 (365)', value: 'edr', required: true }]
+      },
+      formData: {
+        assets: [],
+        userAssets: [],
+        probe: null,
+        baselines: [],
+        scenario: null,
+        credentials: []
       }
     }
   },
@@ -156,56 +85,42 @@ export default {
       // Add default rules in case they are not defined in the props
       return {
         ...{
-          probes: [],
           assets: [],
           baselines: [],
+          credentials: [],
+          probes: [],
           scenario: null,
-          credentials: []
         },
-        ...this.rules
+        ...this.rules,
       }
-    }
+    },
   },
   methods: {
-    validateAssets(assets) {
-      this.$emit('updateFormData', { assets })
-    },
-    validateUserAssets(userAssets) {
-      this.$emit('updateFormData', { userAssets })
-    },
-    validateProbe(probe) {
-      this.$emit('updateFormData', { probe })
-    },
-    validateBaselines(baselines) {
-      this.$emit('updateFormData', { baselines })
-    },
-    validateScenarios(scenario) {
-      this.$emit('updateFormData', { scenario })
+    addCredential() {
+      const cred = this.createCredential()
+      if (cred.authTypes.length > 0)
+        this.formData.credentials.push(cred)
     },
     createCredential() {
       return {
-        id: uuid.v4(),
-        type: null,
         authTypes: this.scanTypes.reduce(
           (arr, scanType) =>
             arr.concat(
               this.creds[scanType]
                 ? this.creds[scanType].filter(
-                    (itm) => !arr.some((it) => it.value === itm.value)
-                  )
-                : []
+                  itm => !arr.some(it => it.value === itm.value),
+                )
+                : [],
             ),
-          []
-        )
+          [],
+        ),
+        id: uuid.v4(),
+        type: null,
       }
-    },
-    addCredential() {
-      const cred = this.createCredential()
-      if (cred.authTypes.length > 0) this.formData.credentials.push(cred)
     },
     deleteCredential(credential) {
       const idx = this.formData.credentials.findIndex(
-        (cred) => cred.id === credential.id
+        cred => cred.id === credential.id,
       )
 
       if (idx >= 0) {
@@ -217,16 +132,102 @@ export default {
     },
     updateCredential(credential) {
       const credentialToUpdateIdx = this.formData.credentials.findIndex(
-        (cred) => cred.id === credential.id
+        cred => cred.id === credential.id,
       )
 
       if (credentialToUpdateIdx >= 0) {
         this.formData.credentials[credentialToUpdateIdx] = _.cloneDeep(
-          credential
+          credential,
         )
       }
       this.$emit('updateFormData', { credentials: this.formData.credentials })
-    }
-  }
+    },
+    validateAssets(assets) {
+      this.$emit('updateFormData', { assets })
+    },
+    validateBaselines(baselines) {
+      this.$emit('updateFormData', { baselines })
+    },
+    validateProbe(probe) {
+      this.$emit('updateFormData', { probe })
+    },
+    validateScenarios(scenario) {
+      this.$emit('updateFormData', { scenario })
+    },
+    validateUserAssets(userAssets) {
+      this.$emit('updateFormData', { userAssets })
+    },
+  },
 }
 </script>
+
+<template>
+  <v-container class="pa-0">
+    <probes-picker
+      v-if="
+        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
+          scanTypes.includes(el),
+        )
+      "
+      :rules="formRules.probes"
+      @validateProbe="validateProbe"
+    />
+    <assets-picker
+      v-if="
+        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
+          scanTypes.includes(el),
+        )
+      "
+      key="server"
+      :scan-type="scanTypes"
+      asset-type="server"
+      allow-user-input
+      :rules="formRules.assets"
+      @validateAssets="validateAssets"
+    />
+    <baselines-picker
+      v-if="scanTypes.includes('nessus_hardening')"
+      :rules="formRules.baselines"
+      @validateBaselines="validateBaselines"
+    />
+    <phishing-scenarios-picker
+      v-if="scanTypes.includes('phish')"
+      :rules="formRules.scenario"
+      @validateScenarios="validateScenarios"
+    />
+    <assets-picker
+      v-if="scanTypes.includes('phish')"
+      key="user"
+      asset-type="user"
+      :scan-type="scanTypes"
+      :rules="formRules.assets"
+      @validateUserAssets="validateUserAssets"
+    />
+    <credential-item
+      v-for="cred of formData.credentials"
+      :key="cred.id"
+      :data="cred"
+      :rules="formRules.credentials"
+      class="mt-4"
+      @change="updateCredential"
+      @delete="deleteCredential(cred)"
+    />
+    <div
+      v-if="
+        ['nmap', 'nessus', 'nessus_hardening'].some((el) =>
+          scanTypes.includes(el),
+        )
+      "
+      class="mt-4"
+    >
+      <button
+        :disabled="formData.credentials.length >= 5"
+        class="add-credential-btn"
+        @click="addCredential"
+      >
+        + Add Credential (You must select a scan type that support credentials
+        first)
+      </button>
+    </div>
+  </v-container>
+</template>

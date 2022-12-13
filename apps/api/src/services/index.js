@@ -1,5 +1,4 @@
 import { passThroughApi } from '@/api/store'
-import { throwHTTPError } from '@/common/errors'
 import { createServiceError } from '@/common/errors/service'
 import { log } from '@/lib/logger'
 
@@ -8,7 +7,7 @@ export const passThroughService = async (
   method,
   query,
   body,
-  accessToken
+  accessToken,
 ) => {
   try {
     const result = await passThroughApi.passThrough(
@@ -16,10 +15,11 @@ export const passThroughService = async (
       method,
       query,
       body,
-      accessToken
+      accessToken,
     )
     return result
-  } catch (error) {
+  }
+  catch (error) {
     log.withError(error).error('passThroughService')
     return createServiceError(error)
   }

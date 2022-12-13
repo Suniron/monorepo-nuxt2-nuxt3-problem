@@ -1,20 +1,20 @@
 import { throwHTTPError } from '@/common/errors'
 import {
-  getRemediationProjectsSummaryService,
-  getRemediationProjectsService,
   createRemediationProjectsService,
-  updateRemediationProjectsService,
+  getRemediationProjectCommentsService,
   getRemediationProjectStatusHistoryService,
   getRemediationProjectsScopeService,
-  updateRemediationProjectScopeService,
+  getRemediationProjectsService,
+  getRemediationProjectsSummaryService,
   updateRemediationProjectScopeItemService,
-  getRemediationProjectCommentsService,
+  updateRemediationProjectScopeService,
+  updateRemediationProjectsService,
 } from '@/services/remediationProjects'
 
 export const getRemediationProjectsSummaryController = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const data = await getRemediationProjectsSummaryService(
@@ -22,11 +22,13 @@ export const getRemediationProjectsSummaryController = async (
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -38,12 +40,14 @@ export const getRemediationProjectsController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -51,7 +55,7 @@ export const getRemediationProjectsController = async (req, res, next) => {
 export const getRemediationProjectStatusHistoryController = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const data = await getRemediationProjectStatusHistoryService(
@@ -60,11 +64,13 @@ export const getRemediationProjectStatusHistoryController = async (
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -77,11 +83,13 @@ export const updateRemediationProjectsController = async (req, res, next) => {
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -93,11 +101,13 @@ export const getRemediationProjectsScopeController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -105,7 +115,7 @@ export const getRemediationProjectsScopeController = async (req, res, next) => {
 export const updateRemediationProjectScopeController = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const data = await updateRemediationProjectScopeService(
@@ -114,11 +124,13 @@ export const updateRemediationProjectScopeController = async (
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -126,7 +138,7 @@ export const updateRemediationProjectScopeController = async (
 export const updateRemediationProjectScopeItemController = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const data = await updateRemediationProjectScopeItemService(
@@ -135,11 +147,13 @@ export const updateRemediationProjectScopeItemController = async (
         ...(req.query || {}),
       },
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -152,11 +166,13 @@ export const getRemediationProjectComments = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -169,11 +185,13 @@ export const createRemediationProjectsController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
-    if (data.error) throwHTTPError(data.error)
+    if (data.error)
+      throwHTTPError(data.error)
     res.send(data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

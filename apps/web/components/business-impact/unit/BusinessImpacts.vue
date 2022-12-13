@@ -1,3 +1,98 @@
+<script>
+import BusinessImpactButton from './BusinessImpactButton.vue'
+import { updateBusinessImpactsLinkedToMissionUnit } from '~/services/businessMissionAnalysis/index.js'
+import { getBusinessImpactInfos } from '~/utils/asset.utils.js'
+/**
+ * @typedef {import("~/types/assets").BusinessMission} BusinessMission
+ * @typedef {import("~/types/assets").BusinessUnit} BusinessUnit
+ * @typedef {import("~/types/assets").BusinessImpact} BusinessImpact
+ * @typedef {import("~/types/assets").FearedEvent} FearedEvent
+ * @typedef {import("~/types/assets").BusinessImpactInfos} BusinessImpactInfos
+ */
+
+export default {
+  components: { BusinessImpactButton },
+  data() {
+    return {
+      show: false,
+      affectedBusinessImpacts: this.fearedEvent.businessImpact
+    }
+  },
+  props: {
+    /** @type {import('vue').PropOptions<BusinessUnit>} */
+    unit: {
+      type: Object,
+      required: true
+    },
+    /** @type {import('vue').PropOptions<BusinessImpact[]>} */
+    availableBusinessImpacts: {
+      type: Array,
+      required: true
+    },
+    /** @type {import('vue').PropOptions<FearedEvent>} */
+    fearedEvent: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+
+    getBIDesc(nameBusinessImpact) {
+      return getBusinessImpactInfos(nameBusinessImpact).description
+    },
+
+    /**
+     * Handle click on a business impact.
+     * @param {BusinessImpact} businessImpact
+     */
+    async handleClickOnBusinessImpact(businessImpact) {
+      // If already selected, remove it:
+      if (this.isImpactAffected(businessImpact.id)) {
+        const businessImpactToRemoveIndex = this.affectedBusinessImpacts.findIndex(
+          bi => bi.id === businessImpact.id,
+        )
+        this.affectedBusinessImpacts.splice(businessImpactToRemoveIndex, 1)
+      }
+      else {
+        // If not selected, add it:
+        this.affectedBusinessImpacts.push(businessImpact)
+      }
+
+      await this.saveInDatabase()
+
+      // Emit new fearedEvent
+      this.$emit('update:fearedEvent', {
+        ...this.fearedEvent,
+        businessImpact: this.affectedBusinessImpacts,
+      })
+    },
+
+    /**
+     * Return **true** if the given business impact is already affected to the Business Unit.
+     * @param {number} businessImpactId
+     * @returns {boolean}
+     */
+    isImpactAffected(businessImpactId) {
+      return !!this.affectedBusinessImpacts.find(
+        bi => bi.id === businessImpactId,
+      )
+    },
+    async saveInDatabase() {
+      try {
+        await updateBusinessImpactsLinkedToMissionUnit(
+          this.$axios,
+          this.fearedEvent.id,
+          this.affectedBusinessImpacts.map(abi => abi.id),
+        )
+      }
+      catch (error) {
+        // TODO: handle request fail
+      }
+    },
+  },
+}
+</script>
+
 <template>
   <v-menu
     v-model="show"
@@ -14,11 +109,11 @@
         <li v-if="affectedBusinessImpacts.length === 0">
           <v-btn
             v-bind="attrs"
-            v-on="on"
             color="primary"
             elevation="2"
             outlined
             icon
+            v-on="on"
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
@@ -30,10 +125,10 @@
           v-bind="attrs"
           v-on="on"
         >
-          <business-impact-button
+          <BusinessImpactButton
             :business-impact="{
               id: businessImpact.id,
-              name: businessImpact.name
+              name: businessImpact.name,
             }"
             :is-selected="isImpactAffected(businessImpact.id)"
             without-text
@@ -43,7 +138,7 @@
     </template>
 
     <v-card>
-      <v-btn @click="show = false" class="close-btn" icon>
+      <v-btn class="close-btn" icon @click="show = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <p class="mb-1 pt-3 px-7 caption font-italic text--secondary">
@@ -62,11 +157,11 @@
           <v-tooltip top open-delay="750" open-on-hover>
             <template #activator="{ on, attrs }">
               <span v-bind="attrs" v-on="on">
-                <business-impact-button
+                <BusinessImpactButton
                   :business-impact="businessImpact"
                   :is-selected="isImpactAffected(businessImpact.id)"
                   @impact-clicked="handleClickOnBusinessImpact"
-              /></span>
+                /></span>
             </template>
             <span>{{ getBIDesc(businessImpact.name) }}</span>
           </v-tooltip>
@@ -75,96 +170,6 @@
     </v-card>
   </v-menu>
 </template>
-
-<script>
-import BusinessImpactButton from './BusinessImpactButton.vue'
-import { updateBusinessImpactsLinkedToMissionUnit } from '~/services/businessMissionAnalysis/index.js'
-import { getBusinessImpactInfos } from '~/utils/asset.utils.js'
-/**
- * @typedef {import("~/types/assets").BusinessMission} BusinessMission
- * @typedef {import("~/types/assets").BusinessUnit} BusinessUnit
- * @typedef {import("~/types/assets").BusinessImpact} BusinessImpact
- * @typedef {import("~/types/assets").FearedEvent} FearedEvent
- * @typedef {import("~/types/assets").BusinessImpactInfos} BusinessImpactInfos
- */
-
-export default {
-  components: { BusinessImpactButton },
-  props: {
-    /** @type {import('vue').PropOptions<BusinessUnit>} */
-    unit: {
-      type: Object,
-      required: true
-    },
-    /** @type {import('vue').PropOptions<BusinessImpact[]>} */
-    availableBusinessImpacts: {
-      type: Array,
-      required: true
-    },
-    /** @type {import('vue').PropOptions<FearedEvent>} */
-    fearedEvent: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      show: false,
-      affectedBusinessImpacts: this.fearedEvent.businessImpact
-    }
-  },
-  methods: {
-    /**
-     * Return **true** if the given business impact is already affected to the Business Unit.
-     * @param {number} businessImpactId
-     * @returns {boolean}
-     */
-    isImpactAffected(businessImpactId) {
-      return !!this.affectedBusinessImpacts.find(
-        (bi) => bi.id === businessImpactId
-      )
-    },
-    getBIDesc(nameBusinessImpact) {
-      return getBusinessImpactInfos(nameBusinessImpact).description
-    },
-    /**
-     * Handle click on a business impact.
-     * @param {BusinessImpact} businessImpact
-     */
-    async handleClickOnBusinessImpact(businessImpact) {
-      // If already selected, remove it:
-      if (this.isImpactAffected(businessImpact.id)) {
-        const businessImpactToRemoveIndex = this.affectedBusinessImpacts.findIndex(
-          (bi) => bi.id === businessImpact.id
-        )
-        this.affectedBusinessImpacts.splice(businessImpactToRemoveIndex, 1)
-      } else {
-        // If not selected, add it:
-        this.affectedBusinessImpacts.push(businessImpact)
-      }
-
-      await this.saveInDatabase()
-
-      // Emit new fearedEvent
-      this.$emit('update:fearedEvent', {
-        ...this.fearedEvent,
-        businessImpact: this.affectedBusinessImpacts
-      })
-    },
-    async saveInDatabase() {
-      try {
-        await updateBusinessImpactsLinkedToMissionUnit(
-          this.$axios,
-          this.fearedEvent.id,
-          this.affectedBusinessImpacts.map((abi) => abi.id)
-        )
-      } catch (error) {
-        // TODO: handle request fail
-      }
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .close-btn {

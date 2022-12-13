@@ -1,7 +1,18 @@
+<script>
+export default {
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <div>
     <div class="my-4">
-      <span><strong>Name:</strong><br />{{ asset.name || asset.url }}</span>
+      <span><strong>Name:</strong><br>{{ asset.name || asset.url }}</span>
     </div>
     <div class="my-4">
       <span><strong>URL:</strong> {{ asset.url || 'NA' }}</span>
@@ -11,13 +22,3 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  }
-}
-</script>

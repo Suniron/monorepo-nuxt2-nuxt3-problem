@@ -13,11 +13,13 @@ export const passThroughController = async (req, res, next) => {
       req.method,
       req.query,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (storeResponse.error) throwHTTPError(storeResponse.error)
+    if (storeResponse.error)
+      throwHTTPError(storeResponse.error)
     res.status(storeResponse.status).send(storeResponse.data)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

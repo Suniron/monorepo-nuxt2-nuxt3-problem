@@ -7,11 +7,16 @@ ENV NUXT_HOST=0.0.0.0\
 
 EXPOSE 3000
 
-WORKDIR /app
+WORKDIR /web
 
 COPY . .
 
-RUN npm ci
+# Install pnpm
+RUN corepack enable
+
+# TODO: find a fix to use frozen-lockfile
+# RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 FROM base AS prod
 
@@ -21,10 +26,6 @@ ARG BACKEND_BROWSER_BASE_URL
 ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
     BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL
 
-RUN npm cache clean --force
+RUN pnpm prune
 
-CMD ["npm", "start"]
-
-FROM base AS dev
-
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "start"]

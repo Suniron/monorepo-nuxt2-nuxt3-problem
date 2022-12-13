@@ -1,80 +1,3 @@
-<template>
-  <v-form v-model="isFormValid" @submit.prevent class="schedule-form">
-    <v-container>
-      <v-row class="schedule-form__content">
-        <v-col cols="12">
-          <v-text-field
-            v-model="formData.name"
-            label="Scan Name"
-            placeholder="Scan Name"
-            :rules="rules.mustChar"
-            solo
-          />
-          <v-select
-            v-model="formData.types"
-            placeholder="Select scan type"
-            label="Select scan type"
-            item-text="text"
-            item-value="value"
-            item-disabled="disabled"
-            :items="scanTypes"
-            :rules="rules.requiredList"
-            solo
-            multiple
-            chips
-            deletable-chips
-          ></v-select>
-
-          <v-switch
-            v-model="enabledScheduling"
-            inset
-            :label="
-              `Schedule scan for later (${
-                enabledScheduling
-                  ? 'Please specify the date'
-                  : 'Scheduled for now by default'
-              })`
-            "
-          ></v-switch>
-
-          <CustomDateTimePicker
-            v-if="enabledScheduling"
-            @change="dateTimeChanged"
-          />
-
-          <form-by-scan-type
-            v-if="formData.types.length > 0"
-            :scan-types="formData.types"
-            :rules="{
-              probes: rules.required
-            }"
-            @updateFormData="updateFormData"
-          />
-        </v-col>
-      </v-row>
-      <v-row class="schedule-form__actions">
-        <v-col cols="12" class="text-right">
-          <v-alert text type="error" class="text-left" v-if="errors">
-            You must select at least one credential
-          </v-alert>
-          <v-btn @click="() => $router.push(localePath('scans'))">
-            Cancel
-          </v-btn>
-          <v-btn
-            :loading="isLoading"
-            :disabled="!isFormValid"
-            @click="scheduleScan"
-            color="primary"
-            class="ml-2"
-          >
-            Confirm scan
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
-</template>
-
 <script>
 import FormByScanType from './form-by-scan-type.vue'
 import CustomDateTimePicker from './form-components/CustomDateTimePicker.vue'
@@ -83,86 +6,77 @@ import CustomDateTimePicker from './form-components/CustomDateTimePicker.vue'
 import { scheduleScan } from '~/services/scans'
 
 export default {
-  name: 'ScheduleForm',
   components: {
     CustomDateTimePicker,
     FormByScanType
   },
+  name: 'ScheduleForm',
   data() {
     return {
-      errors: false,
-      isFormValid: false,
-      formData: {
-        name: '',
-        types: [],
-        isInternalAsset: false,
-        startDate: null,
-        endDate: null,
-        startTime: null,
-        endTime: null
-      },
-      rules: {
-        required: [(v) => !!v || 'Field is required'],
-        requiredList: [
-          (v) =>
-            v.length > 0 ? true : 'You must select at least one scan type'
-        ],
-        mustChar: [
-          (v) => (v.trim().length > 0 ? true : 'The name needs a character')
-        ]
-      },
       enabledScheduling: false,
+      errors: false,
+      formData: {
+        endDate: null,
+        endTime: null,
+        isInternalAsset: false,
+        name: '',
+        startDate: null,
+        startTime: null,
+        types: [],
+      },
+      isFormValid: false,
       isLoading: false,
+      rules: {
+        mustChar: [
+          v => (v.trim().length > 0 ? true : 'The name needs a character'),
+        ],
+        required: [v => !!v || 'Field is required'],
+        requiredList: [
+          v =>
+            v.length > 0 ? true : 'You must select at least one scan type',
+        ],
+      },
       scanTypes: [
         {
+          data: ['probe', 'assets'],
+          disabled: false,
           text: 'Asset Discovery',
           value: 'nmap',
-          disabled: false,
-          data: ['probe', 'assets']
         },
         {
+          data: ['probe', 'assets', 'credentials'],
+          disabled: false,
           text: 'Vulnerability',
           value: 'nessus',
-          disabled: false,
-          data: ['probe', 'assets', 'credentials']
         },
         {
+          data: ['probe', 'assets', 'baselines', 'credentials'],
+          disabled: false,
           text: 'Hardening',
           value: 'nessus_hardening',
-          disabled: false,
-          data: ['probe', 'assets', 'baselines', 'credentials']
         },
         {
+          data: ['scenario', 'userAssets'],
+          disabled: false,
           text: 'Phishing Simulation',
           value: 'phish',
-          disabled: false,
-          data: ['scenario', 'userAssets']
         },
         {
+          disabled: true,
           text: 'Active Directory (On premise) [coming soon]',
           value: 'bloodhound',
-          disabled: true
         },
         {
+          disabled: true,
           text: 'Active Directory (O365) [coming soon]',
           value: 'o365',
-          disabled: true
         },
         {
+          disabled: true,
           text: 'Endpoint Detection Response [coming soon]',
           value: 'edr',
-          disabled: true
-        }
-      ]
-    }
-  },
-  watch: {
-    'formData.types'(newTypes, oldTypes) {
-      this.resetFormData(newTypes, oldTypes)
-    },
-    enabledScheduling() {
-      this.formData.startDate = null
-      this.formData.startTime = null
+        },
+      ],
     }
   },
   methods: {
@@ -276,9 +190,95 @@ export default {
         this.errors = true
       }
     }
+  },
+  watch: {
+    'formData.types'(newTypes, oldTypes) {
+      this.resetFormData(newTypes, oldTypes)
+    },
+    enabledScheduling() {
+      this.formData.startDate = null
+      this.formData.startTime = null
+    }
   }
 }
 </script>
+
+<template>
+  <v-form v-model="isFormValid" class="schedule-form" @submit.prevent>
+    <v-container>
+      <v-row class="schedule-form__content">
+        <v-col cols="12">
+          <v-text-field
+            v-model="formData.name"
+            label="Scan Name"
+            placeholder="Scan Name"
+            :rules="rules.mustChar"
+            solo
+          />
+          <v-select
+            v-model="formData.types"
+            placeholder="Select scan type"
+            label="Select scan type"
+            item-text="text"
+            item-value="value"
+            item-disabled="disabled"
+            :items="scanTypes"
+            :rules="rules.requiredList"
+            solo
+            multiple
+            chips
+            deletable-chips
+          />
+
+          <v-switch
+            v-model="enabledScheduling"
+            inset
+            :label="
+              `Schedule scan for later (${
+                enabledScheduling
+                  ? 'Please specify the date'
+                  : 'Scheduled for now by default'
+              })`
+            "
+          />
+
+          <CustomDateTimePicker
+            v-if="enabledScheduling"
+            @change="dateTimeChanged"
+          />
+
+          <FormByScanType
+            v-if="formData.types.length > 0"
+            :scan-types="formData.types"
+            :rules="{
+              probes: rules.required,
+            }"
+            @updateFormData="updateFormData"
+          />
+        </v-col>
+      </v-row>
+      <v-row class="schedule-form__actions">
+        <v-col cols="12" class="text-right">
+          <v-alert v-if="errors" text type="error" class="text-left">
+            You must select at least one credential
+          </v-alert>
+          <v-btn @click="() => $router.push(localePath('scans'))">
+            Cancel
+          </v-btn>
+          <v-btn
+            :loading="isLoading"
+            :disabled="!isFormValid"
+            color="primary"
+            class="ml-2"
+            @click="scheduleScan"
+          >
+            Confirm scan
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
+</template>
 
 <style lang="scss">
 .schedule-form {

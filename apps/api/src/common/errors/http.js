@@ -31,14 +31,14 @@ export class HTTPError extends Error {
     const message = this.getDefaultMessage()
     return message
       .split(' ')
-      .map((str) => str[0].toUpperCase() + str.substr(1))
+      .map(str => str[0].toUpperCase() + str.substr(1))
       .join('')
   }
 
   toJSON() {
     return {
-      errorType: this.errorType,
       code: this.code,
+      errorType: this.errorType,
       message: this.message,
     }
   }

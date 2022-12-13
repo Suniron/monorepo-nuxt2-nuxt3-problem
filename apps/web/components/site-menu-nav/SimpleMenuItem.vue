@@ -1,20 +1,14 @@
-<template>
-  <v-list-item nuxt :to="to" :v-test="testId">
-    <!-- This slot can be used to put custom icon like in SVG -->
-    <slot name="custom-icon"></slot>
-
-    <v-list-item-icon v-if="icon">
-      <v-icon>{{ icon }}</v-icon>
-    </v-list-item-icon>
-    <v-list-item-content>
-      {{ title }}
-    </v-list-item-content>
-  </v-list-item>
-</template>
-
 <script>
 // @ts-check
 export default {
+  computed: {
+    /**
+     * @returns {string} unique test idifie
+     */
+    testId() {
+      return `navbar-${this.title.toLowerCase()}`
+    }
+  },
   props: {
     /**
      * Link to follow on click
@@ -37,14 +31,20 @@ export default {
       type: String,
       default: undefined
     }
-  },
-  computed: {
-    /**
-     * @returns {string} unique test idifie
-     */
-    testId() {
-      return `navbar-${this.title.toLowerCase()}`
-    }
   }
 }
 </script>
+
+<template>
+  <v-list-item nuxt :to="to" :v-test="testId">
+    <!-- This slot can be used to put custom icon like in SVG -->
+    <slot name="custom-icon" />
+
+    <v-list-item-icon v-if="icon">
+      <v-icon>{{ icon }}</v-icon>
+    </v-list-item-icon>
+    <v-list-item-content>
+      {{ title }}
+    </v-list-item-content>
+  </v-list-item>
+</template>

@@ -1,3 +1,32 @@
+<script>
+import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
+import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
+import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
+import AssetPort from '~/components/assets/details/asset-ports.vue'
+import AssetHardening from '~/components/assets/details/asset-hardening.vue'
+// import AssetRelationModalActivator from '~/components/assets/AssetRelationModalActivator.vue'
+export default {
+  components: {
+    AssetDetailsForm,
+    AssetHardening,
+    AssetPort,
+    AssetRelationsList,
+    AssetVulnerabilities,
+  },
+  data() {
+    return {
+      tab: null
+    }
+  },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+
 <template>
   <v-col cols="12">
     <v-tabs v-model="tab" show-arrows>
@@ -13,16 +42,16 @@
 
     <v-tabs-items v-model="tab" class="px-5">
       <v-tab-item>
-        <asset-vulnerabilities :tabs="tab" :asset="asset" />
+        <AssetVulnerabilities :tabs="tab" :asset="asset" />
       </v-tab-item>
       <v-tab-item>
-        <asset-hardening :asset="asset" />
+        <AssetHardening :asset="asset" />
       </v-tab-item>
       <v-tab-item>
-        <asset-details-form :asset="asset" />
+        <AssetDetailsForm :asset="asset" />
       </v-tab-item>
       <v-tab-item>
-        <asset-port :tabs="tab" :asset-id="asset.id" />
+        <AssetPort :tabs="tab" :asset-id="asset.id" />
       </v-tab-item>
       <v-tab-item>
         <AssetRelationsList :asset="asset" parents :types="['NETWORK']" />
@@ -41,31 +70,3 @@
     </v-tabs-items>
   </v-col>
 </template>
-<script>
-import AssetRelationsList from '~/components/assets/details/AssetRelationsList.vue'
-import AssetVulnerabilities from '~/components/assets/details/vulnerabilities'
-import AssetDetailsForm from '~/components/assets/details/asset-details.vue'
-import AssetPort from '~/components/assets/details/asset-ports.vue'
-import AssetHardening from '~/components/assets/details/asset-hardening.vue'
-// import AssetRelationModalActivator from '~/components/assets/AssetRelationModalActivator.vue'
-export default {
-  components: {
-    AssetVulnerabilities,
-    AssetDetailsForm,
-    AssetPort,
-    AssetHardening,
-    AssetRelationsList
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      tab: null
-    }
-  }
-}
-</script>

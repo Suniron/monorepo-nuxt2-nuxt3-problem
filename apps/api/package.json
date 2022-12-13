@@ -1,10 +1,12 @@
 {
-  "name": "xrator_api",
+  "name": "@xrator-operator/api",
   "version": "1.13.0",
   "description": "Backend services for xrator_ui (frontend)",
   "main": "index.js",
   "scripts": {
-    "dev": "npm ci && nodemon",
+    "dev": "PORT=3001 nodemon",
+    "dev:docker": "pnpm install --frozen-lockfile && nodemon",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf coverage",
     "start": "babel-node src/app.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint --ext .js . ",
@@ -24,15 +26,13 @@
     "@babel/preset-env": "^7.12.11",
     "@types/express": "^4.17.13",
     "cross-env": "^7.0.3",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^26.6.3",
+    "eslint": "^8.29.0",
+    "eslint-config-custom": "workspace:*",
+    "jest": "^29.3.1",
     "nodemon": "^2.0.7",
     "prettier": "2.2.1",
-    "supertest": "^6.1.1"
+    "supertest": "^6.1.1",
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -44,10 +44,12 @@
     "csv-parse": "^4.16.3",
     "docx": "^7.3.0",
     "dotenv": "^8.2.0",
+    "eslint-config-custom": "workspace:*",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "fast-xml-parser": "^3.20.3",
     "helmet": "^4.4.1",
+    "jest-presets": "*",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "loglayer": "^1.4.2",
@@ -58,9 +60,17 @@
     "pino-elasticsearch": "^6.3.0",
     "pino-pretty": "^9.1.1",
     "swagger-ui-express": "^4.3.0",
+    "uuid": "^9.0.0",
     "yamljs": "^0.3.0"
   },
   "_moduleAliases": {
     "@": "src"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@7.14.2",
+  "jest": {
+    "preset": "jest-presets/jest/node"
   }
 }

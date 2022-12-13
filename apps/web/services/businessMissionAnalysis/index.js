@@ -10,7 +10,7 @@
  * @returns {Promise<import("~/types/businessImpactAnalysis").BusinessMissionAnalysis>}
  */
 export const searchMissionAnalysis = async (axios, id) => {
-  const { data } = await axios.get('/missions_analysis/' + id)
+  const { data } = await axios.get(`/missions_analysis/${id}`)
   return data
 }
 
@@ -24,11 +24,11 @@ export const searchMissionAnalysis = async (axios, id) => {
 export const updateBusinessImpactsLinkedToMissionUnit = async (
   axios,
   fearedEventId,
-  businessImpactIds
+  businessImpactIds,
 ) => {
   const { data } = await axios.patch(
-    '/missions_analysis/' + fearedEventId + '/business_impact',
-    businessImpactIds
+    `/missions_analysis/${fearedEventId}/business_impact`,
+    businessImpactIds,
   )
   return data
 }

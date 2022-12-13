@@ -1,16 +1,16 @@
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
-  getRemediationProjectsSummaryController,
-  getRemediationProjectsController,
-  updateRemediationProjectsController,
+  createRemediationProjectsController,
+  getRemediationProjectComments,
   getRemediationProjectStatusHistoryController,
+  getRemediationProjectsController,
   getRemediationProjectsScopeController,
+  getRemediationProjectsSummaryController,
   updateRemediationProjectScopeController,
   updateRemediationProjectScopeItemController,
-  getRemediationProjectComments,
-  createRemediationProjectsController,
+  updateRemediationProjectsController,
 } from '@/controllers/remediationProjects'
-import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()
 
@@ -42,27 +42,27 @@ const updateRemediationProjectScopeItemValidation = celebrate({
 // Remediation Projects End Points
 router.get(
   '/remediation-projects/summary',
-  getRemediationProjectsSummaryController
+  getRemediationProjectsSummaryController,
 )
 router.get(
   '/remediation-projects/:id',
   getRemediationProjectByIdValidation,
-  getRemediationProjectsController
+  getRemediationProjectsController,
 )
 router.patch(
   '/remediation-projects/:id',
   getRemediationProjectByIdValidation,
-  updateRemediationProjectsController
+  updateRemediationProjectsController,
 )
 router.get(
   '/remediation-projects/:id/status-history',
   getRemediationProjectByIdValidation,
-  getRemediationProjectStatusHistoryController
+  getRemediationProjectStatusHistoryController,
 )
 router.get(
   '/posts/remediation-project/:id',
   getRemediationProjectByIdValidation,
-  getRemediationProjectComments
+  getRemediationProjectComments,
 )
 router.post('/remediation-projects', createRemediationProjectsController)
 
@@ -70,16 +70,16 @@ router.post('/remediation-projects', createRemediationProjectsController)
 router.get(
   '/remediation-projects/:id/scope',
   getRemediationProjectByIdValidation,
-  getRemediationProjectsScopeController
+  getRemediationProjectsScopeController,
 )
 router.patch(
   '/remediation-projects/:id/scope',
   updateRemediationProjectScopeValidation,
-  updateRemediationProjectScopeController
+  updateRemediationProjectScopeController,
 )
 router.patch(
   '/remediation-projects/:id/scope/:scopeId',
   updateRemediationProjectScopeItemValidation,
-  updateRemediationProjectScopeItemController
+  updateRemediationProjectScopeItemController,
 )
 export default router

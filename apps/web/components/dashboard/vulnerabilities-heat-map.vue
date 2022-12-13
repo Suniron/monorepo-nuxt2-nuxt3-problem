@@ -1,13 +1,118 @@
+<script>
+export default {
+  name: 'VulnerabilitiesHeatMap',
+  data: () => ({
+    heatMapData: [
+      ['Critical', 0, 0, 69, 4, 81],
+      ['High', 0, 8, 1037, 17, 0],
+      ['Medium', 0, 11, 2253, 378, 0],
+      ['Low', 58, 47, 664, 13, 0]
+    ]
+  }),
+  computed: {
+    gridData() {
+      // Add ID's to data for v-for
+      const data = this.heatMapData.map(row =>
+        row.map((data, idx) => {
+          let id = row[0]
+          if (idx > 0)
+            id += `-${this.headers[idx - 1]}`
+
+          return { data, id }
+        }),
+      )
+
+      // Add classes for data color
+      const heatMapClasses = [
+        ['Critical', 'safe', 'warning', 'danger', 'danger', 'critical'],
+        ['High', 'safe', 'warning', 'warning', 'danger', 'danger'],
+        ['Medium', 'safe', 'safe', 'safe', 'warning', 'warning'],
+        ['Low', 'safe', 'safe', 'safe', 'safe', 'safe'],
+      ]
+
+      for (let i = 0; i < data.length; i++) {
+        data[i][0].class = 'heat-map_row-header'
+        for (let j = 1; j < data[i].length; j++) {
+          data[i][j].class = [
+            'heat-map_cell',
+            `heat-map_cell--${heatMapClasses[i][j]}`,
+          ]
+        }
+      }
+      return data.flat()
+    },
+  },
+  watch: {
+    data(newData) {
+      this.populateChartData(newData)
+    }
+  },
+  created() {
+    this.headers = ['Rare', 'Unlikely', 'Moderate', 'Likely', 'Certain']
+    this.populateChartData(this.data)
+  },
+  methods: {
+    populateChartData(likelihoods) {
+      const { critical, high, medium, low } = likelihoods
+      this.heatMapData = [
+        [
+          'Critical',
+          critical.rare,
+          critical.unlikely,
+          critical.moderate,
+          critical.likely,
+          critical.certain,
+        ],
+        [
+          'High',
+          high.rare,
+          high.unlikely,
+          high.moderate,
+          high.likely,
+          high.certain,
+        ],
+        [
+          'Medium',
+          medium.rare,
+          medium.unlikely,
+          medium.moderate,
+          medium.likely,
+          medium.certain,
+        ],
+        ['Low', low.rare, low.unlikely, low.moderate, low.likely, low.certain],
+      ]
+    },
+    showDataDetails(data) {
+      const [severities, likelihoods] = data.id
+        .split('-')
+        .map(s => s.toLowerCase())
+
+      this.$router.push({
+        path: this.localePath('vulnerabilities'),
+        query: { likelihoods, severities },
+      })
+    },
+  },
+  props: {
+    data: {
+      required: false,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <v-card class="vulnerabilities-heat-map">
-    <v-card-title
-      >Vulnerabilities Heat Map<v-spacer></v-spacer
-      ><v-icon @click="$emit('close')">mdi-close</v-icon></v-card-title
-    >
+    <v-card-title>
+      Vulnerabilities Heat Map<v-spacer /><v-icon @click="$emit('close')">
+        mdi-close
+      </v-icon>
+    </v-card-title>
     <v-card-text class="dash-text overflow-y-auto">
       <div class="heat-map">
         <!-- Headers -->
-        <div class="heat-map_column-header"></div>
+        <div class="heat-map_column-header" />
         <div
           v-for="(header, hidx) of headers"
           :key="hidx"
@@ -29,110 +134,6 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-export default {
-  name: 'VulnerabilitiesHeatMap',
-  props: {
-    data: {
-      type: Object,
-      required: false
-    }
-  },
-  data: () => ({
-    heatMapData: [
-      ['Critical', 0, 0, 69, 4, 81],
-      ['High', 0, 8, 1037, 17, 0],
-      ['Medium', 0, 11, 2253, 378, 0],
-      ['Low', 58, 47, 664, 13, 0]
-    ]
-  }),
-  computed: {
-    gridData() {
-      // Add ID's to data for v-for
-      const data = this.heatMapData.map((row) =>
-        row.map((data, idx) => {
-          let id = row[0]
-          if (idx > 0) {
-            id += '-' + this.headers[idx - 1]
-          }
-          return { id, data }
-        })
-      )
-
-      // Add classes for data color
-      const heatMapClasses = [
-        ['Critical', 'safe', 'warning', 'danger', 'danger', 'critical'],
-        ['High', 'safe', 'warning', 'warning', 'danger', 'danger'],
-        ['Medium', 'safe', 'safe', 'safe', 'warning', 'warning'],
-        ['Low', 'safe', 'safe', 'safe', 'safe', 'safe']
-      ]
-
-      for (let i = 0; i < data.length; i++) {
-        data[i][0].class = 'heat-map_row-header'
-        for (let j = 1; j < data[i].length; j++) {
-          data[i][j].class = [
-            'heat-map_cell',
-            'heat-map_cell--' + heatMapClasses[i][j]
-          ]
-        }
-      }
-      return data.flat()
-    }
-  },
-  watch: {
-    data(newData) {
-      this.populateChartData(newData)
-    }
-  },
-  created() {
-    this.headers = ['Rare', 'Unlikely', 'Moderate', 'Likely', 'Certain']
-    this.populateChartData(this.data)
-  },
-  methods: {
-    populateChartData(likelihoods) {
-      const { critical, high, medium, low } = likelihoods
-      this.heatMapData = [
-        [
-          'Critical',
-          critical.rare,
-          critical.unlikely,
-          critical.moderate,
-          critical.likely,
-          critical.certain
-        ],
-        [
-          'High',
-          high.rare,
-          high.unlikely,
-          high.moderate,
-          high.likely,
-          high.certain
-        ],
-        [
-          'Medium',
-          medium.rare,
-          medium.unlikely,
-          medium.moderate,
-          medium.likely,
-          medium.certain
-        ],
-        ['Low', low.rare, low.unlikely, low.moderate, low.likely, low.certain]
-      ]
-    },
-    showDataDetails(data) {
-      const [severities, likelihoods] = data.id
-        .split('-')
-        .map((s) => s.toLowerCase())
-
-      this.$router.push({
-        path: this.localePath('vulnerabilities'),
-        query: { severities, likelihoods }
-      })
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .vulnerabilities-heat-map {

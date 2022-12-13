@@ -1,15 +1,15 @@
 import { groupsAPIs } from '@/api/store'
 import { createServiceError } from '@/common/errors/service'
 
-const formatGroup = (group) => ({
+const formatGroup = group => ({
   id: group.id,
-  name: group.name,
-  members: group.members.map((m) => ({
-    id: m.id,
-    firstName: m.first_name,
-    lastName: m.last_name,
+  members: group.members.map(m => ({
     email: m.email,
+    firstName: m.first_name,
+    id: m.id,
+    lastName: m.last_name,
   })),
+  name: group.name,
 })
 
 export const searchGroupsService = async (params, accessToken = '') => {
@@ -18,10 +18,11 @@ export const searchGroupsService = async (params, accessToken = '') => {
     {
       id,
     },
-    accessToken
+    accessToken,
   )
 
-  if (error) return createServiceError(error)
+  if (error)
+    return createServiceError(error)
 
   return group
     ? { group: formatGroup(group) }

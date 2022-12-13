@@ -1,21 +1,23 @@
 import {
+  addCartographyElementService,
+  createCartographyService,
+  deleteCartographyElementService,
+  deleteCartographyService,
   fetchCartographiesService,
   fetchCartographyElementsService,
-  updateCartographyService,
-  createCartographyService,
-  deleteCartographyService,
-  addCartographyElementService,
   updateCartographyElementService,
-  deleteCartographyElementService,
+  updateCartographyService,
 } from '@/services/cartography'
 import { throwHTTPError } from '@/common/errors'
 
 export const fetchCartographiesController = async (req, res, next) => {
   try {
     const cy = await fetchCartographiesService(req.accessToken)
-    if (cy.error) throwHTTPError(cy.error)
+    if (cy.error)
+      throwHTTPError(cy.error)
     res.send(cy)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -24,10 +26,11 @@ export const fetchCartographyElementsController = async (req, res, next) => {
   try {
     const elts = await fetchCartographyElementsService(
       req.params.id,
-      req.accessToken
+      req.accessToken,
     )
     res.send(elts)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -37,11 +40,13 @@ export const updateCartographyController = async (req, res, next) => {
     const result = await updateCartographyService(
       req.params.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (result?.error) throwHTTPError(result.error)
+    if (result?.error)
+      throwHTTPError(result.error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -49,9 +54,11 @@ export const updateCartographyController = async (req, res, next) => {
 export const createCartographyController = async (req, res, next) => {
   try {
     const id = await createCartographyService(req.body, req.accessToken)
-    if (id.error) throwHTTPError(id.error)
-    res.send({ id: id })
-  } catch (error) {
+    if (id.error)
+      throwHTTPError(id.error)
+    res.send({ id })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -60,11 +67,13 @@ export const deleteCartographyController = async (req, res, next) => {
   try {
     const result = await deleteCartographyService(
       req.params.id,
-      req.accessToken
+      req.accessToken,
     )
-    if (result?.error) throwHTTPError(result.error)
+    if (result?.error)
+      throwHTTPError(result.error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -74,11 +83,13 @@ export const addCartographyElementController = async (req, res, next) => {
     const id = await addCartographyElementService(
       req.params.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (id.error) throwHTTPError(id.error)
-    res.send({ id: id })
-  } catch (error) {
+    if (id.error)
+      throwHTTPError(id.error)
+    res.send({ id })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -89,11 +100,13 @@ export const updateCartographyElementController = async (req, res, next) => {
       req.params.id,
       req.params.eid,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (result?.error) throwHTTPError(result.error)
+    if (result?.error)
+      throwHTTPError(result.error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -103,11 +116,13 @@ export const deleteCartographyElementController = async (req, res, next) => {
     const result = await deleteCartographyElementService(
       req.params.id,
       req.params.eid,
-      req.accessToken
+      req.accessToken,
     )
-    if (result?.error) throwHTTPError(result.error)
+    if (result?.error)
+      throwHTTPError(result.error)
     res.send()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

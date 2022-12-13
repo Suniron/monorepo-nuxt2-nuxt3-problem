@@ -1,4 +1,4 @@
-const getEndpoint = (id) => (id ? '/groups/' + id : '/groups')
+const getEndpoint = id => (id ? `/groups/${id}` : '/groups')
 
 /**
  * @typedef Group
@@ -42,17 +42,15 @@ export const searchGroupByIdService = async (axios, id) => {
 export const createGroupService = async (axios, params) => {
   const { name, memberIds } = params
 
-  if (!name) {
+  if (!name)
     throw new Error('Param "name" required to create group')
-  }
 
-  if (!Array.isArray(memberIds)) {
+  if (!Array.isArray(memberIds))
     throw new TypeError('Param "memberIds" must be an array')
-  }
 
   const bodyPayload = {
+    memberIds,
     name,
-    memberIds
   }
 
   const { data } = await axios.post(getEndpoint(), bodyPayload)
@@ -69,23 +67,20 @@ export const createGroupService = async (axios, params) => {
  * @returns
  */
 export const updateGroupService = async (axios, groupId, params) => {
-  if (!groupId) {
+  if (!groupId)
     throw new Error('Param "id" required to update group')
-  }
 
   const { name, memberIds } = params
 
-  if (!name && !memberIds) {
+  if (!name && !memberIds)
     throw new Error('Nothing to update from group')
-  }
 
-  if (!Array.isArray(memberIds)) {
+  if (!Array.isArray(memberIds))
     throw new TypeError('Param "memberIds" must be an array')
-  }
 
   const bodyPayload = {
+    memberIds,
     name: name || undefined,
-    memberIds
   }
 
   const { data } = await axios.patch(getEndpoint(groupId), bodyPayload)

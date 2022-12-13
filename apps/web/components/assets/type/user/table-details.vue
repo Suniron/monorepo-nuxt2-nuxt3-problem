@@ -1,42 +1,7 @@
-<template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="details"
-      :items-per-page="30"
-      class="elevation-1 ellipsis"
-    >
-      <template #[`item.severity`]="{ item: itemSev }">
-        <v-chip :color="severityColor(itemSev.severity)" dark>
-          {{ itemSev.severity }}
-        </v-chip>
-      </template>
-      <template #[`item.details`]="{ item: itemDets }">
-        <p v-html="toHtml(itemDets.details)" class="details-cell"></p>
-      </template>
-      <template #[`item.status`]="{ item: itemStat }">
-        <v-chip small>
-          {{ itemStat.status || 'Open' }}
-          <v-icon small right>mdi-file-document-edit-outline</v-icon>
-        </v-chip>
-      </template>
-    </v-data-table>
-  </div>
-</template>
 <script>
 import { severityColor } from '~/utils/color.utils'
 export default {
   name: 'UserTableDetails',
-  props: {
-    details: {
-      type: Array,
-      required: true
-    },
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       headers: [
@@ -60,10 +25,49 @@ export default {
           .replaceAll('\n', '<br />')
           .replaceAll('    ', '&nbsp;&nbsp;&nbsp;&nbsp;')
       }
-    }
-  }
+    },
+  },
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+    details: {
+      required: true,
+      type: Array,
+    },
+  },
 }
 </script>
+
+<template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="details"
+      :items-per-page="30"
+      class="elevation-1 ellipsis"
+    >
+      <template #[`item.severity`]="{ item: itemSev }">
+        <v-chip :color="severityColor(itemSev.severity)" dark>
+          {{ itemSev.severity }}
+        </v-chip>
+      </template>
+      <template #[`item.details`]="{ item: itemDets }">
+        <p class="details-cell" v-html="toHtml(itemDets.details)" />
+      </template>
+      <template #[`item.status`]="{ item: itemStat }">
+        <v-chip small>
+          {{ itemStat.status || 'Open' }}
+          <v-icon small right>
+            mdi-file-document-edit-outline
+          </v-icon>
+        </v-chip>
+      </template>
+    </v-data-table>
+  </div>
+</template>
+
 <style lang="scss">
 .details-cell {
   overflow-y: auto;

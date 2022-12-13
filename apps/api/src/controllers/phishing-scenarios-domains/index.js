@@ -7,13 +7,15 @@ export const getPhishingScenariosDomains = async (req, res, next) => {
       {
         ...(req.params || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ data })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

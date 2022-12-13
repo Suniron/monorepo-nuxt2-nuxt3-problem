@@ -3,9 +3,8 @@ import { refreshTokenService } from '~/services/auth'
 
 export default async ({ $axios, store }) => {
   try {
-    if (store.getters['user/isLoggedIn']) {
+    if (store.getters['user/isLoggedIn'])
       return
-    }
 
     // Start the app loading:
     store.commit('CHANGE_IS_LOADING', true)
@@ -13,12 +12,14 @@ export default async ({ $axios, store }) => {
     const { accessToken, user } = await refreshTokenService($axios)
     store.dispatch('user/authorize', {
       accessToken,
-      user
+      user,
     })
-  } catch (error) {
+  }
+  catch (error) {
     // Silently fail
     console.error(error)
-  } finally {
+  }
+  finally {
     // End the app loading:
     store.commit('CHANGE_IS_LOADING', false)
   }

@@ -1,3 +1,30 @@
+<script>
+import {
+  globalRiskScoreDisplays,
+  riskScoreColor,
+  riskScoreLetter,
+} from '~/utils/risk.utils'
+export default {
+  data() {
+    return {
+      riskScoreColor,
+      riskScoreLetter,
+      globalRiskScoreDisplays
+    }
+  },
+  props: {
+    isSuperAsset: {
+      type: Boolean,
+      default: false
+    },
+    globalRiskScore: {
+      type: Boolean,
+      default: false
+    }
+  }
+}
+</script>
+
 <template>
   <v-card>
     <v-card-title>What is this ?</v-card-title>
@@ -10,23 +37,26 @@
               label
               :color="globalRiskScoreDisplays(0).color"
               class="grade-scale-extrema"
-              >{{ globalRiskScoreDisplays(0).letter }}</v-chip
             >
+              {{ globalRiskScoreDisplays(0).letter }}
+            </v-chip>
             (best) to
             <v-chip
               label
               :color="globalRiskScoreDisplays(10).color"
               class="grade-scale-extrema"
-              >{{ globalRiskScoreDisplays(10).letter }}</v-chip
             >
+              {{ globalRiskScoreDisplays(10).letter }}
+            </v-chip>
             (worst) representing the average risk score of your business
             missions. The
             <v-chip
               label
               :color="globalRiskScoreDisplays(null).color"
               class="grade-scale-extrema"
-              >{{ globalRiskScoreDisplays(null).letter }}</v-chip
             >
+              {{ globalRiskScoreDisplays(null).letter }}
+            </v-chip>
             grading means that there is no Business Missions risk score.
           </p>
         </template>
@@ -37,23 +67,26 @@
               label
               :color="riskScoreColor(0, true)"
               class="grade-scale-extrema"
-              >{{ riskScoreLetter(0, true) }}</v-chip
             >
+              {{ riskScoreLetter(0, true) }}
+            </v-chip>
             (best) to
             <v-chip
               label
               :color="riskScoreColor(10, true)"
               class="grade-scale-extrema"
-              >{{ riskScoreLetter(10, true) }}</v-chip
             >
+              {{ riskScoreLetter(10, true) }}
+            </v-chip>
             (worst) representing the
             {{ isSuperAsset ? 'compound' : 'inherited' }} risk. The
             <v-chip
               label
               :color="riskScoreColor(null)"
               class="grade-scale-extrema"
-              >{{ riskScoreLetter(null) }}</v-chip
             >
+              {{ riskScoreLetter(null) }}
+            </v-chip>
             grading means that there is no risk score available.
           </p>
           <p>
@@ -63,9 +96,8 @@
           <ul>
             <li v-if="isSuperAsset">
               The <strong>compound risk</strong> score is a score calculated for
-              <abbr title='Assets that can "contain" other assets'>
-                super assets</abbr
-              >
+              <abbr title="Assets that can &quot;contain&quot; other assets">
+                super assets</abbr>
               based on its related technical assets' risk scores.
             </li>
             <template v-else>
@@ -85,33 +117,6 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-import {
-  riskScoreColor,
-  riskScoreLetter,
-  globalRiskScoreDisplays
-} from '~/utils/risk.utils'
-export default {
-  props: {
-    isSuperAsset: {
-      type: Boolean,
-      default: false
-    },
-    globalRiskScore: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      riskScoreColor,
-      riskScoreLetter,
-      globalRiskScoreDisplays
-    }
-  }
-}
-</script>
 
 <style>
 .grade-scale-extrema {

@@ -1,9 +1,9 @@
 import express from 'express'
 import {
-  searchGroupsController,
-  updateGroupController,
   createGroupController,
   deleteGroupController,
+  searchGroupsController,
+  updateGroupController,
 } from '@/controllers/groups'
 
 const router = express.Router()

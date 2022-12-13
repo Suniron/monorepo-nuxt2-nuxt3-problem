@@ -39,18 +39,18 @@ Here is an example of a migration:
 `20220315091204_user_avatar.js`
 
 ```js
-exports.up = function(knex) {
+exports.up = function (knex) {
   if (knex.userParams.isSetup) {
     return Promise.resolve()
   }
   return knex.schema.table('user', function (table) {
-    table.string('avatar_url');
+    table.string('avatar_url')
   })
-};
+}
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.table('user', function (table) {
-    table.dropColumn('avatar_url');
+    table.dropColumn('avatar_url')
   })
-};
+}
 ```

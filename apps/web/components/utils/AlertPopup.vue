@@ -1,18 +1,12 @@
-<template>
-  <div class="text-center">
-    <v-dialog v-model="isOpen" width="500">
-      <v-card>
-        <v-alert :type="type" class="mb-0" outlined prominent>
-          <slot></slot>
-        </v-alert>
-      </v-card>
-    </v-dialog>
-  </div>
-</template>
-
 <script>
 // @ts-check
 export default {
+  data() {
+    return {
+      isOpen: false,
+      timeoutId: null
+    }
+  },
   props: {
     /**
      * Display the dialog
@@ -43,13 +37,6 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      isOpen: false,
-      timeoutId: null
-    }
-  },
-
   watch: {
     isOpen(val) {
       if (!val) {
@@ -60,13 +47,25 @@ export default {
       }
 
       // On open..
-      if (this.autoClose) {
+      if (this.autoClose)
         this.timeoutId = setTimeout(() => (this.isOpen = false), this.timeout) // auto close after timeout
-      }
-    }
+    },
   },
+
   mounted() {
     this.isOpen = this.show // to trigger the watch
-  }
+  },
 }
 </script>
+
+<template>
+  <div class="text-center">
+    <v-dialog v-model="isOpen" width="500">
+      <v-card>
+        <v-alert :type="type" class="mb-0" outlined prominent>
+          <slot />
+        </v-alert>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>

@@ -1,15 +1,3 @@
-<template>
-  <div class="vulnerabilities__toolbar">
-    <v-text-field
-      v-model="search"
-      @input="(txt) => debouncedUpdateFilter({ name: 'search', value: txt })"
-      class="search mr-4"
-      label="Search hardening item"
-      solo
-    />
-  </div>
-</template>
-
 <script>
 import _debounce from 'lodash/debounce'
 
@@ -17,16 +5,6 @@ const DEBOUNCE_WAIT = 300 // ms
 
 export default {
   name: 'AssetDetailsHardeningToolbar',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    filters: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   data() {
     return {
       search: this.filters?.search || '',
@@ -38,18 +16,17 @@ export default {
   },
   computed: {
     isSeverityActive() {
-      return function(severity) {
+      return function (severity) {
         return Boolean(this.$route.query.severities?.includes(severity))
       }
-    }
+    },
   },
   created() {
-    if (this.$route.query.severities) {
+    if (this.$route.query.severities)
       this.toggleSeverityFilter(this.$route.query.severities)
-    }
   },
   methods: {
-    debouncedUpdateFilter: _debounce(function(payload) {
+    debouncedUpdateFilter: _debounce(function (payload) {
       this.$emit('filter', payload)
     }, DEBOUNCE_WAIT),
     toggleSeverityFilter(severity) {
@@ -57,15 +34,38 @@ export default {
         const newSeverities = [...this.severities]
         newSeverities.splice(newSeverities.indexOf(severity), 1)
         this.severities = newSeverities
-      } else {
+      }
+      else {
         this.severities = [...this.severities, severity]
       }
 
       this.$emit('filter', { name: 'severities', value: [...this.severities] })
-    }
-  }
+    },
+  },
+  props: {
+    asset: {
+      required: true,
+      type: Object,
+    },
+    filters: {
+      default: () => ({}),
+      type: Object,
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="vulnerabilities__toolbar">
+    <v-text-field
+      v-model="search"
+      class="search mr-4"
+      label="Search hardening item"
+      solo
+      @input="(txt) => debouncedUpdateFilter({ name: 'search', value: txt })"
+    />
+  </div>
+</template>
 
 <style lang="scss">
 .vulnerabilities__toolbar {

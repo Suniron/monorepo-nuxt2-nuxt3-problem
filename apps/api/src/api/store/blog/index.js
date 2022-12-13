@@ -1,4 +1,3 @@
-import { VALIDATION_ERROR, SUCCESS } from '@/common/constants'
 import { createAPIError } from '@/common/errors/api'
 
 export const requestFetchPosts = async (provider, accessToken) => {
@@ -11,7 +10,8 @@ export const requestFetchPosts = async (provider, accessToken) => {
     }
     const { data } = await axios.get('/posts', reqConfig)
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }
@@ -21,7 +21,7 @@ export const requestCreateRemediationProjectPostsService = async (
   provider,
   id,
   body,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -34,10 +34,11 @@ export const requestCreateRemediationProjectPostsService = async (
     const { data } = await axios.post(
       `/posts/remediation-project/${Number(id)}`,
       body,
-      reqConfig
+      reqConfig,
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

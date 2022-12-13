@@ -1,19 +1,19 @@
-<template>
-  <quill-editor
-    :content="content"
-    @change="onContentChange($event)"
-    :options="editorOptions"
-  />
-</template>
-
 <script>
 // @ts-check
-// @ts-ignore
+// @ts-expect-error
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
   components: {
-    quillEditor
+    QuillEditor: quillEditor,
+  },
+  data() {
+    return {
+      content: '',
+      editorOptions: {
+        // Some Quill options...
+      }
+    }
   },
   props: {
     /**
@@ -24,14 +24,6 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      content: '',
-      editorOptions: {
-        // Some Quill options...
-      }
-    }
-  },
   methods: {
     /**
      * @param {{html: string, text: string, quill: any}} quillEvent
@@ -39,12 +31,19 @@ export default {
     onContentChange(quillEvent) {
       this.content = quillEvent.html
 
-      if (this.withoutHtml) {
+      if (this.withoutHtml)
         this.$emit('change-content', quillEvent.text)
-      } else {
+      else
         this.$emit('change-content', quillEvent.html)
-      }
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <QuillEditor
+    :content="content"
+    :options="editorOptions"
+    @change="onContentChange($event)"
+  />
+</template>

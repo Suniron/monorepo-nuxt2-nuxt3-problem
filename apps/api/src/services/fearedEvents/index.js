@@ -4,7 +4,7 @@ export const updateFearedEventsService = async (id, body, accessToken = '') => {
   const data = await missionsAPIs.updateFearedEventSeverityService(
     id,
     body,
-    accessToken
+    accessToken,
   )
   return data
 }

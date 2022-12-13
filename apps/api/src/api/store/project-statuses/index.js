@@ -3,7 +3,7 @@ import { createAPIError } from '@/common/errors/api'
 export const requestGetAvailableTransitions = async (
   provider,
   params,
-  accessToken
+  accessToken,
 ) => {
   const { axios, logger } = provider
   try {
@@ -20,10 +20,11 @@ export const requestGetAvailableTransitions = async (
       {
         ...reqConfig,
         params,
-      }
+      },
     )
     return data
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(error)
     return createAPIError(error)
   }

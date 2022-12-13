@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+
 const fs = require('fs')
+
 const csv = require('csvtojson')
+
 const path = require('path')
 
 const demo = [
@@ -56,6 +59,7 @@ const demo = [
   'comment_remediation_project.csv',
   'remediation_project_scope.csv',
 ]
+
 
 const directory = './seeds/csv_seed_files/demo/'
 

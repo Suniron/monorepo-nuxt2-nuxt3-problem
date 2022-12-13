@@ -3,7 +3,7 @@ import {
   SpecificRemediationProject,
   RemediationProjectScopeItem,
   RemediationProjectPost,
-  RemediationProjectStatusHistory
+  RemediationProjectStatusHistory,
 } from '~/types/remediationProject'
 
 export type RemediationProjectDetails = {

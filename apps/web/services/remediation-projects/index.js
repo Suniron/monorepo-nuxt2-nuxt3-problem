@@ -36,15 +36,14 @@ export const createRemediationProjectService = async (axios, params) => {
  */
 export const searchSpecificRemediationProjectService = async (
   axios,
-  remediationProjectId
+  remediationProjectId,
 ) => {
   const { data } = await axios.get(
-    '/remediation-projects/' + remediationProjectId
+    `/remediation-projects/${remediationProjectId}`,
   )
 
-  if (data.error) {
+  if (data.error)
     throw new Error(data.error?.message)
-  }
 
   return data
 }
@@ -56,15 +55,14 @@ export const searchSpecificRemediationProjectService = async (
  */
 export const searchRemediationProjectScopeService = async (
   axios,
-  remediationProjectId
+  remediationProjectId,
 ) => {
   const { data } = await axios.get(
-    `/remediation-projects/${remediationProjectId}/scope`
+    `/remediation-projects/${remediationProjectId}/scope`,
   )
 
-  if (data.error) {
+  if (data.error)
     throw new Error(data.error?.message)
-  }
 
   return data
 }
@@ -76,10 +74,10 @@ export const searchRemediationProjectScopeService = async (
  */
 export const searchAvailableTransitionsFromStatusIdService = async (
   axios,
-  fromStatusId
+  fromStatusId,
 ) => {
   const { data } = await axios.get(
-    '/projects/available-transitions/' + fromStatusId
+    `/projects/available-transitions/${fromStatusId}`,
   )
   return data
 }
@@ -92,15 +90,14 @@ export const searchAvailableTransitionsFromStatusIdService = async (
  */
 export const searchRemediationProjectStatusHistoryService = async (
   axios,
-  projectId
+  projectId,
 ) => {
   const { data } = await axios.get(
-    '/remediation-projects/' + projectId + '/status-history'
+    `/remediation-projects/${projectId}/status-history`,
   )
 
-  if (data.error) {
+  if (data.error)
     throw new Error(data.error?.message)
-  }
 
   return data
 }
@@ -113,15 +110,14 @@ export const searchRemediationProjectStatusHistoryService = async (
  */
 export const searchRemediationProjectPostsService = async (
   axios,
-  remediationProjectId
+  remediationProjectId,
 ) => {
   const { data } = await axios.get(
-    '/posts/remediation-project/' + remediationProjectId
+    `/posts/remediation-project/${remediationProjectId}`,
   )
 
-  if (data.error) {
+  if (data.error)
     throw new Error(data.error?.message)
-  }
 
   return data
 }
@@ -137,7 +133,7 @@ export const searchRemediationProjectPostsService = async (
 export const updateRemediationProjectScopeService = async (
   axios,
   projectId,
-  payload
+  payload,
 ) => {
   await axios.patch(`/remediation-projects/${projectId}/scope/`, payload)
 }
@@ -151,13 +147,13 @@ export const updateRemediationProjectScopeService = async (
 export const updateRemediationProjectScopeItemService = async (
   axios,
   projectId,
-  remediationProjectScopeItem
+  remediationProjectScopeItem,
 ) => {
   await axios.patch(
     `/remediation-projects/${projectId}/scope/${remediationProjectScopeItem.project_scope_id}`,
     {
-      is_done: remediationProjectScopeItem.is_done
-    }
+      is_done: remediationProjectScopeItem.is_done,
+    },
   )
 }
 
@@ -172,11 +168,11 @@ export const updateRemediationProjectScopeItemService = async (
 export const updateRemediationProjectService = async (
   axios,
   remediationProjectId,
-  infoToUpdate
+  infoToUpdate,
 ) => {
   const { data } = await axios.patch(
-    '/remediation-projects/' + remediationProjectId,
-    infoToUpdate
+    `/remediation-projects/${remediationProjectId}`,
+    infoToUpdate,
   )
 
   return data
@@ -193,11 +189,11 @@ export const updateRemediationProjectService = async (
 export const createRemediationProjectPostService = async (
   axios,
   projectId,
-  post
+  post,
 ) => {
-  await axios.post('/posts/remediation-project/' + projectId, {
+  await axios.post(`/posts/remediation-project/${projectId}`, {
     comment: post.comment,
-    remediation_project_status_history_id: post.projectStatusHistoryId
+    remediation_project_status_history_id: post.projectStatusHistoryId,
   })
 }
 

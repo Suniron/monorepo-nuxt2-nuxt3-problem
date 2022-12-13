@@ -1,99 +1,14 @@
-<template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    :items-per-page="15"
-    class="users-list-table"
-  >
-    <template #[`footer.page-text`]="items">
-      {{ items.pageStart }}-{{ items.pageStop }} of
-      {{ items.itemsLength }} results
-    </template>
-    <template #[`item.name`]="{ item }">
-      {{ item.firstName + ' ' + item.lastName }}
-    </template>
-    <template #[`item.role`]="{ item }">
-      <v-select
-        :items="roleOptions"
-        :value="item.roles[0]"
-        :loading="isRoleLoading"
-        class="role-list"
-        placeholder="Select Role"
-        :menu-props="{
-          bottom: true,
-          offsetY: true,
-          closeOnClick: true
-        }"
-        @change="(role) => updateUser(item, { role })"
-      >
-      </v-select>
-    </template>
-    <template #[`item.groups`]="{ item }">
-      <v-select
-        :value="item.groups"
-        :items="groups"
-        item-text="name"
-        class="group-list"
-        chips
-        deletable-chips
-        multiple
-        placeholder="Select Groups"
-        return-object
-        @change="(groups) => updateUser(item, { groups })"
-        :menu-props="{
-          bottom: true,
-          offsetY: true,
-          closeOnClick: true
-        }"
-      ></v-select>
-    </template>
-    <template #[`item.edit`]="{ item: itemEdit }">
-      <v-dialog width="500" persistent :retain-focus="false">
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-pencil</v-icon
-          >
-        </template>
-
-        <template #default="dialog">
-          <create-edit-user-modal
-            :user="itemEdit"
-            @created="$emit('update')"
-            @close="dialog.value = false"
-          />
-        </template>
-      </v-dialog>
-      <v-dialog width="500" persistent :retain-focus="false">
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on" style="cursor:pointer" small right
-            >mdi-delete</v-icon
-          >
-        </template>
-        <template #default="dialog">
-          <delete-modal
-            style="background-color:white"
-            :item="itemEdit"
-            whatis-deleting="User"
-            @close="dialog.value = false"
-            @delete="removeUser"
-          />
-        </template>
-      </v-dialog>
-    </template>
-  </v-data-table>
-</template>
-
 <script>
 // Services
 import createEditUserModal from './create-edit-user-modal'
-import { updateUserService, deleteUserService } from '~/services/users'
+import { deleteUserService, updateUserService } from '~/services/users'
 import DeleteModal from '~/components/settings/delete-modal.vue'
 export default {
-  name: 'UsersList',
   components: {
     createEditUserModal,
     DeleteModal
   },
+  name: 'UsersList',
   props: {
     users: {
       type: Array,
@@ -107,6 +22,7 @@ export default {
   data() {
     return {
       arrUsers: [...this.users],
+      groupOptions: ['Management', 'Security', 'Staff', 'Other'],
       headers: [
         {
           text: 'Name',
@@ -137,17 +53,11 @@ export default {
           sortable: false
         }
       ],
-      groupOptions: ['Management', 'Security', 'Staff', 'Other'],
+      isRoleLoading: false,
       roleOptions: [
         { text: 'Admin', value: 'admin' },
         { text: 'Member', value: 'member' }
-      ],
-      isRoleLoading: false
-    }
-  },
-  watch: {
-    users(newUsers) {
-      this.arrUsers = [...newUsers]
+      ]
     }
   },
   methods: {
@@ -178,9 +88,98 @@ export default {
         this.$emit('update')
       }
     }
-  }
+  },
+  watch: {
+    users(newUsers) {
+      this.arrUsers = [...newUsers]
+    },
+  },
 }
 </script>
+
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="users"
+    :items-per-page="15"
+    class="users-list-table"
+  >
+    <template #[`footer.page-text`]="items">
+      {{ items.pageStart }}-{{ items.pageStop }} of
+      {{ items.itemsLength }} results
+    </template>
+    <template #[`item.name`]="{ item }">
+      {{ `${item.firstName} ${item.lastName}` }}
+    </template>
+    <template #[`item.role`]="{ item }">
+      <v-select
+        :items="roleOptions"
+        :value="item.roles[0]"
+        :loading="isRoleLoading"
+        class="role-list"
+        placeholder="Select Role"
+        :menu-props="{
+          bottom: true,
+          offsetY: true,
+          closeOnClick: true,
+        }"
+        @change="(role) => updateUser(item, { role })"
+      />
+    </template>
+    <template #[`item.groups`]="{ item }">
+      <v-select
+        :value="item.groups"
+        :items="groups"
+        item-text="name"
+        class="group-list"
+        chips
+        deletable-chips
+        multiple
+        placeholder="Select Groups"
+        return-object
+        :menu-props="{
+          bottom: true,
+          offsetY: true,
+          closeOnClick: true,
+        }"
+        @change="(groups) => updateUser(item, { groups })"
+      />
+    </template>
+    <template #[`item.edit`]="{ item: itemEdit }">
+      <v-dialog width="500" persistent :retain-focus="false">
+        <template #activator="{ on, attrs }">
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-pencil
+          </v-icon>
+        </template>
+
+        <template #default="dialog">
+          <create-edit-user-modal
+            :user="itemEdit"
+            @created="$emit('update')"
+            @close="dialog.value = false"
+          />
+        </template>
+      </v-dialog>
+      <v-dialog width="500" persistent :retain-focus="false">
+        <template #activator="{ on, attrs }">
+          <v-icon v-bind="attrs" style="cursor:pointer" small right v-on="on">
+            mdi-delete
+          </v-icon>
+        </template>
+        <template #default="dialog">
+          <DeleteModal
+            style="background-color:white"
+            :item="itemEdit"
+            whatis-deleting="User"
+            @close="dialog.value = false"
+            @delete="removeUser"
+          />
+        </template>
+      </v-dialog>
+    </template>
+  </v-data-table>
+</template>
 
 <style lang="scss">
 .users-list-table {

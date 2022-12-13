@@ -1,3 +1,165 @@
+<script>
+export default {
+  name: 'WebURLItem',
+  data() {
+    return {
+      type: this.data.type || '',
+      auth: {
+        id: this.data.id,
+        type: this.data.type,
+        auth_method: null,
+        username: null,
+        password: null,
+        port: null,
+        security_level: null,
+        auth_algorithm: null,
+        auth_password: null,
+        privacy_algorithm: null,
+        privacy_password: null,
+        private_key: null,
+        private_key_passphrase: null,
+        user_cert: null,
+        kdc: null,
+        kdc_port: null,
+        kdc_transport: null,
+        realm: null,
+        elevate_privileges_with: null,
+        escalation_password: null,
+        escalation_account: null,
+        bin_directory: null,
+        su_user: null,
+        custom_password_prompt: null,
+        domain: null,
+        ca_crt: null,
+        authTypes: this.data.authTypes
+      },
+      selectRequired:
+        this.data.authTypes.length === 1 &&
+        this.data.authTypes[0].required === true,
+      authTypes: this.data.authTypes,
+      securityLevel: {
+        'Authentication and privacy': 0,
+        'Authentication without privacy': 1,
+        'No authentication and no privacy': 2
+      },
+      sshAuthMethod: {
+        'public key': 0,
+        certificate: 1,
+        Kerberos: 2,
+        password: 3
+      },
+      windowsAuthMethod: {
+        Kerberos: 0,
+        Password: 1
+      },
+      elevatePrivilegesWith: {
+        Nothing: 0,
+        "Cisco 'enable'": 1,
+        sudo: 2,
+        'su+sudo': 3,
+        su: 4,
+        "Checkpoint Gaia 'expert'": 5
+      },
+      authAlgo: ['SHA1', 'MD5'],
+      privacyAlgo: ['AES', 'DES'],
+      rules: {
+        required: [(v) => !!v || 'Required field'],
+        isNumber: [(v) => /^\d{1,5}$/.test(v) || 'Port number is required']
+      },
+      current: ''
+      /* auth: {
+        id: this.data.id,
+        type: '',
+        username: '',
+        password: '',
+        publicCrt: null,
+        privateKey: null,
+        caCrt: null,
+        domain: this.data.domain || '',
+        key: this.data.key || null
+      },
+      authTypes: [
+        { text: 'SSH', value: 'ssh' },
+        { text: 'WMI', value: 'wmi' },
+        { text: 'SSH-KEY', value: 'ssh-key' },
+        {
+          text: 'Login form',
+          value: 'login'
+        },
+        {
+          text: 'Basic',
+          value: 'basic'
+        },
+        {
+          text: 'NTLM',
+          value: 'ntlm'
+        },
+        {
+          text: 'Digest',
+          value: 'digest'
+        },
+        {
+          text: 'Certificate',
+          value: 'certificate'
+        }
+      ] */
+    }
+  },
+  methods: {
+    credentialChanged() {
+      this.$emit('change', this.auth)
+    },
+    initAuthType(type) {
+      if (this.auth.type === 'SNMPv3' && type === 'SNMPv3') {
+        if (this.current === this.auth.type)
+          return true
+        this.current = this.auth.type
+        this.auth.port = 161
+        this.auth.security_level = 'Authentication and privacy'
+        this.auth.auth_algorithm = 'SHA1'
+        this.auth.privacy_algorithm = 'AES'
+        return true
+      }
+      else if (this.auth.type === 'SSH' && type === 'SSH') {
+        if (this.current === this.auth.type)
+          return true
+        this.current = this.auth.type
+        this.auth.port = 22
+        this.auth.kdc_port = 88
+        this.auth.kdc_transport = 'tcp'
+        this.auth.elevate_privileges_with = 'Nothing'
+        return true
+      }
+      else if (this.auth.type === 'Windows' && type === 'Windows') {
+        if (this.current === this.auth.type)
+          return true
+        this.current = this.auth.type
+        return true
+      }
+      else if (this.auth.type === 'bloodhound' && type === 'bloodhound') {
+        if (this.current === this.auth.type)
+          return true
+        this.current = this.auth.type
+        return true
+      }
+      else if (this.auth.type === 'edr' && type === 'edr') {
+        if (this.current === this.auth.type)
+          return true
+        this.current = this.auth.type
+        return true
+      }
+      return false
+    },
+  },
+  props: {
+    data: {
+      required: true,
+      type: Object,
+    },
+  },
+}
+</script>
+
 <template>
   <v-card class="network-ip-item">
     <v-card-text>
@@ -229,7 +391,7 @@
             <template
               v-if="
                 [2, 3, 4].includes(
-                  elevatePrivilegesWith[auth.elevate_privileges_with]
+                  elevatePrivilegesWith[auth.elevate_privileges_with],
                 )
               "
             >
@@ -419,10 +581,10 @@
           </template>
           <v-col cols="auto" class="text-right py-1">
             <v-btn
-              @click="$emit('delete')"
               color="primary"
               :disabled="selectRequired"
               icon
+              @click="$emit('delete')"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -510,158 +672,5 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-export default {
-  name: 'WebURLItem',
-  props: {
-    data: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      type: this.data.type || '',
-      auth: {
-        id: this.data.id,
-        type: this.data.type,
-        auth_method: null,
-        username: null,
-        password: null,
-        port: null,
-        security_level: null,
-        auth_algorithm: null,
-        auth_password: null,
-        privacy_algorithm: null,
-        privacy_password: null,
-        private_key: null,
-        private_key_passphrase: null,
-        user_cert: null,
-        kdc: null,
-        kdc_port: null,
-        kdc_transport: null,
-        realm: null,
-        elevate_privileges_with: null,
-        escalation_password: null,
-        escalation_account: null,
-        bin_directory: null,
-        su_user: null,
-        custom_password_prompt: null,
-        domain: null,
-        ca_crt: null,
-        authTypes: this.data.authTypes
-      },
-      selectRequired:
-        this.data.authTypes.length === 1 &&
-        this.data.authTypes[0].required === true,
-      authTypes: this.data.authTypes,
-      securityLevel: {
-        'Authentication and privacy': 0,
-        'Authentication without privacy': 1,
-        'No authentication and no privacy': 2
-      },
-      sshAuthMethod: {
-        'public key': 0,
-        certificate: 1,
-        Kerberos: 2,
-        password: 3
-      },
-      windowsAuthMethod: {
-        Kerberos: 0,
-        Password: 1
-      },
-      elevatePrivilegesWith: {
-        Nothing: 0,
-        "Cisco 'enable'": 1,
-        sudo: 2,
-        'su+sudo': 3,
-        su: 4,
-        "Checkpoint Gaia 'expert'": 5
-      },
-      authAlgo: ['SHA1', 'MD5'],
-      privacyAlgo: ['AES', 'DES'],
-      rules: {
-        required: [(v) => !!v || 'Required field'],
-        isNumber: [(v) => /^\d{1,5}$/.test(v) || 'Port number is required']
-      },
-      current: ''
-      /* auth: {
-        id: this.data.id,
-        type: '',
-        username: '',
-        password: '',
-        publicCrt: null,
-        privateKey: null,
-        caCrt: null,
-        domain: this.data.domain || '',
-        key: this.data.key || null
-      },
-      authTypes: [
-        { text: 'SSH', value: 'ssh' },
-        { text: 'WMI', value: 'wmi' },
-        { text: 'SSH-KEY', value: 'ssh-key' },
-        {
-          text: 'Login form',
-          value: 'login'
-        },
-        {
-          text: 'Basic',
-          value: 'basic'
-        },
-        {
-          text: 'NTLM',
-          value: 'ntlm'
-        },
-        {
-          text: 'Digest',
-          value: 'digest'
-        },
-        {
-          text: 'Certificate',
-          value: 'certificate'
-        }
-      ] */
-    }
-  },
-  methods: {
-    credentialChanged() {
-      this.$emit('change', this.auth)
-    },
-    initAuthType(type) {
-      if (this.auth.type === 'SNMPv3' && type === 'SNMPv3') {
-        if (this.current === this.auth.type) return true
-        this.current = this.auth.type
-        this.auth.port = 161
-        this.auth.security_level = 'Authentication and privacy'
-        this.auth.auth_algorithm = 'SHA1'
-        this.auth.privacy_algorithm = 'AES'
-        return true
-      } else if (this.auth.type === 'SSH' && type === 'SSH') {
-        if (this.current === this.auth.type) return true
-        this.current = this.auth.type
-        this.auth.port = 22
-        this.auth.kdc_port = 88
-        this.auth.kdc_transport = 'tcp'
-        this.auth.elevate_privileges_with = 'Nothing'
-        return true
-      } else if (this.auth.type === 'Windows' && type === 'Windows') {
-        if (this.current === this.auth.type) return true
-        this.current = this.auth.type
-        return true
-      } else if (this.auth.type === 'bloodhound' && type === 'bloodhound') {
-        if (this.current === this.auth.type) return true
-        this.current = this.auth.type
-        return true
-      } else if (this.auth.type === 'edr' && type === 'edr') {
-        if (this.current === this.auth.type) return true
-        this.current = this.auth.type
-        return true
-      }
-      return false
-    }
-  }
-}
-</script>
 
 <style lang="scss"></style>

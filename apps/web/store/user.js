@@ -1,31 +1,31 @@
 export const types = {
   CREATE_SESSION: 'CREATE_SESSION',
   DELETE_SESSION: 'DELETE_SESSION',
+  MODIFY_SESSION: 'MODIFY_SESSION',
   WRONG_LOGIN: 'WRONG_LOGIN',
-  MODIFY_SESSION: 'MODIFY_SESSION'
 }
 
 export const state = () => ({
   accessToken: '',
-  id: '',
-  firstName: '',
-  lastName: '',
-  wrongLogin: false,
-  username: '',
   email: '',
-  roles: []
+  firstName: '',
+  id: '',
+  lastName: '',
+  roles: [],
+  username: '',
+  wrongLogin: false,
 })
 
 export const getters = {
-  isLoggedIn: (state) => !!(state.accessToken && state.id),
-  id: (state) => state.id,
-  firstName: (state) => state.firstName,
-  lastName: (state) => state.lastName,
-  wrongLogin: (state) => state.wrongLogin,
-  username: (state) => state.username,
-  email: (state) => state.email,
-  roles: (state) => state.roles,
-  isAdmin: (state) => state.roles.includes('admin')
+  email: state => state.email,
+  firstName: state => state.firstName,
+  id: state => state.id,
+  isAdmin: state => state.roles.includes('admin'),
+  isLoggedIn: state => !!(state.accessToken && state.id),
+  lastName: state => state.lastName,
+  roles: state => state.roles,
+  username: state => state.username,
+  wrongLogin: state => state.wrongLogin,
 }
 
 export const mutations = {
@@ -68,7 +68,7 @@ export const mutations = {
   [types.MODIFY_SESSION](state, { user }) {
     state.firstName = user.firstName
     state.lastName = user.lastName
-  }
+  },
 }
 
 export const actions = {
@@ -79,11 +79,13 @@ export const actions = {
    * @returns
    */
   authorize({ commit }, payload) {
-    if (!payload?.accessToken || !payload?.user) {
+    if (!payload?.accessToken || !payload?.user)
       return
-    }
 
     commit(types.CREATE_SESSION, payload)
+  },
+  changeUserValueAfterUpdate({ commit }, value) {
+    commit(types.MODIFY_SESSION, value)
   },
   deauthorize({ commit }) {
     commit(types.DELETE_SESSION)
@@ -91,7 +93,4 @@ export const actions = {
   updateLoginState({ commit }, value) {
     commit(types.WRONG_LOGIN, value)
   },
-  changeUserValueAfterUpdate({ commit }, value) {
-    commit(types.MODIFY_SESSION, value)
-  }
 }

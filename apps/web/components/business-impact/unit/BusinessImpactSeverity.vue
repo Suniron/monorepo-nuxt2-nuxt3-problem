@@ -1,66 +1,3 @@
-<template>
-  <v-menu
-    v-model="show"
-    offset-y
-    max-width="600px"
-    transition="scale-transition"
-  >
-    <template #activator="{ on, attrs }">
-      <!-- [+] button when no affected Business Impact Severity -->
-      <v-btn
-        v-if="!curSeverity"
-        v-bind="attrs"
-        v-on="on"
-        color="primary"
-        elevation="2"
-        outlined
-        icon
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <!-- ... Else show Business Impact Severity button -->
-      <v-btn
-        v-else
-        v-bind="attrs"
-        v-on="on"
-        :title="`${severityInfos.severity} - ${severityInfos.name}`"
-        text
-      >
-        <v-icon :color="severityInfos.color">{{ severityInfos.icon }}</v-icon>
-      </v-btn>
-    </template>
-
-    <!-- Modal to choose Business Impact Severity level -->
-    <v-card>
-      <v-card-text>
-        <p class="mb-2 caption font-italic text--secondary">
-          Choose severity you want to associate to
-          <span class="font-weight-bold">{{ fearedEvent.name }}</span> feared
-          event.
-        </p>
-
-        <ul class="pl-0">
-          <li
-            v-for="severity in getAllSeverities()"
-            :key="severity.severity"
-            class="d-flex severity-chooser-btn"
-            @click="setSeverity(severity.severity)"
-          >
-            <v-icon :color="severity.color">{{ severity.icon }}</v-icon>
-            <p class="mb-0 text-body-2">
-              <span class="font-weight-bold" :style="{ color: severity.color }">
-                {{ severity.severity }} - {{ severity.name }}</span
-              >
-              <br />
-              {{ severity.description }}
-            </p>
-          </li>
-        </ul>
-      </v-card-text>
-    </v-card>
-  </v-menu>
-</template>
-
 <script>
 // @ts-check
 /**
@@ -71,17 +8,17 @@ import { getBusinessSeverityInfos } from '~/utils/asset.utils'
 import { updateFearedEventSeverity } from '~/services/fearedEvents'
 
 export default {
+  data() {
+    return {
+      curSeverity: this.fearedEvent?.severity,
+      show: false
+    }
+  },
   props: {
     /** @type {import('vue').PropOptions<FearedEvent>} */
     fearedEvent: {
       type: Object,
       required: true
-    }
-  },
-  data() {
-    return {
-      curSeverity: this.fearedEvent?.severity,
-      show: false
     }
   },
   computed: {
@@ -91,21 +28,7 @@ export default {
      */
     severityInfos() {
       return this.curSeverity && getBusinessSeverityInfos(this.curSeverity)
-    }
-  },
-  watch: {
-    /**
-     * Emit an event on each severity change
-     *
-     * @param {string} newSeverity
-     */
-    curSeverity(newSeverity) {
-      // Emit feared event with updated severity:
-      this.$emit('update:fearedEvent', {
-        ...this.fearedEvent,
-        severity: newSeverity
-      })
-    }
+    },
   },
   methods: {
     /**
@@ -137,9 +60,89 @@ export default {
         // TODO: handle request fail
       }
     }
+  },
+  watch: {
+    /**
+     * Emit an event on each severity change
+     *
+     * @param {string} newSeverity
+     */
+    curSeverity(newSeverity) {
+      // Emit feared event with updated severity:
+      this.$emit('update:fearedEvent', {
+        ...this.fearedEvent,
+        severity: newSeverity
+      })
+    }
   }
 }
 </script>
+
+<template>
+  <v-menu
+    v-model="show"
+    offset-y
+    max-width="600px"
+    transition="scale-transition"
+  >
+    <template #activator="{ on, attrs }">
+      <!-- [+] button when no affected Business Impact Severity -->
+      <v-btn
+        v-if="!curSeverity"
+        v-bind="attrs"
+        color="primary"
+        elevation="2"
+        outlined
+        icon
+        v-on="on"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+      <!-- ... Else show Business Impact Severity button -->
+      <v-btn
+        v-else
+        v-bind="attrs"
+        :title="`${severityInfos.severity} - ${severityInfos.name}`"
+        text
+        v-on="on"
+      >
+        <v-icon :color="severityInfos.color">
+          {{ severityInfos.icon }}
+        </v-icon>
+      </v-btn>
+    </template>
+
+    <!-- Modal to choose Business Impact Severity level -->
+    <v-card>
+      <v-card-text>
+        <p class="mb-2 caption font-italic text--secondary">
+          Choose severity you want to associate to
+          <span class="font-weight-bold">{{ fearedEvent.name }}</span> feared
+          event.
+        </p>
+
+        <ul class="pl-0">
+          <li
+            v-for="severity in getAllSeverities()"
+            :key="severity.severity"
+            class="d-flex severity-chooser-btn"
+            @click="setSeverity(severity.severity)"
+          >
+            <v-icon :color="severity.color">
+              {{ severity.icon }}
+            </v-icon>
+            <p class="mb-0 text-body-2">
+              <span class="font-weight-bold" :style="{ color: severity.color }">
+                {{ severity.severity }} - {{ severity.name }}</span>
+              <br>
+              {{ severity.description }}
+            </p>
+          </li>
+        </ul>
+      </v-card-text>
+    </v-card>
+  </v-menu>
+</template>
 
 <style lang="scss" scoped>
 .severity-chooser-btn {

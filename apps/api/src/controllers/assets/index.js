@@ -1,18 +1,18 @@
 import { throwHTTPError } from '@/common/errors'
 
 import {
-  searchAssetsService,
   createAssetService,
+  createAssetVulnerabilityService,
   deleteAssetService,
+  deleteAssetsBulkService,
+  fetchAssetPortsService,
+  getAssetRiskService,
+  importCsvService,
+  searchAssetRevisionsService,
+  searchAssetsBelongingService,
+  searchAssetsService,
   updateAssetService,
   updateAssetsBulkService,
-  deleteAssetsBulkService,
-  searchAssetRevisionsService,
-  importCsvService,
-  fetchAssetPortsService,
-  createAssetVulnerabilityService,
-  searchAssetsBelongingService,
-  getAssetRiskService,
 } from '@/services/assets'
 
 export const searchAssets = async (req, res, next) => {
@@ -22,13 +22,15 @@ export const searchAssets = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send(asset || { assets, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -37,13 +39,16 @@ export const createAssetController = async (req, res, next) => {
   try {
     const { error, id } = await createAssetService(req.body, req.accessToken)
 
-    if (error === 'DuplicateError') throw error
-    if (error) throwHTTPError(error)
-    res.send({ id, error })
-  } catch (error) {
-    if (error === 'DuplicateError') {
+    if (error === 'DuplicateError')
+      throw error
+    if (error)
+      throwHTTPError(error)
+    res.send({ error, id })
+  }
+  catch (error) {
+    if (error === 'DuplicateError')
       res.send({ error })
-    }
+
     next(error)
   }
 }
@@ -51,10 +56,12 @@ export const createAssetController = async (req, res, next) => {
 export const deleteAssetController = async (req, res, next) => {
   try {
     const { error } = await deleteAssetService(req.params?.id, req.accessToken)
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -64,12 +71,14 @@ export const createAssetVulnerabilityController = async (req, res, next) => {
     const { error } = await createAssetVulnerabilityService(
       req.params?.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -79,13 +88,16 @@ export const updateAssetController = async (req, res, next) => {
     const { error } = await updateAssetService(
       req.params?.id,
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (error?.code >= 300) throw error
-    if (error) throwHTTPError(error)
+    if (error?.code >= 300)
+      throw error
+    if (error)
+      throwHTTPError(error)
 
     res.status(204).end()
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -94,12 +106,14 @@ export const updateAssetsBulkController = async (req, res, next) => {
   try {
     const { error, data } = await updateAssetsBulkService(
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(201).send({ data })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -108,12 +122,14 @@ export const deleteAssetsBulkController = async (req, res, next) => {
   try {
     const { error, status } = await deleteAssetsBulkService(
       req.body,
-      req.accessToken
+      req.accessToken,
     )
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.status(201).send({ status })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -123,13 +139,15 @@ export const searchAssetRevisionsController = async (req, res, next) => {
     const { error, revisions, total } = await searchAssetRevisionsService(
       req.params?.id,
       req.query,
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ revisions, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -137,8 +155,9 @@ export const searchAssetRevisionsController = async (req, res, next) => {
 export const importCsvController = async (req, res, next) => {
   try {
     const { pass, failed } = await importCsvService(req.body, req.accessToken)
-    res.send({ pass: pass, failed: failed })
-  } catch (error) {
+    res.send({ failed, pass })
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -146,9 +165,11 @@ export const importCsvController = async (req, res, next) => {
 export const fetchAssetPortsController = async (req, res, next) => {
   try {
     const details = await fetchAssetPortsService(req.params.id, req.accessToken)
-    if (details.error) throwHTTPError(details.error)
+    if (details.error)
+      throwHTTPError(details.error)
     res.send({ details })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -160,13 +181,15 @@ export const searchAssetsBelongingController = async (req, res, next) => {
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.accessToken
+      req.accessToken,
     )
 
-    if (error) throwHTTPError(error)
+    if (error)
+      throwHTTPError(error)
 
     res.send({ assets, total })
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }
@@ -175,10 +198,12 @@ export const getAssetRiskController = async (req, res, next) => {
   try {
     const result = await getAssetRiskService(req.params.id, req.accessToken)
 
-    if ('error' in result) throwHTTPError(result.error)
+    if ('error' in result)
+      throwHTTPError(result.error)
 
     res.send(result)
-  } catch (error) {
+  }
+  catch (error) {
     next(error)
   }
 }

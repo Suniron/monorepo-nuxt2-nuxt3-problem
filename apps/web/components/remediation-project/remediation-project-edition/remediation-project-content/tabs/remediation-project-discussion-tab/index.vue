@@ -1,3 +1,107 @@
+<script>
+// @ts-check
+/**
+ * @typedef {import('@/types/remediationProject').RemediationProjectPost} RemediationProjectPost
+ */
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+// @ts-expect-error
+import { quillEditor } from 'vue-quill-editor'
+import { mapActions, mapGetters, mapState } from 'vuex'
+import { format } from 'date-fns'
+import MessageCreator from '~/components/common/MessageCreator.vue'
+import { createRemediationProjectPostService } from '~/services/remediation-projects'
+import { statusColor } from '~/utils/color.utils'
+import { getDurationFromDate } from '~/utils/date.utils'
+
+export default {
+  components: { MessageCreator, QuillEditor: quillEditor },
+  computed: {
+    ...mapState({
+      /**
+       * @returns {RemediationProjectPost[]}
+       */
+      projectDetailsPosts: state =>
+        state.remediationProject.projectDetails?.posts ?? [],
+      /**
+       * @returns {number}
+       */
+      projectId: state =>
+        state.remediationProject.projectDetails?.info.project_id,
+    }),
+    ...mapGetters('remediationProject', ['isReadOnlyMode']),
+    /**
+     * Filter posts by date, most recent in the top
+     * @returns {RemediationProjectPost[]}
+     */
+    sortedPostsByDate() {
+      if (!this.projectDetailsPosts)
+        return []
+
+      return [...this.projectDetailsPosts].sort(
+        (a, b) =>
+          new Date(b.from_date).getTime() - new Date(a.from_date).getTime(),
+      )
+    },
+  },
+  data() {
+    return {
+      editorOptionReadOnly: {
+        modules: {
+          toolbar: false,
+        },
+      },
+    }
+  },
+  methods: {
+    statusColor,
+    ...mapActions({
+      fetchRemediationProjectDetailsPosts:
+        'remediationProject/fetchRemediationProjectDetailsPosts',
+    }),
+    /**
+     * @param {string} date
+     */
+    getDuration: date => getDurationFromDate(date),
+
+    /**
+     * Returns date like "1994-04-15 17:05"
+     *
+     * @param {string} date
+     * @returns {string}
+     */
+    getFormattedDate(date) {
+      if (!date)
+        return ''
+
+      return format(new Date(date), 'yyyy-MM-dd HH:mm:ss')
+    },
+
+    /**
+     * @param {string} comment
+     */
+    async postComment(comment) {
+      if (!this.projectId)
+        return
+
+      try {
+        // Create post:
+        await createRemediationProjectPostService(this.$axios, this.projectId, {
+          comment,
+        })
+
+        // Refresh posts list:
+        await this.fetchRemediationProjectDetailsPosts(this.projectId)
+      }
+      catch (error) {
+        // TODO: handle request error
+      }
+    },
+  },
+}
+</script>
+
 <template>
   <v-col>
     <!-- CREATE MESSAGE -->
@@ -7,7 +111,7 @@
       </v-col>
     </v-row>
 
-    <!-- SHOW MESSAGE HISTORY-->
+    <!-- SHOW MESSAGE HISTORY -->
     <v-row justify="center">
       <v-col cols="6">
         <v-card>
@@ -36,15 +140,13 @@
                           </p>
                           <v-tooltip top>
                             <template #activator="{ on, attrs }">
-                              <span v-bind="attrs" v-on="on"
-                                >{{ getDuration(post.from_date) }} ago</span
-                              >
+                              <span v-bind="attrs" v-on="on">{{ getDuration(post.from_date) }} ago</span>
                             </template>
                             <span>{{ getFormattedDate(post.from_date) }}</span>
                           </v-tooltip>
                         </div>
 
-                        <quill-editor
+                        <QuillEditor
                           :content="post.comment"
                           :options="editorOptionReadOnly"
                           disabled
@@ -58,8 +160,9 @@
                           <v-chip
                             label
                             :color="statusColor(post.from_status_name)"
-                            >{{ post.from_status_name }}</v-chip
                           >
+                            {{ post.from_status_name }}
+                          </v-chip>
                         </p>
 
                         <p
@@ -71,14 +174,16 @@
                           <v-chip
                             label
                             :color="statusColor(post.from_status_name)"
-                            >{{ post.from_status_name }}</v-chip
                           >
+                            {{ post.from_status_name }}
+                          </v-chip>
                           <v-icon>mdi-arrow-right</v-icon>
                           <v-chip
                             label
                             :color="statusColor(post.to_status_name)"
-                            >{{ post.to_status_name }}</v-chip
                           >
+                            {{ post.to_status_name }}
+                          </v-chip>
                         </p>
                       </v-card-text>
                     </v-card>
@@ -92,106 +197,3 @@
     </v-row>
   </v-col>
 </template>
-
-<script>
-// @ts-check
-/**
- * @typedef {import('@/types/remediationProject').RemediationProjectPost} RemediationProjectPost
- */
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-// @ts-ignore
-import { quillEditor } from 'vue-quill-editor'
-import { mapState, mapGetters, mapActions } from 'vuex'
-import { format } from 'date-fns'
-import MessageCreator from '~/components/common/MessageCreator.vue'
-import { createRemediationProjectPostService } from '~/services/remediation-projects'
-import { statusColor } from '~/utils/color.utils'
-import { getDurationFromDate } from '~/utils/date.utils'
-
-export default {
-  components: { MessageCreator, quillEditor },
-  data() {
-    return {
-      editorOptionReadOnly: {
-        modules: {
-          toolbar: false
-        }
-      }
-    }
-  },
-  computed: {
-    ...mapState({
-      /**
-       * @returns {RemediationProjectPost[]}
-       */
-      projectDetailsPosts: (state) =>
-        state.remediationProject.projectDetails?.posts ?? [],
-      /**
-       * @returns {number}
-       */
-      projectId: (state) =>
-        state.remediationProject.projectDetails?.info.project_id
-    }),
-    ...mapGetters('remediationProject', ['isReadOnlyMode']),
-    /**
-     * Filter posts by date, most recent in the top
-     * @returns {RemediationProjectPost[]}
-     */
-    sortedPostsByDate() {
-      if (!this.projectDetailsPosts) {
-        return []
-      }
-
-      return [...this.projectDetailsPosts].sort(
-        (a, b) =>
-          new Date(b.from_date).getTime() - new Date(a.from_date).getTime()
-      )
-    }
-  },
-  methods: {
-    statusColor,
-    ...mapActions({
-      fetchRemediationProjectDetailsPosts:
-        'remediationProject/fetchRemediationProjectDetailsPosts'
-    }),
-    /**
-     * @param {string} date
-     */
-    getDuration: (date) => getDurationFromDate(date),
-    /**
-     * @param {string} comment
-     */
-    async postComment(comment) {
-      if (!this.projectId) {
-        return
-      }
-
-      try {
-        // Create post:
-        await createRemediationProjectPostService(this.$axios, this.projectId, {
-          comment
-        })
-
-        // Refresh posts list:
-        await this.fetchRemediationProjectDetailsPosts(this.projectId)
-      } catch (error) {
-        // TODO: handle request error
-      }
-    },
-    /**
-     * Returns date like "1994-04-15 17:05"
-     *
-     * @param {string} date
-     * @returns {string}
-     */
-    getFormattedDate(date) {
-      if (!date) {
-        return ''
-      }
-      return format(new Date(date), 'yyyy-MM-dd HH:mm:ss')
-    }
-  }
-}
-</script>

@@ -2,10 +2,10 @@ import { groupedRemediationsAPIs } from '@/api/store'
 
 export const searchGroupedRemediationsService = async (
   params,
-  accessToken = ''
+  accessToken = '',
 ) => {
   const data = await groupedRemediationsAPIs.searchGroupedRemediationsService(
-    accessToken
+    accessToken,
   )
   return data
 }

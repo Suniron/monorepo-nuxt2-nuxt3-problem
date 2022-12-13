@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ npm run install
 
@@ -25,11 +25,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ### Dashboard
 
-The library vue-responsive-dash ([Github](https://github.com/bensladden/vue-responsive-dash) [full documentation](https://vue-responsive-dash.netlify.app/)) is used to create a reponsive dashbaord with sm, md and lg breakpoints. 
+The library vue-responsive-dash ([Github](https://github.com/bensladden/vue-responsive-dash) [full documentation](https://vue-responsive-dash.netlify.app/)) is used to create a reponsive dashbaord with sm, md and lg breakpoints.
 
 Note: in the future, this lib should be replaced by [gridstack](https://www.npmjs.com/package/gridstack) which offers better support.
 
 - By default, there is **12** columns in the grid.
 - **Height** and **width** correspond to the number of **columns** and **rows**.
 - **x** and **y** correspond to the top left corner of the widget.
-

@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+
 const fs = require('fs')
+
 const csv = require('csvtojson')
+
 const path = require('path')
+
 
 const directory = './seeds/csv_seed_files/init_data/'
 

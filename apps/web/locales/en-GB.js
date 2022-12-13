@@ -1,77 +1,77 @@
 export default {
   action: {
-    login: 'Login',
-    signup: 'Sign up',
-    resetPassword: 'Reset Password',
-    mailHasBeenSent: "We've just sent an email, please check your mailbox",
-    mailDoesntExist:
-      'There is no account associated with this username or email address',
-    deleteMyAssets: 'I confirm i want to delete my asset(s)',
-    deleteMyIps: 'I confirm i want to delete my IP',
-    cancel: 'Cancel',
-    deleteSelectedAssets: 'Delete Selected Assets',
-    submit: 'Submit',
     addVulnerabilitiesToSelectedAssets:
       'Add vulnerabilities to selected Assets',
-    save: 'Save'
-  },
-  t: {
-    email: 'Email',
-    password: 'Password',
-    confirmPassword: 'Confirm password',
-    forgotYourPassword: 'Forgot your password ?',
-    ReturnToLoginPage: 'Return to login page',
-    usernameOrEmail: 'Username or Email',
-    loginUnsuccessful: 'Login unsuccessful. Please try again.',
-    resetPasswordFailed: 'Reset password failed. Please try again.',
-    errorLogin: 'Login failed. Please try again.',
-    deleteMessage: 'You are going to delete :',
-    irreversibleAction: 'This action is irreversible',
-    noDataToShow: 'No data to show',
-    loading: 'Loading...'
-  },
-  validation: {
-    emailRequired: 'Email is required',
-    passwordRequired: 'Password is required'
+    cancel: 'Cancel',
+    deleteMyAssets: 'I confirm i want to delete my asset(s)',
+    deleteMyIps: 'I confirm i want to delete my IP',
+    deleteSelectedAssets: 'Delete Selected Assets',
+    login: 'Login',
+    mailDoesntExist:
+      'There is no account associated with this username or email address',
+    mailHasBeenSent: 'We\'ve just sent an email, please check your mailbox',
+    resetPassword: 'Reset Password',
+    save: 'Save',
+    signup: 'Sign up',
+    submit: 'Submit',
   },
   projectManagement: {
-    noProject: 'No projects',
+    deadline: 'Deadline',
     id: 'ID',
-    projectName: 'Project Name',
-    projectOwner: 'Owner',
+    noProject: 'No projects',
     priority: 'Priority',
     priorityLevel: {
       critical: 'Critical',
       high: 'High',
+      low: 'Low',
       medium: 'Medium',
-      low: 'Low'
     },
-    status: 'Status',
-    statusLevel: {
-      open: 'Open',
-      in_progress: 'In progress',
-      to_review: 'To review',
-      completed: 'Completed',
-      canceled: 'Canceled',
-      overdue: 'Overdue'
-    },
-    transitions: {
-      start: 'Start',
-      accept: 'Accept',
-      refuse: 'Refuse',
-      send_for_review: 'Send for review',
-      cancel: 'Cancel',
-      re_open: 'Re-open'
-    },
-    deadline: 'Deadline',
+    projectName: 'Project Name',
+    projectOwner: 'Owner',
     remediationProject: {
-      title: 'Remediation project',
       closest_deadline:
         '{project_id} has the closest deadline on the {due_date}',
       noClosestDeadline: 'No future milestones',
+      projectInTime: 'All projects are in time !',
       projectOverdue:
         'No projects | {0} project exceeds the deadline | {0} projects exceed the deadline',
-      projectInTime: 'All projects are in time !'
-    }
-  }
+      title: 'Remediation project',
+    },
+    status: 'Status',
+    statusLevel: {
+      canceled: 'Canceled',
+      completed: 'Completed',
+      in_progress: 'In progress',
+      open: 'Open',
+      overdue: 'Overdue',
+      to_review: 'To review',
+    },
+    transitions: {
+      accept: 'Accept',
+      cancel: 'Cancel',
+      re_open: 'Re-open',
+      refuse: 'Refuse',
+      send_for_review: 'Send for review',
+      start: 'Start',
+    },
+  },
+  t: {
+    ReturnToLoginPage: 'Return to login page',
+    confirmPassword: 'Confirm password',
+    deleteMessage: 'You are going to delete :',
+    email: 'Email',
+    errorLogin: 'Login failed. Please try again.',
+    forgotYourPassword: 'Forgot your password ?',
+    irreversibleAction: 'This action is irreversible',
+    loading: 'Loading...',
+    loginUnsuccessful: 'Login unsuccessful. Please try again.',
+    noDataToShow: 'No data to show',
+    password: 'Password',
+    resetPasswordFailed: 'Reset password failed. Please try again.',
+    usernameOrEmail: 'Username or Email',
+  },
+  validation: {
+    emailRequired: 'Email is required',
+    passwordRequired: 'Password is required',
+  },
 }

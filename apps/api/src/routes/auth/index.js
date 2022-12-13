@@ -1,21 +1,21 @@
 import express from 'express'
+import { Joi, Segments, celebrate } from 'celebrate'
 import {
   jwtAuthParsing,
   loginController,
-  refreshAccessTokenController,
   logoutController,
+  refreshAccessTokenController,
   resetPassword,
   updatePasswordByToken,
 } from '@/controllers/auth'
-import { celebrate, Segments, Joi } from 'celebrate'
 
 const router = express.Router()
 
 // Validations
 const loginPayloadValidation = celebrate({
   [Segments.BODY]: Joi.object({
-    username: Joi.string().required(),
     password: Joi.string().required(),
+    username: Joi.string().required(),
   }),
 })
 
