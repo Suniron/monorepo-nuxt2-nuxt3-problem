@@ -104,7 +104,7 @@ api-create-prod-image:
   tags:
     - recettage
   script:
-    - docker build . --target prod -t $DOCKER_REGISTRY/test-xrator_api:prod-$VERSION -f ./apps/api/Dockerfile # Create a Docker image with production tags
+    - docker build . --target prod -t $DOCKER_REGISTRY/test-xrator_api:prod-$VERSION -t $DOCKER_REGISTRY/test-xrator_api -f ./apps/api/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/test-xrator_api:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/test-xrator_api # Push Docker image to "latest" tag
   rules:
