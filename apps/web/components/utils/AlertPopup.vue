@@ -47,14 +47,14 @@ export default {
       }
 
       // On open..
-      if (this.autoClose) 
+      if (this.autoClose)
         this.timeoutId = setTimeout(() => (this.isOpen = false), this.timeout) // auto close after timeout
     },
   },
 
   mounted() {
     this.isOpen = this.show // to trigger the watch
-  }
+  },
 }
 </script>
 
