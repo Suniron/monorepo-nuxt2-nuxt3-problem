@@ -302,8 +302,6 @@ store-create-prod-image:
       - .gitlab-ci.yml
 
 store-start-job:
-  extends: 
-  - .store_variables
   stage: deploy
   tags:
     - recettage
@@ -325,8 +323,6 @@ store-start-job:
       - .gitlab-ci.yml
 
 store-start-prerelease:
-  extends: 
-  - .store_variables
   stage: deploy
   tags:
     - prerelease
