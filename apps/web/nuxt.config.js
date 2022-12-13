@@ -51,7 +51,7 @@ const nuxtConfig = {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    ['@nuxtjs/eslint-module', { fix: true, lintDirtyModulesOnly: false }],
+    // ['@nuxtjs/eslint-module', { fix: true, lintDirtyModulesOnly: false }],
     '@nuxtjs/vuetify',
   ],
 
