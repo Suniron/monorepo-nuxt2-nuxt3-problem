@@ -14,7 +14,7 @@ const getEndpoint = id => (id ? `/tags/${id}` : '/tags')
  * @param {object} params Params to perform search
  * @returns {Promise<{ tags: Tag[], total: number }>} Tags available
  */
-export const searchTagsService = async (axios, params) => {
+export const searchTagsService = async (axios) => {
   const queryParams = {}
 
   const { data } = await axios.get(getEndpoint(), { params: queryParams })
