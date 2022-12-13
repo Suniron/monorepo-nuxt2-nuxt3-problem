@@ -11,6 +11,7 @@
     "build:docker": "docker-compose -f docker-compose.prod.yml build",
     "clean": "turbo run clean",
     "dev": "turbo run dev --parallel",
+    "dev:back": "turbo run dev --parallel --filter=@xrator-operator/store... --filter=@xrator-operator/api...",
     "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
     "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
     "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
