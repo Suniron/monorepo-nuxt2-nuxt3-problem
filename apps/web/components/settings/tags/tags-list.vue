@@ -1,18 +1,12 @@
 <script>
 // Service
 import CreateEditTagModal from './create-edit-tags-modal.vue'
-import { deleteTagService, updateTagService } from '~/services/tags'
+import { deleteTagService /* updateTagService */ } from '~/services/tags'
 import DeleteModal from '~/components/settings/delete-modal.vue'
 import { searchAssetsService } from '~/services/assets'
 export default {
-  components: { CreateEditTagModal, DeleteModal },
   name: 'TagsList',
-  props: {
-    tags: {
-      type: Array,
-      default: () => []
-    }
-  },
+  components: { CreateEditTagModal, DeleteModal },
   data() {
     return {
       assetsWithTags: [],
@@ -39,6 +33,12 @@ export default {
       isTagsLoading: false,
     }
   },
+  props: {
+    tags: {
+      type: Array,
+      default: () => []
+    }
+  },
   computed: {
     /**
      * @returns {Array} - Array of tags with assets count
@@ -52,22 +52,30 @@ export default {
       }))
     },
   },
+  async mounted() {
+    const assets = (
+      await searchAssetsService(this.$axios, {
+        tagIds: this.tags.map((tag) => tag.id)
+      })
+    ).assets
+    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
+  },
   methods: {
-    async changeTagColor(tagId, color) {
-      try {
-        this.isTagsLoading = true
+    // async changeTagColor(tagId, color) {
+    //   try {
+    //     this.isTagsLoading = true
 
-        await updateTagService(this.$axios, tagId, {
-          color
-        })
+    //     await updateTagService(this.$axios, tagId, {
+    //       color
+    //     })
 
-        this.$emit('update')
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.isTagsLoading = false
-      }
-    },
+    //     this.$emit('update')
+    //   } catch (error) {
+    //     console.error(error)
+    //   } finally {
+    //     this.isTagsLoading = false
+    //   }
+    // },
     async removeTag(tag) {
       const res = await deleteTagService(this.$axios, tag.id)
       if (res.status >= 300) {
@@ -76,14 +84,6 @@ export default {
         this.$emit('update')
       }
     }
-  },
-  async mounted() {
-    const assets = (
-      await searchAssetsService(this.$axios, {
-        tagIds: this.tags.map((tag) => tag.id)
-      })
-    ).assets
-    this.assetsWithTags.splice(0, this.assetsWithTags.length, ...assets)
   }
 }
 </script>
