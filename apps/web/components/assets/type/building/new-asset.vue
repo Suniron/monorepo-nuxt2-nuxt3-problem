@@ -35,11 +35,11 @@ export default {
     }
   },
   created() {
-    this.$root.$on('canceledSaves', this.canceledSaves)
+    this.$root.$on('resetForm', this.resetForm)
     this.$emit('change', this.formData)
   },
   methods: {
-    canceledSaves() {
+    resetForm() {
       this.formData = {
         latitude: this.asset?.latitude || null,
         location: this.asset?.location || null,

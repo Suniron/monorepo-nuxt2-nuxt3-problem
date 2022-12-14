@@ -52,11 +52,11 @@ export default {
     this.formData.LOCATED_TO = this.fetchLocation()
     this.restoreTheActualStateInDatabase()
     this.fetchMissions()
-    this.$root.$on('canceledSaves', this.canceledSaves)
+    this.$root.$on('resetForm', this.resetForm)
     this.changed()
   },
   methods: {
-    canceledSaves() {
+    resetForm() {
       this.formData = {
         LOCATED_TO: this.fetchLocation(),
         mail: this.asset?.mail || null,

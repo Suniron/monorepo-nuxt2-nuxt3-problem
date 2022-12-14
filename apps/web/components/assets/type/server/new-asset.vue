@@ -1,5 +1,15 @@
 <script>
 export default {
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    },
+    quickedit: {
+      type: Boolean,
+      required: false
+    }
+  },
   data() {
     return {
       formData: {
@@ -10,15 +20,9 @@ export default {
       IPs: this.asset?.ips?.map((x) => x.address) || null
     }
   },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    quickedit: {
-      type: Boolean,
-      required: false
-    }
+  created() {
+    this.$root.$on('resetForm', this.resetForm)
+    this.$emit('change', this.formData)
   },
   watch: {
     'formData.hostname'(newValue) {
@@ -32,12 +36,11 @@ export default {
       }
     }
   },
-  created() {
-    this.$root.$on('canceledSaves', this.canceledSaves)
-    this.$emit('change', this.formData)
-  },
   methods: {
-    canceledSaves() {
+    changed() {
+      this.$emit('change', this.formData)
+    },
+    resetForm() {
       this.formData = {
         IPs: {},
         hostname: this.asset?.hostname || null,
@@ -45,9 +48,6 @@ export default {
       }
       this.IPs = this.asset?.ips?.map(x => x.address) || null
       this.changed()
-    },
-    changed() {
-      this.$emit('change', this.formData)
     },
     validateIPs(ips) {
       this.formData.IPs = ips.reduce(

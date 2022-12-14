@@ -19,11 +19,11 @@ export default {
     }
   },
   created() {
-    this.$root.$on('canceledSaves', this.canceledSaves)
+    this.$root.$on('resetForm', this.resetForm)
     this.$emit('change', this.formData)
   },
   methods: {
-    canceledSaves() {
+    resetForm() {
       this.formData = {
         language: this.asset?.language || null,
         url: this.asset?.url || null,
