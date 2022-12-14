@@ -87,19 +87,34 @@ export const getAssetRiskModel = async (
 
 /**
  * Returns a list of assets. If an ID is given, returns a single asset object instead.
- *
- * @param {object} params Search params
- * @param {number} params.id ID of an asset
- * @param {string} params.ids ID of an asset, separated by commas
- * @param {string} params.search Search string used to search asset by name
- * @param {string} params.severities Comma-separated string-array of severities. Filters asset by the specified
- *                                   vulnerabilities' severities. Options: low, medium, high, critical
- * @param {string} params.tagIds Comma-separated string-array of tag IDs. Filters an asset by tag
- * @param {string} params.groupIds Comma-separated string-array of group IDs. Filter assets by group id
- * @param {Express.LoggedUser} loggedUserInfo
- * @returns
  */
-export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
+export const searchAssetsModel = async (params: {
+  /**
+   * ID of an asset
+   */
+  id: asset['id']
+  /**
+   * Asset IDs, separated by commas
+   */
+  ids: string
+  /**
+   * Search string used to search asset by name
+   */
+  search: string
+  /**
+   * Comma-separated string-array of severities. Filters asset by the specified
+   * vulnerabilities' severities. Options: low, medium, high, critical
+   */
+  severities: string
+  /**
+   * Comma-separated string-array of tag IDs. Filters an asset by tag
+   */
+  tagIds: string
+  /**
+   * Comma-separated string-array of group IDs. Filter assets by group id
+   */
+  groupIds: string
+}, loggedUserInfo: Express.LoggedUser) => {
   try {
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
@@ -560,13 +575,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-/**
- * @param {{parents_ids?: string, children_ids?: string}} params
- * @param {Express.LoggedUser} loggedUserInfo
- */
 export const searchAssetsBelongingModel = async (
-  params: any,
-  loggedUserInfo = {},
+  params: { parents_ids?: string; children_ids?: string },
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId, roles, id: userId } = loggedUserInfo
@@ -682,9 +693,9 @@ export const searchAssetsBelongingModel = async (
   }
 }
 
-export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
+export const createAssetModel = async (params: any, loggedUserInfo: Express.LoggedUser) => {
   try {
-    const createdAssetId = await knex.transaction(async (tx: any) => {
+    const createdAssetId = await knex.transaction(async (tx) => {
       const { name: inputName, type, assetData = {} } = params
       let name = inputName
 
@@ -949,7 +960,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
+export const deleteAssetModel = async (id: any, loggedUserInfo: Express.LoggedUser) => {
   try {
     if (!id)
       return { error: VALIDATION_ERROR }
@@ -987,7 +998,7 @@ export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
 export const updateAssetModel = async (
   id: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     if (!id)
@@ -1498,7 +1509,7 @@ export const updateAssetModel = async (
 export const searchAssetRevisions = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1598,7 +1609,7 @@ export const searchAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1701,7 +1712,7 @@ export const createAssetVulnerabilityModel = async (
 export const updateAssetVulnerabilityModel = async (
   astVulnId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1779,7 +1790,7 @@ export const updateAssetVulnerabilityModel = async (
 
 export const fetchAssetPortsModel = async (
   assetId: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1830,7 +1841,7 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
 export const createUrisModel = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1863,7 +1874,7 @@ export const createUrisModel = async (
 export const createAssetVulnerabilityModel = async (
   assetId,
   params,
-  loggedUserInfo = {}
+  loggedUserInfo: Express.LoggedUser
 ) => {
   try {
     const { companyId } = loggedUserInfo
