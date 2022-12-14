@@ -22,7 +22,8 @@
     "start": "turbo run start",
     "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
     "start:docker:db": "docker compose -f docker-compose.dev.yml up -d xrator_db",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "rm:docker:db": "docker stop xrator_db && docker rm xrator_db && docker image rm xrator-operator-xrator_db && docker volume rm xrator-operator_pg_data"
   },
   "devDependencies": {
     "eslint": "^8.29.0",
