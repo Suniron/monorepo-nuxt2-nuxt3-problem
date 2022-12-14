@@ -27,6 +27,7 @@
   "devDependencies": {
     "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.2",
     "prettier": "latest",
     "turbo": "latest"
   },
