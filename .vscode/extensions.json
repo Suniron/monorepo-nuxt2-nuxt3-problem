@@ -12,7 +12,9 @@
         "yzhang.markdown-all-in-one",
         "atlassian.atlascode",
   
-        "prisma.prisma"
+        "prisma.prisma",
+        "mtxr.sqltools-driver-pg",
+        "mtxr.sqltools"
       ],
       "unwantedRecommendations": [
         "vue.volar",
