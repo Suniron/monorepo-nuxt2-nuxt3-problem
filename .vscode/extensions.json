@@ -9,8 +9,8 @@
         "atlassian.atlascode",
         "orta.vscode-jest",
         "naumovs.color-highlight",
-        "yzhang.markdown-all-in-one",
         "atlassian.atlascode",
+        "adrianwilczynski.terminal-commands",
   
         "prisma.prisma",
         "mtxr.sqltools-driver-pg",
@@ -23,6 +23,8 @@
         "ms-mssql.mssql",
         "mtxr.sqltools",
         "googlecloudtools.cloudcode",
-        "oracle.oracledevtools"
+        "oracle.oracledevtools",
+        "christian-kohler.npm-intellisense",
+        "davidanson.vscode-markdownlint"
       ]
 }

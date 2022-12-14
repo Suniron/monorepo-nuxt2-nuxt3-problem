@@ -68,5 +68,22 @@
       "username": "postgres",
       "password": "P@ssw0rd"
     }
+  ],
+  "runTerminalCommand.commands": [
+    {
+      "command": "cd ../apps/store && pnpm db:seed:demo",
+      "name": "Seed demo",
+      "group": "database"
+    },
+    {
+      "command": "cd ../apps/store && pnpm db:truncate",
+      "name": "Remove all data",
+      "group": "database"
+    },
+    {
+      "command": "cd ../apps/store && pnpm db:resetseed",
+      "name": "Reset seeders",
+      "group": "database"
+    }
   ]
 }
