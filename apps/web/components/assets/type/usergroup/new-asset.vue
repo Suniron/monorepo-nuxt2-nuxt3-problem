@@ -49,7 +49,7 @@ export default {
   created() {
     this.restoreTheActualStateInDatabase()
     this.fetchMissions()
-    this.$root.$on('canceledSaves', this.canceledSaves)
+    this.$root.$on('resetForm', this.resetForm)
     this.changed()
   },
   watch: {
@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    canceledSaves() {
+    resetForm() {
       this.changed()
       this.restoreTheActualStateInDatabase()
     },

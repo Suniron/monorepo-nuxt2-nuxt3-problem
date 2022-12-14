@@ -28,14 +28,10 @@ export default {
   created() {
     this.restoreTheActualStateInDatabase()
     this.fetchMissions()
-    this.$root.$on('canceledSaves', this.canceledSaves)
+    this.$root.$on('resetForm', this.resetForm)
     this.changed()
   },
   methods: {
-    canceledSaves() {
-      this.changed()
-      this.restoreTheActualStateInDatabase()
-    },
     changed() {
       this.$emit('change', {
         children: Array.from(
@@ -53,6 +49,13 @@ export default {
       serviceParams.types = ['UNIT']
       const { assets } = await searchAssetsService(this.$axios, serviceParams)
       this.units = assets
+    },
+    resetForm() {
+      this.formData = {
+        unitsLinked: [],
+      }
+      this.changed()
+      this.restoreTheActualStateInDatabase()
     },
     restoreTheActualStateInDatabase() {
       if (this.asset?.children?.length > 0) {
