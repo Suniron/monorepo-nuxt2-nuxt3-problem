@@ -135,6 +135,7 @@ export const searchAssetsModel = async (params: {
         longitude: 'abdg.longitude',
         low_vulnerabilities: knex.raw('agg_sev.low'),
         mail: 'ausr.mail',
+        // mainIp: 'asrv.mainIp',
         medium_vulnerabilities: knex.raw('agg_sev.medium'),
         name: 'ast.name',
         netmask: 'anet.netmask',
@@ -508,26 +509,27 @@ export const searchAssetsModel = async (params: {
       }
     }
     // Filter result
-    let result_filtered = result
+    let resultsFiltered = result
 
+    // Apply regex filters
     filters.forEach(({ keyword, value }) => {
       switch (keyword) {
         case 'port': // fall-through to 'ports'
         case 'ports':
-          result_filtered = result_filtered.filter((asset: any) => {
+          resultsFiltered = resultsFiltered.filter((asset: any) => {
             return asset.ports.some((port: any) => {
               return port.number === parseInt(value)
             })
           })
           break
         case 'id':
-          result_filtered = result_filtered.filter(
+          resultsFiltered = resultsFiltered.filter(
             (asset: any) => asset.id === parseInt(value),
           )
           break
 
         default:
-          result_filtered = result_filtered.filter(
+          resultsFiltered = resultsFiltered.filter(
             (asset: any) =>
               typeof asset[keyword] === 'string'
               && asset[keyword].toLowerCase().includes(value),
@@ -536,21 +538,26 @@ export const searchAssetsModel = async (params: {
       }
     })
 
+    // Remove duplicates by keeping only one asset by id (like server assets with multiple ips)
+    resultsFiltered = resultsFiltered.filter((a, pos, assets) => {
+      return assets.map(mapObj => mapObj.id).indexOf(a.id) === pos
+    })
+
     if (Array.isArray(result)) {
       if (id) {
         // Single asset
-        if (result.length === 1) {
+        const isMultiIpsServer = result.every(asset => asset.type === 'SERVER' && asset.id === Number(id))
+        if (result.length === 1 || isMultiIpsServer)
           return { asset: result[0] }
-        }
-        else {
-          log
-            .withError(new Error(`Asset with id "${id}" not found`))
-            .error('searchAssetsModel error')
-          return { error: NOT_FOUND }
-        }
+
+        // Error: non handled "multiple assets" with same ids.
+        log
+          .withError(new Error(`Multiple assets with the id "${id}" found`))
+          .error('searchAssetsModel error')
+        return { error: NOT_FOUND }
       }
 
-      let total_result = result_filtered.length
+      let total_result = resultsFiltered.length
       if (filters.length === 0 && result.length > 0)
         total_result = result[0].total_count
 
@@ -558,11 +565,11 @@ export const searchAssetsModel = async (params: {
         const minAssetShow = (page - 1) * parseInt(pageSize)
         const maxAssetShow = minAssetShow + parseInt(pageSize)
 
-        result_filtered = result_filtered.slice(minAssetShow, maxAssetShow)
+        resultsFiltered = resultsFiltered.slice(minAssetShow, maxAssetShow)
       }
       // Multiple assets
       return {
-        assets: result_filtered,
+        assets: resultsFiltered,
         total: total_result,
       }
     }
@@ -699,7 +706,7 @@ export const createAssetModel = async (params: any, loggedUserInfo: Express.Logg
       const { name: inputName, type, assetData = {} } = params
       let name = inputName
 
-      const { companyId, userId } = loggedUserInfo
+      const { companyId, id: userId } = loggedUserInfo
 
       // Resolving homonyms (appending / increasing a number at the end of the name)
 
