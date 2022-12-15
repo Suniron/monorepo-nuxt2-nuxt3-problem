@@ -192,7 +192,7 @@ export default {
 <template>
   <div class="d-flex">
     <v-row
-      class="d-flex flex-column mr-4 justify-space-around m-5 w-50 bg-secondary rounded-0"
+      class="d-flex flex-column mr-4 justify-space-around m-5 w-50 rounded-0"
     >
       <v-col>
         <v-text-field
