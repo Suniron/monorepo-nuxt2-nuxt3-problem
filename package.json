@@ -12,6 +12,7 @@
     "clean": "turbo run clean",
     "dev": "turbo run dev --parallel",
     "dev:back": "turbo run dev --parallel --filter=@xrator-operator/store... --filter=@xrator-operator/api...",
+    "dev:web": "turbo run dev --parallel --filter=@xrator-operator/web...",
     "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
     "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
     "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
@@ -21,11 +22,14 @@
     "start": "turbo run start",
     "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
     "start:docker:db": "docker compose -f docker-compose.dev.yml up -d xrator_db",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "rm:docker:db": "docker stop xrator_db && docker rm xrator_db && docker image rm xrator-operator-xrator_db && docker volume rm xrator-operator_pg_data"
   },
   "devDependencies": {
     "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
+    "jest-presets": "workspace:*",
+    "husky": "^8.0.2",
     "prettier": "latest",
     "turbo": "latest"
   },
@@ -35,5 +39,8 @@
   "packageManager": "pnpm@7.14.2",
   "prisma": {
     "schema": "apps/store/prisma/schema.prisma"
+  },
+  "jest": {
+    "preset": "jest-presets/jest/node"
   }
 }

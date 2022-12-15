@@ -6,5 +6,6 @@ CREATE TABLE ip (
     mac character varying,
     iface character varying,
     mask character varying,
-    operational_status character varying
+    operational_status character varying,
+    is_main boolean default false
 );
