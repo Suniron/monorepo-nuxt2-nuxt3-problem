@@ -1,29 +1,27 @@
 {
-    "recommendations": [
-        "octref.vetur",
-  
-        "dbaeumer.vscode-eslint",
-        "eamodio.gitlens",
-        "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker",
-        "atlassian.atlascode",
-        "orta.vscode-jest",
-        "naumovs.color-highlight",
-        "atlassian.atlascode",
-  
-        "prisma.prisma",
-        "mtxr.sqltools-driver-pg",
-        "mtxr.sqltools"
-      ],
-      "unwantedRecommendations": [
-        "vue.volar",
-        "firefox-devtools.vscode-firefox-debug",
-        "ms-edgedevtools.vscode-edge-devtools",
-        "ms-mssql.mssql",
-        "mtxr.sqltools",
-        "googlecloudtools.cloudcode",
-        "oracle.oracledevtools",
-        "christian-kohler.npm-intellisense",
-        "davidanson.vscode-markdownlint"
-      ]
+  "recommendations": [
+    "vue.volar",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-docker",
+    "atlassian.atlascode",
+    "orta.vscode-jest",
+    "naumovs.color-highlight",
+    "atlassian.atlascode",
+    "prisma.prisma",
+    "mtxr.sqltools-driver-pg",
+    "mtxr.sqltools"
+  ],
+  "unwantedRecommendations": [
+    "octref.vetur",
+    "firefox-devtools.vscode-firefox-debug",
+    "ms-edgedevtools.vscode-edge-devtools",
+    "ms-mssql.mssql",
+    "mtxr.sqltools",
+    "googlecloudtools.cloudcode",
+    "oracle.oracledevtools",
+    "christian-kohler.npm-intellisense",
+    "davidanson.vscode-markdownlint"
+  ]
 }

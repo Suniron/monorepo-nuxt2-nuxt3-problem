@@ -3,6 +3,7 @@
   "vetur.experimental.templateInterpolationService": true,
   "vetur.validation.templateProps": true,
   "vetur.completion.tagCasing": "initial",
+  "vetur.completion.autoImport": true,
 
   "atlascode.jira.todoIssues.enabled": false,
   "atlascode.jira.startWorkBranchTemplate.customPrefixes": [
