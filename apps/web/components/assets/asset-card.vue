@@ -1,39 +1,24 @@
-<script>
+<script setup lang="ts">
+import { ref, useRouter } from '@nuxtjs/composition-api'
 import AssetIcon from '~/components/assets/AssetIcon.vue'
-import SaveAssetModal from '~/components/assets/save-asset-modal'
-import RemoveAssetModal from '~/components/assets/remove-asset-modal'
+import SaveAssetModal from '~/components/assets/save-asset-modal.vue'
+import RemoveAssetModal from '~/components/assets/remove-asset-modal.vue'
 import AssetInfo from '~/components/assets/type/AssetInfo.vue'
 
-export default {
-  components: {
-    AssetIcon,
-    SaveAssetModal,
-    RemoveAssetModal,
-    AssetInfo
-  },
-  name: 'AssetCard',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isRemoveModalOpen: false,
-      isSaveModalOpen: false
-    }
-  },
-  methods: {
-    handleCardClicked() {
-      this.$router.push(
-        this.localePath({
-          name: 'assets-id',
-          params: { id: this.asset.id },
-        }),
-      )
-    },
-  },
+const { asset } = defineProps({
+  asset: { required: true, type: Object },
+})
+const emit = defineEmits(['saved', 'delete'])
+
+const router = useRouter()
+
+const isRemoveModalOpen = ref(false)
+const isSaveModalOpen = ref(false)
+
+const handleCardClicked = () => {
+  router.push({
+    path: `/assets/${asset.id}`,
+  })
 }
 </script>
 
@@ -54,7 +39,7 @@ export default {
         <SaveAssetModal
           :is-update="true"
           :asset="asset"
-          @saved="$emit('saved')"
+          @saved="emit('saved')"
           @close="isSaveModalOpen = false"
         />
       </template>
@@ -70,7 +55,7 @@ export default {
       <template #default>
         <RemoveAssetModal
           :asset="asset"
-          @delete="$emit('delete')"
+          @delete="emit('delete')"
           @close="isRemoveModalOpen = false"
         />
       </template>
