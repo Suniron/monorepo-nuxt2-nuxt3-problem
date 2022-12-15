@@ -17,13 +17,28 @@ Need **Docker compose**, **Node.js >= 14**
 
 Note: since the web project (AKA `xrator_ui`) is not really optimized, you may need to wait a bit before the app is ready to be used (nearly 3 or 4 minutes minutes)
 
-## Tips
+## Tools
 
-### Database playground
+### Database
+
+From the `apps/store` folder:
+
+- Put the demo seeders in database (db must be empty): `pnpm db:seed:demo`
+- Delete the database tables content: `pnpm db:truncate`
+- Delete the database tables content and seed the demo: `pnpm db:resetseed`
+
+#### Playground
 
 You can create a `playground.sql` file at the root of the project to test your SQL queries (with `SQLTools` extension installed in vscode).
 
 This file is automatically excluded from git 👌.
+
+### Docker
+
+From the root of the project:
+
+- Create/init or start the database container: `pnpm start:docker:db`
+- Remove the database container (cache + data): `pnpm rm:docker:db`
 
 # Contributing
 

@@ -69,38 +69,5 @@
       "password": "P@ssw0rd"
     }
   ],
-  "runTerminalCommand.commands": [
-    // == DATABASE ==
-    {
-      "command": "pnpm start:docker:db",
-      "name": "Start database (and init if not yet)",
-      "group": "database",
-      "preserve": true
-    },
-    {
-      "command": "cd apps/store && pnpm db:seed:demo",
-      "name": "Seed demo",
-      "group": "database",
-      "preserve": true
-    },
-    {
-      "command": "cd apps/store && pnpm db:resetseed",
-      "name": "Reset seeders (db will be empty)",
-      "group": "database",
-      "preserve": true
-    },
-    {
-      "command": "cd apps/store && pnpm db:truncate",
-      "name": "Remove all data",
-      "group": "database",
-      "preserve": true
-    },
-    // == DOCKER ==
-    {
-      "command": "pnpm rm:docker:db",
-      "name": "Remove database (volume data + cache)",
-      "group": "docker",
-      "preserve": true
-    }
-  ]
+
 }
