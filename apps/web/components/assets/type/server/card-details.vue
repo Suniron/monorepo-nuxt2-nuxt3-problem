@@ -1,31 +1,44 @@
-<script>
-export default {
-  props: {
-    asset: {
-      required: true,
-      type: Object,
-    },
-  },
-}
+<script setup lang="ts">
+import { computed } from '@nuxtjs/composition-api'
+
+const { asset } = defineProps({
+  asset: { required: true, type: Object },
+})
+
+/**
+ * Get only the first main ip of the asset
+ */
+const mainIp = computed(() => {
+  if (!asset.mainIps?.length || !asset.mainIps[0].address)
+    return
+
+  return asset.mainIps[0].address
+})
+
+/**
+ * All other ips of the asset (remove the main ip)
+ */
+const otherIps = computed(() => {
+  if (!asset.ips.length)
+    return []
+  return [...asset.ips].filter(ip => ip.address !== mainIp.value).map(ip => ip.address)
+})
 </script>
 
 <template>
   <div>
-    <div class="my-4">
-      <span><strong>Name:</strong>
-        {{ asset.name || (asset.ip && asset.ip.address) }}</span>
-    </div>
-    <div class="my-4">
-      <span><strong>IP:</strong>
-        {{
-          (asset.ips && asset.ips.map((x) => x.address).join(', ')) || 'NA'
-        }}</span>
-    </div>
-    <div v-if="asset.hostname" class="my-4">
-      <span><strong>Hostname:</strong> {{ asset.hostname }}</span>
-    </div>
-    <div class="my-4">
-      <span><strong>Operating System:</strong> {{ asset.os }}</span>
-    </div>
+    <p><b>Name:</b> {{ asset.name }}</p>
+    <p>
+      <b>Main IP:</b> <span :class="{ 'text-warning': !mainIp }">{{ mainIp ?? 'No main IP' }}</span>
+      <span v-if="otherIps.length" class="tooltip tooltip-info z-10" :data-tip="`Non-main ips: ${otherIps.join(', ')}`">
+        <span class="badge badge-info">
+          +{{ otherIps.length }}
+        </span>
+      </span>
+    </p>
+    <p v-if="asset.hostname">
+      <b>Hostname:</b> {{ asset.hostname }}
+    </p>
+    <p><b>Operating System:</b> {{ asset.os }}</p>
   </div>
 </template>
