@@ -42,7 +42,7 @@ importers:
       fast-xml-parser: ^3.20.3
       helmet: ^4.4.1
       jest: ^29.3.1
-      jest-presets: '*'
+      jest-presets: workspace:*
       jsonwebtoken: ^8.5.1
       lodash: ^4.17.21
       loglayer: ^1.4.2
