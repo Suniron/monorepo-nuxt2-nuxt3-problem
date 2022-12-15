@@ -65,6 +65,7 @@ export const searchAssetsService = async (params, accessToken = '') => {
         location: asset.location,
         longitude: asset.longitude,
         mail: asset.mail,
+        mainIps: asset.mainIps,
         name: asset.name,
         netmask: asset.netmask,
         network: asset.network,

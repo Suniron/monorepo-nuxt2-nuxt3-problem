@@ -135,7 +135,8 @@ export const searchAssetsModel = async (params: {
         longitude: 'abdg.longitude',
         low_vulnerabilities: knex.raw('agg_sev.low'),
         mail: 'ausr.mail',
-        // mainIp: 'asrv.mainIp',
+        // Get the main IPs of the asset:
+        mainIps: knex.raw('coalesce(agg_main_ip.ips, \'{}\')'),
         medium_vulnerabilities: knex.raw('agg_sev.medium'),
         name: 'ast.name',
         netmask: 'anet.netmask',
@@ -279,6 +280,20 @@ export const searchAssetsModel = async (params: {
       .groupBy('asset_server_id')
       .as('agg_ip')
     query.leftJoin(ipsSubquery, { 'agg_ip.asset_server_id': 'ast.id' })
+
+    // Main IPs subquery
+    const mainIpsSubquery = knex
+      .select(
+        'asset_server_id',
+        knex.raw(
+          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask)) as ips',
+        ),
+      )
+      .from('ip')
+      .where('is_main', true)
+      .groupBy('asset_server_id')
+      .as('agg_main_ip')
+    query.leftJoin(mainIpsSubquery, { 'agg_main_ip.asset_server_id': 'ast.id' })
 
     // Ports subquery
     const portsSubquery = knex
