@@ -13,16 +13,10 @@
   "jest.nodeEnv": {
     "JWT_REFRESH_LIFE_MS": "7776000000"
   },
-  "jest.disabledWorkspaceFolders": [
-    "apps/api",
-    "apps/web",
-    "apps/store",
-    "apps/db"
-  ],
   "jest.autoRun": {
     "watch": false,
-    "onSave": "test-file",
-    "onStartup": ["all-tests"]
+    // "onSave": "test-file",
+    // "onStartup": ["all-tests"]
   },
   "jest.jestCommandLine": "pnpm jest",
   "files.watcherExclude": {
