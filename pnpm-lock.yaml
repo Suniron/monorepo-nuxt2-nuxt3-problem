@@ -7,12 +7,14 @@ importers:
       eslint: ^8.29.0
       eslint-config-custom: workspace:*
       husky: ^8.0.2
+      jest-presets: workspace:*
       prettier: latest
       turbo: latest
     devDependencies:
       eslint: 8.29.0
       eslint-config-custom: link:packages/config/eslint-config-custom
       husky: 8.0.2
+      jest-presets: link:packages/config/jest-presets
       prettier: 2.8.1
       turbo: 1.6.3
 
@@ -133,7 +135,7 @@ importers:
       helmet: ^4.4.1
       jest: ^29.3.1
       jest-mock-extended: ^3.0.1
-      jest-presets: '*'
+      jest-presets: workspace:*
       jsonwebtoken: ^8.5.1
       knex: ^2.0.0
       lodash: ^4.17.21

@@ -24,7 +24,7 @@
     "onSave": "test-file",
     "onStartup": ["all-tests"]
   },
-
+  "jest.jestCommandLine": "pnpm jest",
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
