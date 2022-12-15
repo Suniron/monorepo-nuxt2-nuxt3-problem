@@ -1,18 +1,17 @@
 import { log } from '../lib/logger'
 
 /**
- * @param {Number | null} score
- * @param {Boolean} hasVuln
- * @param {Boolean} scanned
- * @returns {"A" | "B" | "C" | "D" | "E" | "F"}
+ * [0]: GOOD or A
+ *
+ * ]0; 4[: LOW or B
+ *
+ * [4; 7[: MEDIUM or C
+ *
+ * [7; 9[: HIGH or D
+ *
+ * [9; 10]: CRITICAL or E
  */
-export function riskScoreLetter(score: any, hasVuln = false, scanned = false) {
-  // [0]: GOOD or A
-  // ]0; 4[: LOW or B
-  // [4; 7[: MEDIUM or C
-  // [7; 9[: HIGH or D
-  // [9; 10]: CRITICAL or E
-
+export const riskScoreLetter = (score: Number | null, hasVuln = false, scanned = false): ('A' | 'B' | 'C' | 'D' | 'E' | 'F') => {
   switch (true) {
     case !hasVuln && !scanned:
     case score === null:
