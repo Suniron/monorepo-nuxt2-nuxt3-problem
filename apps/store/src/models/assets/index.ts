@@ -273,7 +273,7 @@ export const searchAssetsModel = async (params: {
       .select(
         'asset_server_id',
         knex.raw(
-          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask)) as ips',
+          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask, \'isMain\', ip.is_main)) as ips',
         ),
       )
       .from('ip')

@@ -30,15 +30,16 @@ const otherIps = computed(() => {
     <p><b>Name:</b> {{ asset.name }}</p>
     <p>
       <b>Main IP:</b> <span :class="{ 'text-warning': !mainIp }">{{ mainIp ?? 'No main IP' }}</span>
-      <span v-if="otherIps.length" class="tooltip tooltip-info z-10" :data-tip="`Non-main ips: ${otherIps.join(', ')}`">
+      <span v-if="otherIps.length" class="tooltip tooltip-info z-10" :data-tip="`Other ips: ${otherIps.join(', ')}`">
         <span class="badge badge-info">
           +{{ otherIps.length }}
         </span>
       </span>
     </p>
-    <p v-if="asset.hostname">
-      <b>Hostname:</b> {{ asset.hostname }}
-    </p>
     <p><b>Operating System:</b> {{ asset.os }}</p>
+    <p>
+      <b>Hostname:</b>
+      <span :class="{ 'text-gray-400': !asset.hostname }">{{ asset.hostname ?? 'N/A' }}</span>
+    </p>
   </div>
 </template>
