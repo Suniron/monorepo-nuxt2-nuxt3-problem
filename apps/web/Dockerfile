@@ -29,7 +29,7 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 # Create and move into /web folder
 WORKDIR /web
 
-RUN yarn global add turbo@1.5.5
+RUN yarn global add turbo
 COPY . .
 
 RUN turbo prune --scope=@xrator-operator/web --docker
