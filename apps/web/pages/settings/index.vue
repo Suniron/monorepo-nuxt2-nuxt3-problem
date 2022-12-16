@@ -11,16 +11,21 @@ import { searchGroupsService } from '~/services/groups'
 import { searchTagsService } from '~/services/tags'
 
 export default {
-  components: { UsersSettings, GroupsSettings, CompanySettings, TagsSettings },
   name: 'CompanySettingsPage',
-  middleware: ['auth'],
+  components: { UsersSettings, GroupsSettings, CompanySettings, TagsSettings },
   data() {
     return {
       groups: [],
       users: [],
       tags: [],
+      showUser: true,
+      showTeam : false,
+      showTag: false,
+      showCompany: false,
+
     }
   },
+  middleware: ['auth'],
   created() {
     // If user is not admin, show a 403 FORBIDDEN PAGE
     if (!this.$store.getters['user/isAdmin'])
@@ -31,6 +36,24 @@ export default {
     this.fetchAllData()
   },
   methods: {
+    changeShow(show) {
+      console.log(show)
+      this.showUser = false
+      this.showTeam = false
+      this.showTag = false
+      this.showCompany = false
+      if (show === 'User')
+        this.showUser = true
+
+      if (show === 'Teams')
+        this.showTeam = true
+
+      if (show === 'Tag')
+        this.showTag = true
+
+      if (show === 'Company')
+        this.showCompany = true
+    },
     async fetchAllData() {
       await Promise.all([
         this.fetchUsers(),
@@ -70,56 +93,48 @@ export default {
 </script>
 
 <template>
-  <v-container style="max-width: 1000px">
-    <v-expansion-panels multiple class="mt-8">
-      <!-- Users Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Users</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <UsersSettings
-            :users="users"
-            :groups="groups"
-            @update="fetchAllData"
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+  <v-container class="bg-base-100">
+    <!-- Users Settings -->
 
-      <!-- Groups Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Teams</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <GroupsSettings
-            :users="users"
-            :groups="groups"
-            @update="fetchAllData"
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+    <div>
+      <h1 class="card-title mt-6">
+        Settings
+      </h1>
+      <div class="tabs text-center">
+        <a v-if="!showUser" class="tab tab-bordered " @click="changeShow('User')">User</a>
+        <a v-else class="tab tab-bordered tab-active ">User</a>
 
-      <!-- Tags Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Tags</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <TagsSettings :tags="tags" @update="fetchAllData" />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+        <a v-if="!showTeam" class="tab tab-bordered " @click="changeShow('Teams')">Teams</a>
+        <a v-else class="tab tab-bordered tab-active ">Teams</a>
 
-      <!-- Company Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Company Profile</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <CompanySettings />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+        <a v-if="!showTag" class="tab tab-bordered " @click="changeShow('Tag')">Tag</a>
+        <a v-else class="tab tab-bordered tab-active ">Tag</a>
+
+        <a v-if="!showCompany" class="tab tab-bordered " @click="changeShow('Company')">Company</a>
+        <a v-else class="tab tab-bordered tab-active ">Company</a>
+      </div>
+      <UsersSettings
+        v-if="showUser"
+        :users="users"
+        :groups="groups"
+        @update="fetchAllData"
+      />
+    </div>
+
+    <!-- Groups Settings -->
+    <GroupsSettings
+      v-if="showTeam"
+      :users="users"
+      :groups="groups"
+      @update="fetchAllData"
+    />
+
+    <!-- Tags Settings -->
+    <TagsSettings v-if="showTag" :tags="tags" @update="fetchAllData" />
+
+    <!-- Company Settings -->
+
+    <CompanySettings v-if="showCompany" />
   </v-container>
 </template>
 
