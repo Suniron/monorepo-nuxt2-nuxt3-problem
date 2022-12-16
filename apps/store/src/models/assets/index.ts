@@ -524,6 +524,8 @@ export const searchAssetsModel = async (params: {
           }),
         )
       }
+      const risk = await getAssetRiskModel(companyId, elem.id)
+      elem.risk = risk
     }
     // Filter result
     let resultsFiltered = result

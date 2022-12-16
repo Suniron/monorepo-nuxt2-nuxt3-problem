@@ -78,6 +78,7 @@ export const searchAssetsService = async (params, accessToken = '') => {
         relations: asset.relations,
         rev_cdate: asset.rev_cdate,
         revision: asset.revision,
+        risk: asset.risk,
         tags: Array.isArray(asset.tags)
           ? asset.tags.map(tag => ({
             color: tag.color,
