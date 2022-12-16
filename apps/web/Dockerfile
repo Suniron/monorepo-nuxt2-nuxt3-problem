@@ -42,6 +42,8 @@ FROM node:18-alpine3.16 as installer
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 WORKDIR /web
 
 # First install dependencies (as they change less often)
@@ -58,7 +60,7 @@ COPY --from=builder /web/out/full/ ./
 # Build the project
 RUN pnpm turbo build --filter=@xrator-operator/web...
 
-# Generate static files
+# # Generate static files
 RUN pnpm --filter=@xrator-operator/web... generate
 
 FROM node:18-alpine3.16 AS prod
@@ -83,6 +85,6 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nuxtjs
 USER nuxtjs
 
-COPY --from=installer /web/ /web
+COPY --from=installer --chown=nuxtjs:nuxtjs /web/ /web
 
 CMD ["pnpm", "--filter=@xrator-operator/web...", "start"]
