@@ -1,9 +1,11 @@
-FROM node:14-alpine AS base
+FROM node:18-alpine AS base
 
 ARG NODE_ENV
 ENV NUXT_HOST=0.0.0.0\
     NUXT_PORT=3000\ 
     NODE_ENV=$NODE_ENV
+
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
 EXPOSE 3000
 

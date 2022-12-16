@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useRouter } from '@nuxtjs/composition-api'
+import { computed, ref } from 'vue'
 import AssetIcon from '~/components/assets/AssetIcon.vue'
 import SaveAssetModal from '~/components/assets/save-asset-modal.vue'
 import RemoveAssetModal from '~/components/assets/remove-asset-modal.vue'
@@ -10,66 +10,65 @@ const { asset } = defineProps({
 })
 const emit = defineEmits(['saved', 'delete'])
 
-const router = useRouter()
-
 const isRemoveModalOpen = ref(false)
 const isSaveModalOpen = ref(false)
 
-const handleCardClicked = () => {
-  router.push({
+const assetPageLink = computed(() => {
+  return {
     path: `/assets/${asset.id}`,
-  })
-}
+  }
+})
 </script>
 
 <template>
-  <v-card
-    v-test="`asset-list-card-${asset.id}`"
-    class="asset-card"
-    @click.exact="handleCardClicked"
-  >
-    <v-dialog v-model="isSaveModalOpen" width="500">
-      <template #activator="{ on, attrs }">
-        <v-btn class="edit-asset-btn" small icon v-bind="attrs" v-on="on">
-          <v-icon>mdi-pen</v-icon>
-        </v-btn>
-      </template>
+  <NuxtLink :to="assetPageLink">
+    <v-card
+      v-test="`asset-list-card-${asset.id}`"
+      class="asset-card"
+    >
+      <v-dialog v-model="isSaveModalOpen" width="500">
+        <template #activator="{ on, attrs }">
+          <v-btn class="edit-asset-btn" small icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-pen</v-icon>
+          </v-btn>
+        </template>
 
-      <template #default>
-        <SaveAssetModal
-          :is-update="true"
-          :asset="asset"
-          @saved="emit('saved')"
-          @close="isSaveModalOpen = false"
-        />
-      </template>
-    </v-dialog>
+        <template #default>
+          <SaveAssetModal
+            :is-update="true"
+            :asset="asset"
+            @saved="emit('saved')"
+            @close="isSaveModalOpen = false"
+          />
+        </template>
+      </v-dialog>
 
-    <v-dialog v-model="isRemoveModalOpen" width="500">
-      <template #activator="{ on, attrs }">
-        <v-btn class="remove-asset-btn" small icon v-bind="attrs" v-on="on">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </template>
+      <v-dialog v-model="isRemoveModalOpen" width="500">
+        <template #activator="{ on, attrs }">
+          <v-btn class="remove-asset-btn" small icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
 
-      <template #default>
-        <RemoveAssetModal
-          :asset="asset"
-          @delete="emit('delete')"
-          @close="isRemoveModalOpen = false"
-        />
-      </template>
-    </v-dialog>
+        <template #default>
+          <RemoveAssetModal
+            :asset="asset"
+            @delete="emit('delete')"
+            @close="isRemoveModalOpen = false"
+          />
+        </template>
+      </v-dialog>
 
-    <div class="d-flex flex-column justify-space-between align-center">
-      <AssetIcon :os="asset.os || asset.language || asset.type" />
-    </div>
+      <div class="d-flex flex-column justify-space-between align-center">
+        <AssetIcon :os="asset.os || asset.language || asset.type" />
+      </div>
 
-    <div class="asset-card__details mt-5">
-      <AssetInfo :asset="asset" section="cardDetails" />
-      <AssetInfo :asset="asset" section="cardFooter" />
-    </div>
-  </v-card>
+      <div class="asset-card__details mt-5">
+        <AssetInfo :asset="asset" section="cardDetails" />
+        <AssetInfo :asset="asset" section="cardFooter" />
+      </div>
+    </v-card>
+  </NuxtLink>
 </template>
 
 <style lang="scss">
