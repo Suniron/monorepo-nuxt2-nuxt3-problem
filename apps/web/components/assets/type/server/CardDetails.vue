@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from '@nuxtjs/composition-api'
+import { computed } from 'vue'
 
 const { asset } = defineProps({
   asset: { required: true, type: Object },
