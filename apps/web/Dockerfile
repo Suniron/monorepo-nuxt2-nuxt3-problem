@@ -1,33 +1,88 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine3.16 AS base
+
+# Create and move into /web folder
+WORKDIR /web
 
 ARG NODE_ENV
 ENV NUXT_HOST=0.0.0.0\
     NUXT_PORT=3000\ 
-    NODE_ENV=$NODE_ENV
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
+    NODE_ENV=$NODE_ENV\
+    NODE_OPTIONS=--openssl-legacy-provider
 
 EXPOSE 3000
-
-WORKDIR /web
 
 COPY . .
 
 # Install pnpm
 RUN corepack enable
 
-# TODO: find a fix to use frozen-lockfile
-# RUN pnpm install --frozen-lockfile
-RUN pnpm install
+###############
+# BUILD STAGE # This stage is used to build application before production (Typescript => Javascript)
+###############
+FROM node:18-alpine3.16 as builder
 
-FROM base AS prod
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
-ARG BACKEND_BASE_URL
-ARG BACKEND_BROWSER_BASE_URL
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
+# Create and move into /web folder
+WORKDIR /web
+
+RUN yarn global add turbo@1.5.5
+COPY . .
+
+RUN turbo prune --scope=@xrator-operator/web --docker
+
+###################
+# INSTALLER STAGE # This stage is used to build application before production
+###################
+FROM node:18-alpine3.16 as installer
+
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /web
+
+# First install dependencies (as they change less often)
+COPY .npmrc .gitignore ./
+COPY --from=builder /web/out/json/ .
+COPY pnpm-*.yaml ./
+
+# Activate corepack to use pnpm
+RUN corepack enable
+RUN pnpm install -r --frozen-lockfile
+
+COPY --from=builder /web/out/full/ ./
+
+# Build the project
+RUN pnpm turbo build --filter=@xrator-operator/web...
+
+# Generate static files
+RUN pnpm --filter=@xrator-operator/web... generate
+
+FROM node:18-alpine3.16 AS prod
+
+# Create and move into /web folder
+WORKDIR /web
+
+ARG BACKEND_BASE_URL \
+    BACKEND_BROWSER_BASE_URL
 ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
-    BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL
+    BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL\
+    NUXT_HOST=0.0.0.0\
+    NUXT_PORT=3000\ 
+    NODE_ENV=production
 
-RUN pnpm prune
+EXPOSE 3000
 
-CMD ["pnpm", "start"]
+RUN corepack enable
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nuxtjs
+USER nuxtjs
+
+COPY --from=installer /web/ /web
+
+CMD ["pnpm", "--filter=@xrator-operator/web...", "start"]

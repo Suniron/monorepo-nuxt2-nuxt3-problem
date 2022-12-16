@@ -12,7 +12,6 @@
     "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "prestart": "pnpm generate",
     "lint:fix": "eslint --fix --ext .js,.vue . "
   },
   "dependencies": {
