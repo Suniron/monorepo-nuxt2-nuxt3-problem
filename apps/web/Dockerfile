@@ -21,13 +21,11 @@ RUN corepack enable
 ###############
 FROM node:18-alpine3.16 as builder
 
-RUN apk update
-RUN apk add --no-cache libc6-compat
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
 # Create and move into /web folder
 WORKDIR /web
+
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
 RUN yarn global add turbo
 COPY . .
@@ -39,6 +37,9 @@ RUN turbo prune --scope=@xrator-operator/web --docker
 ###################
 FROM node:18-alpine3.16 as installer
 
+# Create and move into /web folder
+WORKDIR /web
+
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
@@ -48,7 +49,6 @@ ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\
     BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL\
     NODE_OPTIONS=--openssl-legacy-provider
 
-WORKDIR /web
 
 # First install dependencies (as they change less often)
 COPY .npmrc .gitignore ./
@@ -65,7 +65,7 @@ COPY --from=builder /web/out/full/ ./
 RUN pnpm turbo build --filter=@xrator-operator/web...
 
 # # Generate static files
-RUN pnpm --filter=@xrator-operator/web... generate
+# RUN pnpm --filter=@xrator-operator/web... generate
 
 FROM node:18-alpine3.16 AS prod
 
@@ -89,6 +89,6 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nuxtjs
 USER nuxtjs
 
-COPY --from=installer --chown=nuxtjs:nodejs /web/ /web
+COPY --from=installer --chown=nuxtjs:nodejs /web/ /web/
 
 CMD ["pnpm", "--filter=@xrator-operator/web...", "start"]
