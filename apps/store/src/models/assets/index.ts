@@ -1,4 +1,5 @@
 import type { asset, company } from '@prisma/client'
+import type { Server } from '../../../types/asset'
 import { knex } from '../../common/db'
 
 import prismaClient from '../../prismaClient'
@@ -483,6 +484,7 @@ export const searchAssetsModel = async (params: {
       !isNaN(parseInt(page))
       && !isNaN(parseInt(pageSize))
       && filters.length === 0
+      && types !== 'SERVER'
     ) {
       query
         .limit(parseInt(pageSize))
@@ -572,11 +574,28 @@ export const searchAssetsModel = async (params: {
         return { error: NOT_FOUND }
       }
 
+      const ipToInt = (ip: string) => {
+        const ipArr = ip.split('.')
+        return parseInt(ipArr[0]) * 256 * 256 * 256 + parseInt(ipArr[1]) * 256 * 256 + parseInt(ipArr[2]) * 256 + parseInt(ipArr[3])
+      }
+
+      // Sort server assets by ip in numerical order
+      if (types === 'SERVER') {
+        resultsFiltered = resultsFiltered.sort((a: Server, b: Server) => {
+          if (b.mainIps.length === 0)
+            return 1
+          if (a.mainIps.length === 0 || ipToInt(a.mainIps[0].address) < ipToInt(b.mainIps[0].address))
+            return -1
+          if (ipToInt(a.mainIps[0].address) > ipToInt(b.mainIps[0].address))
+            return 1
+          return 0
+        })
+      }
       let total_result = resultsFiltered.length
       if (filters.length === 0 && result.length > 0)
         total_result = result[0].total_count
 
-      if (page && filters.length > 0) {
+      if (page && ((filters.length > 0) || types === 'SERVER')) {
         const minAssetShow = (page - 1) * parseInt(pageSize)
         const maxAssetShow = minAssetShow + parseInt(pageSize)
 
