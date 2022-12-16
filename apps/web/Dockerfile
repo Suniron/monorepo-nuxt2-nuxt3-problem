@@ -42,7 +42,11 @@ FROM node:18-alpine3.16 as installer
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
+ARG BACKEND_BASE_URL \
+    BACKEND_BROWSER_BASE_URL
+ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\ 
+    BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL\
+    NODE_OPTIONS=--openssl-legacy-provider
 
 WORKDIR /web
 
