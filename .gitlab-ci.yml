@@ -181,7 +181,7 @@ web-create-recette-image:
   script:
     - env
     - echo creating new Recette image for tag $VERSION
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/xrator_ui:rec -f ./apps/web/Dockerfile # Create a Docker image with recette tag
+    - docker build . --target prod -t $DOCKER_REGISTRY/xrator_ui:rec -f ./apps/web/Dockerfile # Create a Docker image with recette tag
     - docker push $DOCKER_REGISTRY/xrator_ui:rec # Push Docker image to "rec" tag
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop") # Run after MRs
@@ -197,7 +197,7 @@ web-create-prerelease-image:
     - recettage
   script:
     - echo creating new PreRelease image for tag $VERSION
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/xrator_ui:pre -f ./apps/web/Dockerfile # Create a Docker image with recette tags
+    - docker build . --target prod -t $DOCKER_REGISTRY/xrator_ui:pre-$VERSION -t $DOCKER_REGISTRY/xrator_ui:pre -f ./apps/web/Dockerfile # Create a Docker image with recette tags
     - docker push $DOCKER_REGISTRY/xrator_ui:pre-$VERSION # Push Docker image with versioned recette tag
     - docker push $DOCKER_REGISTRY/xrator_ui:pre # Push Docker image to "pre" tag
   rules:
@@ -213,7 +213,7 @@ web-create-prod-image:
   tags:
     - recettage
   script:
-    - docker build ./apps/web/ --target prod -t $DOCKER_REGISTRY/xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/xrator_ui -f ./apps/web/Dockerfile # Create a Docker image with production tags
+    - docker build . --target prod -t $DOCKER_REGISTRY/xrator_ui:prod-$VERSION -t $DOCKER_REGISTRY/xrator_ui -f ./apps/web/Dockerfile # Create a Docker image with production tags
     - docker push $DOCKER_REGISTRY/xrator_ui:prod-$VERSION # Push Docker image with versioned production tag
     - docker push $DOCKER_REGISTRY/xrator_ui # Push Docker image to "latest" tag
   rules:
