@@ -4,29 +4,21 @@ import AssetIcon from '~/components/assets/AssetIcon.vue'
 import AssetRiskScoreBar from '~/components/assets/details/AssetRiskScoreBar.vue'
 
 export default {
+  name: 'AssetCard',
   components: {
     AssetIcon,
     AssetRiskScoreBar
-  },
-  name: 'AssetCard',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
   },
   data() {
     return {
       show: false,
     }
   },
-  computed: {
-    /**
-     * @returns {boolean}
-     */
-    showRiskScoreBar() {
-      return ['UNIT', 'MISSION'].includes(this.asset.type)
-    },
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     handleCardClick() {
@@ -69,7 +61,7 @@ export default {
     </v-hover>
 
     <v-spacer class="mt-2" />
-    <AssetRiskScoreBar v-if="showRiskScoreBar" :asset="asset" />
+    <AssetRiskScoreBar :asset="asset" />
 
     <v-dialog v-model="show" width="500">
       <template #activator="{ on, attrs }">

@@ -1,5 +1,5 @@
 <script>
-import RiskIndicators from '~/components/assets/risk-indicators'
+import AssetRiskScoreBar from '../details/AssetRiskScoreBar.vue'
 
 // Controls
 import GroupsMultiselect from '~/components/controls/groups-multiselect'
@@ -10,8 +10,8 @@ import { updateAssetService } from '~/services/assets'
 
 export default {
   components: {
+    AssetRiskScoreBar,
     GroupsMultiselect,
-    RiskIndicators,
     TagsMultiselect,
   },
   data() {
@@ -74,7 +74,7 @@ export default {
       class="my-4 ws-8"
     >
       <span><strong>Risks:</strong></span>
-      <RiskIndicators :asset="asset" />
+      <AssetRiskScoreBar :asset="asset" />
     </div>
     <div class="my-4 ws-24">
       <span><strong>Team:</strong></span>

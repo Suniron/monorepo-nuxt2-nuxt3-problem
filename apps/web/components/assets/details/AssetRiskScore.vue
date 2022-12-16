@@ -3,19 +3,14 @@
 import RiskScoreExplanationModal from './RiskScoreExplanationModal.vue'
 import { getAssetsRisk } from '~/services/assets'
 import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
+import { isSuperAsset } from '~/utils/asset.utils'
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
 
 export default {
+  name: 'AssetRiskScore',
   components: {
     RiskScoreExplanationModal,
     LoadingSpinner
-  },
-  name: 'AssetRiskScore',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
   },
   data: () => ({
     dialogOpen: false,
@@ -28,6 +23,12 @@ export default {
       inherited: null
     },
   }),
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     /**
      * @returns {number}
@@ -44,12 +45,12 @@ export default {
         color: riskScoreColor(
           this.scoreToUse,
           this.hasVuln,
-          this.scanned || this.isSuperAsset,
+          this.scanned || isSuperAsset(this.asset.type),
         ),
         letter: riskScoreLetter(
           this.scoreToUse,
           this.hasVuln,
-          this.scanned || this.isSuperAsset,
+          this.scanned || isSuperAsset(this.asset.type),
         ),
       }
     },
@@ -79,33 +80,31 @@ export default {
     },
 
     /**
-     * TODO: Check with a list of super assets instead the reverse
-     *
-     * @returns {boolean}
-     */
-    isSuperAsset() {
-      return !['USER', 'SERVER', 'WEB'].includes(this.asset.type)
-    },
-
-    /**
      * Get the score to use depending on the asset type
      *
      * @returns {number}
      */
     scoreToUse() {
-      if (this.isSuperAsset)
+      if (isSuperAsset(this.asset.type))
         return this.scores.compoundScore
 
       return this.scores.inheritedScore
     },
-  },
-  mounted() {
-    this.fetchScores()
+
+    /**
+     * @returns {boolean}
+     */
+    superAsset() {
+      return isSuperAsset(this.asset.type)
+    },
   },
   watch: {
     assetId() {
       this.fetchScores()
     }
+  },
+  mounted() {
+    this.fetchScores()
   },
   methods: {
     async fetchScores() {
@@ -141,9 +140,9 @@ export default {
           </p>
         </div>
       </template>
-      <RiskScoreExplanationModal :is-super-asset="isSuperAsset" />
+      <RiskScoreExplanationModal :is-super-asset="superAsset" />
     </v-dialog>
-    <div v-if="isSuperAsset" style="display: flex">
+    <div v-if="superAsset" style="display: flex">
       <p>
         <strong>Compound Risk Score: </strong>
         <span :title="scores.compound">{{ getScoresToDisplay.compound }}</span>

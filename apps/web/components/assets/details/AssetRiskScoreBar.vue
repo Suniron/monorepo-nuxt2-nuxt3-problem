@@ -3,6 +3,7 @@
 
 // IMPORTANT NOTE: for now, it's only for super asset, not for server, web, user, ...
 import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
+import { isSuperAsset } from '~/utils/asset.utils'
 
 export default {
   computed: {
@@ -42,19 +43,9 @@ export default {
      * @returns {number}
      */
     scoreToUse() {
-      if (this.isSuperAsset) {
-        return this.compoundScore
-      }
+      if (isSuperAsset(this.asset.type)) return this.compoundScore
 
       return this.inheritedScore
-    },
-    /**
-     * TODO: Check with a list of super assets instead the reverse
-     *
-     * @returns {boolean}
-     */
-    isSuperAsset() {
-      return !['USER', 'SERVER', 'WEB'].includes(this.asset.type)
     },
     /**
      * @returns {"A" | "B" | "C" | "D" | "E" | "F"}
@@ -63,7 +54,7 @@ export default {
       return riskScoreLetter(
         this.scoreToUse,
         this.hasVulnerability,
-        this.isScanned || this.isSuperAsset
+        this.isScanned || isSuperAsset(this.asset.type),
       )
     },
     /**
@@ -73,9 +64,9 @@ export default {
       return riskScoreColor(
         this.scoreToUse,
         this.hasVulnerability,
-        this.isScanned || this.isSuperAsset
+        this.isScanned || isSuperAsset(this.asset.type),
       )
-    }
+    },
   },
   props: {
     /**
@@ -131,6 +122,7 @@ export default {
     color: white;
     width: 100%;
     margin-bottom: 0px !important;
+    text-align: center;
   }
 
   :first-child {

@@ -196,3 +196,12 @@ Object.keys(allowedRelationsTypes).forEach((assetType) => {
   })
 })
 export { allowedRelationsTypes }
+
+/**
+     * Return true if the asset is a super asset
+     *
+     * @returns {boolean}
+     */
+export const isSuperAsset = (assetType) => {
+  return SUPER_ASSET_TYPES.includes(assetType)
+}
