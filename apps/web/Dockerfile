@@ -85,6 +85,6 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nuxtjs
 USER nuxtjs
 
-COPY --from=installer --chown=nuxtjs:nuxtjs /web/ /web
+COPY --from=installer --chown=nuxtjs:nodejs /web/ /web
 
 CMD ["pnpm", "--filter=@xrator-operator/web...", "start"]
