@@ -64,7 +64,7 @@ COPY --from=builder /web/out/full/ ./
 # Build the project
 RUN pnpm turbo build --filter=@xrator-operator/web...
 
-# # Generate static files
+# Generate static files // TODO: find why it doesn't work
 # RUN pnpm --filter=@xrator-operator/web... generate
 
 FROM node:18-alpine3.16 AS prod
@@ -78,7 +78,8 @@ ENV BACKEND_BASE_URL=$BACKEND_BASE_URL\
     BACKEND_BROWSER_BASE_URL=$BACKEND_BROWSER_BASE_URL\
     NUXT_HOST=0.0.0.0\
     NUXT_PORT=3000\ 
-    NODE_ENV=production
+    NODE_ENV=production\
+    NODE_OPTIONS=--openssl-legacy-provider
 
 EXPOSE 3000
 
