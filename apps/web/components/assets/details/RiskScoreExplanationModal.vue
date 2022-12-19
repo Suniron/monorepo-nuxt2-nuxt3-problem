@@ -9,7 +9,7 @@ export default {
     return {
       riskScoreColor,
       riskScoreLetter,
-      globalRiskScoreDisplays
+      globalRiskScoreDisplays,
     }
   },
   props: {
