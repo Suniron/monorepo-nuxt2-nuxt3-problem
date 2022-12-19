@@ -2,14 +2,16 @@ import { knex } from '../../../common/db'
 
 import { MODEL_ERROR, NOT_FOUND, SUCCESS } from '../../../common/constants'
 
-export const createIpModel = async (tx: any, assetId: any, params: any) => {
+export const createIpModel = async (tx: any, assetId: number, params: { ips: { address: String; mac: String; iface: String; mask: String }; is_main: Boolean }) => {
   try {
-    const { address, mac = '', iface = '', mask = '' } = params
+    const { address, mac = '', iface = '', mask = '' } = params.ips
+    const is_main = params.is_main
     const [ipId] = (
       await tx('ip').returning('id').insert({
         address,
         asset_server_id: assetId,
         iface,
+        is_main,
         mac,
         mask,
       })

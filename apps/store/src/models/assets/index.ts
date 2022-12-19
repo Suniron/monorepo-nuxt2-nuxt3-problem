@@ -894,8 +894,9 @@ export const createAssetModel = async (params: any, loggedUserInfo: Express.Logg
           id: assetId,
           os,
         })
+        let isMain = true
         for (let i = 0; i < IPs.length; i++) {
-          const ipId = await createIpModel(tx, assetId, IPs[i])
+          const ipId = await createIpModel(tx, assetId, { ips: IPs[i], is_main: isMain })
           params.assetData.IPs[i].id = ipId
           for (const port in ports) {
             const portId = await createPortModel(tx, ipId, ports[port])
@@ -903,6 +904,7 @@ export const createAssetModel = async (params: any, loggedUserInfo: Express.Logg
             for (const cipher in ports[port].ciphers)
               await createCipherModel(tx, portId, cipher)
           }
+          isMain = false
         }
         // Create WEB asset
       }
