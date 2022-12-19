@@ -7,10 +7,16 @@ import { isSuperAsset } from '~/utils/asset.utils'
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
 
 export default {
-  name: 'AssetRiskScore',
   components: {
     RiskScoreExplanationModal,
     LoadingSpinner
+  },
+  name: 'AssetRiskScore',
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
   },
   data: () => ({
     dialogOpen: false,
@@ -20,15 +26,12 @@ export default {
     scores: {
       inherent: null,
       compound: null,
-      inherited: null
+      inherited: null,
     },
+    timeout: 5000,
+    snackbar: false,
+    snackbarText: 'A problem has occurred that makes the service temporarily unavailable. Please try again later',
   }),
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
   computed: {
     /**
      * @returns {number}
@@ -98,27 +101,33 @@ export default {
       return isSuperAsset(this.asset.type)
     },
   },
+  mounted() {
+    this.fetchScores()
+  },
   watch: {
     assetId() {
       this.fetchScores()
     }
   },
-  mounted() {
-    this.fetchScores()
-  },
   methods: {
     async fetchScores() {
       this.loading = true
-      const { data } = await getAssetsRisk(this.$axios, this.assetId)
-      this.scores.inherentScore = data.scores.inherentScore
-      this.scores.inheritedScore = data.scores.inheritedScore
-      this.scores.compoundScore = data.scores.compoundScore
-      this.scanned = data.lastScanDate !== null
+      try {
+        const { data } = await getAssetsRisk(this.$axios, this.assetId)
+        this.scores.inherentScore = data.scores.inherentScore
+        this.scores.inheritedScore = data.scores.inheritedScore
+        this.scores.compoundScore = data.scores.compoundScore
+        this.scanned = data.lastScanDate !== null
 
-      // If the inherent score is at 0, it means there only are remediated vulns.
-      // A non-scanned & no-vuln asset has an inherent risk score of 10
-      this.hasVuln = data.scores.inherentScore === 0 || data.hasVulnerability
-      this.loading = false
+        // If the inherent score is at 0, it means there only are remediated vulns.
+        // A non-scanned & no-vuln asset has an inherent risk score of 10
+        this.hasVuln = data.scores.inherentScore === 0 || data.hasVulnerability
+      }
+      finally {
+        this.loading = false
+        if (this.getScoresToDisplay.compound === -1 || this.getScoresToDisplay.inherent === -1 || this.getScoresToDisplay.inherited === -1)
+          this.snackbar = true
+      }
     },
   },
 }
@@ -165,6 +174,14 @@ export default {
           }}</span>
         </p>
       </div>
+      <v-snackbar v-model="snackbar" :timeout="timeout" color="red accent-2">
+        {{ snackbarText }}
+        <template #action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </template>
   </div>
 </template>
