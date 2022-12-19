@@ -1,136 +1,109 @@
-<script>
-// @ts-check
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue'
+import { useContext } from '@nuxtjs/composition-api'
 import RiskScoreExplanationModal from './RiskScoreExplanationModal.vue'
 import { getAssetsRisk } from '~/services/assets'
 import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
 import { isSuperAsset } from '~/utils/asset.utils'
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
 
-export default {
-  components: {
-    RiskScoreExplanationModal,
-    LoadingSpinner
+const { asset } = defineProps({
+  asset: {
+    required: true,
+    type: Object,
   },
-  name: 'AssetRiskScore',
-  props: {
-    asset: {
-      type: Object,
-      required: true
+})
+
+const axios = useContext().$axios
+
+const dialogOpen = ref(false)
+const loading = ref(true)
+const hasVuln = ref(false)
+const scanned = ref(false)
+const scores = ref<{
+  compound: null | number
+  inherent: null | number
+  inherited: null | number
+}>({
+  compound: null,
+  inherent: null,
+  inherited: null,
+})
+const timeout = ref(5000)
+const snackbar = ref(false)
+const snackbarText = ref('A problem has occurred that makes the service temporarily unavailable. Please try again later')
+
+const scoreToUse = computed (
+  () =>
+    isSuperAsset(asset.type)
+      ? scores.value.compound
+      : scores.value.inherited,
+)
+const assetId = computed<number>(() => asset.id)
+const getGlobalRiskScore = computed(() => {
+  if (scoreToUse.value === null) {
+    return {
+      color: 'black',
+      letter: 'N/A',
     }
-  },
-  data: () => ({
-    dialogOpen: false,
-    loading: true,
-    hasVuln: false,
-    scanned: false,
-    scores: {
-      inherent: null,
-      compound: null,
-      inherited: null,
-    },
-    timeout: 5000,
-    snackbar: false,
-    snackbarText: 'A problem has occurred that makes the service temporarily unavailable. Please try again later',
-  }),
-  computed: {
-    /**
-     * @returns {number}
-     */
-    assetId() {
-      return this.asset.id
-    },
+  }
 
-    /**
-     * @returns {{letter: String, color: String}}
-     */
-    getGlobalRiskScore() {
-      return {
-        color: riskScoreColor(
-          this.scoreToUse,
-          this.hasVuln,
-          this.scanned || isSuperAsset(this.asset.type),
-        ),
-        letter: riskScoreLetter(
-          this.scoreToUse,
-          this.hasVuln,
-          this.scanned || isSuperAsset(this.asset.type),
-        ),
-      }
-    },
-
-    /**
-     * @returns {{
-     *  inherent: string | number,
-     *  inherited: string | number,
-     *  compound: string | number
-     * }}
-     */
-    getScoresToDisplay() {
-      return {
-        compound:
-          this.scores.compoundScore === null
+  return {
+    color: riskScoreColor(
+      scoreToUse.value,
+      hasVuln.value,
+      scanned.value || isSuperAsset(asset.type),
+    ),
+    letter: riskScoreLetter(
+      scoreToUse.value,
+      hasVuln.value,
+      scanned.value || isSuperAsset(asset.type),
+    ),
+  }
+},
+)
+const getScoresToDisplay = computed(() => ({
+  compound:
+          scores.value.compound === null
             ? 'N/A'
-            : roundScore(this.scores.compoundScore),
-        inherent:
-          this.scores.inherentScore === null
+            : roundScore(scores.value.compound),
+  inherent:
+          scores.value.inherent === null
             ? 'N/A'
-            : roundScore(this.scores.inherentScore),
-        inherited:
-          this.scores.inheritedScore === null
+            : roundScore(scores.value.inherent),
+  inherited:
+          scores.value.inherited === null
             ? 'N/A'
-            : roundScore(this.scores.inheritedScore),
-      }
-    },
+            : roundScore(scores.value.inherited),
+}))
+const superAsset = computed(() => isSuperAsset(asset.type))
 
-    /**
-     * Get the score to use depending on the asset type
-     *
-     * @returns {number}
-     */
-    scoreToUse() {
-      if (isSuperAsset(this.asset.type))
-        return this.scores.compoundScore
+const fetchScores = async () => {
+  loading.value = true
+  try {
+    const { data } = await getAssetsRisk(axios, assetId.value)
+    scores.value.inherent = data.scores.inherentScore
+    scores.value.inherited = data.scores.inheritedScore
+    scores.value.compound = data.scores.compoundScore
+    scanned.value = data.lastScanDate !== null
 
-      return this.scores.inheritedScore
-    },
-
-    /**
-     * @returns {boolean}
-     */
-    superAsset() {
-      return isSuperAsset(this.asset.type)
-    },
-  },
-  mounted() {
-    this.fetchScores()
-  },
-  watch: {
-    assetId() {
-      this.fetchScores()
-    }
-  },
-  methods: {
-    async fetchScores() {
-      this.loading = true
-      try {
-        const { data } = await getAssetsRisk(this.$axios, this.assetId)
-        this.scores.inherentScore = data.scores.inherentScore
-        this.scores.inheritedScore = data.scores.inheritedScore
-        this.scores.compoundScore = data.scores.compoundScore
-        this.scanned = data.lastScanDate !== null
-
-        // If the inherent score is at 0, it means there only are remediated vulns.
-        // A non-scanned & no-vuln asset has an inherent risk score of 10
-        this.hasVuln = data.scores.inherentScore === 0 || data.hasVulnerability
-      }
-      finally {
-        this.loading = false
-        if (this.getScoresToDisplay.compound === -1 || this.getScoresToDisplay.inherent === -1 || this.getScoresToDisplay.inherited === -1)
-          this.snackbar = true
-      }
-    },
-  },
+    // If the inherent score is at 0, it means there only are remediated vulns.
+    // A non-scanned & no-vuln asset has an inherent risk score of 10
+    hasVuln.value = data.scores.inherentScore === 0 || data.hasVulnerability
+  }
+  finally {
+    loading.value = false
+    if (getScoresToDisplay.value.compound === -1 || getScoresToDisplay.value.inherent === -1 || getScoresToDisplay.value.inherited === -1)
+      snackbar.value = true
+  }
 }
+
+onMounted(() => fetchScores())
+watch(
+  asset, async () => {
+    await fetchScores()
+  },
+)
 </script>
 
 <template>
@@ -154,14 +127,14 @@ export default {
     <div v-if="superAsset" style="display: flex">
       <p>
         <strong>Compound Risk Score: </strong>
-        <span :title="scores.compound">{{ getScoresToDisplay.compound }}</span>
+        <span>{{ getScoresToDisplay.compound }}</span>
       </p>
     </div>
     <template v-else>
       <div style="display: flex">
         <p>
           <strong>Inherent Risk Score: </strong>
-          <span :title="scores.inherent">{{
+          <span>{{
             getScoresToDisplay.inherent
           }}</span>
         </p>
@@ -169,7 +142,7 @@ export default {
       <div style="display: flex">
         <p>
           <strong>Inherited Risk Score: </strong>
-          <span :title="scores.inherited">{{
+          <span>{{
             getScoresToDisplay.inherited
           }}</span>
         </p>
