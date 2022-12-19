@@ -120,47 +120,6 @@ api-create-prod-image:
       # - apps/api/**/*
       # - .gitlab-ci.yml
 
-# api-start-job:
-#   stage: deploy
-#   tags:
-#     - recettage
-#     - front
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/git/xrator-frontend-compose/
-#     - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_api # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_api:rec # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_api # Start service again
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#       # changes:
-#       # - apps/api/**/*
-#       # - .gitlab-ci.yml
-
-# api-start-prerelease:
-#   stage: deploy
-#   tags:
-#     - prerelease
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/xrator-compose/
-#     - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_api # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_api:pre # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.yml" up -d --build xrator_api # Start service again
-#   rules:
-#     # Should be run after push on master
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#       # changes:
-#       # - apps/api/**/*
-#       # - .gitlab-ci.yml
-
 # # =========
 # # =========
 # # == WEB ==
@@ -221,47 +180,6 @@ web-create-prod-image:
       # changes:
       # - apps/web/**/*
       # - .gitlab-ci.yml
-
-# web-start-job:
-#   stage: deploy
-#   tags:
-#     - recettage
-#     - front
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/git/xrator-frontend-compose/
-#     - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_ui # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_ui:rec # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_ui # Start service again
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#       # changes:
-#       # - apps/web/**/*
-#       # - .gitlab-ci.yml
-       
-# web-start-prerelease:
-#   stage: deploy
-#   tags:
-#     - prerelease
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/xrator-compose/
-#     - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_ui # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_ui:pre # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.yml" up -d --build xrator_ui # Start service again
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#       # changes:
-#       # - apps/web/**/*
-#       # - .gitlab-ci.yml
 
 # # ===========
 # # ===========
@@ -324,50 +242,6 @@ store-create-prod-image:
       # - apps/store/**/*
       # - .gitlab-ci.yml
 
-# store-start-job:
-#   stage: deploy
-#   tags:
-#     - recettage
-#     - store
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/git/xrator-db-compose/
-#     - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_store # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_store:rec # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_store # Start service again
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#       # changes:
-#       # - apps/store/**/*
-#       # - .gitlab-ci.yml
-
-# store-start-prerelease:
-#   stage: deploy
-#   tags:
-#     - prerelease
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/xrator-compose/
-#     - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_store # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_store:pre # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.yml" up -d --build xrator_store # Start service again
-#   after_script:
-#     - docker exec xrator_store npm run prestart # Wait for DB to be ready
-#     - docker exec xrator_store npm run import-demo || true # Import demo data (do not fail job if seeders did not run, as they are already imported)
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#       # changes:
-#       # - apps/store/**/*
-#       # - .gitlab-ci.yml
-
 # # ========
 # # ========
 # # == DB ==
@@ -429,50 +303,6 @@ db-create-prod-image:
       # - apps/db/**/*
       # - .gitlab-ci.yml
 
-# db-start-job:
-#   stage: deploy
-#   tags:
-#     - recettage
-#     - store
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/git/xrator-db-compose/
-#     - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_db # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_db:rec # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_db # Start service again
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
-#       # changes:
-#       # - apps/db/**/*
-#       # - .gitlab-ci.yml
-
-# db-start-prerelease:
-#   stage: deploy
-#   tags:
-#     - prerelease
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - echo "Starting..."
-#     - cd /home/user/xrator-compose/
-#     - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_db # Remove service
-#     - docker pull $DOCKER_REGISTRY/xrator_db:pre # Pull new image
-#     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-#     - docker-compose -f "docker-compose.yml" up -d --build xrator_db # Start service again
-#   after_script:
-#     - docker exec xrator_store npm run prestart # Waiting for Postgres DB to be ready
-#     - docker exec xrator_store npm run import-demo # Import the demo data in new prerelease database
-#   rules:
-#     # Should be run after push on develop
-#     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "master") # Run after MRs
-#       # changes:
-#       # - apps/db/**/*
-#       # - .gitlab-ci.yml
-
 ## =============
 ## =============
 ## == RECETTE ==
@@ -487,11 +317,11 @@ recette-front-start-job:
     GIT_STRATEGY: none
   script:
     - cd /home/user/git/xrator-frontend-compose/
-    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f # Remove web & api services
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_api xrator_ui # Remove web & api services
     - docker pull $DOCKER_REGISTRY/xrator_ui:rec # Pull new image
     - docker pull $DOCKER_REGISTRY/xrator_api:rec # Pull new image
     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-    - docker-compose -f "docker-compose.rec.yml" up -d --build # Start service again
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_api xrator_ui # Start service again
   rules:
     # Should be run after push on develop
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
@@ -506,11 +336,11 @@ recette-back-start-job:
   script:
     - echo "Starting..."
     - cd /home/user/git/xrator-db-compose/
-    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f # Remove store & db services
+    - docker-compose -f "docker-compose.rec.yml" rm -s -v -f xrator_db xrator_store # Remove store & db services
     - docker pull $DOCKER_REGISTRY/xrator_store:rec # Pull new image
     - docker pull $DOCKER_REGISTRY/xrator_db:rec # Pull new image
     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-    - docker-compose -f "docker-compose.rec.yml" up -d --build # Start service again
+    - docker-compose -f "docker-compose.rec.yml" up -d --build xrator_db xrator_store # Start service again
   rules:
     # Should be run after push on develop
     - if: ($CI_PIPELINE_SOURCE == "push") && ($CI_COMMIT_BRANCH == "develop")
@@ -530,13 +360,13 @@ prerelease-start-job:
   script:
     - echo "Starting..."
     - cd /home/user/xrator-compose/
-    - docker-compose -f "docker-compose.yml" rm -s -v -f # Remove service
+    - docker-compose -f "docker-compose.yml" rm -s -v -f xrator_db xrator_store xrator_ui xrator_api # Remove service
     - docker pull $DOCKER_REGISTRY/xrator_db:pre # Pull new image
     - docker pull $DOCKER_REGISTRY/xrator_store:pre # Pull new image
     - docker pull $DOCKER_REGISTRY/xrator_ui:pre # Pull new image
     - docker pull $DOCKER_REGISTRY/xrator_api:pre # Pull new image
     - docker rmi $(docker images -f "dangling=true" -q) --force || true # Remove untagged / dangling images
-    - docker-compose -f "docker-compose.yml" up -d --build # Start service again
+    - docker-compose -f "docker-compose.yml" up -d --build xrator_db xrator_store xrator_ui xrator_api # Start service again
   after_script:
     - docker exec xrator_store npm run prestart # Waiting for Postgres DB to be ready
     - docker exec xrator_store npm run import-demo # Import the demo data in new prerelease database
