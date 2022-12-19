@@ -1,5 +1,4 @@
 <script>
-// @ts-check
 import UsersSettings from '~/components/settings/users/index.vue'
 import GroupsSettings from '~/components/settings/groups/index.vue'
 import TagsSettings from '~/components/settings/tags/index.vue'
@@ -19,6 +18,11 @@ export default {
       groups: [],
       users: [],
       tags: [],
+      showUser: true,
+      showTeam : false,
+      showTag: false,
+      showCompany: false,
+
     }
   },
   created() {
@@ -31,6 +35,12 @@ export default {
     this.fetchAllData()
   },
   methods: {
+    changeTabToShow(tabToShow) {
+      this.showUser = tabToShow === 'users'
+      this.showTeam = tabToShow === 'teams'
+      this.showTag = tabToShow === 'tags'
+      this.showCompany = tabToShow === 'company'
+    },
     async fetchAllData() {
       await Promise.all([
         this.fetchUsers(),
@@ -70,57 +80,44 @@ export default {
 </script>
 
 <template>
-  <v-container style="max-width: 1000px">
-    <v-expansion-panels multiple class="mt-8">
+  <v-container>
+    <h1 class="card-title my-6 text-2xl">
+      Settings
+    </h1>
+
+    <div class="max-w-6xl mx-auto">
+      <div class="tabs flex justify-center">
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showUser }" @click="changeTabToShow('users')">Users</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showTeam }" @click="changeTabToShow('teams')">Teams</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showTag }" @click="changeTabToShow('tags')">Tags</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showCompany }" @click="changeTabToShow('company')">Company</a>
+      </div>
+
       <!-- Users Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Users</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <UsersSettings
-            :users="users"
-            :groups="groups"
-            @update="fetchAllData"
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <UsersSettings
+        v-if="showUser"
+        :users="users"
+        :groups="groups"
+
+        @update="fetchAllData"
+      />
 
       <!-- Groups Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Teams</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <GroupsSettings
-            :users="users"
-            :groups="groups"
-            @update="fetchAllData"
-          />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <GroupsSettings
+        v-if="showTeam"
+        :users="users"
+        :groups="groups"
+
+        @update="fetchAllData"
+      />
 
       <!-- Tags Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Tags</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <TagsSettings :tags="tags" @update="fetchAllData" />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <TagsSettings v-if="showTag" :tags="tags" @update="fetchAllData" />
 
       <!-- Company Settings -->
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <h3>Company Profile</h3>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <CompanySettings />
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+      <CompanySettings
+        v-if="showCompany"
+      />
+    </div>
   </v-container>
 </template>
-
-<style></style>
