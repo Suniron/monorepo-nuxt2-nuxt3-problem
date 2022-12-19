@@ -1,4 +1,5 @@
 import type { asset, company } from '@prisma/client'
+import type { Server } from '../../../types/asset'
 import { knex } from '../../common/db'
 
 import prismaClient from '../../prismaClient'
@@ -87,19 +88,34 @@ export const getAssetRiskModel = async (
 
 /**
  * Returns a list of assets. If an ID is given, returns a single asset object instead.
- *
- * @param {object} params Search params
- * @param {number} params.id ID of an asset
- * @param {string} params.ids ID of an asset, separated by commas
- * @param {string} params.search Search string used to search asset by name
- * @param {string} params.severities Comma-separated string-array of severities. Filters asset by the specified
- *                                   vulnerabilities' severities. Options: low, medium, high, critical
- * @param {string} params.tagIds Comma-separated string-array of tag IDs. Filters an asset by tag
- * @param {string} params.groupIds Comma-separated string-array of group IDs. Filter assets by group id
- * @param {Express.LoggedUser} loggedUserInfo
- * @returns
  */
-export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
+export const searchAssetsModel = async (params: {
+  /**
+   * ID of an asset
+   */
+  id: asset['id']
+  /**
+   * Asset IDs, separated by commas
+   */
+  ids: string
+  /**
+   * Search string used to search asset by name
+   */
+  search: string
+  /**
+   * Comma-separated string-array of severities. Filters asset by the specified
+   * vulnerabilities' severities. Options: low, medium, high, critical
+   */
+  severities: string
+  /**
+   * Comma-separated string-array of tag IDs. Filters an asset by tag
+   */
+  tagIds: string
+  /**
+   * Comma-separated string-array of group IDs. Filter assets by group id
+   */
+  groupIds: string
+}, loggedUserInfo: Express.LoggedUser) => {
   try {
     const { companyId, roles, id: userId } = loggedUserInfo
     const groups = await getUserGroupIds(userId)
@@ -120,6 +136,8 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
         longitude: 'abdg.longitude',
         low_vulnerabilities: knex.raw('agg_sev.low'),
         mail: 'ausr.mail',
+        // Get the main IPs of the asset:
+        mainIps: knex.raw('coalesce(agg_main_ip.ips, \'{}\')'),
         medium_vulnerabilities: knex.raw('agg_sev.medium'),
         name: 'ast.name',
         netmask: 'anet.netmask',
@@ -256,13 +274,27 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       .select(
         'asset_server_id',
         knex.raw(
-          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask)) as ips',
+          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask, \'isMain\', ip.is_main)) as ips',
         ),
       )
       .from('ip')
       .groupBy('asset_server_id')
       .as('agg_ip')
     query.leftJoin(ipsSubquery, { 'agg_ip.asset_server_id': 'ast.id' })
+
+    // Main IPs subquery
+    const mainIpsSubquery = knex
+      .select(
+        'asset_server_id',
+        knex.raw(
+          'array_agg(json_build_object(\'id\', ip.id, \'address\', ip.address, \'mac\', ip.mac, \'iface\', ip.iface, \'mask\', ip.mask)) as ips',
+        ),
+      )
+      .from('ip')
+      .where('is_main', true)
+      .groupBy('asset_server_id')
+      .as('agg_main_ip')
+    query.leftJoin(mainIpsSubquery, { 'agg_main_ip.asset_server_id': 'ast.id' })
 
     // Ports subquery
     const portsSubquery = knex
@@ -452,6 +484,7 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       !isNaN(parseInt(page))
       && !isNaN(parseInt(pageSize))
       && filters.length === 0
+      && types !== 'SERVER'
     ) {
       query
         .limit(parseInt(pageSize))
@@ -491,28 +524,31 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
           }),
         )
       }
+      const risk = await getAssetRiskModel(companyId, elem.id)
+      elem.risk = risk
     }
     // Filter result
-    let result_filtered = result
+    let resultsFiltered = result
 
+    // Apply regex filters
     filters.forEach(({ keyword, value }) => {
       switch (keyword) {
         case 'port': // fall-through to 'ports'
         case 'ports':
-          result_filtered = result_filtered.filter((asset: any) => {
+          resultsFiltered = resultsFiltered.filter((asset: any) => {
             return asset.ports.some((port: any) => {
               return port.number === parseInt(value)
             })
           })
           break
         case 'id':
-          result_filtered = result_filtered.filter(
+          resultsFiltered = resultsFiltered.filter(
             (asset: any) => asset.id === parseInt(value),
           )
           break
 
         default:
-          result_filtered = result_filtered.filter(
+          resultsFiltered = resultsFiltered.filter(
             (asset: any) =>
               typeof asset[keyword] === 'string'
               && asset[keyword].toLowerCase().includes(value),
@@ -521,33 +557,55 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
       }
     })
 
+    // Remove duplicates by keeping only one asset by id (like server assets with multiple ips)
+    resultsFiltered = resultsFiltered.filter((a, pos, assets) => {
+      return assets.map(mapObj => mapObj.id).indexOf(a.id) === pos
+    })
+
     if (Array.isArray(result)) {
       if (id) {
         // Single asset
-        if (result.length === 1) {
+        const isMultiIpsServer = result.every(asset => asset.type === 'SERVER' && asset.id === Number(id))
+        if (result.length === 1 || isMultiIpsServer)
           return { asset: result[0] }
-        }
-        else {
-          log
-            .withError(new Error(`Asset with id "${id}" not found`))
-            .error('searchAssetsModel error')
-          return { error: NOT_FOUND }
-        }
+
+        // Error: non handled "multiple assets" with same ids.
+        log
+          .withError(new Error(`Multiple assets with the id "${id}" found`))
+          .error('searchAssetsModel error')
+        return { error: NOT_FOUND }
       }
 
-      let total_result = result_filtered.length
+      const ipToInt = (ip: string) => {
+        const ipArr = ip.split('.')
+        return parseInt(ipArr[0]) * 256 * 256 * 256 + parseInt(ipArr[1]) * 256 * 256 + parseInt(ipArr[2]) * 256 + parseInt(ipArr[3])
+      }
+
+      // Sort server assets by ip in numerical order
+      if (types === 'SERVER') {
+        resultsFiltered = resultsFiltered.sort((a: Server, b: Server) => {
+          if (b.mainIps.length === 0)
+            return 1
+          if (a.mainIps.length === 0 || ipToInt(a.mainIps[0].address) < ipToInt(b.mainIps[0].address))
+            return -1
+          if (ipToInt(a.mainIps[0].address) > ipToInt(b.mainIps[0].address))
+            return 1
+          return 0
+        })
+      }
+      let total_result = resultsFiltered.length
       if (filters.length === 0 && result.length > 0)
         total_result = result[0].total_count
 
-      if (page && filters.length > 0) {
+      if (page && ((filters.length > 0) || types === 'SERVER')) {
         const minAssetShow = (page - 1) * parseInt(pageSize)
         const maxAssetShow = minAssetShow + parseInt(pageSize)
 
-        result_filtered = result_filtered.slice(minAssetShow, maxAssetShow)
+        resultsFiltered = resultsFiltered.slice(minAssetShow, maxAssetShow)
       }
       // Multiple assets
       return {
-        assets: result_filtered,
+        assets: resultsFiltered,
         total: total_result,
       }
     }
@@ -560,13 +618,9 @@ export const searchAssetsModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-/**
- * @param {{parents_ids?: string, children_ids?: string}} params
- * @param {Express.LoggedUser} loggedUserInfo
- */
 export const searchAssetsBelongingModel = async (
-  params: any,
-  loggedUserInfo = {},
+  params: { parents_ids?: string; children_ids?: string },
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId, roles, id: userId } = loggedUserInfo
@@ -682,13 +736,13 @@ export const searchAssetsBelongingModel = async (
   }
 }
 
-export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
+export const createAssetModel = async (params: any, loggedUserInfo: Express.LoggedUser) => {
   try {
-    const createdAssetId = await knex.transaction(async (tx: any) => {
+    const createdAssetId = await knex.transaction(async (tx) => {
       const { name: inputName, type, assetData = {} } = params
       let name = inputName
 
-      const { companyId, userId } = loggedUserInfo
+      const { companyId, id: userId } = loggedUserInfo
 
       // Resolving homonyms (appending / increasing a number at the end of the name)
 
@@ -840,8 +894,9 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
           id: assetId,
           os,
         })
+        let isMain = true
         for (let i = 0; i < IPs.length; i++) {
-          const ipId = await createIpModel(tx, assetId, IPs[i])
+          const ipId = await createIpModel(tx, assetId, { ips: IPs[i], is_main: isMain })
           params.assetData.IPs[i].id = ipId
           for (const port in ports) {
             const portId = await createPortModel(tx, ipId, ports[port])
@@ -849,6 +904,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
             for (const cipher in ports[port].ciphers)
               await createCipherModel(tx, portId, cipher)
           }
+          isMain = false
         }
         // Create WEB asset
       }
@@ -949,7 +1005,7 @@ export const createAssetModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
+export const deleteAssetModel = async (id: any, loggedUserInfo: Express.LoggedUser) => {
   try {
     if (!id)
       return { error: VALIDATION_ERROR }
@@ -987,7 +1043,7 @@ export const deleteAssetModel = async (id: any, loggedUserInfo = {}) => {
 export const updateAssetModel = async (
   id: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     if (!id)
@@ -1498,7 +1554,7 @@ export const updateAssetModel = async (
 export const searchAssetRevisions = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1598,7 +1654,7 @@ export const searchAssetVulnerabilityModel = async (
   assetId: any,
   vulnId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1643,15 +1699,15 @@ export const createAssetVulnerabilityModel = async (
       code,
       score,
       version,
-      severity = '',
-      confidence = '',
-      likelihood = '',
-      details = '',
-      exploit_code_maturity = '',
-      exploitability_ease = '',
-      patch_publication_date = '',
-      plugin_modification_date = '',
-      vuln_publication_date = '',
+      severity = knex.raw('NULL'),
+      confidence = knex.raw('NULL'),
+      likelihood = knex.raw('NULL'),
+      details = knex.raw('NULL'),
+      exploit_code_maturity = knex.raw('NULL'),
+      exploitability_ease = knex.raw('NULL'),
+      patch_publication_date = knex.raw('NULL'),
+      plugin_modification_date = knex.raw('NULL'),
+      vuln_publication_date = knex.raw('NULL'),
       exploit_available = false,
       exploit_framework_core = false,
       exploited_by_malware = false,
@@ -1701,7 +1757,7 @@ export const createAssetVulnerabilityModel = async (
 export const updateAssetVulnerabilityModel = async (
   astVulnId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1779,7 +1835,7 @@ export const updateAssetVulnerabilityModel = async (
 
 export const fetchAssetPortsModel = async (
   assetId: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1830,7 +1886,7 @@ export const createIpPortsModel = async (assetId: any, params: any) => {
 export const createUrisModel = async (
   assetId: any,
   params: any,
-  loggedUserInfo = {},
+  loggedUserInfo: Express.LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
@@ -1863,7 +1919,7 @@ export const createUrisModel = async (
 export const createAssetVulnerabilityModel = async (
   assetId,
   params,
-  loggedUserInfo = {}
+  loggedUserInfo: Express.LoggedUser
 ) => {
   try {
     const { companyId } = loggedUserInfo

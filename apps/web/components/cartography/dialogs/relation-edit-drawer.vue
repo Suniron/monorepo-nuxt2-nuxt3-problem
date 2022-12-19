@@ -79,7 +79,6 @@ export default {
           )
           this.$emit('saved')
         }
-        // this.resetField()
         this.$emit('close')
       }
       catch (error) {

@@ -28,7 +28,7 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /web
 
-RUN yarn global add turbo@1.5.5
+RUN yarn global add turbo
 COPY . .
 
 RUN turbo prune --scope=@xrator-operator/web --docker

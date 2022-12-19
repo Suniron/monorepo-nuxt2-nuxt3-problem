@@ -1,6 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import webpack from 'webpack'
+import type { NuxtConfig } from '@nuxt/types'
+import { version } from './package.json'
 // import colors from 'vuetify/es5/util/colors'
 
 const isProd = process.env.NODE_ENV === 'production'
@@ -23,7 +25,7 @@ const server
       }
     : undefined
 
-const nuxtConfig = {
+const nuxtConfig: NuxtConfig = {
   /*
   ** Build configuration
   */
@@ -38,28 +40,36 @@ const nuxtConfig = {
           ...(config.plugins ?? []),
           new webpack.DefinePlugin({
             'process.env': {
-              PACKAGE_VERSION: `"${require('./package.json').version}"`,
+              PACKAGE_VERSION: `"${version}"`,
             },
           }),
         ],
       }
     },
+    postcss: {
+      plugins: {
+        autoprefixer: {},
+        tailwindcss: {},
+      },
+    },
   },
-
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     // ['@nuxtjs/eslint-module', { fix: true, lintDirtyModulesOnly: false }],
+    '@nuxtjs/composition-api/module',
     '@nuxtjs/vuetify',
+    '@nuxt/typescript-build',
+    '@nuxt/postcss8',
   ],
-
   /*
   ** Global CSS
   */
-  css: [],
-
+  css: [
+    '@/assets/css/main.css',
+  ],
   /*
   ** Headers of the page
   */
@@ -144,6 +154,10 @@ const nuxtConfig = {
   ssr: false,
 
   target: 'static',
+
+  typescript: {
+    typeCheck: false,
+  },
 
   /*
   ** vuetify module configuration

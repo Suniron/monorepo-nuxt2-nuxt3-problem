@@ -70,7 +70,7 @@ export default {
     cancel() {
       this.form.name = this.asset.name
       this.form.type = this.asset.type
-      this.$root.$emit('canceledSaves')
+      this.$root.$emit('resetForm')
       this.quickEdit = !this.quickEdit
     },
     /**
@@ -128,7 +128,6 @@ export default {
 
           this.$emit('saved')
         }
-        // this.resetField()
         this.quickEdit = !this.quickEdit
       }
       catch (error) {

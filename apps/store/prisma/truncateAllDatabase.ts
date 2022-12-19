@@ -6,7 +6,7 @@ export const resetDatabase = async () => {
   /**
    * @type {{tablename: string}[]}
    */
-  const tablenames
+  const tablenames: { tablename: string }[]
     = await prismaClient.$queryRaw`SELECT tablename FROM pg_tables WHERE schemaname='public'`
 
   for (const { tablename } of tablenames) {

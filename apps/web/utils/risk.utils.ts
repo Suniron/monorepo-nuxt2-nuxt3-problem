@@ -1,16 +1,8 @@
 // @ts-check
 import { severityColor } from './color.utils'
+import { logDebug } from '~/lib/logger'
 
-/**
- * @param {Number} score
- * @returns {String}
- */
-export function severityLevelString(score) {
-  // [0]: INFO
-  // ]0; 4[: LOW
-  // [4; 7[: MEDIUM
-  // [7; 9[: HIGH
-  // [9; 10]: CRITICAL
+export function severityLevelString(score: number): 'high' | 'medium' | 'low' | 'critical' | 'info' {
   if (score > 0 && score < 4)
     return 'low'
 
@@ -26,18 +18,7 @@ export function severityLevelString(score) {
   return 'info'
 }
 
-/**
- * @param {Number} score
- * @param {Boolean} hasVuln
- * @param {Boolean} scanned
- * @returns {String}
- */
-export function riskScoreColor(score, hasVuln = false, scanned = false) {
-  // [0]: GOOD or A
-  // ]0; 4[: LOW or B
-  // [4; 7[: MEDIUM or C
-  // [7; 9[: HIGH or D
-  // [9; 10]: CRITICAL or E
+export function riskScoreColor(score: number, hasVuln = false, scanned = false): string {
   if (hasVuln || scanned) {
     if (score === 0)
       return severityColor('STATE_OF_THE_ART')
@@ -57,18 +38,7 @@ export function riskScoreColor(score, hasVuln = false, scanned = false) {
   return severityColor('CATASTROPHIC')
 }
 
-/**
- * @param {Number} score
- * @param {Boolean} hasVuln
- * @param {Boolean} scanned
- * @returns {"A" | "B" | "C" | "D" | "E" | "F"}
- */
-export function riskScoreLetter(score, hasVuln = false, scanned = false) {
-  // [0]: GOOD or A
-  // ]0; 4[: LOW or B
-  // [4; 7[: MEDIUM or C
-  // [7; 9[: HIGH or D
-  // [9; 10]: CRITICAL or E
+export function riskScoreLetter(score: number, hasVuln = false, scanned = false): 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | undefined {
   switch (true) {
     case !hasVuln && !scanned:
     case score === null:
@@ -91,16 +61,15 @@ export function riskScoreLetter(score, hasVuln = false, scanned = false) {
 }
 
 /**
- * @param {Number} score
- * @returns {{letter: String, color: String, subtitle: String}}
- */
-export function globalRiskScoreDisplays(score) {
-  // [0]: GOOD or A
-  // ]0; 4[: LOW or B
-  // [4; 7[: MEDIUM or C
-  // [7; 9[: HIGH or D
-  // [9; 10[: CRITICAL or E
-  // [10]: CATASTROPHIC or F
+  *
+  * [0]: GOOD or A
+  * ]0; 4[: LOW or B
+  * [4; 7[: MEDIUM or C
+  * [7; 9[: HIGH or D
+  * [9; 10[: CRITICAL or E
+  * [10]: CATASTROPHIC or F
+*/
+export function globalRiskScoreDisplays(score: number): ({ letter: string; color: string; subtitle: string }) {
   if (score === 0) {
     return {
       color: severityColor('STATE_OF_THE_ART'),
@@ -159,12 +128,12 @@ export function globalRiskScoreDisplays(score) {
  * - 3.324 => 3.32
  * - 3.325 => 3.33
  * - 12 => -1
- * @param {number} score
- * @returns number
  */
-export const roundScore = (score) => {
-  if (!score || score < 0 || score > 10)
+export const roundScore = (score: number): number => {
+  if (score < 0 || score > 10) {
+    logDebug(`roundScore: score out of range: ${score}`)
     return -1
+  }
 
   return Math.round(score * 1e2) / 1e2
 }

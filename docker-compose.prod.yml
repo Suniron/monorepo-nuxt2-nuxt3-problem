@@ -4,8 +4,8 @@ services:
   xrator_ui:
     container_name: xrator_ui
     build:
-      context: ./apps/web/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/web/Dockerfile
       target: prod
     environment:
       - BACKEND_BASE_URL=http://${HOSTNAME}.x-rator.lan:3001

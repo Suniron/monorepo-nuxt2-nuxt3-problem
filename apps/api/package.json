@@ -1,6 +1,6 @@
 {
   "name": "@xrator-operator/api",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "Backend services for xrator_ui (frontend)",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "nodemon": "^2.0.7",
     "prettier": "2.2.1",
     "supertest": "^6.1.1",
+    "jest-presets": "workspace:*",
     "typescript": "^4.9.3"
   },
   "dependencies": {
@@ -49,7 +50,6 @@
     "express-fileupload": "^1.2.1",
     "fast-xml-parser": "^3.20.3",
     "helmet": "^4.4.1",
-    "jest-presets": "*",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "loglayer": "^1.4.2",

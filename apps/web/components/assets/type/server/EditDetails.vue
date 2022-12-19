@@ -13,7 +13,10 @@ export default {
         name: this.asset?.name,
         os: this.asset?.os,
         hostname: this.asset?.hostname,
-        IPs: _.cloneDeep(this.asset.ips),
+        IPs: _.cloneDeep(this.asset.ips).map(ip => ({
+          ...ip,
+          isMain: ip.isMain ? '✔' : 'No',
+        })),
         OWN_BY: this.fetchRelations('OWN_BY', true),
         MAINTAINED_BY: this.fetchRelations('MAINTAINED_BY', true),
         LOCATED_TO: this.fetchRelations('LOCATED_TO', false)
@@ -23,7 +26,8 @@ export default {
         { text: 'Mac', value: 'mac' },
         { text: 'Iface', value: 'iface' },
         { text: 'Netmask', value: 'mask' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { text: 'Is main', value: 'isMain'},
+        { text: 'Actions', value: 'actions', sortable: false },
       ],
       snack: false,
       snackColor: '',
@@ -192,7 +196,7 @@ export default {
 <template>
   <div class="d-flex">
     <v-row
-      class="d-flex flex-column mr-4 justify-space-around m-5 w-50 bg-secondary rounded-0"
+      class="d-flex flex-column mr-4 justify-space-around m-5 w-50 rounded-0"
     >
       <v-col>
         <v-text-field

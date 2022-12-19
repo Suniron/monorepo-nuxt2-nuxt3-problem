@@ -1,14 +1,6 @@
 <script>
 import { searchAssetsService } from '~/services/assets'
 export default {
-  data() {
-    return {
-      formData: {
-        missionsLinked: []
-      },
-      missions: []
-    }
-  },
   props: {
     asset: {
       type: Object,
@@ -19,23 +11,27 @@ export default {
       required: false
     }
   },
+  data() {
+    return {
+      formData: {
+        missionsLinked: []
+      },
+      missions: []
+    }
+  },
+  created() {
+    this.restoreTheActualStateInDatabase()
+    this.fetchMissions()
+    this.$root.$on('resetForm', this.resetForm)
+    this.changed()
+  },
   watch: {
     'asset.id'(newAsset) {
       this.restoreTheActualStateInDatabase()
       this.fetchMissions()
     }
   },
-  created() {
-    this.restoreTheActualStateInDatabase()
-    this.fetchMissions()
-    this.$root.$on('canceledSaves', this.canceledSaves)
-    this.changed()
-  },
   methods: {
-    canceledSaves() {
-      this.changed()
-      this.restoreTheActualStateInDatabase()
-    },
     changed() {
       this.$emit('change', {
         parents: Array.from(
@@ -53,6 +49,13 @@ export default {
       serviceParams.types = ['MISSION']
       const { assets } = await searchAssetsService(this.$axios, serviceParams)
       this.missions = assets
+    },
+    resetForm() {
+      this.formData = {
+        missionsLinked: [],
+      }
+      this.changed()
+      this.restoreTheActualStateInDatabase()
     },
     restoreTheActualStateInDatabase() {
       if (this.asset?.parents?.length > 0) {

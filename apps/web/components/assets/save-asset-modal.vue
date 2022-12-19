@@ -12,35 +12,8 @@ import { uploadFiles } from '~/services/file_upload'
 import { ASSET_TYPES } from '~/utils/asset.utils'
 
 export default {
-  components: { AssetInfo },
   name: 'SaveAssetModal',
-  props: {
-    asset: {
-      type: Object,
-      default: null
-    },
-    noAssetInfo: {
-      type: Boolean,
-      default: false
-    },
-    fakeSave: {
-      type: Boolean,
-      default: false
-    },
-    isUpdate: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Optionnal list of asset types name to restrict.
-     *
-     * **If set, others are ignored**.
-     */
-    allowedAssetTypes: {
-      type: Array,
-      default: null
-    }
-  },
+  components: { AssetInfo },
   data() {
     return {
       snackbar: false,
@@ -78,6 +51,33 @@ export default {
       hideAssetInfos: this.noAssetInfo,
     }
   },
+  props: {
+    asset: {
+      type: Object,
+      default: null
+    },
+    noAssetInfo: {
+      type: Boolean,
+      default: false
+    },
+    fakeSave: {
+      type: Boolean,
+      default: false
+    },
+    isUpdate: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Optionnal list of asset types name to restrict.
+     *
+     * **If set, others are ignored**.
+     */
+    allowedAssetTypes: {
+      type: Array,
+      default: null
+    }
+  },
   computed: {
     /**
      * Return only authorized asset types
@@ -102,10 +102,6 @@ export default {
         ?? 'new'}-${Date.now()}`
     },
   },
-  created() {
-    this.$root.$on('CHANGEPAGEFORCREATEASSET', this.restartFormInformation)
-    this.$root.$on('filesChanged', this.fileUploaded)
-  },
   watch: {
     /**
      * When the asset type changes, we need to show the asset info in some case (add mode).
@@ -121,6 +117,10 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.$root.$on('CHANGEPAGEFORCREATEASSET', this.restartFormInformation)
+    this.$root.$on('filesChanged', this.fileUploaded)
+  },
   methods: {
     ...mapActions('assets', {
       createAssetInStore: 'createAsset',
@@ -132,8 +132,7 @@ export default {
     cancel() {
       this.restartFormInformation()
       this.$emit('close')
-      this.$root.$emit('resetFormOnCreatingPolicyAsset')
-      this.$root.$emit('canceledSaves')
+      this.$root.$emit('resetForm')
     },
     cancelHomonym() {
       this.homonymModalActions.cancel()
@@ -143,12 +142,6 @@ export default {
     },
     fileUploaded(file) {
       this.file = file
-    },
-    resetField() {
-      this.form = {
-        name: '',
-        type: this.form.type,
-      }
     },
     restartFormInformation() {
       for (const elem in this.form.assetData)
@@ -253,7 +246,7 @@ export default {
         if (this.snackbar === false)
           this.$emit('close')
 
-        this.$root.$emit('resetFormOnCreatingPolicyAsset')
+        this.$root.$emit('resetForm')
         this.isLoading = false
       }
     },

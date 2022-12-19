@@ -65,6 +65,7 @@ export const searchAssetsService = async (params, accessToken = '') => {
         location: asset.location,
         longitude: asset.longitude,
         mail: asset.mail,
+        mainIps: asset.mainIps,
         name: asset.name,
         netmask: asset.netmask,
         network: asset.network,
@@ -77,6 +78,7 @@ export const searchAssetsService = async (params, accessToken = '') => {
         relations: asset.relations,
         rev_cdate: asset.rev_cdate,
         revision: asset.revision,
+        risk: asset.risk,
         tags: Array.isArray(asset.tags)
           ? asset.tags.map(tag => ({
             color: tag.color,

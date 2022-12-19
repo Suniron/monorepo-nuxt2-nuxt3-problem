@@ -1,19 +1,5 @@
 <script>
 export default {
-  data() {
-    return {
-      formData: {
-        revision: this.asset?.revision || null,
-        doc: this.asset?.doc || null,
-        cdate: this.asset?.cdate || null
-      },
-      file: null,
-      validations: {
-        required: [(value) => !!value || 'Required.']
-      },
-      menu: false
-    }
-  },
   props: {
     asset: {
       type: Object,
@@ -28,8 +14,22 @@ export default {
       required: false
     }
   },
+  data() {
+    return {
+      formData: {
+        revision: this.asset?.revision || null,
+        doc: this.asset?.doc || null,
+        cdate: this.asset?.cdate || null
+      },
+      file: null,
+      validations: {
+        required: [(value) => !!value || 'Required.']
+      },
+      menu: false
+    }
+  },
   created() {
-    this.$root.$on('resetFormOnCreatingPolicyAsset', this.resetForm)
+    this.$root.$on('resetForm', this.resetForm)
     this.changed()
     this.$emit('change', this.formData)
   },
