@@ -1,5 +1,4 @@
 <script>
-// @ts-check
 import UsersSettings from '~/components/settings/users/index.vue'
 import GroupsSettings from '~/components/settings/groups/index.vue'
 import TagsSettings from '~/components/settings/tags/index.vue'
@@ -11,8 +10,9 @@ import { searchGroupsService } from '~/services/groups'
 import { searchTagsService } from '~/services/tags'
 
 export default {
-  name: 'CompanySettingsPage',
   components: { UsersSettings, GroupsSettings, CompanySettings, TagsSettings },
+  name: 'CompanySettingsPage',
+  middleware: ['auth'],
   data() {
     return {
       groups: [],
@@ -25,7 +25,6 @@ export default {
 
     }
   },
-  middleware: ['auth'],
   created() {
     // If user is not admin, show a 403 FORBIDDEN PAGE
     if (!this.$store.getters['user/isAdmin'])
@@ -36,23 +35,11 @@ export default {
     this.fetchAllData()
   },
   methods: {
-    changeShow(show) {
-      console.log(show)
-      this.showUser = false
-      this.showTeam = false
-      this.showTag = false
-      this.showCompany = false
-      if (show === 'User')
-        this.showUser = true
-
-      if (show === 'Teams')
-        this.showTeam = true
-
-      if (show === 'Tag')
-        this.showTag = true
-
-      if (show === 'Company')
-        this.showCompany = true
+    changeTabToShow(tabToShow) {
+      this.showUser = tabToShow === 'users'
+      this.showTeam = tabToShow === 'teams'
+      this.showTag = tabToShow === 'tags'
+      this.showCompany = tabToShow === 'company'
     },
     async fetchAllData() {
       await Promise.all([
@@ -94,54 +81,43 @@ export default {
 
 <template>
   <v-container>
-    <!-- Users Settings -->
+    <h1 class="card-title my-6 text-2xl">
+      Settings
+    </h1>
 
-    <div>
-      <h1 class="card-title my-6 text-2xl">
-        Settings
-      </h1>
-
-      <div class="tabs flex  justify-center">
-        <a v-if="!showUser" class="tab tab-bordered " @click="changeShow('User')">User</a>
-        <a v-else class="tab tab-bordered tab-active ">User</a>
-
-        <a v-if="!showTeam" class="tab tab-bordered " @click="changeShow('Teams')">Teams</a>
-        <a v-else class="tab tab-bordered tab-active ">Teams</a>
-
-        <a v-if="!showTag" class="tab tab-bordered " @click="changeShow('Tag')">Tag</a>
-        <a v-else class="tab tab-bordered tab-active ">Tag</a>
-
-        <a v-if="!showCompany" class="tab tab-bordered " @click="changeShow('Company')">Company</a>
-        <a v-else class="tab tab-bordered tab-active ">Company</a>
+    <div class="max-w-6xl mx-auto">
+      <div class="tabs flex justify-center">
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showUser }" @click="changeTabToShow('users')">Users</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showTeam }" @click="changeTabToShow('teams')">Teams</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showTag }" @click="changeTabToShow('tags')">Tags</a>
+        <a class="tab tab-lg tab-bordered" :class="{ 'tab-active': showCompany }" @click="changeTabToShow('company')">Company</a>
       </div>
+
+      <!-- Users Settings -->
       <UsersSettings
         v-if="showUser"
         :users="users"
         :groups="groups"
-        class="md:mx-10 lg:mx-10"
+
         @update="fetchAllData"
       />
+
+      <!-- Groups Settings -->
+      <GroupsSettings
+        v-if="showTeam"
+        :users="users"
+        :groups="groups"
+
+        @update="fetchAllData"
+      />
+
+      <!-- Tags Settings -->
+      <TagsSettings v-if="showTag" :tags="tags" @update="fetchAllData" />
+
+      <!-- Company Settings -->
+      <CompanySettings
+        v-if="showCompany"
+      />
     </div>
-
-    <!-- Groups Settings -->
-    <GroupsSettings
-      v-if="showTeam"
-      :users="users"
-      :groups="groups"
-      class="md:mx-10 lg:mx-10"
-      @update="fetchAllData"
-    />
-
-    <!-- Tags Settings -->
-    <TagsSettings v-if="showTag" :tags="tags" class="md:mx-10 lg:mx-10" @update="fetchAllData" />
-
-    <!-- Company Settings -->
-
-    <CompanySettings
-      v-if="showCompany"
-      class="md:mx-10 lg:mx-10"
-    />
   </v-container>
 </template>
-
-<style></style>
