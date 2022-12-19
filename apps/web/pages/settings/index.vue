@@ -118,6 +118,7 @@ export default {
         v-if="showUser"
         :users="users"
         :groups="groups"
+        class="md:mx-10 lg:mx-10"
         @update="fetchAllData"
       />
     </div>
@@ -127,15 +128,19 @@ export default {
       v-if="showTeam"
       :users="users"
       :groups="groups"
+      class="md:mx-10 lg:mx-10"
       @update="fetchAllData"
     />
 
     <!-- Tags Settings -->
-    <TagsSettings v-if="showTag" :tags="tags" @update="fetchAllData" />
+    <TagsSettings v-if="showTag" :tags="tags" class="md:mx-10 lg:mx-10" @update="fetchAllData" />
 
     <!-- Company Settings -->
 
-    <CompanySettings v-if="showCompany" />
+    <CompanySettings
+      v-if="showCompany"
+      class="md:mx-10 lg:mx-10"
+    />
   </v-container>
 </template>
 
