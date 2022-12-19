@@ -93,14 +93,15 @@ export default {
 </script>
 
 <template>
-  <v-container class="bg-base-100">
+  <v-container>
     <!-- Users Settings -->
 
     <div>
-      <h1 class="card-title mt-6">
+      <h1 class="card-title my-6 text-2xl">
         Settings
       </h1>
-      <div class="tabs text-center">
+
+      <div class="tabs flex  justify-center">
         <a v-if="!showUser" class="tab tab-bordered " @click="changeShow('User')">User</a>
         <a v-else class="tab tab-bordered tab-active ">User</a>
 
