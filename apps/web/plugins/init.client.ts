@@ -1,7 +1,9 @@
 // Services
+import type { NuxtAxiosInstance } from '@nuxtjs/axios'
+import type { Store } from 'vuex'
 import { refreshTokenService } from '~/services/auth'
 
-export default async ({ $axios, store }) => {
+export default async ({ $axios, store }: { $axios: NuxtAxiosInstance; store: Store<any> }) => {
   try {
     if (store.getters['user/isLoggedIn'])
       return

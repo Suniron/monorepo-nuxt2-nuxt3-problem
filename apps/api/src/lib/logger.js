@@ -18,6 +18,7 @@ const streams = [
     level: 'trace',
     stream: PinoPretty({
       colorize: true,
+      singleLine: true,
     }),
   },
 ]

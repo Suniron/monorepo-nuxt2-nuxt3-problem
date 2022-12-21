@@ -1,5 +1,5 @@
 import { isCelebrateError } from 'celebrate'
-import { HTTPError, getBadRequestError } from '@/common/errors/http'
+import { HTTPError, getBadRequestError, getInternalServerError } from '@/common/errors/http'
 
 /**
  *
@@ -9,23 +9,32 @@ import { HTTPError, getBadRequestError } from '@/common/errors/http'
  * @param {import('express').NextFunction} _next
  */
 export const errorHandler = (err, req, res, _next) => {
-  if (isCelebrateError(err)) {
-    // TODO: is there a better way to get the error message?
-    const message = err.details.entries()[0][1].message
+  let httpError = getInternalServerError()
 
-    req.log.withError(err).error('errorHandler: celebrate error')
-    return getBadRequestError({
+  if (err instanceof HTTPError) {
+    httpError = err
+    req.log.withError(err).error('Error handler: http error')
+  }
+  else if (isCelebrateError(err)) {
+    let message = 'ValidatonErrpr'
+
+    // TODO: fix this useless loop
+    // eslint-disable-next-line no-unreachable-loop, @typescript-eslint/no-unused-vars
+    for (const [_segment, joiError] of err.details.entries()) {
+      message = joiError.message
+      break
+    }
+
+    httpError = getBadRequestError({
       errorType: 'ValidationError',
       message,
     })
+    req.log.withError(err).error('Error handler: celebrate error')
   }
-
-  const httpError = new HTTPError(err.code ?? 500, {
-    errorType: err.errorType,
-    message: err.message,
-  })
-
-  req.log.withError(err).error('errorHandler: http error')
+  else {
+    // Log if error is unhandled
+    req.log.withError(err).error('Error handler: Unhandled error')
+  }
   return res.status(httpError.code).send(httpError.toJSON())
 }
 

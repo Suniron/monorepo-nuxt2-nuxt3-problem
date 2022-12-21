@@ -78,6 +78,10 @@ export default {
        * @param {boolean} isLogged **true** if user log into app
        */
       handler(isLogged) {
+        // Ignore the reset password page
+        if (this.$route.path.startsWith('/reset-password'))
+          return
+
         if (!isLogged) {
           this.$router.push('/sign-in')
           return
