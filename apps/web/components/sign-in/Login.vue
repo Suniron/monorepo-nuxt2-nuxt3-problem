@@ -14,8 +14,8 @@ export default {
       this.$store.dispatch('changePageTitle', this.$t('action.login'))
     this.redirectIfLoggedIn()
   },
-  emits: ['goToForgotPassword'],
   layout: 'no-nav-bar',
+  emits: ['goToForgotPassword'],
   data() {
     return {
       isLoading: false,
@@ -28,6 +28,8 @@ export default {
         password: [v => !!v || 'Password is required'],
         username: [v => !!v || 'Username or email required'],
       },
+      showBadCredentialsSnackbar: false,
+      showErrorSnackbar: false,
     }
   },
   methods: {
@@ -43,9 +45,7 @@ export default {
           password,
           username,
         })
-        /**
-                 * @return {void}
-                 */
+
         this.authorize({
           accessToken,
           user: {
@@ -57,14 +57,21 @@ export default {
             username: user.username,
           },
         })
+
         const redirectUrl = new URL(location.href).searchParams.get('redirect')
-        if (redirectUrl)
-          this.$router.push(decodeURIComponent(redirectUrl))
-        else
-          this.$router.push('/dashboard')
+        if (!redirectUrl)
+          return this.$router.push('/dashboard')
+
+        this.$router.push(decodeURIComponent(redirectUrl))
       }
       catch (error) {
-        console.error(error)
+        if (error.message.includes('code 401')) {
+          this.showBadCredentialsSnackbar = true
+          return
+        }
+
+        this.showErrorSnackbar = true
+        console.log(error)
       }
       finally {
         this.isLoading = false
@@ -165,5 +172,41 @@ export default {
         </div>
       </v-form>
     </v-card-text>
+
+    <!-- == NOTFIICATIONS == -->
+    <!-- Credentials error -->
+    <v-snackbar
+      v-model="showBadCredentialsSnackbar"
+      color="warning"
+    >
+      Your credentials are not valid ❌
+      <template #action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="showBadCredentialsSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <!-- Server error -->
+    <v-snackbar
+      v-model="showErrorSnackbar"
+      text
+      color="error"
+    >
+      An error occured on the server, please contact us.
+      <template #action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="showErrorSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>

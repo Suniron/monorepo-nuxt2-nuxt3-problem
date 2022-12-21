@@ -100,5 +100,39 @@ const handleGoToLoginClick = () => {
         </div>
       </v-form>
     </v-card-text>
+
+    <!-- == NOTIFICATIONS == -->
+    <v-snackbar
+      v-model="showEmailSentSnackbar"
+      color="success"
+    >
+      Email sent, please check your inbox to reset your password ✅
+      <template #action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="showEmailSentSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <v-snackbar
+      v-model="showFailMailSnackbar"
+      text
+      color="error"
+    >
+      Your username or email is not valid ❌
+      <template #action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="showFailMailSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
