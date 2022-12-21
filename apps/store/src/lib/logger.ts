@@ -15,6 +15,7 @@ const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
     level: 'trace',
     stream: PinoPretty({
       colorize: true,
+      singleLine: true,
     }),
   },
 ]

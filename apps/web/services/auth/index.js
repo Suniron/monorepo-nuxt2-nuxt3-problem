@@ -2,7 +2,7 @@
 /**
  *
  * @param { import("@nuxtjs/axios").NuxtAxiosInstance } axios
- * @param { Object } params
+ * @param { {username: string; password: string} } params
  */
 export const loginService = async (axios, params = {}) => {
   const { username, password } = params
@@ -40,12 +40,13 @@ export const logoutService = axios =>
 /**
  *
  * @param { import("@nuxtjs/axios").NuxtAxiosInstance } axios
- * @param { Object } params
+ * @param { {username: string} } params
  */
 export const sendResetPasswordMail = async (axios, params = {}) => {
   const { username } = params
   if (!username)
     throw new Error('Username or email required')
+
   const data = await axios.post(
     'reset-password',
     { username },

@@ -128,11 +128,11 @@ const nuxtConfig: NuxtConfig = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/axios.js',
-    '~/plugins/directives.js',
-    { src: '~/plugins/multiTabState.client.js' },
-    '~/plugins/init.client.js',
-    { src: '~plugins/leaflet.js', ssr: false },
+    '~/plugins/axios',
+    '~/plugins/directives',
+    { src: '~/plugins/multiTabState.client' },
+    '~/plugins/init.client',
+    { src: '~plugins/leaflet', ssr: false },
   ],
 
   publicRuntimeConfig: {

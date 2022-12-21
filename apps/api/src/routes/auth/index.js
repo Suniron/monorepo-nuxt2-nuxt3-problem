@@ -19,12 +19,18 @@ const loginPayloadValidation = celebrate({
   }),
 })
 
+const resetPayloadValidation = celebrate({
+  [Segments.BODY]: Joi.object({
+    username: Joi.string().required(),
+  }),
+})
+
 // Public routes BEFORE JWT authentication
 router.post('/login', loginPayloadValidation, loginController)
 router.post('/refresh-token', refreshAccessTokenController)
 
 router.patch('/reset-password', updatePasswordByToken)
-router.post('/reset-password', resetPassword)
+router.post('/reset-password', resetPayloadValidation, resetPassword)
 
 // JWT access token parsing for easier access
 router.use(jwtAuthParsing)

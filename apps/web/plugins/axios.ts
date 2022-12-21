@@ -1,14 +1,15 @@
-/**
- *
- * @param {{
- * $axios: import("@nuxtjs/axios").NuxtAxiosInstance,
- * store: import("vuex").Store<any>,
- * redirect: any,
- * app: any,
- * route: any
- * }} args
- */
-const axiosPlugin = ({ $axios, store, redirect, app }) => {
+import type { NuxtApp } from '@nuxt/types/app'
+import type { NuxtAxiosInstance } from '@nuxtjs/axios'
+import type { RedirectOption, Route } from 'vue-router'
+import type { Store } from 'vuex'
+
+const axiosPlugin = ({ $axios, store, redirect, app }: {
+  $axios: NuxtAxiosInstance
+  store: Store<any>
+  redirect: RedirectOption
+  app: NuxtApp
+  route: Route
+}) => {
   // Configure authentification bearer token, on each request:
   $axios.onRequest((config) => {
     if (store.state.user.accessToken)
