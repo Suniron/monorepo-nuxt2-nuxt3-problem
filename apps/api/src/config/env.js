@@ -22,6 +22,9 @@ const httpsEnabled
  * Environmental variables
  */
 
+if (!process.env.MAIL_LOGIN || !process.env.MAIL_PASSWORD || !process.env.MAIL_SERVER || !process.env.MAIL_PORT)
+  console.warn('💥 Missing mail server credentials. Please set MAIL_LOGIN, MAIL_PASSWORD, MAIL_SERVER and MAIL_PORT in .env file. Password can\t be reset without mail server credentials.')
+
 export const buildEnvObj = env => ({
   httpsEnabled,
   mailServer: {
