@@ -1,3 +1,5 @@
+// @ts-check
+import nodeMailer from 'nodemailer'
 import { NOT_FOUND } from '@/common/constants'
 import env from '@/config/env'
 import { throwHTTPError, throwUnauthorizedError } from '@/common/errors'
@@ -10,7 +12,7 @@ import {
   sendResetPasswordMail,
   updateResetPasswordByToken,
 } from '@/services/auth'
-const nodemailer = require('nodemailer')
+import { log } from '@/lib/logger'
 
 export const jwtAuthParsing = (req, _res, next) => {
   const authHeader = req.headers.authorization
@@ -96,31 +98,34 @@ export const resetPassword = async (req, res) => {
   const { resetToken, email } = await sendResetPasswordMail({
     username: mailOrUsername,
   })
-  if (resetToken) {
-    const transporter = nodemailer.createTransport({
-      auth: {
-        pass: env.mailServer.MAIL_PASSWORD,
-        user: env.mailServer.MAIL_LOGIN,
-      },
-      host: env.mailServer.MAIL_SERVER,
-      port: env.mailServer.MAIL_PORT,
-      secure: false,
-    })
-    const mailContent = getResetPasswordEmailTemplate(env.ui.origin, resetToken)
-    const info = await transporter.sendMail({
-      from: '"Xrator support" <no-reply@x-rator.cloud>',
-      html: mailContent,
-      subject: 'Reset password',
-      to: `${email}`,
-    })
-    if (info.accepted[0] === email)
-      res.sendStatus(201)
-    else
-      res.sendStatus(400)
+
+  if (!resetToken)
+    return res.sendStatus(404)
+
+  const transporter = nodeMailer.createTransport({
+    auth: {
+      pass: env.mailServer.MAIL_PASSWORD,
+      user: env.mailServer.MAIL_LOGIN,
+    },
+    host: env.mailServer.MAIL_SERVER,
+    port: env.mailServer.MAIL_PORT,
+    secure: false,
+  })
+
+  const mailContent = getResetPasswordEmailTemplate(env.ui.origin, resetToken)
+  const info = await transporter.sendMail({
+    from: '"Xrator support" <no-reply@x-rator.cloud>',
+    html: mailContent,
+    subject: 'Reset password',
+    to: `${email}`,
+  })
+
+  if (info.accepted[0] === email) {
+    log.info(`Reset password email sent to ${email}`)
+    return res.sendStatus(201)
   }
-  else {
-    res.sendStatus(404)
-  }
+
+  log.warn(`Failed to send reset password email to ${email}`)
 }
 
 /**
