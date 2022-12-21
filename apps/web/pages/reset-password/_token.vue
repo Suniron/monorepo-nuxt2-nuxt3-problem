@@ -1,54 +1,50 @@
-<script>
+<script setup lang="ts">
+import { useContext, useRouter } from '@nuxtjs/composition-api'
+import { ref } from 'vue'
 import PasswordPolicyTooltipWrapper from '~/components/users/PasswordPolicyTooltipWrapper.vue'
 import { updatePasswordByToken } from '~/services/auth'
 import { PASSWORD_VALIDATION_REGEXP } from '~/utils/users.utils'
-export default {
-  components: { PasswordPolicyTooltipWrapper },
-  name: 'ResetPasswordPage',
-  data() {
-    return {
-      failMessage: '',
-      isLoading: false,
-      loginForm: {
-        password: '',
-        valid: false,
-      },
-      rules: {
-        complexity: [
-          (v) => {
-            if (this.isEdit && v === '')
-              return true
 
-            return PASSWORD_VALIDATION_REGEXP.test(v)
-          },
-        ],
-        required: v => !!v || 'This field is required',
-      },
-    }
-  },
-  methods: {
-    async submitForm() {
-      try {
-        this.isLoading = true
-        const { password } = this.loginForm
-        const res = await updatePasswordByToken(this.$axios, {
-          password,
-          token: this.$route.params.token,
-        })
-        if (res.status === 200) {
-          this.$router.push('/sign-in')
-          this.isLoading = false
-          this.failMessage = ''
-        }
-        else {
-          this.failMessage = this.$t('error.resetPasswordFailed')
-        }
-      }
-      catch (error) {
-        console.error(error)
-      }
+const router = useRouter()
+const axios = useContext().$axios
+
+const failMessage = ref('')
+const isLoading = ref(false)
+
+const userPassword = ref('')
+
+// TODO: replace by vee-validate
+const rules = {
+  complexity: [
+    (v: string) => {
+      if (/* isEdit &&  */v === '')
+        return true
+
+      return PASSWORD_VALIDATION_REGEXP.test(v)
     },
-  },
+  ],
+  required: (v: string) => !!v || 'This field is required',
+}
+
+const submitForm = async () => {
+  try {
+    isLoading.value = true
+    const res = await updatePasswordByToken(axios, {
+      password: userPassword.value,
+      token: router.currentRoute.params.token,
+    })
+    if (res.status === 200) {
+      router.push('/sign-in')
+      isLoading.value = false
+    // this.failMessage = ''
+    }
+    else {
+      // this.failMessage = this.$t('error.resetPasswordFailed')
+    }
+  }
+  catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
@@ -63,11 +59,11 @@ export default {
           color="card-bg"
         >
           <v-card-text class="mt-5">
-            <PasswordPolicyTooltipWrapper :password="loginForm.password">
+            <PasswordPolicyTooltipWrapper :password="userPassword">
               <v-text-field
-                v-model="loginForm.password"
+                v-model="userPassword"
                 :rules="rules.complexity"
-                :label="$t('t.password')"
+                label="Password"
                 type="password"
                 required
               />
@@ -77,7 +73,7 @@ export default {
               class="text-center mt-4 green--text"
               @click="submitForm"
             >
-              {{ $t('action.resetPassword') }}
+              Reset password
             </v-btn>
             <div v-if="failMessage" class="text-center mt-4 red--text">
               {{ failMessage }}
@@ -88,5 +84,3 @@ export default {
     </v-row>
   </v-container>
 </template>
-
-<style lang="scss"></style>
