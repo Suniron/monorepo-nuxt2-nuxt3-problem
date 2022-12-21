@@ -2,7 +2,7 @@
 /**
  *
  * @param { import("@nuxtjs/axios").NuxtAxiosInstance } axios
- * @param { Object } params
+ * @param { {username: string; password: string} } params
  */
 export const loginService = async (axios, params = {}) => {
   const { username, password } = params
