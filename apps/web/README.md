@@ -32,3 +32,15 @@ Note: in the future, this lib should be replaced by [gridstack](https://www.npmj
 - By default, there is **12** columns in the grid.
 - **Height** and **width** correspond to the number of **columns** and **rows**.
 - **x** and **y** correspond to the top left corner of the widget.
+
+## Migration guide to Nuxt 3
+
+### Turn components into setup script + ts + composition api
+
+#### Use axios inside setup script
+
+```ts
+import { useContext } from '@nuxtjs/composition-api'
+
+const axios = useContext().$axios
+```
