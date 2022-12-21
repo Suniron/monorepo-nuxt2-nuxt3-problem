@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import CardDetails from '~/components/assets/type/server/CardDetails.vue'
 import AssetIcon from '~/components/assets/AssetIcon.vue'
 import AssetRiskScore from '~/components/assets/details/AssetRiskScore.vue'
