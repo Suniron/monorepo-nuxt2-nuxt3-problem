@@ -1,6 +1,6 @@
 {
   "name": "@xrator-operator/store",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "scripts": {
     "import-demo": "NODE_ENV=development node import_demo.js",
     "prestart": "node ./dist/src/prepare.js",
