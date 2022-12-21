@@ -10,35 +10,18 @@ export default {
   components: { Login, ResetPassword },
   computed: {
     ...mapGetters('user', ['isLoggedIn', 'wrongLogin']),
-    /**
-         * @return {string}
-         */
-    showErrorSnackbard: {
-      /**
-             * @return {string}
-             */
-      get() {
-        return this.wrongLogin
-      },
-      /**
-             * @param {string} value
-             */
-      set(value) {
-        this.updateLoginState(value)
-      },
-    },
   },
   created() {
     if (!this.isLoggedIn)
       this.$store.dispatch('changePageTitle', this.$t('action.login'))
     this.redirectIfLoggedIn()
   },
-  layout: 'no-nav-bar',
   data() {
     return {
       toggleForgotPassword: false,
     }
   },
+  layout: 'no-nav-bar',
   methods: {
     redirectIfLoggedIn() {
       const redirectUrl = new URL(location.href).searchParams.get('redirect')
