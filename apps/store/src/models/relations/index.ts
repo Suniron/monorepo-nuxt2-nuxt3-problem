@@ -7,6 +7,7 @@ import {
   SUCCESS,
   UNAUTHORIZED,
 } from '../../../src/common/constants'
+import type { LoggedUser } from '../../../types/loggedUser'
 
 export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {
@@ -74,25 +75,25 @@ export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
   }
 }
 
-/**
- *
- * @param {{fromAssetId: number, relationType: string, toAssetId: number}[]} params
- * @param {*} loggedUserInfo
- * @returns {Promise<{error?: undefined, ids: {id: number}[]} | {error: string, ids?: undefined}>}
- */
 export const createBulkRelationModel = async (
-  params: any,
-  loggedUserInfo = {},
+  relations:
+  {
+    fromAssetId: number
+    relationType: string
+    toAssetId: number
+  }[]
+  ,
+  loggedUserInfo: LoggedUser,
 ) => {
   try {
     const { companyId } = loggedUserInfo
 
-    const relationsToInsert = params.filter(
-      (relation: any) => relation.fromAssetId !== relation.toAssetId,
+    const relationsToInsert = relations.filter(
+      r => r.fromAssetId !== r.toAssetId,
     )
 
-    const assets = relationsToInsert.reduce(
-      (/** @type {number[]} */ acc: any, { fromAssetId, toAssetId }: any) => {
+    const assetIds = relationsToInsert.reduce(
+      (acc: number[], { fromAssetId, toAssetId }: { fromAssetId: number; toAssetId: number }) => {
         acc.push(fromAssetId)
         acc.push(toAssetId)
         return acc
@@ -100,54 +101,101 @@ export const createBulkRelationModel = async (
       [],
     )
 
-    const assetsIdsInCompany = (
+    const assetsInCompany = (
       await prismaClient.asset.findMany({
         select: {
           id: true,
+          type: true,
         },
         where: {
           company_id: companyId,
           id: {
-            in: assets,
+            in: assetIds,
           },
         },
       })
-    ).map((e: any) => e.id)
+    )
+    const assetIdsInCompany = assetsInCompany.map(aic => aic.id)
 
-    const queries: any = []
+    const createRelationQueries = []
+    relationsToInsert.forEach((relation) => {
+      if (!assetIdsInCompany.includes(relation.fromAssetId) || !assetIdsInCompany.includes(relation.toAssetId))
+        return
 
-    relationsToInsert.forEach((relation: any) => {
-      if (
-        assetsIdsInCompany.includes(relation.fromAssetId)
-        && assetsIdsInCompany.includes(relation.toAssetId)
-      ) {
-        queries.push(
-          prismaClient.relation.upsert({
-            create: {
+      // Etablish a relation between two assets
+      createRelationQueries.push(
+        prismaClient.relation.upsert({
+          create: {
+            from_asset_id: relation.fromAssetId,
+            to_asset_id: relation.toAssetId,
+            type: relation.relationType,
+          },
+          select: {
+            from_asset_id: true,
+            id: true,
+            to_asset_id: true,
+            type: true,
+          },
+          update: {},
+          where: {
+            type_from_asset_id_to_asset_id: {
               from_asset_id: relation.fromAssetId,
               to_asset_id: relation.toAssetId,
               type: relation.relationType,
             },
-            select: {
-              id: true,
-            },
-            update: {},
-            where: {
-              type_from_asset_id_to_asset_id: {
-                from_asset_id: relation.fromAssetId,
-                to_asset_id: relation.toAssetId,
-                type: relation.relationType,
-              },
-            },
-          }),
-        )
-      }
+          },
+        }),
+      )
     })
 
-    if (queries.length > 0)
-      return { ids: await prismaClient.$transaction(queries) }
+    if (!createRelationQueries.length)
+      return { ids: [] }
 
-    return { ids: [] }
+    const newRelationIds = await prismaClient.$transaction(createRelationQueries)
+
+    // Only if we link a business unit to a business mission
+    let fearedEventsIds: number[] = []
+    const addFearedEventQueries = []
+    // Search for couple of business unit and business mission to add feared events
+    for (const relation of relations) {
+      const fromAsset = assetsInCompany.find(r => r.id === relation.fromAssetId)
+      const toAsset = assetsInCompany.find(r => r.id === relation.toAssetId)
+
+      const newRelationId = newRelationIds.find(
+        nri =>
+          nri.from_asset_id === relation.fromAssetId
+
+        && nri.to_asset_id === relation.toAssetId && nri.type === relation.relationType,
+      )?.id
+
+      if (!fromAsset || !toAsset || !newRelationId || !(fromAsset.type === 'UNIT' && toAsset.type === 'MISSION') || relation.relationType !== 'BELONGS_TO')
+        continue
+
+      // Init feared events ids if not already done
+      if (!fearedEventsIds.length) {
+        fearedEventsIds = await prismaClient.feared_event.findMany({
+          select: {
+            id: true,
+          },
+        }).then(fes => fes.map(fe => fe.id))
+      }
+
+      // Add feared events
+      addFearedEventQueries.push(
+        prismaClient.business_mission_unit_has_feared_event.createMany({
+          data:
+            fearedEventsIds.map(fei => ({
+              business_mission_unit_id: newRelationId,
+              feared_event_id: fei,
+            })),
+        }),
+      )
+    }
+
+    if (addFearedEventQueries.length)
+      await prismaClient.$transaction(addFearedEventQueries)
+
+    return { ids: newRelationIds }
   }
   catch (error) {
     console.error(error)
