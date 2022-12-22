@@ -1,9 +1,25 @@
-<script>
+<script setup lang="ts">
+import { useContext } from '@nuxtjs/composition-api'
+import { computed, ref, watch } from 'vue'
 import {
   createAssetService,
   searchAssetsService,
   updateAssetService,
 } from '~/services/assets'
+
+const props = defineProps<{
+  // TODO: use business mission type
+  mission: {
+    id: string
+    children: { id: string }[]
+  }
+}>()
+
+const emit = defineEmits(
+  ['saved'],
+)
+
+const axios = useContext().$axios
 
 /**
  * Line creation prefix in dropdown.
@@ -12,126 +28,96 @@ import {
  */
 const CREATE_PREFIX = 'Create '
 
-export default {
-  data() {
-    return {
-      show: false,
-      isInputValid: false,
-      availableUnits: [],
-      /**
-       * User searched string
-       * @type {string}
-       */
-      searchedBusinessUnit: null,
-      selectedBusinessUnit: ''
-    }
-  },
-  props: {
-    mission: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    /**
-     * Get all available business units names listed in dropdown
-     * @returns {string[]} available business units names
-     */
-    availableBusinessUnitNames() {
-      const names = this.availableUnits.map(unit => unit.name)
+const show = ref(false)
+const isInputValid = ref(false)
+// TODO: use business unit type
+const availableUnits = ref<{ id: string; name: string }[]>([])
+const searchedBusinessUnit = ref('')
+const selectedBusinessUnit = ref('')
 
-      // If no user search
-      if (!this.searchedBusinessUnit || this.searchedBusinessUnit === '')
-        return names
+const availableBusinessUnitNames = computed(() => {
+  const names = availableUnits.value.map(unit => unit.name)
 
-      return [...names, CREATE_PREFIX + this.searchedBusinessUnit]
-    },
-    /**
-     * Determine if business unit must be created or not
-     * @returns {boolean} true if business unit need to be created
-     */
-    isBusinessUnitNeedCreation() {
-      if (!this.selectedBusinessUnit)
-        return false
+  // If no user search
+  if (!searchedBusinessUnit.value || searchedBusinessUnit.value === '')
+    return names
 
-      return this.selectedBusinessUnit.startsWith(CREATE_PREFIX)
-    },
-  },
-  methods: {
-    /**
-     * Get all business units without this mission and affect in the state
-     */
-    async getBusinessUnitsWithoutThisMission() {
-      const { assets: businessUnits } = await searchAssetsService(this.$axios, {
-        types: ['UNIT']
-      })
-      // Filter only business units without this mission
-      this.availableUnits = businessUnits.filter((unit) => {
-        return !unit.parents.find((parent) => parent.id === this.mission.id)
-      })
-    },
-    /**
-     * Handle save button click
-     */
-    async handleSave() {
-      // If business unit need to be created:
-      if (this.isBusinessUnitNeedCreation) {
-        // TODO: handle request fail
-        await createAssetService(this.$axios, {
-          name: this.selectedBusinessUnit.replace(CREATE_PREFIX, ''),
-          type: 'UNIT',
-          assetData: { parents: [this.mission.id] }
-        })
-      }
-      // ... or add existing business unit to mission
-      else {
-        const { id: businessUnitId } = this.availableUnits.find(
-          (unit) => unit.name === this.selectedBusinessUnit
-        )
+  return [...names, CREATE_PREFIX + searchedBusinessUnit.value]
+})
+const isBusinessUnitNeedCreation = computed(() => {
+  if (!selectedBusinessUnit.value)
+    return false
 
-        await updateAssetService(this.$axios, this.mission.id, {
-          assetData: {
-            children: [
-              ...this.mission.children.map((child) => child.id),
-              businessUnitId
-            ]
-          }
-        })
-      }
+  return selectedBusinessUnit.value.startsWith(CREATE_PREFIX)
+})
 
-      this.$emit('saved')
-
-      this.show = false // close modal
-    }
-  },
-  watch: {
-    /**
-     * This watcher is used to check input validity
-     *
-     * @param {string} newVal new user input
-     */
-    selectedBusinessUnit(newInput) {
-      this.isInputValid = this.availableBusinessUnitNames.includes(newInput)
-    },
-    /**
-     * This watcher is used to fetch datas on open and reset it on close.
-     * @param {boolean} switchToOpen new show state
-     */
-    show(switchToOpen) {
-      // On open:
-      if (switchToOpen) {
-        // Get all available business units:
-        this.getBusinessUnitsWithoutThisMission()
-        return
-      }
-      // On close, reset datas:
-      Object.assign(this.$data, this.$options.data())
-    }
-  }
+const getBusinessUnitsWithoutThisMission = async () => {
+  const { assets: businessUnits } = await searchAssetsService(axios, {
+    types: ['UNIT'],
+  })
+  // Filter only business units without this mission
+  availableUnits.value = businessUnits.filter((unit) => {
+    return !unit.parents.find(parent => parent.id === props.mission.id)
+  })
 }
+const handleSave = async () => {
+  // If business unit need to be created:
+  if (isBusinessUnitNeedCreation.value) {
+    // TODO: handle request fail
+    await createAssetService(axios, {
+      assetData: { parents: [props.mission.id] },
+      name: selectedBusinessUnit.value.replace(CREATE_PREFIX, ''),
+      type: 'UNIT',
+    })
+  }
+  // ... or add existing business unit to mission
+  else {
+    const { id: businessUnitId } = availableUnits.value.find(
+      unit => unit.name === selectedBusinessUnit.value,
+    )
+
+    await updateAssetService(axios, props.mission.id, {
+      assetData: {
+        children: [
+          ...props.mission.children.map(child => child.id),
+          businessUnitId,
+        ],
+      },
+    })
+  }
+
+  emit('saved')
+
+  // Close modal
+  show.value = false
+}
+
+/**
+* This watcher is used to check input validity
+*/
+watch(selectedBusinessUnit, (newInput: string) => {
+  isInputValid.value = availableBusinessUnitNames.value.includes(newInput)
+})
+
+watch(show, async (switchToOpen) => {
+  // On open:
+  if (switchToOpen) {
+    // Get all available business units:
+    await getBusinessUnitsWithoutThisMission()
+    return
+  }
+
+  // On close, reset data:
+  availableUnits.value = []
+  isInputValid.value = false
+  searchedBusinessUnit.value = ''
+  selectedBusinessUnit.value = ''
+  show.value = false
+})
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-deprecated-v-bind-sync -->
   <div class="text-center">
     <v-dialog v-model="show" width="500">
       <template #activator="{ on, attrs }">
@@ -151,15 +137,12 @@ export default {
         <v-card-text class="py-0">
           <v-autocomplete
             v-model="selectedBusinessUnit"
-            v-model:search-input="searchedBusinessUnit"
-            class="mt-3"
-            :items="availableBusinessUnitNames"
-            label="Create or search an existing Business Unit"
+            :search-input.sync="searchedBusinessUnit" class="mt-3"
+            :items="availableBusinessUnitNames" label="Create or search an existing Business Unit"
             placeholder="Start typing to search (or create)"
             auto-select-first
             hide-no-data
-            filled
-            chips
+            filled chips
           />
         </v-card-text>
 
