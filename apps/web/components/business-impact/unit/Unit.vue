@@ -1,86 +1,68 @@
-<script>
-// @ts-check
-/**
- * @typedef {import("~/types/businessImpactAnalysis").BusinessMission} BusinessMission
- * @typedef {import("~/types/businessImpactAnalysis").BusinessUnit} BusinessUnit
- * @typedef {import("~/types/businessImpactAnalysis").BusinessImpact} BusinessImpact
- */
+<script setup lang="ts">
+import { useRouter } from '@nuxtjs/composition-api'
 import DetachBusinessUnitToMissionModal from './DetachBusinessUnitToMissionModal.vue'
 import Severity from './BusinessImpactSeverity.vue'
 import BusinessImpacts from '~/components/business-impact/unit/BusinessImpacts.vue'
+import type { BusinessImpact, BusinessMission, BusinessUnit, FearedEvent } from '~/types/businessImpactAnalysis'
 
-export default {
-  components: { BusinessImpacts, Severity, DetachBusinessUnitToMissionModal },
-  name: 'Unit',
-  props: {
-    /** @type {import('vue').PropOptions<BusinessMission>} */
-    mission: {
-      type: Object,
-      required: true
-    },
-    /** @type {import('vue').PropOptions<BusinessUnit>} */
-    unit: {
-      type: Object,
-      required: true
-    },
-    /** @type {import('vue').PropOptions<BusinessImpact[]>} */
-    availableBusinessImpacts: {
-      type: Array
-    }
+const props = defineProps<{
+  mission: BusinessMission
+  unit: BusinessUnit
+  availableBusinessImpacts: BusinessImpact[]
+}>()
+
+const emits = defineEmits<{
+  (event: 'detachBusinessUnit', value: number): void
+  (event: 'update:unit', value: BusinessUnit): void
+}>()
+
+const router = useRouter()
+
+const headers = [
+  {
+    align: 'center',
+    class: 'grey lighten-3 black--text',
+    text: 'Consequences',
+    value: 'fearedEvents',
+    width: '30%',
   },
-  data: () => ({
-    headers: [
-      {
-        class: 'grey lighten-3 black--text',
-        text: 'Consequences',
-        align: 'center',
-        value: 'fearedEvents',
-        width: '30%',
-      },
-      {
-        class: 'grey lighten-3 black--text',
-        text: 'Business Impacts',
-        align: 'center',
-        value: 'businessImpacts',
-        width: '30%',
-      },
-      {
-        class: 'grey lighten-3 black--text',
-        text: 'Severity',
-        align: 'center',
-        value: 'severity',
-        width: '30%',
-      }
-    ],
-  }),
-  methods: {
-
-    detachBusinessUnit() {
-      this.$emit('detachBusinessUnit', this.unit.unitId)
-    },
-
-    goToAssetPage() {
-      // @ts-expect-error
-      this.$router.push(`/assets/${this.unit.unitId}`)
-    },
-    /**
-     * @param {import('~/types/businessImpactAnalysis').FearedEvent} updatedFearedEvent
-     */
-    handleUpdateFearedEvent(updatedFearedEvent) {
-      // Update unit with new severity:
-      const updatedUnit = {
-        ...this.unit,
-        fearedEvents: this.unit.fearedEvents.map((fe) => {
-          if (fe.id === updatedFearedEvent.id)
-            return updatedFearedEvent
-
-          return fe
-        }),
-      }
-
-      this.$emit('update:unit', updatedUnit)
-    },
+  {
+    align: 'center',
+    class: 'grey lighten-3 black--text',
+    text: 'Business Impacts',
+    value: 'businessImpacts',
+    width: '30%',
   },
+  {
+    align: 'center',
+    class: 'grey lighten-3 black--text',
+    text: 'Severity',
+    value: 'severity',
+    width: '30%',
+  },
+]
+
+const detachBusinessUnit = () => {
+  emits('detachBusinessUnit', props.unit.unitId)
+}
+
+const goToAssetPage = () => {
+  router.push(`/assets/${props.unit.unitId}`)
+}
+
+const handleUpdateFearedEvent = (updatedFearedEvent: FearedEvent) => {
+  // Update unit with new severity:
+  const updatedUnit = {
+    ...props.unit,
+    fearedEvents: props.unit.fearedEvents.map((fe) => {
+      if (fe.id === updatedFearedEvent.id)
+        return updatedFearedEvent
+
+      return fe
+    }),
+  }
+
+  emits('update:unit', updatedUnit)
 }
 </script>
 
@@ -115,14 +97,14 @@ export default {
               :unit="unit"
               :available-business-impacts="availableBusinessImpacts"
               :feared-event="item"
-              @update:fearedEvent="handleUpdateFearedEvent"
+              @update:feared-event="handleUpdateFearedEvent"
             />
           </template>
           <template #[`item.severity`]="{ item }">
             <!-- TODO: Ajouter les props pour gérer en interne l'update de la sévérité -->
             <Severity
               :feared-event="item"
-              @update:fearedEvent="handleUpdateFearedEvent"
+              @update:feared-event="handleUpdateFearedEvent"
             />
           </template>
         </v-data-table>
