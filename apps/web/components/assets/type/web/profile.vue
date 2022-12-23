@@ -3,14 +3,8 @@ import AssetRiskScore from '../../details/AssetRiskScore.vue'
 import AssetIcon from '~/components/assets/AssetIcon.vue'
 
 export default {
-  components: { AssetIcon, AssetRiskScore },
   name: 'WebProfile',
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    }
-  },
+  components: { AssetIcon, AssetRiskScore },
   data() {
     return {
       relations: {
@@ -20,8 +14,11 @@ export default {
       },
     }
   },
-  created() {
-    this.fetchRelations()
+  props: {
+    asset: {
+      type: Object,
+      required: true
+    }
   },
   watch: {
     asset: {
@@ -30,6 +27,9 @@ export default {
         this.fetchRelations()
       }
     },
+  },
+  created() {
+    this.fetchRelations()
   },
   methods: {
     fetchRelations() {
@@ -67,7 +67,7 @@ export default {
             <strong>Hosted by:</strong>
           </span>
           <p style="display: flex; width: 300px; justify-content:left">
-            <v-chip small nuxt :to="`/assets/${relations.LOCATED_TO[0].id}`">
+            <v-chip small nuxt :to="`/assets/${relations.LOCATED_TO[0].to_id}`">
               <AssetIcon os="SERVER" :size="15" />&nbsp;{{
                 relations.LOCATED_TO[0].name
               }}
