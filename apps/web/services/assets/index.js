@@ -23,7 +23,7 @@ const getImportCsvEndpoit = () => `${getEndpoint()}/importCSV`
  * @param {string[]=} params.severities Array of vulnerability severities to filter assets that
  *                                     contain vulnerabilities of such severities
  * @param {string[]=} params.types Array of asset type to filter asset that are of such type
- * @returns {Promise<{ assets: object[], total: number }>} Assets from search result
+ * @returns {Promise<{ assets: import('~/types/asset').Asset[], total: number }>} Assets from search result
  */
 export const searchAssetsService = async (axios, params) => {
   const {
@@ -210,7 +210,7 @@ export const tmpService = async (axios, q) => {
 
 /**
  * @param {import('@nuxtjs/axios').NuxtAxiosInstance} axios
- * @param {{ childrenIds?: number[], parentsIds?: number[] }} [options]
+ * @param {{ childrenIds?: number[] | number, parentsIds?: number[] | number }} [options]
  * @return {Promise<{data: {assets: import('~/types/asset').AssetWithRelations[] }}>}
  */
 export const searchAssetsBelonging = async (axios, options) => {
