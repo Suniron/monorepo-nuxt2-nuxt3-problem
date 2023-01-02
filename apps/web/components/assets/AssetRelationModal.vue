@@ -1,185 +1,206 @@
-<script>
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { useContext } from '@nuxtjs/composition-api'
 import { searchAssetsBelonging, searchAssetsService } from '~/services/assets'
-import { ASSET_TYPES } from '~/utils/asset.utils'
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
 import {
   createBulkRelationService,
   deleteRelationByAssetsIdsService,
 } from '~/services/relations'
+import type { Asset, AssetWithRelations } from '~/types/asset'
 
-export default {
-  components: { LoadingSpinner },
-  data() {
-    return {
-      isLoading: true,
-      searchAsset: '',
-      assetsBelongings: [],
-      availableAssets: [],
-      ASSET_TYPES,
-      groupByType: false,
-      showOnlySelected: false,
-      assetsHeaders: [
-        {
-          text: 'Type',
-          align: 'start',
-          value: 'type'
-        },
-        {
-          text: 'Name',
-          value: 'name'
-        }
-      ],
-      elementsToLink: [],
-      elementsToUnlink: []
-    }
-  },
-  props: {
-    asset: {
-      type: Object,
-      required: true
-    },
-    isOpen: {
-      type: Boolean,
-      required: false
-    },
-    allowedTypes: {
-      type: Array,
-      required: true
-    },
-    relationWanted: {
-      type: String,
-      required: true
-    },
-    relationType: {
-      type: String,
-      required: true
-    }
-  },
-  computed: {
-    /**
-     * @returns {Array}
-     */
-    newUsableAvailableAssets() {
-      return this.availableAssets
-        .filter(
-          ass =>
-            ass.id !== this.asset.id
-            && !(this.showOnlySelected && !ass.isSelected),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }))
-    },
-    /**
-     * @returns {Array}
-     */
-    selected() {
-      return this.newUsableAvailableAssets.filter(a => a.isSelected)
-    },
-  },
-  created() {
-    this.fetchAsset()
-  },
-  watch: {
-    isOpen(value) {
-      if (value) {
-        this.fetchAsset()
-      }
-    }
-  },
-  methods: {
-    allSelected({ items, value }) {
-      items.forEach(item => (item.isSelected = value))
-    },
-    close() {
-      this.$emit('closed')
-    },
-    async fetchAsset() {
-      this.isLoading = true
-      this.availableAssets = []
-      const option = {}
-      if (this.relationWanted === 'children')
-        option.parentsIds = this.asset.id
-      if (this.relationWanted === 'parents')
-        option.childrenIds = this.asset.id
-      const { assets } = await searchAssetsService(this.$axios, {
-        types: this.allowedTypes,
-      })
-
-      const { data: assetsBelongings } = await searchAssetsBelonging(
-        this.$axios,
-        option,
-      )
-      this.assetsBelongings = assetsBelongings.assets.filter(
-        e => e.id !== this.asset.id,
-      )
-      this.availableAssets = assets.map((e) => {
-        return {
-          ...e,
-          isSelected: this.assetsBelongings.map(a => a.id).includes(e.id),
-        }
-      })
-      this.isLoading = false
-    },
-    itemSelected({ item, value }) {
-      item.isSelected = value
-      if (value)
-        this.linkElement(item.id)
-      else
-        this.unlinkElement(item.id)
-    },
-    linkElement(elementId) {
-      if (this.elementsToUnlink.includes(elementId)) {
-        this.elementsToUnlink.splice(
-          this.elementsToUnlink.indexOf(elementId),
-          1,
-        )
-      }
-      else {
-        this.elementsToLink.push(elementId)
-      }
-    },
-    unlinkElement(elementId) {
-      if (this.elementsToLink.includes(elementId))
-        this.elementsToLink.splice(this.elementsToLink.indexOf(elementId), 1)
-      else
-        this.elementsToUnlink.push(elementId)
-    },
-    async verifyAddBtn() {
-      await Promise.all(
-        this.elementsToUnlink.map(newRelativeId =>
-          deleteRelationByAssetsIdsService(this.$axios, {
-            fromAssetId:
-              this.relationWanted === 'children'
-                ? newRelativeId
-                : this.asset.id,
-            relationType: this.relationType,
-            toAssetId:
-              this.relationWanted === 'children' ? this.asset.id : newRelativeId,
-          }),
-        ),
-      )
-
-      if (this.elementsToLink.length > 0) {
-        await createBulkRelationService(
-          this.$axios,
-          this.elementsToLink.map(newRelativeId => ({
-            fromAssetId:
-              this.relationWanted === 'children'
-                ? newRelativeId
-                : this.asset.id,
-            relationType: this.relationType,
-            toAssetId:
-              this.relationWanted === 'children' ? this.asset.id : newRelativeId,
-          })),
-        )
-      }
-
-      this.elementsToLink.splice(0, this.elementsToLink.length)
-      this.elementsToUnlink.splice(0, this.elementsToUnlink.length)
-
-      this.$emit('saved')
-    },
-  },
+interface AssetWithIsSelected extends Asset {
+  isSelected: boolean
 }
+
+const props = defineProps<{
+  asset: Asset
+  isOpen: boolean
+  allowedTypes: string[]
+  relationWanted: string
+  relationType: string
+}>()
+
+const emits = defineEmits<{
+  (event: 'closed'): void
+  (event: 'saved'): void
+}>()
+
+const axios = useContext().$axios
+
+const isLoading = ref(true)
+const searchAsset = ref('')
+const assetsBelongings = ref<AssetWithRelations[]>([])
+const availableAssets = ref<AssetWithIsSelected[]>([])
+const groupByType = ref(false)
+const showOnlySelected = ref(false)
+const elementsToLink = ref<number[]>([])
+const elementsToUnlink = ref<number[]>([])
+const selectedAssets = ref<Asset[]>([])
+
+const linkElement = (elementId: number) => {
+  if (!elementsToUnlink.value.includes(elementId))
+    return elementsToLink.value.push(elementId)
+
+  elementsToUnlink.value.splice(
+    elementsToUnlink.value.indexOf(elementId),
+    1,
+  )
+}
+
+const unlinkElement = (elementId: number) => {
+  if (!elementsToLink.value.includes(elementId))
+    return elementsToUnlink.value.push(elementId)
+
+  elementsToLink.value.splice(elementsToLink.value.indexOf(elementId), 1)
+}
+
+const handleToggleSelectOneItem = (
+  { item, value }: {
+    item: AssetWithIsSelected
+    value: boolean
+  }) => {
+  item.isSelected = value
+  if (!value)
+    return unlinkElement(item.id)
+
+  linkElement(item.id)
+}
+
+const handleToggleSelectAllItems = (event: {
+  items: AssetWithIsSelected[]
+  value: boolean
+},
+) => {
+  // Reset lists of elements to link and unlink
+  elementsToLink.value = []
+  elementsToUnlink.value = []
+
+  event.items.forEach((item) => {
+    handleToggleSelectOneItem({ item, value: event.value })
+  })
+
+  // = Clean elements to avoid the link of a relation already existing or unlink no existing relations =
+  // Remove from unlink list elements that are not already linked
+  elementsToUnlink.value = elementsToUnlink.value.filter(
+    id => assetsBelongings.value.map(ab => ab.id).includes(id),
+  )
+  // Remove from link list elements that are already linked
+  elementsToLink.value = elementsToLink.value.filter(
+    id => !assetsBelongings.value.map(ab => ab.id).includes(id),
+  )
+}
+
+const fetchAsset = async () => {
+  isLoading.value = true
+  availableAssets.value = []
+
+  const option = {
+    childrenIds: props.relationWanted === 'parents' ? props.asset.id : undefined,
+    parentsIds: props.relationWanted === 'children' ? props.asset.id : undefined,
+  }
+
+  const { assets } = await searchAssetsService(axios, {
+    types: props.allowedTypes,
+  })
+
+  const { data: fetchedAssetsBelongings } = await searchAssetsBelonging(
+    axios,
+    option,
+  )
+
+  assetsBelongings.value = fetchedAssetsBelongings.assets.filter(
+    fab => fab.id !== props.asset.id,
+  )
+
+  availableAssets.value = assets.map((a) => {
+    const isSelected = assetsBelongings.value.map(ab => ab.id).includes(a.id)
+    return {
+      ...a,
+      isSelected,
+    }
+  })
+
+  isLoading.value = false
+}
+
+const handleConfirmClick = async () => {
+  await Promise.all(
+    elementsToUnlink.value.map(newRelativeId =>
+      deleteRelationByAssetsIdsService(axios, {
+        fromAssetId:
+          props.relationWanted === 'children'
+            ? newRelativeId
+            : props.asset.id,
+        relationType: props.relationType,
+        toAssetId:
+          props.relationWanted === 'children' ? props.asset.id : newRelativeId,
+      }),
+    ),
+  )
+
+  if (elementsToLink.value.length > 0) {
+    await createBulkRelationService(
+      axios,
+      elementsToLink.value.map(newRelativeId => ({
+        fromAssetId:
+          props.relationWanted === 'children'
+            ? newRelativeId
+            : props.asset.id,
+        relationType: props.relationType,
+        toAssetId:
+          props.relationWanted === 'children' ? props.asset.id : newRelativeId,
+      })),
+    )
+  }
+
+  elementsToLink.value.splice(0, elementsToLink.value.length)
+  elementsToUnlink.value.splice(0, elementsToUnlink.value.length)
+
+  emits('saved')
+}
+
+watch(
+  () => props.isOpen,
+  (value) => {
+    if (value)
+      fetchAsset()
+  },
+)
+
+const newUsableAvailableAssets = computed(() => {
+  return availableAssets.value
+    .filter(
+      as =>
+        as.id !== props.asset.id
+        && !(showOnlySelected.value && !as.isSelected),
+    )
+    .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }))
+})
+
+watch(newUsableAvailableAssets.value, (value) => {
+  selectedAssets.value = value.filter(a => a.isSelected)
+})
+
+// TODO: find a way to use selectedAssets.value instead of this
+const selected = computed(() => {
+  return newUsableAvailableAssets.value.filter(nuaa => nuaa.isSelected)
+})
+
+const assetsHeaders = [
+  {
+    align: 'start',
+    text: 'Type',
+    value: 'type',
+  },
+  {
+    text: 'Name',
+    value: 'name',
+  },
+]
+
+// Fetch on created
+fetchAsset()
 </script>
 
 <template>
@@ -188,27 +209,16 @@ export default {
     <v-card-text>
       <div class="d-flex justify-space-between mx-5">
         <v-switch v-model="groupByType" label="Group by type" hide-details />
-        <v-switch
-          v-model="showOnlySelected"
-          label="Show only selected"
-          hide-details
-        />
+        <v-switch v-model="showOnlySelected" label="Show only selected" hide-details />
       </div>
       <div style="border:1px solid black" class="ma-3">
-        <v-text-field
-          v-model="searchAsset"
-          dense
-          class="py-0"
-          filled
-          clearable
-          label="Search an asset"
-          hide-details
-        />
+        <v-text-field v-model="searchAsset" dense class="py-0" filled clearable label="Search an asset" hide-details />
         <div class="d-flex flex-column justify-stretch">
           <LoadingSpinner v-if="isLoading" class="align-self-center ma-10" />
+
           <v-data-table
             v-else
-            v-model="selected"
+            :value="selected"
             :headers="assetsHeaders"
             :group-by="groupByType ? 'type' : null"
             :items="newUsableAvailableAssets"
@@ -217,12 +227,10 @@ export default {
             show-select
             dense
             @click:row="(_, { select }) => select()"
-            @item-selected="itemSelected"
-            @toggle-select-all="allSelected"
+            @item-selected="handleToggleSelectOneItem"
+            @toggle-select-all="handleToggleSelectAllItems"
           >
-            <template
-              #[`group.header`]="{ group, groupBy, headers, toggle, isOpen }"
-            >
+            <template #[`group.header`]="{ group, groupBy, headers, toggle, isOpen }">
               <td :colspan="headers.length">
                 <v-btn :ref="group" small icon @click="toggle">
                   <v-icon v-if="isOpen" title="Collapse group">
@@ -233,10 +241,12 @@ export default {
                   </v-icon>
                 </v-btn>
 
-                <span class="mx-5 font-weight-bold">{{
-                  assetsHeaders.find((header) => header.value === groupBy[0])
-                    .text
-                }}: {{ group }}</span>
+                <span class="mx-5 font-weight-bold">
+                  {{
+                    assetsHeaders.find((header) => header.value === groupBy[0])
+                      .text
+                  }}: {{ group }}
+                </span>
               </td>
             </template>
           </v-data-table>
@@ -244,14 +254,12 @@ export default {
       </div>
     </v-card-text>
     <v-card-actions class="d-flex justify-end mb-3">
-      <v-btn class="mx-3" @click="close">
+      <v-btn class="mx-3" @click="emits('closed')">
         Cancel
       </v-btn>
-      <v-btn color="primary" @click="verifyAddBtn">
+      <v-btn color="primary" @click="handleConfirmClick">
         Confirm
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
-
-<style></style>
