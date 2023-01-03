@@ -1,8 +1,10 @@
+import type { company } from '@prisma/client'
 import { riskScoreComputing } from '../utils/RiskScoreComputing'
 import prismaClient from '../prismaClient'
 import { log } from '../lib/logger'
+import type { LightAsset, LightRelation } from '../../types/asset'
 
-async function calculateCompanyRisk(companyId: any) {
+async function calculateCompanyRisk(companyId: company['id']) {
   const startDate = new Date()
   const today = new Date()
 
@@ -32,9 +34,9 @@ async function calculateCompanyRisk(companyId: any) {
 
   // Ignoring TS error because there is not enum for the asset type and the string cannot match the values specified in the function's definition
   const inheritedRisks = riskScoreComputing(
-    listUnvisited,
-    relations,
-    inherentScores.map((inherentScore: any) => ({
+    listUnvisited as LightAsset[],
+    relations as LightRelation[],
+    inherentScores.map(inherentScore => ({
       asset_id: inherentScore.asset_id,
       inherentRisk: inherentScore.inherent_score,
     })),
@@ -47,7 +49,7 @@ async function calculateCompanyRisk(companyId: any) {
   // It is possible to use prismaClient.$transaction() to do this in a single query, however it seem to degrade the performance by 20% of the overall script execution time
   // And since those are just upsert queries, it is not an issue if an error happens and the scores are only partially updated.
   await prismaClient.$transaction(
-    Object.keys(inheritedRisks).flatMap((assetId) => {
+    Object.keys(inheritedRisks).flatMap((assetId: number) => {
       return [
         prismaClient.score_asset_history.upsert({
           create: {
@@ -104,7 +106,7 @@ export async function computeRiskForAllCompanies() {
     companies.map((company: any) => calculateCompanyRisk(company.id)),
   )
   log.info(`Fetched companies in ${new Date().getTime() - date.getTime()}ms`)
-  results.forEach((timings: any, index: any) => {
+  results.forEach((timings, index) => {
     log.info(
       `Risk computed for company ${index + 1} in ${
         timings.queryTime + timings.computeTime + timings.upsertTime

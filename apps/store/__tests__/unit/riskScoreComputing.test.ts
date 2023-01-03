@@ -1,4 +1,5 @@
 import { riskScoreComputing } from '../../src/utils/RiskScoreComputing'
+import type { InherentRiskScore, LightAsset, LightRelation, SuperAssetType, TechnicalAssetType } from '../../types/asset'
 
 describe('Testing the risk score computing algo', () => {
   it('Simple test case', () => {
@@ -243,7 +244,7 @@ describe('Testing the risk score computing algo', () => {
       params.inherentScores,
     )
 
-    const scores = {}
+    const scores: { [key: number]: number } = {}
 
     scores[1] = 7.5 / 2
 
@@ -290,30 +291,26 @@ const RELATION_TYPES_ENUM = {
   OWN_BY: 'OWN_BY',
 }
 
-/**
- * @param {{
- *  nodes: {
- *    id: number,
- *    type: string,
- *    inherentRisk: number
- *  }[],
- *  edges: {
- *    from_asset_id: number,
- *    to_asset_id: number,
- *    type: keyof typeof RELATION_TYPES_ENUM | null
- *  }[]
- * }} graph
- * @returns {{
- *  listUnvisited: import('@/utils/RiskScoreComputing').lightAssetType[],
- *  relations: import('@/utils/RiskScoreComputing').lightRelationType[],
- *  inherentScores: import('@/utils/RiskScoreComputing').inherentRiskScores[]
- * }}
- */
-function graphToParams(graph: any) {
-  const listUnvisited: any = []
-  const inherentScores: any = []
+const graphToParams = (graph: {
+  nodes: {
+    id: number
+    type: TechnicalAssetType | SuperAssetType
+    inherentRisk: number
+  }[]
+  edges: {
+    from_asset_id: number
+    to_asset_id: number
+    type: keyof typeof RELATION_TYPES_ENUM | null
+  }[]
+}): {
+  listUnvisited: LightAsset[]
+  relations: LightRelation[]
+  inherentScores: InherentRiskScore[]
+} => {
+  const listUnvisited: LightAsset[] = []
+  const inherentScores: InherentRiskScore[] = []
 
-  graph.nodes.forEach((node: any) => {
+  graph.nodes.forEach((node) => {
     listUnvisited.push({
       id: node.id,
       type: node.type,
@@ -370,7 +367,7 @@ function parseGraph(str: any) {
       if (relationType) {
         const [from, to] = line.split(relationType)
         if (relationType === 'NULL')
-          relationType = null
+          relationType = undefined
 
         edges.push({
           from_asset_id: parseFloat(from),
