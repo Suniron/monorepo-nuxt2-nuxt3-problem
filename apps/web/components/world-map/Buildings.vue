@@ -2,7 +2,7 @@
 // @ts-check
 import { LIcon, LMarker } from 'vue2-leaflet'
 import { getAssetsRisk, searchAssetsService } from '~/services/assets'
-import { riskScoreColor, riskScoreLetter } from '~/utils/risk.utils'
+import { getRiskScoreColor, getRiskScoreLetter } from '~/utils/risk.utils'
 
 export default {
   components: {
@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       buildingAssets: [],
-      iconSize: 42
+      iconSize: 42,
     }
   },
   methods: {
@@ -41,12 +41,12 @@ export default {
             }
 
             // Because "Building" is a super asset, use computed risk score and force scanned to true:
-            assetWithRisk.scoreLetter = riskScoreLetter(
+            assetWithRisk.scoreLetter = getRiskScoreLetter(
               assetWithRisk.risk.computedScore,
               risk.hasVulnerability,
               true,
             )
-            assetWithRisk.scoreColor = riskScoreColor(
+            assetWithRisk.scoreColor = getRiskScoreColor(
               assetWithRisk.risk.computedScore,
               risk.hasVulnerability,
               true,

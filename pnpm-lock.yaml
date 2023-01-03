@@ -110,6 +110,7 @@ importers:
       '@types/compression': ^1.7.2
       '@types/cookie-parser': ^1.4.3
       '@types/cors': ^2.8.13
+      '@types/cron': ^2.0.0
       '@types/jest': ^29.2.4
       '@types/jsonwebtoken': ^8.5.9
       '@types/sanitize-html': ^2.6.2
@@ -185,6 +186,7 @@ importers:
       '@types/compression': 1.7.2
       '@types/cookie-parser': 1.4.3
       '@types/cors': 2.8.13
+      '@types/cron': 2.0.0
       '@types/jest': 29.2.4
       '@types/jsonwebtoken': 8.5.9
       '@types/sanitize-html': 2.6.2
@@ -2888,6 +2890,13 @@ packages:
       '@types/node': 18.11.11
     dev: true
 
+  /@types/cron/2.0.0:
+    resolution: {integrity: sha512-xZM08fqvwIXgghtPVkSPKNgC+JoMQ2OHazEvyTKnNf7aWu1aB6/4lBbQFrb03Td2cUGG7ITzMv3mFYnMu6xRaQ==}
+    dependencies:
+      '@types/luxon': 3.2.0
+      '@types/node': 18.11.15
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -3019,6 +3028,10 @@ packages:
 
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
     dev: true
 
   /@types/mdast/3.0.10:

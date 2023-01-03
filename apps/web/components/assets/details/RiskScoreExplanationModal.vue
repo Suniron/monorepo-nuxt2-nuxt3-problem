@@ -1,17 +1,10 @@
 <script>
 import {
+  getRiskScoreColor,
+  getRiskScoreLetter,
   globalRiskScoreDisplays,
-  riskScoreColor,
-  riskScoreLetter,
 } from '~/utils/risk.utils'
 export default {
-  data() {
-    return {
-      riskScoreColor,
-      riskScoreLetter,
-      globalRiskScoreDisplays,
-    }
-  },
   props: {
     isSuperAsset: {
       type: Boolean,
@@ -20,6 +13,13 @@ export default {
     globalRiskScore: {
       type: Boolean,
       default: false
+    }
+  },
+  data() {
+    return {
+      riskScoreColor: getRiskScoreColor,
+      riskScoreLetter: getRiskScoreLetter,
+      globalRiskScoreDisplays,
     }
   }
 }

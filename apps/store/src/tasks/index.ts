@@ -1,3 +1,4 @@
+import type { CronCommand } from 'cron'
 import { CronJob } from 'cron'
 import { log } from '../lib/logger'
 
@@ -16,10 +17,7 @@ const COMMON_CRON_PATTERNS = {
   EVERY_YEAR: '0 0 1 1 *',
 }
 
-/**
- * @type {{cronPattern: string, onTick: import('cron').CronCommand, job: CronJob | null}[]}
- */
-export const tasks = [
+export const tasks: { cronPattern: string; onTick: CronCommand; job: CronJob | null }[] = [
   {
     cronPattern: COMMON_CRON_PATTERNS.EVERY_FIVE_MINUTE,
     job: null,

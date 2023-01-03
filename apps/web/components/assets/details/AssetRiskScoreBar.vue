@@ -2,10 +2,19 @@
 // @ts-check
 
 // IMPORTANT NOTE: for now, it's only for super asset, not for server, web, user, ...
-import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
+import { getRiskScoreColor, getRiskScoreLetter, roundScore } from '~/utils/risk.utils'
 import { isSuperAsset } from '~/utils/asset.utils'
 
 export default {
+  props: {
+    /**
+     * @type {import('vue').PropOptions<(import('~/types/asset').BelongedAsset)>}
+     */
+    asset: {
+      required: true,
+      type: Object,
+    },
+  },
   computed: {
     /**
      * @returns {number}
@@ -43,7 +52,8 @@ export default {
      * @returns {number}
      */
     scoreToUse() {
-      if (isSuperAsset(this.asset.type)) return this.compoundScore
+      if (isSuperAsset(this.asset.type))
+        return this.compoundScore
 
       return this.inheritedScore
     },
@@ -51,7 +61,7 @@ export default {
      * @returns {"A" | "B" | "C" | "D" | "E" | "F"}
      */
     riskScoreLetter() {
-      return riskScoreLetter(
+      return getRiskScoreLetter(
         this.scoreToUse,
         this.hasVulnerability,
         this.isScanned || isSuperAsset(this.asset.type),
@@ -61,21 +71,12 @@ export default {
      * @returns {string}
      */
     riskScoreColor() {
-      return riskScoreColor(
+      return getRiskScoreColor(
         this.scoreToUse,
         this.hasVulnerability,
         this.isScanned || isSuperAsset(this.asset.type),
       )
     },
-  },
-  props: {
-    /**
-     * @type {import('vue').PropOptions<(import('~/types/asset').BelongedAsset)>}
-     */
-    asset: {
-      type: Object,
-      required: true
-    }
   },
   methods: {
     /**
@@ -84,7 +85,7 @@ export default {
      */
     getExtraLetterStyle(letter) {
       if (letter !== this.riskScoreLetter)
-        return
+        return ''
 
       return `background-color: ${this.riskScoreColor}`
     },

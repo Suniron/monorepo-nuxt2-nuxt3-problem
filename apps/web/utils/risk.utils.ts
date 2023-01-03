@@ -1,4 +1,3 @@
-// @ts-check
 import { severityColor } from './color.utils'
 import { logDebug } from '~/lib/logger'
 
@@ -18,32 +17,33 @@ export function severityLevelString(score: number): 'high' | 'medium' | 'low' | 
   return 'info'
 }
 
-export function riskScoreColor(score: number, hasVuln = false, scanned = false): string {
-  if (hasVuln || scanned) {
-    if (score === 0)
-      return severityColor('STATE_OF_THE_ART')
+export const getRiskScoreColor = (score: number | null, hasVuln = false, scanned = false): string => {
+  if ((!hasVuln && !scanned) || score === null || score === -1)
+    return severityColor('CATASTROPHIC')
 
-    if (score > 0 && score < 4)
-      return severityColor('LOW')
+  if (score === 0)
+    return severityColor('STATE_OF_THE_ART')
 
-    if (score >= 4 && score < 7)
-      return severityColor('MEDIUM')
+  if (score > 0 && score < 4)
+    return severityColor('LOW')
 
-    if (score >= 7 && score < 9)
-      return severityColor('HIGH')
+  if (score >= 4 && score < 7)
+    return severityColor('MEDIUM')
 
-    if (score >= 9 && score <= 10)
-      return severityColor('CRITICAL')
-  }
+  if (score >= 7 && score < 9)
+    return severityColor('HIGH')
+
+  if (score >= 9 && score <= 10)
+    return severityColor('CRITICAL')
+
   return severityColor('CATASTROPHIC')
 }
 
-export function riskScoreLetter(score: number, hasVuln = false, scanned = false): 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | undefined {
+export const getRiskScoreLetter = (score: number | null, hasVuln = false, scanned = false): 'A' | 'B' | 'C' | 'D' | 'E' | 'F' => {
+  if ((!hasVuln && !scanned) || score === null || score === -1)
+    return 'F'
+
   switch (true) {
-    case !hasVuln && !scanned:
-    case score === null:
-    case score === -1:
-      return 'F'
     case score === 0:
       return 'A'
     case score > 0 && score < 4:
@@ -56,7 +56,8 @@ export function riskScoreLetter(score: number, hasVuln = false, scanned = false)
       return 'E'
     default:
       // TODO: send by Elastic
-      console.error(`riskScoreLetter: score out of range: ${score}`)
+      console.error(`getRiskScoreLetter: score out of range: ${score}`)
+      return 'F'
   }
 }
 
@@ -130,6 +131,9 @@ export function globalRiskScoreDisplays(score: number): ({ letter: string; color
  * - 12 => -1
  */
 export const roundScore = (score: number): number => {
+  if (!score && score !== 0)
+    return -1
+
   if (score < 0 || score > 10) {
     logDebug(`roundScore: score out of range: ${score}`)
     return -1
