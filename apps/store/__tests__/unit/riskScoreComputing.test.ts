@@ -1,6 +1,114 @@
 import { riskScoreComputing } from '../../src/utils/RiskScoreComputing'
 import type { InherentRiskScore, LightAsset, LightRelation, SuperAssetType, TechnicalAssetType } from '../../types/asset'
 
+/**
+ * The following part of the file are helpers.
+ * You can use the function to transform a string into correctly formatted data.
+ *
+ * The format of the string is the following:
+ *
+ * For declaring an asset:
+ * <id>:<type>/<inherentRisk>
+ *
+ * For declaring a relation:
+ * <from_asset_id> <relation_type> <to_asset_id>
+ *
+ * (comments are supported with a '#' prefix)
+ */
+
+const RELATION_TYPES_ENUM = {
+  BELONGS_TO: 'BELONGS_TO',
+  CONNECTED_TO: 'CONNECTED_TO',
+  LOCATED_TO: 'LOCATED_TO',
+  MAINTAINED_BY: 'MAINTAINED_BY',
+  OWN_BY: 'OWN_BY',
+}
+
+const graphToParams = (graph: {
+  nodes: {
+    id: number
+    type: TechnicalAssetType | SuperAssetType
+    inherentRisk: number
+  }[]
+  edges: {
+    from_asset_id: number
+    to_asset_id: number
+    type: keyof typeof RELATION_TYPES_ENUM
+  }[]
+}): {
+  listUnvisited: LightAsset[]
+  relations: LightRelation[]
+  inherentScores: InherentRiskScore[]
+} => {
+  const listUnvisited: LightAsset[] = []
+  const inherentScores: InherentRiskScore[] = []
+
+  graph.nodes.forEach((node) => {
+    listUnvisited.push({
+      id: node.id,
+      type: node.type,
+    })
+    inherentScores.push({
+      asset_id: node.id,
+      inherentRisk: node.inherentRisk,
+    })
+  })
+  return {
+    inherentScores,
+
+    listUnvisited,
+    relations: graph.edges.map((edge, index) => ({
+      ...edge,
+      id: index,
+    })),
+  }
+}
+
+const parseGraph = (stringToParse: string) => {
+  const nodes: {
+    id: number
+    type: TechnicalAssetType | SuperAssetType
+    inherentRisk: number
+  }[] = []
+  const edges: {
+    from_asset_id: number
+    to_asset_id: number
+    type: keyof typeof RELATION_TYPES_ENUM
+  }[] = []
+
+  const lines = stringToParse.split('\n')
+  lines.forEach((line) => {
+    line = line.split('#')[0].trim()
+    if (line.includes(':') && line.includes('/')) {
+      const [id, assetDetails] = line.split(':')
+      const [assetType, inherentRisk] = assetDetails.split('/')
+      nodes.push({
+        id: parseInt(id),
+        inherentRisk: Number(inherentRisk),
+        type: assetType as TechnicalAssetType | SuperAssetType,
+      })
+    }
+    else {
+      let relationType = Object.keys(RELATION_TYPES_ENUM)
+        .concat('NULL')
+        .find(relationType => line.includes(relationType))
+
+      if (relationType) {
+        const [from, to] = line.split(relationType)
+        if (relationType === 'NULL')
+          relationType = undefined
+
+        edges.push({
+          from_asset_id: parseFloat(from),
+          to_asset_id: parseFloat(to),
+          type: relationType as keyof typeof RELATION_TYPES_ENUM,
+        })
+      }
+    }
+  })
+  return { edges, nodes }
+}
+
 describe('Testing the risk score computing algo', () => {
   it('Simple test case', () => {
     const calculatedRisks = riskScoreComputing(
@@ -268,114 +376,3 @@ describe('Testing the risk score computing algo', () => {
   })
 })
 
-/**
- * The following part of the file are helpers.
- * You can use the function to transform a string into correctly formatted data.
- *
- * The format of the string is the following:
- *
- * For declaring an asset:
- * <id>:<type>/<inherentRisk>
- *
- * For declaring a relation:
- * <from_asset_id> <relation_type> <to_asset_id>
- *
- * (comments are supported with a '#' prefix)
- */
-
-const RELATION_TYPES_ENUM = {
-  BELONGS_TO: 'BELONGS_TO',
-  CONNECTED_TO: 'CONNECTED_TO',
-  LOCATED_TO: 'LOCATED_TO',
-  MAINTAINED_BY: 'MAINTAINED_BY',
-  OWN_BY: 'OWN_BY',
-}
-
-const graphToParams = (graph: {
-  nodes: {
-    id: number
-    type: TechnicalAssetType | SuperAssetType
-    inherentRisk: number
-  }[]
-  edges: {
-    from_asset_id: number
-    to_asset_id: number
-    type: keyof typeof RELATION_TYPES_ENUM | null
-  }[]
-}): {
-  listUnvisited: LightAsset[]
-  relations: LightRelation[]
-  inherentScores: InherentRiskScore[]
-} => {
-  const listUnvisited: LightAsset[] = []
-  const inherentScores: InherentRiskScore[] = []
-
-  graph.nodes.forEach((node) => {
-    listUnvisited.push({
-      id: node.id,
-      type: node.type,
-    })
-    inherentScores.push({
-      asset_id: node.id,
-      inherentRisk: node.inherentRisk,
-    })
-  })
-  return {
-    inherentScores,
-
-    listUnvisited,
-    relations: graph.edges.map((edge, index) => ({
-      ...edge,
-      id: index,
-    })),
-  }
-}
-
-/**
- * @param {string} str
- * @returns {{nodes, edges}}
- */
-function parseGraph(str: any) {
-  /**
-   * @type {{ id: number, type: string, inherentRisk: number }[]}
-   */
-  const nodes: any = []
-  /**
-   * @type {{ from_asset_id: number, to_asset_id: number, type: string | null }[]}
-   */
-  const edges: any = []
-
-  const lines = str.split('\n')
-  lines.forEach((line: any) => {
-    line = line.split('#')[0].trim()
-    if (line.includes(':') && line.includes('/')) {
-      const [id, assetDetails] = line.split(':')
-      const [assetType, inherentRisk] = assetDetails.split('/')
-      nodes.push({
-        id: parseInt(id),
-        inherentRisk: Number(inherentRisk),
-        type: assetType,
-      })
-    }
-    else {
-      /**
-       * @type {string | undefined | null}
-       */
-      let relationType = Object.keys(RELATION_TYPES_ENUM)
-        .concat('NULL')
-        .find(relationType => line.includes(relationType))
-      if (relationType) {
-        const [from, to] = line.split(relationType)
-        if (relationType === 'NULL')
-          relationType = undefined
-
-        edges.push({
-          from_asset_id: parseFloat(from),
-          to_asset_id: parseFloat(to),
-          type: relationType,
-        })
-      }
-    }
-  })
-  return { edges, nodes }
-}
