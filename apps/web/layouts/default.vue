@@ -10,8 +10,8 @@ import { getCompanyLogo } from '~/services/companies/index.js'
 const DEBOUNCE_WAIT = 300 // ms
 
 export default {
-  components: { siteNavMenu },
   name: 'DefaultLayout',
+  components: { siteNavMenu },
   computed: {
     ...mapState(['pageTitle']),
     ...mapState('company', ['logo']),
@@ -28,7 +28,6 @@ export default {
     return {
       assets: [],
       search: '',
-      showMenu: true,
     }
   },
   methods: {
@@ -97,7 +96,7 @@ export default {
 
 <template>
   <v-app id="xrator">
-    <site-nav-menu v-model:show="showMenu" class="side-menu" />
+    <site-nav-menu class="side-menu" />
 
     <v-app-bar app class="app-bar">
       <!-- COMPANY LOGO OR BLANK SPACE -->

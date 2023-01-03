@@ -6,8 +6,8 @@ import DropdownMenuItem from '~/components/site-menu-nav/DropdownMenuItem.vue'
 import ICONS from '~/assets/img/icons'
 
 export default {
-  components: { DropdownMenuItem, SimpleMenuItem },
   name: 'SiteNavMenu',
+  components: { DropdownMenuItem, SimpleMenuItem },
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     /**
@@ -119,6 +119,7 @@ export default {
       title: 'Governance',
     },
     mouseOver: false,
+    show: true,
   }),
   methods: {
     ...mapActions('user', ['deauthorize']),
@@ -140,12 +141,6 @@ export default {
       this.expandLock = !this.expandLock
     })
   },
-  props: {
-    show: {
-      required: true,
-      type: Boolean,
-    },
-  },
 }
 </script>
 
@@ -161,7 +156,6 @@ export default {
     :mini-variant="expandLock === false"
     :expand-on-hover="expandLock === false"
     :width="expandLock || mouseOver ? 256 : 56"
-    @input="(e) => $emit('update:show', e)"
     @mouseenter.native="mouseOver = true"
     @mouseleave.native="mouseOver = false"
   >
@@ -287,7 +281,7 @@ export default {
       </v-list-item> -->
     </v-list>
     <template #append>
-      <div v-if="mouseOver" class="mx-3 text-center grey--text">
+      <div class="mx-3 text-center grey--text">
         <p class="ma-0">
           Version: {{ version }}
         </p>
