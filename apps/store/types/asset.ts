@@ -1,4 +1,4 @@
-export type Asset = {
+export interface Asset {
   id: number
   owner: string
   maintainer: string
@@ -8,14 +8,14 @@ export type Asset = {
   type: string
 }
 
-export type MainIps = {
-  address: string 
+export interface MainIps {
+  address: string
   id: number
   iface: string
-  mac:  string
+  mac: string
   mask: string
 }
-export type Server = {
+export interface Server {
   id: number
   type: string | null
   os: string | null
@@ -36,4 +36,23 @@ export type Server = {
   managed_by: string | null
   managed_by_status: string | null
   mainIps: [MainIps] | []
+}
+
+export type TechnicalAssetType = 'USER' | 'SERVER' | 'WEB'
+export type SuperAssetType = 'NETWORK' | 'BUILDING' | 'MISSION' | 'UNIT' | 'USERGROUP'
+export type RelationType = 'BELONGS_TO' | 'CONNECTED_TO' | 'LOCATED_TO' | 'OWN_BY' | 'MAINTAINED_BY' | null
+export interface LightAsset {
+  id: number
+  type: TechnicalAssetType | SuperAssetType
+}
+export interface LightRelation {
+  id: number
+  type: RelationType
+  to_asset_id: number
+  from_asset_id: number
+}
+
+export interface InherentRiskScore {
+  asset_id: number
+  inherentRisk: number | null
 }
