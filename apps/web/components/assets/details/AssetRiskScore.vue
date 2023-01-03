@@ -3,16 +3,14 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useContext } from '@nuxtjs/composition-api'
 import RiskScoreExplanationModal from './RiskScoreExplanationModal.vue'
 import { getAssetsRisk } from '~/services/assets'
-import { riskScoreColor, riskScoreLetter, roundScore } from '~/utils/risk.utils'
+import { getRiskScoreColor, getRiskScoreLetter, roundScore } from '~/utils/risk.utils'
 import { isSuperAsset } from '~/utils/asset.utils'
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
+import type { Asset } from '~/types/asset'
 
-const { asset } = defineProps({
-  asset: {
-    required: true,
-    type: Object,
-  },
-})
+const props = defineProps<{
+  asset: Asset
+}>()
 
 const axios = useContext().$axios
 
@@ -35,29 +33,22 @@ const snackbarText = ref('A problem has occurred that makes the service temporar
 
 const scoreToUse = computed (
   () =>
-    isSuperAsset(asset.type)
+    isSuperAsset(props.asset.type)
       ? scores.value.compound
       : scores.value.inherited,
 )
-const assetId = computed<number>(() => asset.id)
+const assetId = computed(() => props.asset.id)
 const getGlobalRiskScore = computed(() => {
-  if (scoreToUse.value === null) {
-    return {
-      color: 'black',
-      letter: 'N/A',
-    }
-  }
-
   return {
-    color: riskScoreColor(
+    color: getRiskScoreColor(
       scoreToUse.value,
       hasVuln.value,
-      scanned.value || isSuperAsset(asset.type),
+      scanned.value || isSuperAsset(props.asset.type),
     ),
-    letter: riskScoreLetter(
+    letter: getRiskScoreLetter(
       scoreToUse.value,
       hasVuln.value,
-      scanned.value || isSuperAsset(asset.type),
+      scanned.value || isSuperAsset(props.asset.type),
     ),
   }
 },
@@ -76,7 +67,7 @@ const getScoresToDisplay = computed(() => ({
             ? 'N/A'
             : roundScore(scores.value.inherited),
 }))
-const superAsset = computed(() => isSuperAsset(asset.type))
+const superAsset = computed(() => isSuperAsset(props.asset.type))
 
 const fetchScores = async () => {
   loading.value = true
@@ -100,7 +91,7 @@ const fetchScores = async () => {
 
 onMounted(() => fetchScores())
 watch(
-  asset, async () => {
+  props.asset, async () => {
     await fetchScores()
   },
 )
