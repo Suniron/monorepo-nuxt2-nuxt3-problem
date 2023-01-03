@@ -281,7 +281,7 @@ export default {
       </v-list-item> -->
     </v-list>
     <template #append>
-      <div class="mx-3 text-center grey--text">
+      <div v-if="expandLock || mouseOver" class="mx-3 text-center grey--text">
         <p class="ma-0">
           Version: {{ version }}
         </p>
