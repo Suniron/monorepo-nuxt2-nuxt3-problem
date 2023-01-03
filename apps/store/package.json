@@ -23,7 +23,7 @@
     "prisma:update-schema": "prisma db pull && prisma generate",
     "postinstall": "prisma generate",
     "seed:reset": "node prisma/resetSeeders.js",
-    "compute-risks": "node src/tasks/ComputeRisks.js"
+    "dev:compute:risks": "pnpm build && node -e 'require(\"./dist/src/tasks/computeRisks.js\").computeRiskForAllCompanies()'"
   },
   "keywords": [],
   "author": "",
@@ -59,6 +59,7 @@
     "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
+    "@types/cron": "^2.0.0",
     "@types/jest": "^29.2.4",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/sanitize-html": "^2.6.2",
