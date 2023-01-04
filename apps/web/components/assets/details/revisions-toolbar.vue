@@ -1,7 +1,7 @@
 <script>
 // @ts-check
 import _debounce from 'lodash/debounce'
-import { startDownloadFile } from '~/services/file_upload'
+import { startDownloadFile } from '~/services/fileUpload'
 
 const DEBOUNCE_WAIT = 300 // ms
 
