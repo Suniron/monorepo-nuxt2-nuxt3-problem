@@ -22,7 +22,11 @@ const modalRef = ref(null)
     <div
       ref="modalRef"
       class="modal-box"
-      :class="{ 'w-11/12 max-w-7xl': props.size === 'large', 'w-fit': props.fit }"
+      :class="{
+        'w-11/12 max-w-7xl': props.size === 'large',
+        'w-9/12 max-w-5xl': props.size === 'medium',
+        'w-fit': props.fit,
+      }"
       @mousedown.stop=""
       @click.stop=""
     >

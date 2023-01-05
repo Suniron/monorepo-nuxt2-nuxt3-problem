@@ -3,28 +3,26 @@ import { useContext } from '@nuxtjs/composition-api'
 import { computed, ref } from 'vue'
 import { processCSV } from '~/services/fileUpload'
 import BaseAlert from '~/components/base/Alert.vue'
+import type { FailedCsvImportSimple, FailedCsvImportWithAssetData } from '~/services/assets'
 import { importCsvService } from '~/services/assets'
 
 const axios = useContext().$axios
 
 const fileWarningMessage = ref('')
 const importedWithSuccessCount = ref(0)
-const failedToImport = ref<string[]>([])
-
 const uploadedCsvFile = ref<File>()
 const isCsvValid = ref(false)
 const csvDataRows = ref<string[][]>([])
+
 const csvHeaders = ref<{ csv: number[]; key: string }[]>([])
 
-const detectedHeaders = computed(() => {
-  const headersByIndex: { [key: number]: string } = {}
-  csvHeaders.value.forEach(({ csv, key }) => {
-    csv.forEach((index) => {
-      headersByIndex[index] = key
-    })
+const failedToImport = ref<(FailedCsvImportSimple | FailedCsvImportWithAssetData)[]>([])
+const failedImportedAssets = computed(() => {
+  const assets = failedToImport.value.filter((fti) => {
+    return 'assetData' in fti
   })
 
-  return headersByIndex
+  return assets as FailedCsvImportWithAssetData[]
 })
 
 const resetState = () => {
@@ -95,6 +93,7 @@ const handleConfirmImport = async () => {
   })
 
   resetState()
+  // TODO reset input file, watcher ?
 
   importedWithSuccessCount.value = pass
   failedToImport.value = failed
@@ -123,54 +122,44 @@ const handleConfirmImport = async () => {
       </li>
       <li class="step">
         <div class="flex gap-2">
-          Upload <input
+          Upload
+          <input
             type="file" accept=".csv"
             class="file-input file-input-sm file-input-bordered file-input-primary w-full max-w-xs"
             @input="e => handleFileInput(e)"
           >
         </div>
       </li>
-      <li v-if="isCsvValid" class="step">
-        <div class="flex items-center gap-2">
-          Check your <b>{{ csvDataRows.length }}</b> assets in the table bellow and
+      <li class="step">
+        <div v-if="isCsvValid" class="flex items-center gap-2">
+          <b>{{ csvDataRows.length }}</b> assets are detected in your file
           <button class="btn btn-primary btn-sm mx-1" @click="handleConfirmImport">
             confirm import
           </button>
+        </div>
+        <div v-else class="italic">
+          upload a valid CSV file to continue
         </div>
       </li>
     </ul>
 
     <!--  Notification area -->
     <div class="max-w-md">
-      <BaseAlert v-if="fileWarningMessage" type="warning">
+      <BaseAlert v-if="fileWarningMessage" class="my-1" type="warning">
         {{ fileWarningMessage }}
       </BaseAlert>
 
-      <BaseAlert v-if="importedWithSuccessCount" type="success">
-        {{ importedWithSuccessCount }} record(s) has been processed
+      <BaseAlert v-if="importedWithSuccessCount" class="my-1" type="success">
+        <b>{{ importedWithSuccessCount }}</b> asset(s) imported successfully
       </BaseAlert>
 
-      <BaseAlert v-if="failedToImport.length" type="warning">
-        {{ failedToImport.length }} record(s) could not be processed
+      <!-- TODO: print info about errors -->
+      <BaseAlert v-if="failedImportedAssets.length" class="my-1" type="warning">
+        <p><b>{{ failedImportedAssets.length }}</b> asset(s) could not be imported: {{ failedImportedAssets.map(fia => fia.name).join(", ") }}.</p>
+        <p class="italic">
+          Please, check if names are unique, for example.
+        </p>
       </BaseAlert>
     </div>
-
-    <!-- Import preview table -->
-    <table v-if="isCsvValid" class="table w-full">
-      <thead>
-        <tr>
-          <th v-for="header, index in detectedHeaders" :key="index">
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in csvDataRows" :key="index">
-          <td v-for="data, index in row" :key="index">
-            {{ data }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
