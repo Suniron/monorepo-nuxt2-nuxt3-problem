@@ -2869,8 +2869,8 @@ paths:
             type: integer
           required: true
           description: Numeric ID of the Feared Event
-  /files/processCSV:
-    get:
+  /files/cs/process:
+    post:
       tags:
         - "File"
       responses:
@@ -2884,7 +2884,7 @@ paths:
                   isAuthorized:
                     type: boolean
                     example: true
-      summary: Get processCSV
+      summary: Post CSV file to process
       security:
         - bearerAuth: []
   /files/{id}:

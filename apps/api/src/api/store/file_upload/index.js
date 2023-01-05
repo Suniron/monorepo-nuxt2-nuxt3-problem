@@ -43,7 +43,7 @@ export const requestProcessCSV = async (provider, accessToken) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { data } = await axios.get('/files/processCSV', reqConfig)
+    const { data } = await axios.get('/files/csv/process', reqConfig)
     return data.error ? createServiceError(data.error) : data.isAuthorized
   }
   catch (error) {

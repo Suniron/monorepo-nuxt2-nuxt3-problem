@@ -1,11 +1,17 @@
 <script>
 // @ts-check
 import comments from '~/components/blog/comments.vue'
-import { startDownloadFile } from '~/services/file_upload'
+import { startDownloadFile } from '~/services/fileUpload'
 
 export default {
-  components: { comments },
   name: 'RevisionsList',
+  components: { comments },
+  data() {
+    return {
+      showDownloadFileError: false,
+      tab: null
+    }
+  },
   props: {
     revisions: {
       type: Array,
@@ -14,12 +20,6 @@ export default {
     assetId: {
       type: Number,
       required: true
-    }
-  },
-  data() {
-    return {
-      showDownloadFileError: false,
-      tab: null
     }
   },
   methods: {

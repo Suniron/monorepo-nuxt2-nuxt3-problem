@@ -1,5 +1,5 @@
 <script>
-import { downloadFile } from '~/services/file_upload'
+import { downloadFile } from '~/services/fileUpload'
 import { updateProbesService } from '~/services/probes'
 export default {
   data() {

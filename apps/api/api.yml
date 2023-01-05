@@ -2890,7 +2890,7 @@ paths:
             type: integer
           required: true
           description: Numeric ID of the Feared Event to update
-  /files/processCSV:
+  /files/csv/process:
     get:
       tags:
         - 'File'

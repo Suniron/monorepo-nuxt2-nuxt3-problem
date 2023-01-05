@@ -16,6 +16,6 @@ const getFilesIdValidation = celebrate({
 
 router.post('/files', uploadFilesController)
 router.get('/files/:id', getFilesIdValidation, downloadFileController)
-router.get('/files/processCSV', processCSVController)
+router.post('/files/csv/process', processCSVController)
 
 export default router

@@ -1,8 +1,7 @@
 <script>
-import { fetchAssetsPortsService } from '@/services/assets/index'
+import { fetchAssetsPortsService } from '~/services/assets/index'
 
 export default {
-  name: 'ServerTableDetails',
   data() {
     return {
       headers: [
@@ -17,9 +16,7 @@ export default {
       details: []
     }
   },
-  created() {
-    this.fetchPorts()
-  },
+  name: 'ServerTableDetails',
   watch: {
     // whenever tab is 3 (so we're trying to access ports tab), this function will run and fetch our ports again (we might have delete an IP)
     tabs(newTab) {
@@ -27,6 +24,9 @@ export default {
         this.fetchPorts()
       
     },
+  },
+  created() {
+    this.fetchPorts()
   },
   methods: {
     async fetchPorts() {

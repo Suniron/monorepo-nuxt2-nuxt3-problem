@@ -1,3 +1,5 @@
+import type { NuxtAxiosInstance } from '@nuxtjs/axios'
+
 let store = null
 
 window.onNuxtReady((app) => {
@@ -25,7 +27,7 @@ const getImportCsvEndpoit = () => `${getEndpoint()}/importCSV`
  * @param {string[]=} params.types Array of asset type to filter asset that are of such type
  * @returns {Promise<{ assets: import('~/types/asset').Asset[], total: number }>} Assets from search result
  */
-export const searchAssetsService = async (axios, params) => {
+export const searchAssetsService = async (axios: NuxtAxiosInstance, params) => {
   const {
     ids,
     search,
@@ -63,12 +65,12 @@ export const searchAssetsService = async (axios, params) => {
   return data
 }
 
-export const searchAssetByIdService = async (axios, id) => {
+export const searchAssetByIdService = async (axios: NuxtAxiosInstance, id) => {
   const { data } = await axios.get(getEndpoint(id))
   return data
 }
 
-export const createAssetService = async (axios, params) => {
+export const createAssetService = async (axios: NuxtAxiosInstance, params) => {
   const bodyPayload = {
     assetData: params.assetData,
     name: params.name,
@@ -82,7 +84,7 @@ export const createAssetService = async (axios, params) => {
   return data
 }
 
-export const deleteAssetService = async (axios, id) => {
+export const deleteAssetService = async (axios: NuxtAxiosInstance, id) => {
   if (!id)
     throw new Error('Param "id" needed to delete asset')
 
@@ -109,7 +111,7 @@ export const updateAssetService = (axios, id, params) => {
     return axios.patch(getEndpoint(id), bodyPayload)
 }
 
-export const updateAssetsBulkService = async (axios, params) => {
+export const updateAssetsBulkService = async (axios: NuxtAxiosInstance, params) => {
   const bodyPayload = {
     assetData: params.assetData,
     assets: params.assets,
@@ -123,10 +125,10 @@ export const updateAssetsBulkService = async (axios, params) => {
   return data
 }
 
-export const createAssetVulnerability = async (axios, assetId, params) => {
+export const createAssetVulnerability = async (axios: NuxtAxiosInstance, assetId, params) => {
   await axios.patch(`/assets/${assetId}/vulnerabilities`, params)
 }
-export const updateSpecialPortInAssetVulnerabilities = async (axios, form) => {
+export const updateSpecialPortInAssetVulnerabilities = async (axios: NuxtAxiosInstance, form) => {
   const bodyPayload = {
     vuln: form,
   }
@@ -137,7 +139,7 @@ export const updateSpecialPortInAssetVulnerabilities = async (axios, form) => {
   return response
 }
 
-export const deleteAssetVulnerabilities = async (axios, item) => {
+export const deleteAssetVulnerabilities = async (axios: NuxtAxiosInstance, item) => {
   const bodyPayload = {
     vuln: item,
   }
@@ -147,7 +149,7 @@ export const deleteAssetVulnerabilities = async (axios, item) => {
   )
 }
 
-export const deleteAssetsBulkService = async (axios, params) => {
+export const deleteAssetsBulkService = async (axios: NuxtAxiosInstance, params) => {
   const bodyPayload = {
     assets: params.assets,
   }
@@ -157,7 +159,7 @@ export const deleteAssetsBulkService = async (axios, params) => {
   await store.dispatch('assets/updateAssetSummary', axios)
 }
 
-export const searchAssetVulnerabilities = async (axios, id, params) => {
+export const searchAssetVulnerabilities = async (axios: NuxtAxiosInstance, id, params) => {
   if (!id) {
     throw new Error(
       'Param "id" needed to search the vulnerabilities of an asset',
@@ -179,7 +181,7 @@ export const searchAssetVulnerabilities = async (axios, id, params) => {
   return data
 }
 
-export const searchAssetRevisions = async (axios, id, params) => {
+export const searchAssetRevisions = async (axios: NuxtAxiosInstance, id, params) => {
   if (!id) {
     throw new Error(
       'Param "id" needed to search the vulnerabilities of an asset',
@@ -194,17 +196,55 @@ export const searchAssetRevisions = async (axios, id, params) => {
   return data
 }
 
-export const importCsvService = async (axios, params) => {
+export interface FailedCsvImportSimple { error: string; relation: number }
+export interface FailedCsvImportWithAssetData {
+  assetData: {
+    IPs: number[]
+    children: number[]
+    language: string | null
+    location: string | null
+    mail: string | null
+    os: string | null
+    parents: number[]
+    position: string | null
+    tel: string | null
+    url: string | null
+  }
+  error: {
+    code: string
+    constraint: string
+    detail: string
+    file: string
+    length: number
+    line: string
+    name: string
+    routine: string
+    schema: string
+    severity: string
+    table: string
+  }
+  name: string
+  // TODO: use AssetType
+  type: string
+}
+export const importCsvService = async (axios: NuxtAxiosInstance,
+  params: {
+    data: string[][]
+    headers: {
+      csv: number[]
+      key: string
+    }[]
+  }): Promise<{ pass: number; failed: (FailedCsvImportSimple | FailedCsvImportWithAssetData)[] }> => {
   const { data } = await axios.post(getImportCsvEndpoit(), params)
   return data
 }
 
-export const fetchAssetsPortsService = async (axios, assetId) => {
+export const fetchAssetsPortsService = async (axios: NuxtAxiosInstance, assetId: number) => {
   const { data } = await axios.get(`/assets/${assetId}/ports`)
   return data.details
 }
 
-export const tmpService = async (axios, q) => {
+export const tmpService = async (axios: NuxtAxiosInstance, q) => {
   await axios.post('/scans/tmp', q)
 }
 
@@ -213,7 +253,7 @@ export const tmpService = async (axios, q) => {
  * @param {{ childrenIds?: number[] | number, parentsIds?: number[] | number }} [options]
  * @return {Promise<{data: {assets: import('~/types/asset').AssetWithRelations[] }}>}
  */
-export const searchAssetsBelonging = async (axios, options) => {
+export const searchAssetsBelonging = async (axios: NuxtAxiosInstance, options) => {
   const params = {
     children_ids: options?.childrenIds,
     parents_ids: options?.parentsIds,
@@ -241,7 +281,7 @@ export const searchAssetsBelonging = async (axios, options) => {
  * @param {number} assetId
  * @return {Promise<{data: {lastScanDate: string, scores: {inherentScore: number | null, inheritedScore: number | null, compoundScore: number | null}, hasVulnerability: boolean}}>}
  */
-export const getAssetsRisk = async (axios, assetId) => {
+export const getAssetsRisk = async (axios: NuxtAxiosInstance, assetId) => {
   const result = await axios.get(`/assets/${assetId}/risk`)
   return result
 }
