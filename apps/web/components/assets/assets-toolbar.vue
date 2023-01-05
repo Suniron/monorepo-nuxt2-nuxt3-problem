@@ -16,42 +16,13 @@ import { ASSET_TYPES } from '~/utils/asset.utils'
 const DEBOUNCE_WAIT = 300 // ms
 
 export default {
+  name: 'AssetsToolbar',
   components: {
     GroupsMultiselect,
     TagsMultiselect,
     SaveAssetModal,
     ScanImport,
     AssetsToolbarImport
-  },
-  name: 'AssetsToolbar',
-  props: {
-    search: {
-      type: String,
-      default: ''
-    },
-    assets: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Array of tag IDs. Used when setting selected tags from route query
-     */
-    tags: {
-      type: Array,
-      default: () => []
-    },
-    severities: {
-      type: Array,
-      default: () => []
-    },
-    groups: {
-      type: Array,
-      default: () => []
-    },
-    types: {
-      type: Array,
-      default: () => []
-    }
   },
   data() {
     const severities = ['critical', 'high', 'medium', 'low']
@@ -100,6 +71,35 @@ export default {
       scan: null,
     }
   },
+  props: {
+    search: {
+      type: String,
+      default: ''
+    },
+    assets: {
+      type: Array,
+      default: () => []
+    },
+    /**
+     * Array of tag IDs. Used when setting selected tags from route query
+     */
+    tags: {
+      type: Array,
+      default: () => []
+    },
+    severities: {
+      type: Array,
+      default: () => []
+    },
+    groups: {
+      type: Array,
+      default: () => []
+    },
+    types: {
+      type: Array,
+      default: () => []
+    }
+  },
   computed: {
 
     /**
@@ -139,14 +139,6 @@ export default {
         return acc
       }, [])
     },
-  },
-  created() {
-    this.updateAssetType()
-    this.debouncedUpdateFilter = _debounce(this.updateFilter, DEBOUNCE_WAIT)
-    this.debouncedUpdateAllAssets = _debounce(
-      this.updateAllAssets,
-      DEBOUNCE_WAIT
-    )
   },
   watch: {
     severities(newSeverities) {
@@ -188,8 +180,13 @@ export default {
       this.debouncedUpdateFilter({ name: 'search', value: newSearch })
     }
   },
-  mounted() {
-    this.debouncedUpdateAllAssets()
+  created() {
+    this.updateAssetType()
+    this.debouncedUpdateFilter = _debounce(this.updateFilter, DEBOUNCE_WAIT)
+    this.debouncedUpdateAllAssets = _debounce(
+      this.updateAllAssets,
+      DEBOUNCE_WAIT
+    )
   },
   methods: {
     async updateAllAssets() {
@@ -258,6 +255,9 @@ export default {
       this.isCsvValid = true
       this.isUploaded = true
     },
+  },
+  mounted() {
+    this.debouncedUpdateAllAssets()
   },
 }
 </script>
@@ -336,123 +336,6 @@ export default {
 
           <!-- IMPORT SECTION -->
           <AssetsToolbarImport v-if="assetType !== 'POLICY' && assetType !== 'PROCEDURE'" />
-
-          <!-- OLD: -->
-          <div v-if="false">
-            <v-tabs v-model="tab">
-              <v-tab>Assets</v-tab>
-              <v-tab>Scan Results</v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="tab">
-              <v-tab-item>
-                <v-card>
-                  <v-card-title> Import Assets </v-card-title>
-                  <v-card-text>
-                    <v-form ref="form" v-model="isFormValid">
-                      <v-container>
-                        <v-row>
-                          <v-col cols="12" lg="8">
-                            <!-- <v-file-input
-                      v-model="file"
-                      class="pt-0"
-                      label="Upload your document"
-                      :rules="validations.required"
-                      accept="text/csv"
-                      @change="show = true"
-                      @click:clear="isUploaded = false"
-                    /> -->
-                          </v-col>
-                          <v-col cols="12" lg="2">
-                            <!-- <v-tooltip v-model="show" top>
-                      <template #activator="{ on }">
-                        <div v-on="on">
-                          <v-btn
-                            icon
-                            x-large
-                            color="primary"
-                            :disabled="isUploaded"
-                            @click="uploadFiles"
-                          >
-                            <v-icon>mdi-file-upload-outline</v-icon>
-                          </v-btn>
-                        </div>
-                      </template>
-                      <span>Click to upload your document first</span>
-                    </v-tooltip> -->
-                          </v-col>
-                          <v-col cols="12" lg="2">
-                            <v-btn color="primary" x-large>
-                              Sample CSV
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12">
-                            <!-- <v-data-table
-                      v-if="isCsvValid"
-                      :headers="headers"
-                      :items="values"
-                    >
-                      <template #[`item.default`]="{ item }">
-                        <v-text-field
-                          v-model="item.default"
-                        />
-                      </template>
-                      <template #[`item.csv`]="{ item }">
-                        <v-select
-                          v-model="item.csv"
-                          :items="csvHeaders"
-                          item-text="csv"
-                          item-value="indexes"
-                        />
-                      </template>
-                    </v-data-table> -->
-                          </v-col>
-                        </v-row>
-                        <!-- <template v-if="isProcessed">
-                  <v-row>
-                    <v-col cols="12">
-                      <p>{{ passText }} / {{ failedText }}</p>
-                    </v-col>
-                  </v-row>
-                </template> -->
-                        <v-row>
-                          <v-col>
-                            <!-- <v-btn
-                      class="mr-2"
-                      :disabled="isLoading"
-                      @click="dialog = isProcessed = false"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      v-if="isProcessed === false"
-                      color="primary"
-                      :disabled="!isFormValid"
-                      :loading="isLoading"
-                      @click="importAssets"
-                    >
-                      Save
-                    </v-btn>
-                    <v-btn
-                      v-else
-                      color="primary"
-                      @click="dialog = isProcessed = false"
-                    >
-                      OK
-                    </v-btn> -->
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-form>
-                  </v-card-text>
-                </v-card>
-              </v-tab-item>
-              <v-tab-item>
-                <!-- <ScanImport @close="dialog = isProcessed = false" /> -->
-              </v-tab-item>
-            </v-tabs-items>
-          </div>
 
           <!-- CREATE ASSET SECTION -->
           <v-dialog v-model="isSaveModalOpen" width="500">
