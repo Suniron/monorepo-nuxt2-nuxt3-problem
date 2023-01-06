@@ -12,11 +12,14 @@ import path from 'path'
 import dotenv from 'dotenv'
 import { version } from '../../package.json'
 
-dotenv.config()
+let httpsEnabled = false
 
-const httpsEnabled
+if (process.env.NODE_ENV !== 'test') {
+  dotenv.config()
+  httpsEnabled
   = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
   && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
+}
 
 /**
  * Environmental variables

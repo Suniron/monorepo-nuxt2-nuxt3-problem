@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   downloadFileController,
@@ -6,7 +6,7 @@ import {
   uploadFilesController,
 } from '../../controllers/file_upload'
 
-const router = express.Router()
+const router = Router()
 
 const getFilesIdValidation = celebrate({
   [Segments.PARAMS]: Joi.object().keys({

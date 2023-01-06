@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { searchGroupedRemediationsController } from '../../controllers/remediations'
 
-const router = express.Router()
+const router = Router()
 
 // Remediations endpoints
 router.get('/remediations/grouped', searchGroupedRemediationsController)

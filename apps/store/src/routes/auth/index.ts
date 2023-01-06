@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   isAuthorizedController,
@@ -11,7 +11,7 @@ import {
   verifyAssetPermissionController,
 } from '../../controllers/auth'
 
-const router = express.Router()
+const router = Router()
 
 // Validations
 const loginPayloadValidation = celebrate({
@@ -22,7 +22,7 @@ const loginPayloadValidation = celebrate({
 })
 
 // Public routes for authentication
-router.post('/login', loginPayloadValidation, loginController)
+router.post('/login/password', loginPayloadValidation, loginController)
 router.post('/refresh-token', refreshAccessTokenController)
 router.post('/reset-password', sendResetMailPassword)
 router.patch('/reset-password', updateResetPasswordByToken)

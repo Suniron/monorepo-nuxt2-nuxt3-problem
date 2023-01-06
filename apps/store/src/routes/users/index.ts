@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate, errors } from 'celebrate'
 import {
   createUserController,
@@ -7,7 +7,7 @@ import {
   updateUserController,
 } from '../../controllers/users'
 
-const router = express.Router()
+const router = Router()
 
 // Validations
 const createUserValidation = celebrate({

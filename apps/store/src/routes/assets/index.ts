@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate, errors } from 'celebrate'
 import {
   createAssetController,
@@ -38,7 +38,7 @@ const assetIdValidation = celebrate({
   }),
 })
 
-const router = express.Router()
+const router = Router()
 // Assets endpoints
 router.get('/assets', searchAssetsController)
 router.delete('/assets', deleteAssetsBulkController)

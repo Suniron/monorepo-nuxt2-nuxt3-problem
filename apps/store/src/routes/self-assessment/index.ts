@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { fetchComplianceController } from '../../controllers/self-assessment'
 
-const router = express.Router()
+const router = Router()
 router.get('/compliance', fetchComplianceController)
 
 export default router

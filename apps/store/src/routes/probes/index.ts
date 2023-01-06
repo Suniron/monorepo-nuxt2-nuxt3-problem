@@ -1,10 +1,10 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   searchProbesController,
   updateProbeController,
 } from '../../controllers/probes'
-const router = express.Router()
+const router = Router()
 
 const updateValidation = celebrate({
   [Segments.PARAMS]: Joi.object().keys({

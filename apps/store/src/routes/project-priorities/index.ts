@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { searchProjectPrioritiesController } from '../../controllers/project-priorities'
 
-const router = express.Router()
+const router = Router()
 
 // Severities endpoints
 router.get('/projects/priorities/', searchProjectPrioritiesController)

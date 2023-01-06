@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import {
   createScan,
   getScanController,
@@ -10,7 +10,7 @@ import {
   updateScanController,
 } from '../../controllers/scans/crud-controller'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/scans', searchScans)
 router.post('/scans', createScan)

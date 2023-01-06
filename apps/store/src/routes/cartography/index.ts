@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import {
   addCartographyElementController,
   createCartographyController,
@@ -10,7 +10,7 @@ import {
   updateCartographyElementController,
 } from '../../controllers/cartography'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/cartographies', fetchCartographiesController)
 router.post('/cartographies', createCartographyController)

@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   createVulnerabilityController,
@@ -6,7 +6,7 @@ import {
   searchVulnerabilitiesWithTheirAssetsController,
 } from '../../controllers/vulnerabilities'
 
-const router = express.Router()
+const router = Router()
 
 const searchVulnerabilityByIdValidation = celebrate({
   [Segments.PARAMS]: Joi.object().keys({

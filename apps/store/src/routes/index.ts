@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 
 import assetsRoutes from '../routes/assets'
 
@@ -50,7 +50,7 @@ import remediationProjects from '../routes/remediationProjects'
 
 import phishingScenarioDomains from '../routes/phishing-scenarios-domains'
 
-const router = express.Router()
+const router = Router()
 
 // Public routes
 router.get('/', (_req, res) => {
