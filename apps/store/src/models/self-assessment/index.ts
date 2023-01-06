@@ -1,6 +1,6 @@
 import { knex } from '../../../src/common/db'
 
-import { computeComplianceStatistics } from '../../../src/utils/compliance.utils'
+import { computeComplianceStatistics } from '../../utils/compliance.utils'
 
 import { NOT_FOUND } from '../../../src/common/constants'
 

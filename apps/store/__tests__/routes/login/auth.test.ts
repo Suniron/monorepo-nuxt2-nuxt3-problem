@@ -3,13 +3,13 @@ import { prismaMock } from '../../mockPrisma'
 
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { generateLogin, generateUser } from '../../utils/'
+import { generateLogin, generateUser } from '../../utils'
 
-describe('POST /login', () => {
+describe('POST /login/password', () => {
   it('when a user attemps to log it with incorrect credentials', async () => {
     const Knex = mockKnexWithFinalValue([null])
 
-    const response = await request(app).post('/login').send({
+    const response = await request(app).post('/login/password').send({
       password: 'password',
       username: 'username',
     })
@@ -43,7 +43,7 @@ describe('POST /login', () => {
     const customLogin = generateLogin({ firstName: 'David', lastName: 'B' })
     mockKnexWithFinalValue([customLogin])
 
-    const response = await request(app).post('/login').send({
+    const response = await request(app).post('/login/password').send({
       password: 'test',
       username: customLogin.username,
     })
@@ -55,7 +55,7 @@ describe('POST /login', () => {
     const Knex = mockKnexWithFinalValue([customLogin])
 
     const response = await request(app)
-      .post('/login')
+      .post('/login/password')
       .send({
         password: 'UnitTestCrypt@1',
         username: customLogin.username,

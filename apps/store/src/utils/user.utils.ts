@@ -1,3 +1,5 @@
+import type { user as User } from '@prisma/client'
+
 import prismaClient from './../prismaClient'
 
 /**
@@ -19,4 +21,19 @@ export const getUserGroupIds = async (userId: any) => {
     .then((grp: any) => grp.map((grp: any) => grp.group_id))
 
   return groups
+}
+
+/**
+ * It will return the user object with sanitized data (no password, no salt, ...)
+ */
+export const sanitizeUser = (user: User): Partial<User> => {
+  return {
+    company_id: user.company_id,
+    email: user.email,
+    first_name: user.first_name,
+    id: user.id,
+    last_name: user.last_name,
+    roles: user.roles,
+    username: user.username,
+  }
 }

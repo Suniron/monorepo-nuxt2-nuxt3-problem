@@ -3,7 +3,7 @@ import { MODEL_ERROR, SUCCESS } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
 
-import { getUserGroupIds } from '../../../src/utils/user.utils'
+import { getUserGroupIds } from '../../utils/user.utils'
 
 import { log } from '../../../src/lib/logger'
 

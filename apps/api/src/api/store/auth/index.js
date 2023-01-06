@@ -7,7 +7,7 @@ export const requestLogin = async (provider, params) => {
     const { username, password } = params
     const bodyParams = { password, username }
 
-    const response = await axios.post('login', bodyParams)
+    const response = await axios.post('/login/password', bodyParams)
     const accessToken = response.data.accessToken || ''
     const refreshTokenCookie = response.headers['set-cookie'] || ''
     const user = response.data.userInfo

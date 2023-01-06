@@ -16,7 +16,7 @@ import {
   isOwnerOfRemediationProject,
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
-} from '../../../src/utils/remediationProject.utils'
+} from '../../utils/remediationProject.utils'
 import type { RemediationProjectEdit } from '../../../types/remediationProject'
 
 /**

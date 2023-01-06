@@ -1,19 +1,20 @@
 import crypto from 'crypto'
-import { generateAccessToken } from '../../common/auth/jwt'
+import type { user as User, user_session } from '@prisma/client'
+import type { Asset } from '../../../types/asset'
+import type { LoggedUser } from '../../../types/user'
+import type { HTTPStatus } from '../../common/constants'
 import {
   FORBIDDEN,
   MODEL_ERROR,
   NOT_FOUND,
   SUCCESS,
   UNAUTHORIZED,
-  VALIDATION_ERROR,
 } from '../../common/constants'
-
 import { knex } from '../../common/db'
-
 import { log } from '../../lib/logger'
-
 import prismaClient from '../../prismaClient'
+import { generateJwtTokens } from '../../common/auth/jwt'
+import { sanitizeUser } from '../../utils/user.utils'
 
 export const getTokenSessionModel = async (
   provider: any,
@@ -39,115 +40,10 @@ export const getTokenSessionModel = async (
     return { error: MODEL_ERROR }
   }
 }
-/**
- *
- * @param {*} provider
- * @param {*} params
- * @returns {Promise<{error?: string, message?: string, accessToken?: string, refreshToken?: string, userInfo?: import('@/types/user').LoggedUser}>}
- */
-export const loginModel = async (provider: any, params: any) => {
-  const {
-    knex,
-    logger,
-    passwordsMatch,
-    generateAccessToken,
-    generateRefreshToken,
-    TOKEN_TYPE,
-  } = provider
-  try {
-    const { username, password } = params
-    if (!password) {
-      logger.error(new Error('Password param required'))
-      return { error: VALIDATION_ERROR }
-    }
-    if (!username) {
-      logger.error(new Error('Username param required'))
-      return { error: VALIDATION_ERROR }
-    }
 
-    const [user] = await knex
-      .select(
-        'usr.id',
-        'usr.first_name',
-        'usr.last_name',
-        'usr.username',
-        'usr.password',
-        'usr.salt',
-        'usr.email',
-        'usr.company_id',
-        'cmp.name as company_name',
-        'usr.roles',
-      )
-      .from('user as usr')
-      .innerJoin('company as cmp', 'usr.company_id', 'cmp.id')
-      .where(function (this: any) {
-        this.where('usr.username', username).orWhere('usr.email', username)
-      })
-    if (!user) {
-      return {
-        error: NOT_FOUND,
-        message: `User with username or email "${username}" not found`,
-      }
-    }
-    const isCorrectPass = passwordsMatch(password, user.password, user.salt)
-    if (!isCorrectPass)
-      return { error: UNAUTHORIZED, message: 'Incorrect password' }
-
-    // Proceed to create new session
-    const { accessToken, refreshToken, userInfo } = await knex.transaction(
-      async (trx: any) => {
-        // Kill any existing session
-        await trx('user_session')
-          .where('user_id', user.id)
-          .whereNull('deleted_at')
-          .update({ deleted_at: new Date(Date.now()) })
-
-        const userInfo = {
-          companyId: user.company_id,
-          companyName: user.company_name,
-          email: user.email,
-          firstName: user.first_name,
-          id: user.id,
-          lastName: user.last_name,
-          roles: user.roles,
-          username: user.username,
-        }
-        const accessToken = generateAccessToken(userInfo)
-        const refreshToken = generateRefreshToken({
-          id: user.id,
-        })
-
-        await trx('user_session').insert([
-          {
-            token: refreshToken,
-            type: TOKEN_TYPE.refresh,
-            user_id: user.id,
-          },
-          {
-            token: accessToken,
-            type: TOKEN_TYPE.access,
-            user_id: user.id,
-          },
-        ])
-        return { accessToken, refreshToken, userInfo }
-      },
-    )
-    return { accessToken, refreshToken, userInfo }
-  }
-  catch (error) {
-    logger.error('[model>auth>index.js>loginModel()] error:', error)
-    return { error: MODEL_ERROR }
-  }
-}
-
-/**
- *
- * @param {import("@prisma/client").user_session["token"]} refreshToken
- * @param {import("@prisma/client").user_session["user_id"]} userId
- */
 export const isValidSessionRefreshToken = async (
-  refreshToken: any,
-  userId: any,
+  refreshToken: user_session['token'],
+  userId: user_session['user_id'],
 ) => {
   try {
     const sessionFound = await prismaClient.user_session.findFirst({
@@ -270,24 +166,14 @@ export const logoutModel = async (provider: any, userInfo: any) => {
   }
 }
 
-/**
- *
- * @param {*} loggedUserInfo
- * @param {string} assetId
- * @param {*} assets
- * @param {*} relId
- * @param {*} scanId
- * @param {*} cartoId
- * @returns {Promise<{error?: string, status?: import("src/common/constants").HTTPStatus} | void>}
- */
 export const verifyAssetPermissionModel = async (
-  loggedUserInfo = {},
+  loggedUserInfo: LoggedUser,
   assetId = '',
-  assets = undefined,
-  relId = null,
-  scanId = null,
-  cartoId = null,
-) => {
+  assets?: Asset[],
+  relId?: string,
+  scanId?: string,
+  cartoId?: string,
+): Promise<{ error?: string; status?: HTTPStatus } | void> => {
   try {
     const { companyId, groups, roles } = loggedUserInfo
     if (
@@ -427,5 +313,27 @@ export const updateResetPasswordUsingToken = async (
   catch (error) {
     logger.error(error)
     return { error: MODEL_ERROR }
+  }
+}
+
+/**
+ * From a full user object,
+ *
+ * - Generate access and refresh tokens
+ * - Save them in DB
+ * - return a sanitized version of it (whithout password, salt, ...), and JWT Tokens
+ */
+export const loginModel = (user: User): { accessToken: string; refreshToken: string; user: Partial<User> } => {
+  // 1) Generate JWT tokens
+  const sanitizedUser = sanitizeUser(user)
+  const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser)
+
+  // 2) Save tokens in DB
+  // TODO
+
+  return {
+    accessToken,
+    refreshToken,
+    user: sanitizedUser,
   }
 }

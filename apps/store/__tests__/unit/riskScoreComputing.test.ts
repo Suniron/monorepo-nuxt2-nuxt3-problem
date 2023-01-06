@@ -1,4 +1,4 @@
-import { riskScoreComputing } from '../../src/utils/RiskScoreComputing'
+import { riskScoreComputing } from '../utils/RiskScoreComputing'
 import type { InherentRiskScore, LightAsset, LightRelation, SuperAssetType, TechnicalAssetType } from '../../types/asset'
 
 /**

@@ -1726,7 +1726,7 @@ paths:
             example: 2
           required: true
           description: Numeric ID of the status for which to get available transition
-  /login:
+  /login/password:
     post:
       tags:
         - "Login"

@@ -1,7 +1,7 @@
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { convertBase64ImageToBuffer } from '../../../src/utils/image.utils'
+import { convertBase64ImageToBuffer } from '../../utils/image.utils'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 import { getNonAdminUser } from '../../utils'

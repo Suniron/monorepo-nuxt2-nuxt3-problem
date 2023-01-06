@@ -1,18 +1,16 @@
 import jwt from 'jsonwebtoken'
+import type { NextFunction, Request, Response } from 'express'
+import passport from 'passport'
+import type { user } from '@prisma/client'
 import env from '../../config/env'
 import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
-
-import { UNAUTHORIZED } from '../../common/constants'
-
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
-
-import { genSaltSync, hashSync } from '../../common/auth/sha512'
-
+import { genSaltSync, getHashedPassword } from '../../common/auth/sha512'
 import { knex } from '../../common/db'
 
 import {
   TOKEN_TYPE,
-  generateJWTToken,
+  generateJwtTokens,
   verifyToken,
 } from '../../common/auth/jwt'
 
@@ -26,6 +24,9 @@ import {
   updateResetPasswordUsingToken,
   verifyAssetPermissionModel,
 } from '../../models/auth'
+import type { HTTPStatus } from '../../common/constants'
+import { UNAUTHORIZED } from '../../common/constants'
+import { sanitizeUser } from '../../utils/user.utils'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
 
@@ -73,84 +74,51 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
   }
 }
 
-const createLoginModelProvider = () => {
-  const { access, refresh } = env.jwt
-
-  const passMatches = (password: any, hash: any, salt: any) =>
-    passwordsMatch(
-      {
-        hashSync,
-      },
-      password,
-      hash,
-      salt,
-    )
-  const generateAccessToken = (payload: any) =>
-    generateJWTToken(
-      jwt.sign,
-      {
-        audience: access.audience,
-        expiresIn: access.life,
-        issuer: access.issuer,
-        secret: access.secret,
-        type: access.type,
-      },
-      payload,
-    )
-  const generateRefreshToken = (payload: any) =>
-    generateJWTToken(
-      jwt.sign,
-      {
-        audience: refresh.audience,
-        expiresIn: refresh.life,
-        issuer: refresh.issuer,
-        secret: refresh.secret,
-        type: refresh.type,
-      },
-      payload,
-    )
-  return {
-    TOKEN_TYPE,
-    generateAccessToken,
-    generateRefreshToken,
-    knex,
-    logger: console,
-    passwordsMatch: passMatches,
-  }
-}
-
-export const loginController = async (req: any, res: any, next: any) => {
+export const loginWithPasswordController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const provider = createLoginModelProvider()
-    const { error, message, accessToken, refreshToken, userInfo }
-      = await loginModel(provider, req.body)
+    // 1) Check auth
+    return passport.authenticate('local', (error, userFromDb: false | user) => {
+      // Error handler
+      if (error as HTTPStatus) {
+        switch (error) {
+          case UNAUTHORIZED:
+            return res.status(401).send({ message: 'Unauthorized' })
+          // In case of non HTTPStatus error, or non-hanlded:
+          default:
+            return res.status(500).send({ message: 'Internal server error' })
+        }
+      }
 
-    if (error)
-      throwHTTPError(error, message)
+      // This should not happen because it is handled above
+      if (!userFromDb)
+        return res.status(401).send({ message: 'Unauthorized' })
 
-    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
-      domain: env.jwt.refresh.domain,
-      httpOnly: true,
-      maxAge: env.jwt.refresh.lifeInMs,
-      secure: env.nodeEnv.isProduction && env.httpsEnabled,
-    })
-    res.status(201).send({ accessToken, userInfo })
+      // TODO: revoke old tokens
+      // 3) Get tokens
+      const { accessToken, refreshToken, user } = loginModel(userFromDb)
+
+      // 4) Set cookie
+      res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
+        domain: env.jwt.refresh.domain,
+        httpOnly: true,
+        maxAge: env.jwt.refresh.lifeInMs,
+        secure: env.nodeEnv.isProduction && env.httpsEnabled,
+      })
+
+      // 5) Send response
+      return res.status(201).send({ accessToken, user })
+    })(req, res, next)
   }
   catch (error) {
+    req.log.withError(error).error('loginWithPasswordController')
     next(error)
   }
 }
 
-/**
- *
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
 export const refreshAccessTokenController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     /**
@@ -198,7 +166,7 @@ export const refreshAccessTokenController = async (
   }
 }
 
-export const logoutController = async (req: any, res: any, next: any) => {
+export const logoutController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const provider = {
       knex,
@@ -217,9 +185,9 @@ export const logoutController = async (req: any, res: any, next: any) => {
 }
 
 export const verifyAssetPermissionController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const { error, status } = await verifyAssetPermissionModel(
@@ -250,7 +218,7 @@ export const sendResetMailPassword = async (req: any, res: any) => {
         createPasswordHash(
           {
             genSaltSync,
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
         ),
@@ -271,7 +239,7 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
         createPasswordHash(
           {
             genSaltSync,
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
         ),
@@ -280,7 +248,7 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
       passwordsMatch: (password: any, hash: any, salt: any) =>
         passwordsMatch(
           {
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
           hash,
@@ -294,7 +262,7 @@ export const updateResetPasswordByToken = async (req: any, res: any) => {
   }
 }
 
-export const isAuthorizedController = async (req: any, res: any, next: any) => {
+export const isAuthorizedController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.status(201).send({ isAuthorized: true })
   }

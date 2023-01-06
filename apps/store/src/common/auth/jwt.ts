@@ -1,3 +1,4 @@
+import type { SignOptions } from 'jsonwebtoken'
 import jwt from 'jsonwebtoken'
 import env from '../../config/env'
 
@@ -9,91 +10,38 @@ export const TOKEN_TYPE = Object.freeze({
   refresh: 'refresh',
 })
 
-/**
- * A JWT configuration object
- * @typedef {object} JWTConfig
- * @property {string} secret Token secret used to sign it
- * @property {string} expiresIn String describing a time span zeit/ms. i.e. "30m", "90d"
- * @property {string} audience JWT intended audience
- * @property {string} issuer The issuer of the JWT token
- * @property {string} type Type of token. Can be either "access" or "refresh"
- */
+export type JWTTokenType = 'access' | 'refresh'
 
 /**
- * Generates a JWT token with the given configuration
+ * It generates a JWT token with the given configuration.
  *
- * @param {(payload: any, secret: string, options: JWTConfig) => string} jwtSign Function used to sign a token
- * @param {JWTConfig} config
- * @param {any} payload
- * @returns {string} JWT token
+ * Usable for both access and refresh token
  */
-export const generateJWTToken = (jwtSign: any, config: any, payload: any) => {
-  const { secret, expiresIn, audience, issuer, type } = config
+export const generateJWTToken = (tokenType: JWTTokenType, payload: string | object) => {
+  const secretKey: string = tokenType === 'access' ? env.jwt.access.secret : env.jwt.refresh.secret
+  const signOptions: SignOptions = tokenType === 'access'
+    ? {
+        audience: env.jwt.access.audience,
+        expiresIn: env.jwt.access.life,
+        issuer: env.jwt.access.issuer,
+      }
+    : {
+        audience: env.jwt.refresh.audience,
+        expiresIn: env.jwt.refresh.life,
+        issuer: env.jwt.refresh.issuer,
+      }
 
-  const token = jwtSign({ ...payload, typ: type }, secret, {
-    algorithm: ALGORITHM,
-    audience,
-    expiresIn,
-    issuer,
-  })
-
-  return token
+  const generatedToken = jwt.sign(payload, secretKey, signOptions)
+  return generatedToken
 }
 
 /**
- * Generates an access and refresh token with the given payloads
- *
- * @param {{
- *   jwtSign: (payload: any, secret: string, options: JWTConfig) => string,
- *   accessConfig: JWTConfig,
- *   refreshConfig: JWTConfig
- * }} provider
- * @param {any} accessPayload Payload to be included in an access token
- * @param {any} refreshPayload Payload to be included in a refresh token
- * @returns
+ * It generates an access and refresh token with the given payload
  */
-export const generateTokens = (
-  provider: any,
-  accessPayload: any,
-  refreshPayload: any,
-) => {
-  const { jwtSign, accessConfig, refreshConfig } = provider
-
-  const accessToken = generateJWTToken(jwtSign, accessConfig, accessPayload)
-  const refreshToken = generateJWTToken(jwtSign, refreshConfig, refreshPayload)
-
+export const generateJwtTokens = (payload: string | object) => {
+  const accessToken = generateJWTToken('access', payload)
+  const refreshToken = generateJWTToken('refresh', payload)
   return { accessToken, refreshToken }
-}
-
-/**
- *
- * @param {{
- * id: import('@prisma/client').user['id'],
- * firstName: import('@prisma/client').user['first_name'],
- * lastName: import('@prisma/client').user['last_name'],
- * username: import('@prisma/client').user['username'],
- * email: import('@prisma/client').user['email'],
- * companyId: import('@prisma/client').user['company_id'],
- * companyName: import('@prisma/client').company['name'],
- * roles: import('@prisma/client').user['roles'],
- * groups: import('@prisma/client').user_group['group_id'][],
- * }} payload
- * @returns
- */
-export const generateAccessToken = (payload: any) => {
-  const { access } = env.jwt
-
-  return generateJWTToken(
-    jwt.sign,
-    {
-      audience: access.audience,
-      expiresIn: access.life,
-      issuer: access.issuer,
-      secret: access.secret,
-      type: access.type,
-    },
-    payload,
-  )
 }
 
 /**

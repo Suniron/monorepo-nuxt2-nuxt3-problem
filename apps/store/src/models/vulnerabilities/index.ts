@@ -12,7 +12,7 @@ import { log } from '../../../src/lib/logger'
 
 import prismaClient from '../../../src/prismaClient'
 
-import { getUserGroupIds } from '../../../src/utils/user.utils'
+import { getUserGroupIds } from '../../utils/user.utils'
 
 /**
  * @typedef {import('@/types/vulnerability').VulnerabilityWithItsAffectedAssets} VulnerabilityWithItsAffectedAssets

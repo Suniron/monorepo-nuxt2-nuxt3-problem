@@ -13,7 +13,7 @@ import {
   convertBase64ImageToBuffer,
   convertBufferToBase64Image,
   isValidBase64Image,
-} from '../../../src/utils/image.utils'
+} from '../../utils/image.utils'
 
 export const searchCompanyModel = async (params: any) => {
   try {

@@ -1,4 +1,4 @@
-import { computeComplianceStatistics } from '../../src/utils/compliance.utils'
+import { computeComplianceStatistics } from '../utils/compliance.utils'
 import compliances from '../example-values/compliances'
 
 const expected_statistics = [
