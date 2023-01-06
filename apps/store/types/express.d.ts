@@ -42,7 +42,8 @@ declare global {
 
     export interface Request {
       user: LoggedUser
-      log: Logger
+      log: Logger,
+      duration?: number
     }
   }
 }

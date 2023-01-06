@@ -3,6 +3,8 @@ import pino from 'pino'
 import { LogLayer, LoggerType } from 'loglayer'
 import PinoPretty from 'pino-pretty'
 import pinosEs from 'pino-elasticsearch'
+import type { Request, Response } from 'express'
+import { isEmpty } from 'lodash'
 import {
   ELASTICSEARCH_URL,
   INSTANCE_NAME,
@@ -15,6 +17,44 @@ const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
     level: 'trace',
     stream: PinoPretty({
       colorize: true,
+      customPrettifiers: {
+        req: (req) => {
+          if (req) {
+            const { method, url, params, query, body, app, duration } = req as Request
+            const keysToLog: any = {
+              app,
+              duration,
+              method,
+              url,
+            }
+
+            if (!isEmpty(params))
+              keysToLog.params = params
+
+            if (!isEmpty(query))
+              keysToLog.query = query
+
+            if (!isEmpty(body))
+              keysToLog.body = body
+
+            return JSON.stringify(keysToLog)
+          }
+          return ''
+        },
+        res: (res) => {
+          if (res) {
+            const { statusCode, statusMessage, cookie, json, status } = res as Response
+            return JSON.stringify({
+              cookie,
+              json,
+              status,
+              statusCode,
+              statusMessage,
+            })
+          }
+          return ''
+        },
+      },
       singleLine: true,
     }),
   },
@@ -37,14 +77,16 @@ const p = pino(
   {
     enabled: process.env.NODE_ENV !== 'test',
     level: 'trace', // this MUST be set at the lowest level of the destinations,
-    redact: [
-      'req.body.password',
-      'req.body.password1',
-      'req.body.password2',
-      'req.body.oldPassword',
-      'req.headers.authorization',
-      'req.headers.cookie',
-    ],
+    redact: isProd
+      ? [
+          'req.body.password',
+          'req.body.password1',
+          'req.body.password2',
+          'req.body.oldPassword',
+          'req.headers.authorization',
+          'req.headers.cookie',
+        ]
+      : [],
   },
   pino.multistream(streams),
 )
