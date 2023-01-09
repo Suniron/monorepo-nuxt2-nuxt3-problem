@@ -3,6 +3,7 @@ import type { JWTTokenType } from '../../common/auth/jwt'
 import { MODEL_ERROR, VALIDATION_ERROR } from '../../common/constants'
 import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
+
 export const saveTokens = async (userId: User['id'], tokensToSave: { token: string; tokenType: JWTTokenType }[]) => {
   try {
     // Check size of given token list
@@ -19,6 +20,9 @@ export const saveTokens = async (userId: User['id'], tokensToSave: { token: stri
       return { error: VALIDATION_ERROR }
     }
 
+    // TODO: Invalidate all previous tokens
+
+    // TODO: Save new tokens
     await prismaClient.user_session.createMany({
       data: tokensToSave.map(({ token, tokenType }) => ({
         token,

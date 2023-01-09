@@ -15,6 +15,7 @@ import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
 import { generateJwtTokens } from '../../common/auth/jwt'
 import { sanitizeUser } from '../../utils/user.utils'
+import { revokeAllUserTokensRequest, storeTokenRequest } from '../../requests/tokens'
 
 export const getTokenSessionModel = async (
   provider: any,
@@ -323,17 +324,32 @@ export const updateResetPasswordUsingToken = async (
  * - Save them in DB
  * - return a sanitized version of it (whithout password, salt, ...), and JWT Tokens
  */
-export const loginModel = (user: User): { accessToken: string; refreshToken: string; user: Partial<User> } => {
-  // 1) Generate JWT tokens
-  const sanitizedUser = sanitizeUser(user)
-  const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser)
+export const initTokensModel = async (user: User) => {
+  try {
+    // 1) Generate JWT tokens
+    const sanitizedUser = sanitizeUser(user)
+    const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser)
 
-  // 2) Save tokens in DB
-  // TODO
+    // 2) Revoke all existing tokens:
+    await revokeAllUserTokensRequest(prismaClient, user.id)
 
-  return {
-    accessToken,
-    refreshToken,
-    user: sanitizedUser,
+    // 3) Save tokens in DB
+    const [accessSession, refreshSession] = await prismaClient.$transaction([
+      storeTokenRequest(prismaClient, user.id, accessToken, 'access'),
+      storeTokenRequest(prismaClient, user.id, refreshToken, 'refresh'),
+    ])
+
+    if (!accessSession.token || !refreshSession.token)
+      return { error: MODEL_ERROR }
+
+    return {
+      accessToken: accessSession.token,
+      refreshToken: refreshSession.token,
+      user: sanitizedUser,
+    }
+  }
+  catch (error) {
+    log.withError(error).error('getTokensAndUserInfoModel')
+    return { error: MODEL_ERROR }
   }
 }

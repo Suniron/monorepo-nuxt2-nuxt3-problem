@@ -10,15 +10,14 @@ import { knex } from '../../common/db'
 
 import {
   TOKEN_TYPE,
-  generateJwtTokens,
   verifyToken,
 } from '../../common/auth/jwt'
 
 import {
   getResetPasswordToken,
   getTokenSessionModel,
+  initTokensModel,
   isValidSessionRefreshToken,
-  loginModel,
   logoutModel,
   refreshAccessToken,
   updateResetPasswordUsingToken,
@@ -77,7 +76,7 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
 export const loginWithPasswordController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1) Check auth
-    return passport.authenticate('local', (error, userFromDb: false | user) => {
+    return passport.authenticate('local', async (error, userFromDb: false | user) => {
       // Error handler
       if (error as HTTPStatus) {
         switch (error) {
@@ -93,11 +92,13 @@ export const loginWithPasswordController = async (req: Request, res: Response, n
       if (!userFromDb)
         return res.status(401).send({ message: 'Unauthorized' })
 
-      // TODO: revoke old tokens
-      // 3) Get tokens
-      const { accessToken, refreshToken, user } = loginModel(userFromDb)
-
-      // 4) Set cookie
+      // 2) Get tokens
+      const { accessToken, refreshToken, user, error: initTokensError } = await initTokensModel(userFromDb)
+      if (initTokensError) {
+        // TODO: handle different error
+        return res.status(500).send()
+      }
+      // 3) Set cookie
       res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
         domain: env.jwt.refresh.domain,
         httpOnly: true,
@@ -105,7 +106,7 @@ export const loginWithPasswordController = async (req: Request, res: Response, n
         secure: env.nodeEnv.isProduction && env.httpsEnabled,
       })
 
-      // 5) Send response
+      // 4) Send response
       return res.status(201).send({ accessToken, user })
     })(req, res, next)
   }
