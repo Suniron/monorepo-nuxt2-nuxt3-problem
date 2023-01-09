@@ -518,6 +518,9 @@ export const searchVulnerabilitiesWithTheirAssetsModel = async (
               severity: {
                 in: severities,
               },
+              status: {
+                not: 'remediated',
+              },
             },
           },
         },
