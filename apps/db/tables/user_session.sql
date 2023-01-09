@@ -7,5 +7,5 @@ CREATE TABLE user_session(
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP WITH TIME ZONE,
   -- To handle two factor authentication:
-  fullyConnectedAt TIMESTAMP WITH TIME ZONE
+  fully_connected_at TIMESTAMP WITH TIME ZONE
 )
