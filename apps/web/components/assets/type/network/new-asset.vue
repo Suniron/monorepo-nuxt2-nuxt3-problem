@@ -1,14 +1,6 @@
 <script>
+import { netmaskValid } from '~/utils/asset.utils'
 export default {
-  data() {
-    return {
-      formData: {
-        network: this.asset?.network || null,
-        netmask: this.asset?.netmask || null,
-        gateway: this.asset?.gateway || null
-      }
-    }
-  },
   props: {
     asset: {
       type: Object,
@@ -19,12 +11,27 @@ export default {
       required: false
     }
   },
+  data() {
+    return {
+      formData: {
+        network: this.asset?.network || null,
+        netmask: this.asset?.netmask || null,
+        gateway: this.asset?.gateway || null
+      }
+    }
+  },
   created() {
     this.$emit('change', this.formData)
   },
   methods: {
     changed() {
       this.$emit('change', this.formData)
+    },
+    netMaskValidation(netmask) {
+      const result = netmaskValid(netmask)
+      if (result.isValid)
+        this.formData.netmask = result.response
+      return result.isValid || result.response
     },
   },
 }
@@ -47,6 +54,7 @@ export default {
         label="Netmask"
         placeholder="255.255.255.0 or 24"
         :disabled="!quickedit"
+        :rules="[netMaskValidation]"
         @change="changed"
       />
     </v-col>

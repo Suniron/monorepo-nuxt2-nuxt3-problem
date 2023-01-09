@@ -3,11 +3,24 @@
 import { VTextField } from 'vuetify/lib'
 import TagsMultiselect from '~/components/controls/tags-multiselect.vue'
 import GroupsMultiselect from '~/components/controls/groups-multiselect'
+import { netmaskValid } from '~/utils/asset.utils'
 export default {
   components: {
     GroupsMultiselect,
     TagsMultiselect,
     VTextField,
+  },
+  props: {
+    asset: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    details: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -41,7 +54,9 @@ export default {
           vmodel: 'netmask',
           name: '[]',
           itemValue: '',
+          rules:[(v) => this.isValidNetmask(v)],
           itemText: '',
+          placeHolder: '255.255.255.0 or 24',
           multiple: false,
           creatable: true
         },
@@ -82,25 +97,25 @@ export default {
       assetsRelation: []
     }
   },
-  props: {
-    asset: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    details: {
-      type: Array,
-      required: true
-    }
-  },
   created() {},
   methods: {
     changed() {
+      if (
+        this.isValidNetmask(this.formData.netmask) === true
+      )
+        this.formData.isValid = true
+      else
+        this.formData.isValid = false
       this.$emit('change', this.formData)
     },
     eval(str) {
       return eval(str)
+    },
+    isValidNetmask(netmask) {
+      const result = netmaskValid(netmask)
+      if (result.isValid)
+        this.formData.netmask = result.response
+      return result.isValid || result.response
     },
   },
 }
@@ -126,7 +141,8 @@ export default {
             :items="eval(elt.items)"
             :item-value="elt.itemValue"
             :item-text="elt.itemText"
-            :item-placeholder="elt.itemText"
+            :rules="elt.rules"
+            :placeholder="elt.placeHolder"
             :creatable="elt.creatable"
             :multiple="elt.multiple"
             chips
