@@ -1,6 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -27,7 +27,7 @@ model asset {
   asset_building                         asset_building?
   asset_compliance                       asset_compliance?
   asset_document                         asset_document?
-  asset_mission                          asset_mission[]
+  asset_mission                          asset_mission?
   asset_network                          asset_network?
   asset_server                           asset_server?
   asset_user                             asset_user?
@@ -87,9 +87,9 @@ model asset_document {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model asset_mission {
   id               Int       @id
+  type             String?   @default("MISSION") @db.VarChar
   last_update_date DateTime? @db.Date
   version          Int?
-  type             String?   @default("MISSION") @db.VarChar
   asset            asset?    @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_mission_asset_id_fkey")
 }
 
@@ -192,10 +192,10 @@ model business_mission_unit_has_feared_event {
   business_mission_unit_id                               Int
   feared_event_id                                        Int
   severity_id                                            Int?
+  business_mission_unit_feared_event_has_business_impact business_mission_unit_feared_event_has_business_impact[]
   feared_event                                           feared_event                                             @relation(fields: [feared_event_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "business_mission_unit_id")
   relation                                               relation                                                 @relation(fields: [business_mission_unit_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fkey_business_mission_unit_id")
   severity                                               severity?                                                @relation(fields: [severity_id], references: [id], onUpdate: NoAction, map: "fkey_severity")
-  business_mission_unit_feared_event_has_business_impact business_mission_unit_feared_event_has_business_impact[]
 }
 
 model cartography {
@@ -242,10 +242,10 @@ model comment {
   updated_at                                DateTime?            @db.Timestamp(6)
   is_evidence                               Boolean?
   comment_commentTocomment_reply_comment_id comment?             @relation("commentTocomment_reply_comment_id", fields: [reply_comment_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  other_comment                             comment[]            @relation("commentTocomment_reply_comment_id")
   revision                                  revision?            @relation(fields: [revision_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user                                      user?                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   vulnerability_asset                       vulnerability_asset? @relation(fields: [vulnerability_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  other_comment                             comment[]            @relation("commentTocomment_reply_comment_id")
 }
 
 model comment_watch {
@@ -264,9 +264,9 @@ model company {
   name                           String?                   @db.VarChar
   base64_logo                    Bytes?
   fk_phishing_scenario_domain_id Int?
-  phishing_scenario_domain       phishing_scenario_domain? @relation(fields: [fk_phishing_scenario_domain_id], references: [id], onUpdate: NoAction, map: "phishing_scenario_domain_fkey")
   asset                          asset[]
   cartography                    cartography[]
+  phishing_scenario_domain       phishing_scenario_domain? @relation(fields: [fk_phishing_scenario_domain_id], references: [id], onUpdate: NoAction, map: "phishing_scenario_domain_fkey")
   group                          group[]
   probe                          probe[]
   remediation_project            remediation_project[]
@@ -441,6 +441,7 @@ model ip {
   iface               String?               @db.VarChar
   mask                String?               @db.VarChar
   operational_status  String?               @db.VarChar
+  is_main             Boolean?              @default(false)
   asset_server        asset_server?         @relation(fields: [asset_server_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   port                port[]
   vulnerability_asset vulnerability_asset[]
@@ -481,8 +482,8 @@ model port {
   protocol            String?               @db.VarChar
   detail              String?               @db.VarChar
   status              String?               @db.VarChar
-  ip                  ip?                   @relation(fields: [ip_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   cipher_suite        cipher_suite[]
+  ip                  ip?                   @relation(fields: [ip_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   scan_asset          scan_asset[]
   vulnerability_asset vulnerability_asset[]
 }
@@ -520,10 +521,10 @@ model relation {
   type                                   String?                                  @db.VarChar
   from_asset_id                          Int?
   to_asset_id                            Int?
-  asset_assetTorelation_from_asset_id    asset?                                   @relation("assetTorelation_from_asset_id", fields: [from_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_from_asset_id")
-  asset_assetTorelation_to_asset_id      asset?                                   @relation("assetTorelation_to_asset_id", fields: [to_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_to_asset_id")
   business_mission_unit_has_feared_event business_mission_unit_has_feared_event[]
   cartography_element                    cartography_element[]
+  asset_assetTorelation_from_asset_id    asset?                                   @relation("assetTorelation_from_asset_id", fields: [from_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_from_asset_id")
+  asset_assetTorelation_to_asset_id      asset?                                   @relation("assetTorelation_to_asset_id", fields: [to_asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_to_asset_id")
 
   @@unique([type, from_asset_id, to_asset_id], map: "relation_uniq")
 }
@@ -536,8 +537,8 @@ model request {
   http_version String?    @db.VarChar
   parameters   String?    @db.VarChar
   body         String?    @db.VarChar
-  uri          uri?       @relation(fields: [uri_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   header       header[]
+  uri          uri?       @relation(fields: [uri_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   response     response[]
 }
 
@@ -546,8 +547,8 @@ model response {
   request_id Int?
   code       Int?
   body       String?  @db.VarChar
-  request    request? @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   header     header[]
+  request    request? @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model result {
@@ -564,10 +565,10 @@ model revision {
   cdate             DateTime?       @db.Date
   revision          String?         @db.VarChar
   description       String?         @db.VarChar
-  asset_document    asset_document? @relation(fields: [asset_document_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  store             store?          @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   comment           comment[]
   comment_watch     comment_watch[]
+  asset_document    asset_document? @relation(fields: [asset_document_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  store             store?          @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model scan {
@@ -669,8 +670,8 @@ model uri {
   id                  Int                   @id @unique(map: "uri_id_pkey") @default(autoincrement())
   asset_web_id        Int?
   uri                 String?               @db.VarChar
-  asset_web           asset_web?            @relation(fields: [asset_web_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   request             request[]
+  asset_web           asset_web?            @relation(fields: [asset_web_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   vulnerability_asset vulnerability_asset[]
 }
 
@@ -686,7 +687,6 @@ model user {
   roles                              String[]
   reset_token                        String?                              @db.VarChar
   token_expires_at                   String?                              @db.VarChar
-  company                            company?                             @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   asset_asset_maintainerTouser       asset[]                              @relation("asset_maintainerTouser")
   asset_asset_ownerTouser            asset[]                              @relation("asset_ownerTouser")
   comment                            comment[]
@@ -696,6 +696,7 @@ model user {
   remediation_project                remediation_project[]
   remediation_project_assignee       remediation_project_assignee[]
   remediation_project_status_history remediation_project_status_history[]
+  company                            company?                             @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user_group                         user_group[]
   user_session                       user_session[]
   v_remediation_project_summary_list v_remediation_project_summary_list[]
@@ -711,13 +712,14 @@ model user_group {
 }
 
 model user_session {
-  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user_id    String?   @db.Uuid
-  token      String?   @db.VarChar
-  type       String?   @db.VarChar
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  deleted_at DateTime? @db.Timestamptz(6)
-  user       user?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id        String?   @db.Uuid
+  token          String?   @db.VarChar
+  type           JwtTokenTypeEnum
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime? @db.Timestamptz(6)
+  fullyConnected Boolean?  @default(false)
+  user           user?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([user_id, token, type], map: "user_id_token_type_key")
 }
@@ -749,7 +751,7 @@ model vulnerability_asset {
   ip_id                     Int?
   port_id                   Int?
   uri_id                    Int?
-  severity                  VulnerabilitySeverityEnum?
+  severity                  VulnerabilitySeverityEnum?                     @db.VarChar
   confidence                String?                     @db.VarChar
   likelihood                String?                     @db.VarChar
   details                   String?                     @db.VarChar
@@ -764,6 +766,11 @@ model vulnerability_asset {
   status                    String?                     @db.VarChar
   custom_description        String?                     @db.VarChar
   custom_remediation        String?                     @db.VarChar
+  comment                   comment[]
+  comment_watch             comment_watch[]
+  remediation_project_scope remediation_project_scope[]
+  scan_asset                scan_asset[]
+  status_update             status_update[]
   asset                     asset?                      @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   cpe                       cpe?                        @relation(fields: [cpe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   cvss                      cvss?                       @relation(fields: [cvss_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -771,23 +778,18 @@ model vulnerability_asset {
   port                      port?                       @relation(fields: [port_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   uri                       uri?                        @relation(fields: [uri_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   vulnerability             vulnerability?              @relation(fields: [vulnerability_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  comment                   comment[]
-  comment_watch             comment_watch[]
-  remediation_project_scope remediation_project_scope[]
-  scan_asset                scan_asset[]
-  status_update             status_update[]
 }
 
 model comment_remediation_project {
   id                                       Int                                 @id @default(autoincrement())
   fk_remediation_project_id                Int
-  fk_user_id                               String?                             @db.Uuid
+  fk_user_id                               String                              @db.Uuid
   fk_remediation_project_status_history_id Int?                                @unique(map: "fk_remediation_project_status_history_id_key")
   comment                                  String                              @db.VarChar
   created_at                               DateTime                            @default(now()) @db.Timestamptz(6)
   remediation_project                      remediation_project                 @relation(fields: [fk_remediation_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   remediation_project_status_history       remediation_project_status_history? @relation(fields: [fk_remediation_project_status_history_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_remediation_project_fk_remediation_project_status_histo")
-  user                                     user?                               @relation(fields: [fk_user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  user                                     user                                @relation(fields: [fk_user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model project_priority {
@@ -827,10 +829,10 @@ model remediation_project {
   start_date                         DateTime?                            @db.Timestamptz(6)
   creation_date                      DateTime                             @default(now()) @db.Timestamptz(6)
   due_date                           DateTime                             @db.Timestamptz(6)
+  comment_remediation_project        comment_remediation_project[]
   company                            company                              @relation(fields: [fk_company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user                               user                                 @relation(fields: [fk_owner], references: [id], onDelete: NoAction, onUpdate: NoAction)
   project_priority                   project_priority                     @relation(fields: [fk_priority_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  comment_remediation_project        comment_remediation_project[]
   remediation_project_assignee       remediation_project_assignee[]
   remediation_project_scope          remediation_project_scope[]
   remediation_project_status_history remediation_project_status_history[]
@@ -881,10 +883,10 @@ model remediation_project_status_history {
   fk_status_id                Int                          @default(1)
   start_date                  DateTime                     @default(now()) @db.Timestamptz(6)
   end_date                    DateTime?                    @db.Timestamptz(6)
+  comment_remediation_project comment_remediation_project?
   remediation_project         remediation_project          @relation(fields: [fk_project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   project_status              project_status               @relation(fields: [fk_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user                        user?                        @relation(fields: [fk_user_id], references: [id], onUpdate: NoAction)
-  comment_remediation_project comment_remediation_project?
 }
 
 model v_asset_risk_scores {
@@ -977,4 +979,9 @@ enum VulnerabilitySeverityEnum {
   medium
   high
   critical
+}
+
+enum JwtTokenTypeEnum {
+  access
+  refresh
 }
