@@ -751,7 +751,7 @@ model vulnerability_asset {
   ip_id                     Int?
   port_id                   Int?
   uri_id                    Int?
-  severity                  VulnerabilitySeverityEnum?                     @db.VarChar
+  severity                  VulnerabilitySeverityEnum?
   confidence                String?                     @db.VarChar
   likelihood                String?                     @db.VarChar
   details                   String?                     @db.VarChar
