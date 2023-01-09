@@ -91,6 +91,7 @@ model asset_mission {
   last_update_date DateTime? @db.Date
   version          Int?
   asset            asset?    @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_mission_asset_id_fkey")
+  @@unique([id, type])
 }
 
 model score_asset_history {
@@ -751,7 +752,7 @@ model vulnerability_asset {
   ip_id                     Int?
   port_id                   Int?
   uri_id                    Int?
-  severity                  VulnerabilitySeverityEnum?                     @db.VarChar
+  severity                  VulnerabilitySeverityEnum?
   confidence                String?                     @db.VarChar
   likelihood                String?                     @db.VarChar
   details                   String?                     @db.VarChar
