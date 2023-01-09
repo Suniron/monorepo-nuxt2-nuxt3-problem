@@ -1,14 +1,6 @@
 <script>
+import { netmaskValid } from '~/utils/asset.utils'
 export default {
-  data() {
-    return {
-      formData: {
-        network: this.asset?.network || null,
-        netmask: this.asset?.netmask || null,
-        gateway: this.asset?.gateway || null
-      }
-    }
-  },
   props: {
     asset: {
       type: Object,
@@ -19,6 +11,15 @@ export default {
       required: false
     }
   },
+  data() {
+    return {
+      formData: {
+        network: this.asset?.network || null,
+        netmask: this.asset?.netmask || null,
+        gateway: this.asset?.gateway || null
+      }
+    }
+  },
   created() {
     this.$emit('change', this.formData)
   },
@@ -27,29 +28,10 @@ export default {
       this.$emit('change', this.formData)
     },
     netMaskValidation(netmask) {
-      // netmask as 255.255.255.0
-      if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(netmask)) {
-        const ip = netmask.split('.').map((octet) => {
-          return parseInt(octet, 10)
-        })
-        const count = ip.reduce((acc, octet) => {
-          return acc + octet.toString(2).split('1').length - 1
-        }, 0)
-        return this.validateSubnet(count)
-      }// netmask as 24
-      else if (/^[0-9]{1,2}$/.test(netmask)) {
-        return this.validateSubnet(netmask)
-      }
-      else {
-        return 'Netmask is not valid'
-      }
-    },
-    validateSubnet(mask) {
-      if (mask % 8 !== 0 || mask > 32) { return 'Netmask is not valid' }
-      else {
-        this.formData.netmask = mask
-        return true
-      }
+      const result = netmaskValid(netmask)
+      if (result.isValid)
+        this.formData.netmask = result.response
+      return result.isValid || result.response
     },
   },
 }

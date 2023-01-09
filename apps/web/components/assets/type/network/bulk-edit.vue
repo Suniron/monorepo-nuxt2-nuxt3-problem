@@ -3,11 +3,24 @@
 import { VTextField } from 'vuetify/lib'
 import TagsMultiselect from '~/components/controls/tags-multiselect.vue'
 import GroupsMultiselect from '~/components/controls/groups-multiselect'
+import { netmaskValid } from '~/utils/asset.utils'
 export default {
   components: {
     GroupsMultiselect,
     TagsMultiselect,
     VTextField,
+  },
+  props: {
+    asset: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    details: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -84,18 +97,6 @@ export default {
       assetsRelation: []
     }
   },
-  props: {
-    asset: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    details: {
-      type: Array,
-      required: true
-    }
-  },
   created() {},
   methods: {
     changed() {
@@ -111,30 +112,10 @@ export default {
       return eval(str)
     },
     isValidNetmask(netmask) {
-      if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(netmask)) {
-        // parse ip to number
-        const ip = netmask.split('.').map((octet) => {
-          return parseInt(octet, 10)
-        })
-        // count number of 1 in binary
-        const count = ip.reduce((acc, octet) => {
-          return acc + octet.toString(2).split('1').length - 1
-        }, 0)
-        return this.validateSubnet(count)
-      }
-      else if (/^[0-9]{1,2}$/.test(netmask)) {
-        return this.validateSubnet(netmask)
-      }
-      else {
-        return 'Netmask is not valid'
-      }
-    },
-    validateSubnet(mask) {
-      if (mask % 8 !== 0 || mask > 32) { return 'Netmask is not valid' }
-      else {
-        this.formData.netmask = mask
-        return true
-      }
+      const result = netmaskValid(netmask)
+      if (result.isValid)
+        this.formData.netmask = result.response
+      return result.isValid || result.response
     },
   },
 }
