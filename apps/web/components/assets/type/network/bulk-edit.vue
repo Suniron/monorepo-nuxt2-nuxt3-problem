@@ -41,7 +41,9 @@ export default {
           vmodel: 'netmask',
           name: '[]',
           itemValue: '',
+          rules:[(v) => this.isValidNetmask(v)],
           itemText: '',
+          placeHolder: '255.255.255.0 or 24',
           multiple: false,
           creatable: true
         },
@@ -97,10 +99,42 @@ export default {
   created() {},
   methods: {
     changed() {
+      if (
+        this.isValidNetmask(this.formData.netmask) === true
+      )
+        this.formData.isValid = true
+      else
+        this.formData.isValid = false
       this.$emit('change', this.formData)
     },
     eval(str) {
       return eval(str)
+    },
+    isValidNetmask(netmask) {
+      if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(netmask)) {
+        // parse ip to number
+        const ip = netmask.split('.').map((octet) => {
+          return parseInt(octet, 10)
+        })
+        // count number of 1 in binary
+        const count = ip.reduce((acc, octet) => {
+          return acc + octet.toString(2).split('1').length - 1
+        }, 0)
+        return this.validateSubnet(count)
+      }
+      else if (/^[0-9]{1,2}$/.test(netmask)) {
+        return this.validateSubnet(netmask)
+      }
+      else {
+        return 'Netmask is not valid'
+      }
+    },
+    validateSubnet(mask) {
+      if (mask % 8 !== 0 || mask > 32) { return 'Netmask is not valid' }
+      else {
+        this.formData.netmask = mask
+        return true
+      }
     },
   },
 }
@@ -126,7 +160,8 @@ export default {
             :items="eval(elt.items)"
             :item-value="elt.itemValue"
             :item-text="elt.itemText"
-            :item-placeholder="elt.itemText"
+            :rules="elt.rules"
+            :placeholder="elt.placeHolder"
             :creatable="elt.creatable"
             :multiple="elt.multiple"
             chips
