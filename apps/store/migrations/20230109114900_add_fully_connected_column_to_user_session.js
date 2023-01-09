@@ -10,10 +10,8 @@ exports.up = async (knex) => {
   if (knex.userParams.isSetup)
     return Promise.resolve()
 
-  // Add new "fullyConnected" boolean column to "user_session" table
-  await knex.schema.table('user_session', (table) => {
-    table.boolean('fullyConnected').defaultTo(false)
-  })
+  // Add new "fullyConnectedAt" timestamp column to "user_session" table
+  await knex.raw('ALTER TABLE user_session ADD fullyConnectedAt timestamptz NULL;')
 }
 
 /**
@@ -23,6 +21,6 @@ exports.up = async (knex) => {
  */
 exports.down = (knex) => {
   return knex.schema.table('user_session', (table) => {
-    table.dropColumn('fullyConnected')
+    table.dropColumn('fullyConnectedAt')
   })
 }

@@ -91,6 +91,7 @@ model asset_mission {
   last_update_date DateTime? @db.Date
   version          Int?
   asset            asset?    @relation(fields: [id, type], references: [id, type], onDelete: Cascade, onUpdate: NoAction, map: "asset_mission_asset_id_fkey")
+
   @@unique([id, type])
 }
 
@@ -573,23 +574,23 @@ model revision {
 }
 
 model scan {
-  id                    Int                   @id @unique @default(autoincrement())
+  id                    Int                     @id @unique @default(autoincrement())
   company_id            Int?
   probe_id              Int?
-  name                  String?               @db.VarChar
-  cdate                 DateTime?             @default(now()) @db.Timestamptz(6)
-  sdate                 DateTime?             @db.Timestamptz(6)
-  fdate                 DateTime?             @db.Timestamptz(6)
-  start_date            DateTime?             @db.Date
-  end_date              DateTime?             @db.Date
-  start_time            DateTime?             @db.Timetz(6)
-  end_time              DateTime?             @db.Timetz(6)
-  scan_type             String?               @db.VarChar
-  container_id          String?               @db.VarChar
-  parameters            Json?                 @db.Json
-  status                String?               @db.VarChar
-  company               company?              @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  probe                 probe?                @relation(fields: [probe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  name                  String?                 @db.VarChar
+  cdate                 DateTime?               @default(now()) @db.Timestamptz(6)
+  sdate                 DateTime?               @db.Timestamptz(6)
+  fdate                 DateTime?               @db.Timestamptz(6)
+  start_date            DateTime?               @db.Date
+  end_date              DateTime?               @db.Date
+  start_time            DateTime?               @db.Timetz(6)
+  end_time              DateTime?               @db.Timetz(6)
+  scan_type             String?                 @db.VarChar
+  container_id          String?                 @db.VarChar
+  parameters            Json?                   @db.Json
+  status                String?                 @db.VarChar
+  company               company?                @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  probe                 probe?                  @relation(fields: [probe_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   credinfo              credinfo[]
   info                  info[]
   latest_scan_summary   latest_scan_summary[]
@@ -713,14 +714,14 @@ model user_group {
 }
 
 model user_session {
-  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user_id        String?   @db.Uuid
-  token          String?   @db.VarChar
-  type           JwtTokenTypeEnum
-  created_at     DateTime? @default(now()) @db.Timestamptz(6)
-  deleted_at     DateTime? @db.Timestamptz(6)
-  fullyConnected Boolean?  @default(false)
-  user           user?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id               String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id          String?          @db.Uuid
+  token            String?          @db.VarChar
+  type             JwtTokenTypeEnum
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  deleted_at       DateTime?        @db.Timestamptz(6)
+  fullyConnectedAt DateTime?        @db.Timestamptz(6)
+  user             user?            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([user_id, token, type], map: "user_id_token_type_key")
 }
@@ -919,9 +920,9 @@ model v_remediation_project_summary_list {
 
 model v_scan_asset_details {
   scan_id    Int      @id
-  asset_id   Int 
+  asset_id   Int
   name       String   @db.VarChar
-  lower_name String 
+  lower_name String
   os         String?  @db.VarChar
   hostname   String?  @db.VarChar
   ip_address String[]
