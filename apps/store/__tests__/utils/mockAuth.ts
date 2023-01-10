@@ -2,7 +2,7 @@ import type { user as User, user_session as UserSession } from '@prisma/client'
 import type { DefaultLoggedUser, OptionalUserInfo } from '../../types/user'
 import { prismaMock } from '../mockPrisma'
 
-const   : DefaultLoggedUser = {
+const fakeLoggedUser: DefaultLoggedUser = {
   aud: 'https://xrator.com',
   companyId: 1,
   companyName: 'DefaultValue',
