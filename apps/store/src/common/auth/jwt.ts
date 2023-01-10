@@ -36,11 +36,13 @@ export const generateJWTToken = (tokenType: JWTTokenType, payload: string | obje
 }
 
 /**
- * It generates an access and refresh token with the given payload
+ * It generates an access and refresh token with the given payload.
+ *
+ * By default, it generates a non fully connected token.
  */
-export const generateJwtTokens = (payload: string | object) => {
-  const accessToken = generateJWTToken('access', payload)
-  const refreshToken = generateJWTToken('refresh', payload)
+export const generateJwtTokens = (payload: object, fullyConnected = false) => {
+  const accessToken = generateJWTToken('access', { ...payload, fullyConnected })
+  const refreshToken = generateJWTToken('refresh', { ...payload, fullyConnected })
   return { accessToken, refreshToken }
 }
 

@@ -72,7 +72,12 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
   }
 }
 
-export const loginWithPasswordController = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * On success, the user is not fully connected. He needs to authenticate with a 2FA way.
+ *
+ * A limited access token is returned in the response and a refresh token is set in a cookie.
+ */
+export const loginWithLocalStrategyController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1) Check auth
     return passport.authenticate('local', async (error, userFromDb: false | user) => {
@@ -109,7 +114,7 @@ export const loginWithPasswordController = async (req: Request, res: Response, n
     })(req, res, next)
   }
   catch (error) {
-    req.log.withError(error).error('loginWithPasswordController')
+    req.log.withError(error).error('loginWithLocalStrategyController')
     next(error)
   }
 }
