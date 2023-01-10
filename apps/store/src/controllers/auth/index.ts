@@ -25,7 +25,6 @@ import {
 } from '../../models/auth'
 import type { HTTPStatus } from '../../common/constants'
 import { UNAUTHORIZED } from '../../common/constants'
-import { sanitizeUser } from '../../utils/user.utils'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
 
@@ -82,7 +81,7 @@ export const loginWithPasswordController = async (req: Request, res: Response, n
         switch (error) {
           case UNAUTHORIZED:
             return res.status(401).send({ message: 'Unauthorized' })
-          // In case of non HTTPStatus error, or non-hanlded:
+          // In case of non HTTPStatus error, or non-handled:
           default:
             return res.status(500).send({ message: 'Internal server error' })
         }
@@ -91,7 +90,6 @@ export const loginWithPasswordController = async (req: Request, res: Response, n
       // This should not happen because it is handled above
       if (!userFromDb)
         return res.status(401).send({ message: 'Unauthorized' })
-
       // 2) Get tokens
       const { accessToken, refreshToken, user, error: initTokensError } = await initTokensModel(userFromDb)
       if (initTokensError) {
