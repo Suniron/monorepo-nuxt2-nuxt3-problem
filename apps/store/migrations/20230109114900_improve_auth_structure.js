@@ -17,7 +17,8 @@ exports.up = async (knex) => {
   // == Enum ==
   await knex.raw('CREATE TYPE "JwtTokenType" AS ENUM (\'access\', \'refresh\');')
 
-  // == Table "user_session" ==
+  // == Tables ==
+  // = user_session =
   // Edit the "type" column to change type to "JwtTokenType"
   await knex.raw('ALTER TABLE user_session ALTER COLUMN type TYPE "JwtTokenType" USING type::"JwtTokenType";')
   // Add new "fully_connected_at" timestamp column to "user_session" table
@@ -26,6 +27,10 @@ exports.up = async (knex) => {
   await knex.raw('ALTER TABLE user_session ADD CONSTRAINT user_session_token_unique UNIQUE (token);')
   // Add NOT NULL constraint to "user_id" column
   await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id SET NOT NULL;')
+
+  // = user =
+  // Add "totp_seed" column to "user" table
+  await knex.raw('ALTER TABLE "user" ADD totp_seed varchar;')
 }
 
 /**
@@ -34,14 +39,18 @@ exports.up = async (knex) => {
  * @returns
  */
 exports.down = async (knex) => {
+  // Remove "JwtTokenType" enum
+  await knex.raw('DROP TYPE "JwtTokenType";')
+
   // Remove "fully_connected_at" column to "user_session" table
   await knex.schema.table('user_session', (table) => {
     table.dropColumn('fully_connected_at')
   })
-
   // Remove UNIQUE constraint to token column
   await knex.raw('ALTER TABLE user_session DROP CONSTRAINT user_session_token_unique;')
-
   // Remove NOT NULL constraint to "user_id" column
   await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id DROP NOT NULL;')
+
+  // Remove "totp_seed" column to "user" table
+  await knex.raw('ALTER TABLE "user" DROP COLUMN totp_seed;')
 }
