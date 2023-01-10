@@ -23,16 +23,14 @@ export const storeTokenRequest = (client: PrismaClient | Prisma.TransactionClien
 
 /**
  * It change the `fully_connected_at` field to the current date.
+ *
+ * Optionally, you can pass a custom upgrade date.
  */
-export const upgradeAccessTokenToFullyConnected = (client: PrismaClient | Prisma.TransactionClient, userId: string, accessToken: string) => client.user_session.update({
+export const upgradeTokenToFullyConnected = (client: PrismaClient | Prisma.TransactionClient, token: string, upgradeDate = new Date()) => client.user_session.update({
   data: {
-    fully_connected_at: new Date(),
+    fully_connected_at: upgradeDate,
   },
   where: {
-    user_id_token_type: {
-      token: accessToken,
-      type: 'access',
-      user_id: userId,
-    },
+    token,
   },
 })

@@ -1,5 +1,5 @@
 import { prismaMock } from '../mockPrisma'
-import { revokeAllUserTokensRequest, storeTokenRequest } from '../../src/requests/tokens'
+import { revokeAllUserTokensRequest, storeTokenRequest, upgradeTokenToFullyConnected } from '../../src/requests/tokens'
 
 describe('revokeAllUserTokensRequest', () => {
   it('should have a count of 1 updated token', async () => {
@@ -47,10 +47,10 @@ describe('storeTokenRequest', () => {
   })
 })
 
-describe('upgradeAccessTokenToFullyConnected', () => {
-  it('sould return the upgraded access token with a fully_connected_at non-null date', async () => {
+describe('upgradeTokenToFullyConnected', () => {
+  it('should return the upgraded access token with a fully_connected_at non-null date', async () => {
     const fully_connected_at = new Date()
-    prismaMock.user_session.create.mockResolvedValue({
+    prismaMock.user_session.update.mockResolvedValue({
       created_at: new Date(),
       deleted_at: null,
       fully_connected_at,
@@ -60,6 +60,6 @@ describe('upgradeAccessTokenToFullyConnected', () => {
       user_id: 'goodUserId',
     })
 
-    expect((await storeTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'access'))?.fully_connected_at).toBe(fully_connected_at)
+    expect((await upgradeTokenToFullyConnected(prismaMock, 'goodToken'))?.fully_connected_at).toBe(fully_connected_at)
   })
 })
