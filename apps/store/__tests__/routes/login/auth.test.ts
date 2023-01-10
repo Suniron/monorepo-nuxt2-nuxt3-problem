@@ -43,6 +43,7 @@ describe('POST /login/password', () => {
       .expect(201)
 
     expect(response).toEqual(expect.not.objectContaining(loggedUser))
+    expect(response.body.is2faInitialized).toBe(false)
   })
 })
 

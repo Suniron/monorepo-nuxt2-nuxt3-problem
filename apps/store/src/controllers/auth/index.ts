@@ -110,7 +110,7 @@ export const loginWithLocalStrategyController = async (req: Request, res: Respon
       })
 
       // 4) Send response
-      return res.status(201).send({ accessToken, user })
+      return res.status(201).send({ accessToken, is2faInitialized: false, user })
     })(req, res, next)
   }
   catch (error) {

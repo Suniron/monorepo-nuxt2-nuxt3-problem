@@ -3,7 +3,7 @@ import { Joi, Segments, celebrate } from 'celebrate'
 import {
   isAuthorizedController,
   jwtVerify,
-  loginWithPasswordController,
+  loginWithLocalStrategyController,
   logoutController,
   refreshAccessTokenController,
   sendResetMailPassword,
@@ -22,7 +22,7 @@ const loginWithPasswordPayloadValidation = celebrate({
 })
 
 // Public routes for authentication
-router.post('/login/password', loginWithPasswordPayloadValidation, loginWithPasswordController)
+router.post('/login/password', loginWithPasswordPayloadValidation, loginWithLocalStrategyController)
 router.post('/refresh-token', refreshAccessTokenController)
 router.post('/reset-password', sendResetMailPassword)
 router.patch('/reset-password', updateResetPasswordByToken)
