@@ -3,78 +3,51 @@ import { prismaMock } from '../../mockPrisma'
 
 import app from '../../utils/fakeApp'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { generateLogin, generateUser } from '../../utils'
+import { generateUser, getNonAdminUser } from '../../utils'
+import { fakeUserInDb, mockLoggedAsUser } from '../../utils/mockAuth'
 
 describe('POST /login/password', () => {
-  it('when a user attemps to log it with incorrect credentials', async () => {
-    const Knex = mockKnexWithFinalValue([null])
+  it('should return a 401 when a user attempt to log it with a bad username', async () => {
+    // Mock no user found
+    prismaMock.user.findFirst.mockResolvedValue(null)
 
     const response = await request(app).post('/login/password').send({
-      password: 'password',
-      username: 'username',
+      password: 'goodPassword',
+      username: 'badUserName',
     })
 
-    expect(Knex.select).toBeCalledWith(
-      'usr.id',
-      'usr.first_name',
-      'usr.last_name',
-      'usr.username',
-      'usr.password',
-      'usr.salt',
-      'usr.email',
-      'usr.company_id',
-      'cmp.name as company_name',
-      'usr.roles',
-    )
-    expect(Knex.from).toBeCalledWith('user as usr')
-    expect(Knex.innerJoin).toBeCalledWith(
-      'company as cmp',
-      'usr.company_id',
-      'cmp.id',
-    )
-    expect(Knex.where).toBeCalledTimes(2)
-    expect(Knex.where).toBeCalledWith(expect.any(Function))
-    expect(Knex.where).toBeCalledWith('usr.username', 'username')
-    expect(Knex.orWhere).toBeCalledWith('usr.email', 'username')
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(401)
   })
 
-  it('when a user attemps to log it with correct username but wrong password', async () => {
-    const customLogin = generateLogin({ firstName: 'David', lastName: 'B' })
-    mockKnexWithFinalValue([customLogin])
+  it('should return a 401  when a user attempt to log it with correct username but wrong password', async () => {
+    const customLogin = getNonAdminUser()
+    // Mock user found
+    prismaMock.user.findFirst.mockResolvedValue(fakeUserInDb)
 
     const response = await request(app).post('/login/password').send({
-      password: 'test',
+      password: 'badPassword',
       username: customLogin.username,
     })
     expect(response.status).toBe(401)
   })
 
-  it('when a user attemps to log it with correct username and correct password', async () => {
-    const customLogin = generateLogin({ firstName: 'David', lastName: 'B' })
-    const Knex = mockKnexWithFinalValue([customLogin])
+  it('when a user attempt to log it with correct username and correct password', async () => {
+    const loggedUser = mockLoggedAsUser()
 
     const response = await request(app)
       .post('/login/password')
       .send({
-        password: 'UnitTestCrypt@1',
-        username: customLogin.username,
+        password: 'P@ssw0rd',
+        username: loggedUser.username,
       })
       .expect(201)
 
-    expect(Knex.where).toHaveBeenNthCalledWith(1, expect.any(Function))
-    expect(Knex.where).toHaveBeenNthCalledWith(
-      2,
-      'usr.username',
-      customLogin.username,
-    )
-    expect(Knex.transaction).not.toBeUndefined()
-    expect(response).toEqual(expect.not.objectContaining(customLogin))
+    expect(response).toEqual(expect.not.objectContaining(loggedUser))
   })
 })
 
 describe('POST /refresh-token', () => {
-  it('when a user attemps to refresh their token', async () => {
+  it('when a user attempt to refresh their token', async () => {
     mockVerifyToken(generateUser())
 
     prismaMock.user_session.findFirst.mockResolvedValue({
@@ -115,13 +88,14 @@ describe('POST /refresh-token', () => {
     expect(accessToken).toBe(mockedAccessToken)
     expect(user).toEqual(mockedUser)
   })
-  it('when a user attemps to refresh their token without a refresh token', () => {
+  it('when a user attempt to refresh their token without a refresh token', () => {
     return request(app)
       .post('/refresh-token')
       .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
       .expect(401)
   })
 })
+
 describe('/reset-password', () => {
   it(' POST / with correct email should return 200', () => {
     return request(app)

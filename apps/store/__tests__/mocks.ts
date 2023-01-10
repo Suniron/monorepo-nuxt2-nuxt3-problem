@@ -5,7 +5,7 @@ import Knex from 'knex'
 import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
 import * as jwt from '../src/common/auth/jwt'
-import type { OptionnalUserInfos } from '../@types/user'
+import type { OptionalUserInfo } from '../@types/user'
 import { getAdminUser, getNonAdminUser } from './utils'
 
 jest.mock('../src/common/auth/jwt')
@@ -200,8 +200,8 @@ export function mockVerifyToken(user) {
   return jwt.verifyToken
 }
 
-export const mockAdminUser = (userInfos: OptionnalUserInfos) =>
+export const mockAdminUser = (userInfos: OptionalUserInfo) =>
   mockVerifyToken(getAdminUser(userInfos))
 
-export const mockNonAdminUser = (userInfos: OptionnalUserInfos) =>
+export const mockNonAdminUser = (userInfos: OptionalUserInfo) =>
   mockVerifyToken(getNonAdminUser(userInfos))

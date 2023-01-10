@@ -12,10 +12,20 @@
     "hotfix/"
   ],
   "jest.nodeEnv": {
-    "JWT_REFRESH_LIFE_MS": "7776000000"
+    "JWT_REFRESH_LIFE_MS": "7776000000",
+    "JWT_ACCESS_SECRET": "uW%k02xpw&ukfF0C2!VYAM!WK%76rTSY",
+    "JWT_ACCESS_LIFE": "30m",
+    "JWT_ACCESS_TYPE": "access",
+    "JWT_ACCESS_AUD": "https://xrator.com",
+    "JWT_ACCESS_ISS": "https://store.xrator.com",
+    "JWT_REFRESH_SECRET": "ZpfvsB5!&CvCCYba*mWtHXsRVH&0fLrF",
+    "JWT_REFRESH_LIFE": "90d",
+    "JWT_REFRESH_TYPE": "refresh",
+    "JWT_REFRESH_AUD": "https://xrator.com",
+    "JWT_REFRESH_ISS": "https://store.xrator.com"
   },
   "jest.autoRun": {
-    "watch": false,
+    "watch": false
     // "onSave": "test-file",
     // "onStartup": ["all-tests"]
   },
@@ -63,6 +73,6 @@
       "username": "postgres",
       "password": "P@ssw0rd"
     }
-  ],
+  ]
 
 }

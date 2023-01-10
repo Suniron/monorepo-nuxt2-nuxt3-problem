@@ -52,7 +52,7 @@ export interface LoggedUser {
   default: DefaultLoggedUser
 }
 
-export interface OptionnalUserInfos {
+export interface OptionalUserInfo {
   firstName?: string
   lastName?: string
   username?: string
