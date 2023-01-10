@@ -715,9 +715,9 @@ model user_group {
 
 model user_session {
   id               String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user_id          String?          @db.Uuid
-  token            String?          @db.VarChar
-  type             JwtTokenTypeEnum
+  user_id          String          @db.Uuid
+  token            String           @unique
+  type             JwtTokenType
   created_at       DateTime?        @default(now()) @db.Timestamptz(6)
   deleted_at       DateTime?        @db.Timestamptz(6)
   fully_connected_at DateTime?        @db.Timestamptz(6)
@@ -983,7 +983,7 @@ enum VulnerabilitySeverityEnum {
   critical
 }
 
-enum JwtTokenTypeEnum {
+enum JwtTokenType {
   access
   refresh
 }
