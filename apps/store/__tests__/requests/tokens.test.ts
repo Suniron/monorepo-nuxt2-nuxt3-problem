@@ -1,5 +1,6 @@
+import type { user_session as UserSession } from '@prisma/client'
 import { prismaMock } from '../mockPrisma'
-import { revokeAllUserTokensRequest, storeTokenRequest, upgradeTokenToFullyConnected } from '../../src/requests/tokens'
+import { getTokenInfoRequest, revokeAllUserTokensRequest, storeTokenRequest, upgradeTokenToFullyConnectedRequest } from '../../src/requests/tokens'
 
 describe('revokeAllUserTokensRequest', () => {
   it('should have a count of 1 updated token', async () => {
@@ -60,6 +61,24 @@ describe('upgradeTokenToFullyConnected', () => {
       user_id: 'goodUserId',
     })
 
-    expect((await upgradeTokenToFullyConnected(prismaMock, 'goodToken'))?.fully_connected_at).toBe(fully_connected_at)
+    expect((await upgradeTokenToFullyConnectedRequest(prismaMock, 'goodToken'))?.fully_connected_at).toBe(fully_connected_at)
+  })
+})
+
+describe('getTokenInfoRequest', () => {
+  it('should return the token info', async () => {
+    const tokenInfo: UserSession = {
+      created_at: new Date(),
+      deleted_at: null,
+      fully_connected_at: null,
+      id: 'goodId',
+      token: 'goodToken',
+      type: 'access',
+      user_id: 'goodUserId',
+    }
+
+    prismaMock.user_session.findUnique.mockResolvedValue(tokenInfo)
+
+    expect(await getTokenInfoRequest(prismaMock, 'goodToken')).toEqual(tokenInfo)
   })
 })
