@@ -3,20 +3,9 @@ import PieChart from '~/components/charts/pie-chart'
 import { severityColor } from '~/utils/color.utils'
 
 export default {
+  name: 'SeveritySummary',
   components: {
     PieChart
-  },
-  name: 'SeveritySummary',
-  props: {
-    data: {
-      type: Object,
-      default: () => ({
-        low: 0,
-        medium: 0,
-        high: 0,
-        critical: 0
-      })
-    }
   },
   data: () => ({
     chartData: {
@@ -38,6 +27,22 @@ export default {
       }
     },
   }),
+  props: {
+    data: {
+      type: Object,
+      default: () => ({
+        low: 0,
+        medium: 0,
+        high: 0,
+        critical: 0
+      })
+    }
+  },
+  watch: {
+    data(newSeverities) {
+      this.populateChartData(newSeverities)
+    },
+  },
   created() {
     // Non-reactive data
     this.chartConfig = {
@@ -72,11 +77,6 @@ export default {
 
     this.populateChartData(this.data)
   },
-  watch: {
-    data(newSeverities) {
-      this.populateChartData(newSeverities)
-    },
-  },
   methods: {
     handleChartClicked({ data }) {
       this.$router.push({
@@ -100,7 +100,7 @@ export default {
 <template>
   <v-card class="d-flex flex-column">
     <v-card-title>
-      Severity Summary<v-spacer /><v-icon @click="$emit('close')">
+      Open Vulnerabilities<v-spacer /><v-icon @click="$emit('close')">
         mdi-close
       </v-icon>
     </v-card-title>
