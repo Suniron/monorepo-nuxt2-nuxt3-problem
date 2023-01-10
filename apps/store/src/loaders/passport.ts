@@ -23,36 +23,36 @@ export default async function loadPassport(app: Application) {
       // indicate failure and set a flash message.  Otherwise, return the
       // authenticated `user`.
 
-      // try {
-      const { user, error } = await getUserByEmailOrUsername(email)
-      if (error) {
-        log.error(`Passport local stragtegy: error while getting user ${email}: ${error}`)
-        return done(error, false, { message: 'An error occurred' })
-      }
-      // Check user exists
-      else if (!user) {
-        log.warn(`Passport local stragtegy: user ${email} not found`)
-        return done(UNAUTHORIZED, false, { message: 'Invalid username or password' })
-      }
-      // Check user has password and salt (should never happen)
-      else if (!user.password || !user.salt) {
-        log.error(`Passport local stragtegy: error, the user ${user.id} has no password or salt`)
-        return done(MODEL_ERROR, false, { message: 'An error occurred' })
-      }
-      // Check user good password
-      else if (!doesPlaintextAndHashedPasswordMatch(password, user.password, user.salt)) {
-        log.warn(`Passport local stragtegy: user ${user.id} has no password or salt or password doesn't match`)
-        return done(UNAUTHORIZED, false, { message: 'Invalid username or password' })
-      }
+      try {
+        const { user, error } = await getUserByEmailOrUsername(email)
+        if (error) {
+          log.error(`Passport local strategy: error while getting user ${email}: ${error}`)
+          return done(error, false, { message: 'An error occurred' })
+        }
+        // Check user exists
+        else if (!user) {
+          log.warn(`Passport local strategy: user ${email} not found`)
+          return done(UNAUTHORIZED, false, { message: 'Invalid username or password' })
+        }
+        // Check user has password and salt (should never happen)
+        else if (!user.password || !user.salt) {
+          log.error(`Passport local strategy: error, the user ${user.id} has no password or salt`)
+          return done(MODEL_ERROR, false, { message: 'An error occurred' })
+        }
+        // Check user good password
+        else if (!doesPlaintextAndHashedPasswordMatch(password, user.password, user.salt)) {
+          log.warn(`Passport local strategy: user ${user.id} has no password or salt or password doesn't match`)
+          return done(UNAUTHORIZED, false, { message: 'Invalid username or password' })
+        }
 
-      // TODO: add analytics here ?
-      // All good
-      log.info(`Passport local stragtegy: user ${user.id} logged in`)
-      return done(null, user)
-      // }
-      // catch (error) {
-      //   return done('Error', false, { message: 'An error occurred' })
-      // }
+        // TODO: add analytics here ?
+        // All good
+        log.info(`Passport local strategy: user ${user.id} logged in`)
+        return done(null, user)
+      }
+      catch (error) {
+        return done('Error', false, { message: 'An error occurred' })
+      }
     })
   }))
 

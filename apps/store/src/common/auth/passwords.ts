@@ -1,3 +1,4 @@
+import { log } from '../../lib/logger'
 import { getHashedPassword } from './sha512'
 
 /**
@@ -52,6 +53,12 @@ export const doesPlaintextAndHashedPasswordMatch = (
   hashedPassword: string,
   salt: string,
 ): boolean => {
-  const hashedClearPassword = getHashedPassword(plaintextPassword, salt)
-  return hashedClearPassword === hashedPassword
+  try {
+    const hashedClearPassword = getHashedPassword(plaintextPassword, salt)
+    return hashedClearPassword === hashedPassword
+  }
+  catch (error) {
+    log.withError(error).error('doesPlaintextAndHashedPasswordMatch')
+    throw error
+  }
 }
