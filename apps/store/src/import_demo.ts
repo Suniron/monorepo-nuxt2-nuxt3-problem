@@ -1,10 +1,10 @@
 import _knex from 'knex'
-import env from './config/env'
+import { POSTGRES_URI } from './config/env'
 import { log } from './lib/logger'
 
 const knexConnection = _knex({
   client: 'pg',
-  connection: env.postgres.URI,
+  connection: POSTGRES_URI,
   seeds: {},
 })
 

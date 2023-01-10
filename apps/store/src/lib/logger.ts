@@ -9,7 +9,8 @@ import {
   ELASTICSEARCH_URL,
   INSTANCE_NAME,
   appVersion,
-  isProd,
+  isProduction,
+  isTest,
 } from '../../src/config/env'
 
 const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
@@ -60,13 +61,13 @@ const streams: (pino.DestinationStream | pino.StreamEntry)[] = [
   },
 ]
 
-if (process.env.NODE_ENV !== 'test' && ELASTICSEARCH_URL) {
+if (!isTest && ELASTICSEARCH_URL) {
   // eslint-disable-next-line no-console
   console.log('Log will be sent to Elasticsearch')
   streams.push({
     level: 'trace',
     stream: pinosEs({
-      index: isProd ? 'operator' : 'dev-operator', // Index is needed to sort logs
+      index: isProduction ? 'operator' : 'dev-operator', // Index is needed to sort logs
       node: ELASTICSEARCH_URL,
     }),
   })
@@ -75,9 +76,9 @@ if (process.env.NODE_ENV !== 'test' && ELASTICSEARCH_URL) {
 // We only need to create the logging library instance once
 const p = pino(
   {
-    enabled: process.env.NODE_ENV !== 'test',
+    enabled: true, // !isTest,
     level: 'trace', // this MUST be set at the lowest level of the destinations,
-    redact: isProd
+    redact: isProduction
       ? [
           'req.body.password',
           'req.body.password1',

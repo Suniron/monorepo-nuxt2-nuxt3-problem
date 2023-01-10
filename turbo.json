@@ -2,8 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".nuxt/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".nuxt/**"
+      ]
     },
     "clean": {
       "cache": false
@@ -18,9 +23,37 @@
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": []
     }
   },
-  "globalEnv": ["NODE_ENV", "POSTGRES_URI", "INSTANCE_NAME", "ELASTICSEARCH_URL", "BACKEND_BASE_URL", "BACKEND_BROWSER_BASE_URL","MAIL_LOGIN", "MAIL_PASSWORD", "MAIL_SERVER", "MAIL_PORT" ]
+  "globalEnv": [
+    "NODE_ENV",
+    "POSTGRES_URI",
+    "INSTANCE_NAME",
+    "ELASTICSEARCH_URL",
+    "BACKEND_BASE_URL",
+    "BACKEND_BROWSER_BASE_URL",
+    "MAIL_LOGIN",
+    "MAIL_PASSWORD",
+    "MAIL_SERVER",
+    "MAIL_PORT",
+    "PUBLIC_DOMAIN",
+    "BACKEND_BASE_URL",
+    "JWT_ACCESS_SECRET",
+    "JWT_ACCESS_LIFE",
+    "JWT_ACCESS_TYPE",
+    "JWT_ACCESS_AUD",
+    "JWT_ACCESS_ISS",
+    "JWT_REFRESH_SECRET",
+    "JWT_REFRESH_LIFE",
+    "JWT_REFRESH_LIFE_MS",
+    "JWT_REFRESH_TYPE",
+    "JWT_REFRESH_AUD",
+    "JWT_REFRESH_ISS",
+    "JWT_REFRESH_DOMAIN",
+    "PORT"
+  ]
 }

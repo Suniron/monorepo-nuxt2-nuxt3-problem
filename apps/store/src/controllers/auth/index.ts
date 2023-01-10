@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import type { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
 import type { user } from '@prisma/client'
-import env from '../../config/env'
+import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, isProduction } from '../../config/env'
 import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
 import { genSaltSync, getHashedPassword } from '../../common/auth/sha512'
@@ -10,7 +10,8 @@ import { knex } from '../../common/db'
 
 import {
   TOKEN_TYPE,
-  verifyToken,
+  checkTokenValidity,
+  verifyTokenOld,
 } from '../../common/auth/jwt'
 
 import {
@@ -34,7 +35,7 @@ const createJwtProvider = () => {
     logger: console,
   }
   return {
-    env,
+    env: 'TODO: TO REMOVE',
     getTokenSessionModel: (token: any, type: any) =>
       getTokenSessionModel(dbProvider, token, type),
     logger: console,
@@ -56,7 +57,7 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
     }
 
     const provider = createJwtProvider()
-    const { user, error } = await verifyToken(
+    const { user, error } = await verifyTokenOld(
       provider,
       token,
       TOKEN_TYPE.access,
@@ -73,11 +74,51 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
 }
 
 /**
+ * This controller will check the light Authentication.
+ *
+ * It means that the user is not fully connected. He needs to authenticate with a 2FA way.
+ *
+ * This check is a pre-requisite to make the strong Authentication.
+ */
+export const lightAuthenticationVerify = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // 1) Verify JWT Token presence and format
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      throwUnauthorizedError({ message: 'Authorization header not found' })
+      return
+    }
+
+    const token = authHeader.split(' ')[1]
+    if (!token) {
+      throwUnauthorizedError({
+        message: 'Cannot parse token from Authorization header',
+      })
+    }
+
+    // 2) Verify JWT Token validity
+    const { error: checkTokenError, tokenPayload } = await checkTokenValidity(token)
+    if (checkTokenError) {
+      throwHTTPError(checkTokenError)
+      return
+    }
+
+    // If all is good, set user info in request and go to next middleware / controller
+    req.user = tokenPayload
+    next()
+  }
+  catch (error) {
+    req.log.withError(error).error('lightAuthenticationVerify')
+    next(error)
+  }
+}
+
+/**
  * On success, the user is not fully connected. He needs to authenticate with a 2FA way.
  *
  * A limited access token is returned in the response and a refresh token is set in a cookie.
  */
-export const loginWithLocalStrategyController = async (req: Request, res: Response, next: NextFunction) => {
+export const loginWithCredentialsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1) Check auth
     return passport.authenticate('local', async (error, userFromDb: false | user) => {
@@ -103,10 +144,10 @@ export const loginWithLocalStrategyController = async (req: Request, res: Respon
       }
       // 3) Set cookie
       res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
-        domain: env.jwt.refresh.domain,
+        domain: JWT_REFRESH_DOMAIN,
         httpOnly: true,
-        maxAge: env.jwt.refresh.lifeInMs,
-        secure: env.nodeEnv.isProduction && env.httpsEnabled,
+        maxAge: JWT_REFRESH_LIFE_MS,
+        secure: isProduction && HTTPS_ENABLED,
       })
 
       // 4) Send response
@@ -114,7 +155,7 @@ export const loginWithLocalStrategyController = async (req: Request, res: Respon
     })(req, res, next)
   }
   catch (error) {
-    req.log.withError(error).error('loginWithLocalStrategyController')
+    req.log.withError(error).error('loginWithCredentialsController')
     next(error)
   }
 }
@@ -137,7 +178,7 @@ export const refreshAccessTokenController = async (
 
     // Check token validity:
     const provider = createJwtProvider()
-    const { user, error: jwtError } = await verifyToken(
+    const { user, error: jwtError } = await verifyTokenOld(
       provider,
       refreshToken,
       TOKEN_TYPE.refresh,

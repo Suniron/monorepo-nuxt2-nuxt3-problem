@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import env from '../config/env'
+import { isProduction } from '../config/env'
 
 export default async function loadGeneral(app: any) {
   // adding Helmet to enhance your API's security
@@ -22,7 +22,7 @@ export default async function loadGeneral(app: any) {
 
   // enabling CORS for all requests
   const origin = {
-    origin: env.nodeEnv.isProduction ? '*' : '*', // TODO: change the is production for a valid origin
+    origin: isProduction ? '*' : '*', // TODO: change the is production for a valid origin
   }
   app.use(cors(origin))
 }

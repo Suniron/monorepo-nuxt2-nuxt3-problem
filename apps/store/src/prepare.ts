@@ -1,11 +1,11 @@
 import _knex from 'knex'
-import env from './config/env'
+import { POSTGRES_URI } from './config/env'
 
 async function waitForDatabase(connectionsCount = 1) {
   return new Promise((resolve) => {
     const connection = _knex({
       client: 'pg',
-      connection: env.postgres.URI,
+      connection: POSTGRES_URI,
     })
 
     connection

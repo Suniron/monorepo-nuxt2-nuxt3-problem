@@ -5,6 +5,8 @@
  * Benefits:
  * - Structured env variables
  * - Code autocompletion when using env variables
+ *
+ * // TODO: throw error when some variable are missing like JWT variables.
  */
 
 import fs from 'fs'
@@ -17,53 +19,36 @@ let httpsEnabled = false
 if (process.env.NODE_ENV !== 'test') {
   dotenv.config()
   httpsEnabled
-  = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
-  && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
+    = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
+    && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
 }
 
-/**
- * Environmental variables
- */
-export const buildEnvObj = (env: any) =>
-  Object.freeze({
-    httpsEnabled,
-    jwt: Object.freeze({
-      access: Object.freeze({
-        audience: env.JWT_ACCESS_AUD,
-        issuer: env.JWT_ACCESS_ISS,
-        life: env.JWT_ACCESS_LIFE,
-        secret: env.JWT_ACCESS_SECRET,
-        type: env.JWT_ACCESS_TYPE,
-      }),
-      refresh: Object.freeze({
-        audience: env.JWT_REFRESH_AUD,
-        domain: env.JWT_REFRESH_DOMAIN,
-        issuer: env.JWT_REFRESH_ISS,
-        life: env.JWT_REFRESH_LIFE,
-        lifeInMs: Number(env.JWT_REFRESH_LIFE_MS),
-        secret: env.JWT_REFRESH_SECRET,
-        type: env.JWT_REFRESH_TYPE,
-      }),
-    }),
-    nodeEnv: Object.freeze({
-      isDevelopment: env.NODE_ENV === 'development',
-      isProduction: env.NODE_ENV === 'production',
-      isTest: env.NODE_ENV === 'test',
-      value: env.NODE_ENV || 'development',
-    }),
-    port: env.PORT || '3002',
-    postgres: Object.freeze({
-      URI: env.POSTGRES_URI || '',
-    }),
-  })
-
+// = Application =
 export const appVersion = version
-
-export const isDev = process.env.NODE_ENV === 'development'
-export const idTest = process.env.NODE_ENV === 'test'
-export const isProd = process.env.NODE_ENV === 'production'
-
 export const ELASTICSEARCH_URL = process.env.ELASTICSEARCH_URL
 export const INSTANCE_NAME = process.env.INSTANCE_NAME
+export const APP_PORT = process.env.PORT || '3002'
+export const POSTGRES_URI = process.env.POSTGRES_URI || ''
+export const HTTPS_ENABLED = httpsEnabled
 
-export default buildEnvObj(process.env)
+// = Node env =
+export const isDevelopment = process.env.NODE_ENV === 'development'
+export const isTest = process.env.NODE_ENV === 'test'
+export const isProduction = process.env.NODE_ENV === 'production'
+
+// = JWT =
+// Access token
+export const JWT_ACCESS_AUDIENCE = process.env.JWT_ACCESS_AUD as string
+export const JWT_ACCESS_ISSUER = process.env.JWT_ACCESS_ISS as string
+export const JWT_ACCESS_LIFE = process.env.JWT_ACCESS_LIFE as string
+export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET as string
+export const JWT_ACCESS_TYPE = process.env.JWT_ACCESS_TYPE as string
+
+// Refresh Token
+export const JWT_REFRESH_AUDIENCE = process.env.JWT_REFRESH_AUD as string
+export const JWT_REFRESH_DOMAIN = process.env.JWT_REFRESH_DOMAIN as string
+export const JWT_REFRESH_ISSUER = process.env.JWT_REFRESH_ISS as string
+export const JWT_REFRESH_LIFE = process.env.JWT_REFRESH_LIFE as string
+export const JWT_REFRESH_LIFE_MS = parseInt(process.env.JWT_REFRESH_LIFE_MS as string)
+export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
+export const JWT_REFRESH_TYPE = process.env.JWT_REFRESH_TYPE as string
