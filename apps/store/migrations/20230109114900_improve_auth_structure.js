@@ -33,8 +33,10 @@ exports.up = async (knex) => {
   await knex.raw('ALTER TABLE user_session ALTER COLUMN created_at SET NOT NULL;')
 
   // = user =
-  // Add "two_factor_secret" column to "user" table
-  await knex.raw('ALTER TABLE "user" ADD two_factor_secret varchar;')
+  // Add two factor columns to "user" table
+  await knex.raw('ALTER TABLE "user" ADD two_factor_secret VARCHAR;')
+  await knex.raw('ALTER TABLE "user" ADD two_factor_confirmed_at TIMESTAMP WITH TIME ZONE;')
+  await knex.raw('ALTER TABLE "user" ADD is_two_factor_required BOOLEAN DEFAULT false;')
 }
 
 /**
@@ -57,4 +59,5 @@ exports.down = async (knex) => {
 
   // Remove "two_factor_secret" column to "user" table
   await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_secret;')
+  await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_confirmed_at;')
 }

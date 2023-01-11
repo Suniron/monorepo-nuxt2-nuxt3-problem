@@ -8,7 +8,7 @@ import { getTokenInfoRequest } from '../../requests/tokens'
 
 import { MODEL_ERROR, UNAUTHORIZED } from '../constants'
 
-export const ALGORITHM: Algorithm = 'HS512'
+const HASH_ALGORITHM: Algorithm = 'HS512'
 export const TOKEN_TYPE = Object.freeze({
   access: 'access',
   refresh: 'refresh',
@@ -131,7 +131,7 @@ export const verifyTokenOld = async (provider: any, token: any, type: any) => {
       throw new Error(error)
 
     const user = verifyJWTToken(token, secret, {
-      algorithms: [ALGORITHM],
+      algorithms: [HASH_ALGORITHM],
       audience,
       issuer,
     })
@@ -162,7 +162,7 @@ export const verifyToken = (token: string, tokenType: JwtTokenType) => {
       tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET,
       {
         algorithms: [
-          ALGORITHM,
+          HASH_ALGORITHM,
           // TODO: remove 'HS256' algorithm
           'HS256',
         ],

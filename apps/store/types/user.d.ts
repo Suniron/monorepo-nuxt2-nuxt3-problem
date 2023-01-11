@@ -33,8 +33,6 @@ interface DefaultLoggedUser {
   exp: number
   aud: string
   iss: string
-  is2faInitialized: boolean
-
 }
 
 export interface LoggedUser {
@@ -52,7 +50,6 @@ export interface LoggedUser {
   aud: string
   iss: string
   default: DefaultLoggedUser
-  is2faInitialized: boolean
 }
 
 export interface OptionalUserInfo {

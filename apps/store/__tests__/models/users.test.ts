@@ -23,12 +23,14 @@ describe('getUserByEmailOrUsername', () => {
       email: 'myGoodEmail',
       first_name: 'myFirstName',
       id: 'userId',
+      is_two_factor_required: true,
       last_name: 'myLastName',
       password: 'password',
       reset_token: 'resetToken',
       roles: ['admin'],
       salt: 'salt',
       token_expires_at: new Date().toString(),
+      two_factor_confirmed_at: null,
       two_factor_secret: null,
       username: 'username',
     }
@@ -64,7 +66,7 @@ describe('is2faInitialized', () => {
 
   it('should return is2faInitialized = true if userId exists and have a 2fa secret', async () => {
     prismaMock.user.findUnique.mockResolvedValue(
-      { ...fakeUserInDb, two_factor_secret: 'myTwoFactorSecret' },
+      { ...fakeUserInDb, two_factor_confirmed_at: new Date(), two_factor_secret: 'myTwoFactorSecret' },
     )
     expect((await is2faInitialized('goodUserId'))?.isInitialized).toBe(true)
   })
@@ -74,5 +76,12 @@ describe('is2faInitialized', () => {
       { ...fakeUserInDb, two_factor_secret: null },
     )
     expect((await is2faInitialized('goodUserId'))?.isInitialized).toBe(false)
+  })
+
+  it('should return is2faInitialized = true if userId exists and bypass 2fa is enable (for developer for example)', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(
+      { ...fakeUserInDb, is_two_factor_required: false, two_factor_secret: null },
+    )
+    expect((await is2faInitialized('goodUserId'))?.isInitialized).toBe(true)
   })
 })

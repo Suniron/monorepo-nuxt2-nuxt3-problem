@@ -368,7 +368,11 @@ export const is2faInitialized = async (userId: string) => {
     if (!user)
       return { error: UNAUTHORIZED }
 
-    return { isInitialized: !!user.two_factor_secret }
+    // If 2FA bypass is enable (for developers for example)
+    if (!user.is_two_factor_required)
+      return { isInitialized: true }
+
+    return { isInitialized: !!user.two_factor_secret && !!user.two_factor_confirmed_at }
   }
   catch (error) {
     log.withError(error).error('is2faInitialized')

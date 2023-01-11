@@ -35,3 +35,4 @@ export const upgradeTokenToFullyConnectedRequest = (client: PrismaClient | Prism
 })
 
 export const getTokenInfoRequest = (client: PrismaClient | Prisma.TransactionClient, token: string) => client.user_session.findUnique({ where: { token } })
+

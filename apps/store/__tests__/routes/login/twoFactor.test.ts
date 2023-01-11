@@ -15,7 +15,7 @@ describe('POST /2fa/setup', () => {
     const { token } = mockLoggedAsUser()
 
     prismaMock.user.findUnique.mockResolvedValue(
-      { ...fakeUserInDb, two_factor_secret: 'myTwoFactor' },
+      { ...fakeUserInDb, two_factor_confirmed_at: new Date(), two_factor_secret: 'myTwoFactor' },
     )
 
     const response = await request(app)
@@ -25,30 +25,39 @@ describe('POST /2fa/setup', () => {
     expect(response.status).toBe(400)
   })
 
-  // it('should return a 401  when a user attempt to log it with correct username but wrong password', async () => {
-  //   const customLogin = getNonAdminUser()
-  //   // Mock user found
-  //   prismaMock.user.findFirst.mockResolvedValue(fakeUserInDb)
+  it('should return a 200 with a token in body if 2fa not yet initialized', async () => {
+    const { token } = mockLoggedAsUser()
 
-  //   const response = await request(app).post('/login/password').send({
-  //     password: 'badPassword',
-  //     username: customLogin.username,
-  //   })
-  //   expect(response.status).toBe(401)
-  // })
+    prismaMock.user.findUnique.mockResolvedValue(
+      { ...fakeUserInDb, two_factor_secret: null },
+    )
 
-  // it('when a user attempt to log it with correct username and correct password', async () => {
-  //   const loggedUser = mockLoggedAsUser()
+    // Mock init totp model
+    prismaMock.user.findUnique.mockResolvedValue(fakeUserInDb)
+    prismaMock.user.update.mockResolvedValue({ ...fakeUserInDb, two_factor_secret: 'newGeneratedSecret' })
 
-  //   const response = await request(app)
-  //     .post('/login/password')
-  //     .send({
-  //       password: 'P@ssw0rd',
-  //       username: loggedUser.username,
-  //     })
-  //     .expect(201)
+    const response = await request(app)
+      .get('/2fa/setup')
+      .set('Authorization', `Bearer ${token}`)
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('token')
+  })
 
-  //   expect(response).toEqual(expect.not.objectContaining(loggedUser))
-  //   expect(response.body.is2faInitialized).toBe(false)
-  // })
+  it('should return a 200 with a token in body if 2fa not fully initialized (not confirmed by user)', async () => {
+    const { token } = mockLoggedAsUser()
+
+    prismaMock.user.findUnique.mockResolvedValue(
+      { ...fakeUserInDb, two_factor_secret: null },
+    )
+
+    // Mock init totp model
+    prismaMock.user.findUnique.mockResolvedValue(fakeUserInDb)
+    prismaMock.user.update.mockResolvedValue({ ...fakeUserInDb, two_factor_secret: 'newGeneratedSecret' })
+
+    const response = await request(app)
+      .get('/2fa/setup')
+      .set('Authorization', `Bearer ${token}`)
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('token')
+  })
 })

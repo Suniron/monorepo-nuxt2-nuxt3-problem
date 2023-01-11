@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express'
 import type { LoggedUser } from '../../../types/user'
 import { throwHTTPError, throwValidationError } from '../../common/errors'
+import { initTotpAuthenticationModel } from '../../models/auth/twoFactor'
 import { is2faInitialized } from '../../models/users'
 
 export const twoFactorSetupController = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,8 +18,12 @@ export const twoFactorSetupController = async (req: Request, res: Response, next
       return
     }
 
-    // 1) Generate a secret key for the user
-    // 2) Store the secret key in the database
+    // Generate a new totp seed for the user
+    const { error: totpTokenError, token } = await initTotpAuthenticationModel(user.id)
+    if (totpTokenError)
+      return throwHTTPError(totpTokenError)
+
+    res.status(200).send({ token })
   }
   catch (error) {
     next(error)

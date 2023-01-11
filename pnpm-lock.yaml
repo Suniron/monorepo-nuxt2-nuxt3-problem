@@ -148,9 +148,9 @@ importers:
       knex: ^2.4.0
       lodash: ^4.17.21
       loglayer: ^1.4.2
+      otpauth: ^9.0.2
       passport: ^0.6.0
       passport-local: ^1.0.0
-      passport-totp: ^0.0.2
       pg: ^8.5.1
       pino: ^8.8.0
       pino-elasticsearch: ^6.3.0
@@ -183,9 +183,9 @@ importers:
       knex: 2.4.0_pg@8.8.0
       lodash: 4.17.21
       loglayer: 1.4.2
+      otpauth: 9.0.2
       passport: 0.6.0
       passport-local: 1.0.0
-      passport-totp: 0.0.2
       pg: 8.8.0
       pino: 8.8.0
       pino-elasticsearch: 6.3.0
@@ -9552,6 +9552,10 @@ packages:
       semver: 5.7.1
     dev: false
 
+  /jssha/3.3.0:
+    resolution: {integrity: sha512-w9OtT4ALL+fbbwG3gw7erAO0jvS5nfvrukGPMWIAoea359B26ALXGpzy4YJSp9yGnpUvuvOw1nSjSoHDfWSr1w==}
+    dev: false
+
   /jszip/3.10.1:
     resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
     dependencies:
@@ -10406,11 +10410,6 @@ packages:
     resolution: {integrity: sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==}
     engines: {node: '>=6'}
 
-  /notp/2.0.3:
-    resolution: {integrity: sha512-oBig/2uqkjQ5AkBuw4QJYwkEWa/q+zHxI5/I5z6IeP2NT0alpJFsP/trrfCC+9xOAgQSZXssNi962kp5KBmypQ==}
-    engines: {node: '> v0.6.0'}
-    dev: false
-
   /npm-run-path/4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
@@ -10669,6 +10668,12 @@ packages:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
 
+  /otpauth/9.0.2:
+    resolution: {integrity: sha512-0TzpkJYg24VvIK3/K91HKpTtMlwm73UoThhcGY8fZsXcwHDrqf008rfdOjj3NnQuyuT11+vHyyO//qRzi6OZ9A==}
+    dependencies:
+      jssha: 3.3.0
+    dev: false
+
   /p-defer/1.0.0:
     resolution: {integrity: sha512-wB3wfAxZpk2AzOfUMJNL+d36xothRSyj8EXOa4f6GMqYDN9BJaaSISbsk+wS9abmnebVw95C2Kb5t85UmpCxuw==}
     engines: {node: '>=4'}
@@ -10837,15 +10842,6 @@ packages:
   /passport-strategy/1.0.0:
     resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
     engines: {node: '>= 0.4.0'}
-    dev: false
-
-  /passport-totp/0.0.2:
-    resolution: {integrity: sha512-WhCnOSvLy4HDEZxwRwFGRpzQzqw+Q/vDZGzralzjTZerZeNI8EFwxmlgiIohhsBCkLZ+u3BR8Bz2v+gXQoDTcw==}
-    engines: {node: '>= 0.4.0'}
-    dependencies:
-      notp: 2.0.3
-      passport-strategy: 1.0.0
-      pkginfo: 0.2.3
     dev: false
 
   /passport/0.6.0:
@@ -11094,11 +11090,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 4.1.0
-
-  /pkginfo/0.2.3:
-    resolution: {integrity: sha512-7W7wTrE/NsY8xv/DTGjwNIyNah81EQH0MWcTzrHL6pOpMocOGZc0Mbdz9aXxSrp+U0mSmkU8jrNCDCfUs3sOBg==}
-    engines: {node: '>= 0.4.0'}
-    dev: false
 
   /pluralize/8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
