@@ -33,6 +33,8 @@ interface DefaultLoggedUser {
   exp: number
   aud: string
   iss: string
+  is2faInitialized: boolean
+
 }
 
 export interface LoggedUser {
