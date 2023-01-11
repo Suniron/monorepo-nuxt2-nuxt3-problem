@@ -1,34 +1,35 @@
-import type { SignOptions } from 'jsonwebtoken'
+import type { JwtTokenType } from '@prisma/client'
+import type { Algorithm, SignOptions } from 'jsonwebtoken'
 import jwt from 'jsonwebtoken'
-import env from '../../config/env'
+import { JWT_ACCESS_AUDIENCE, JWT_ACCESS_ISSUER, JWT_ACCESS_LIFE, JWT_ACCESS_SECRET, JWT_REFRESH_AUDIENCE, JWT_REFRESH_ISSUER, JWT_REFRESH_LIFE, JWT_REFRESH_SECRET } from '../../config/env'
+import prismaClient from '../../prismaClient'
+import { getTokenInfoRequest } from '../../requests/tokens'
 
 import { UNAUTHORIZED } from '../constants'
 
-export const ALGORITHM = 'HS512'
+export const ALGORITHM: Algorithm = 'HS512'
 export const TOKEN_TYPE = Object.freeze({
   access: 'access',
   refresh: 'refresh',
 })
-
-export type JWTTokenType = 'access' | 'refresh'
 
 /**
  * It generates a JWT token with the given configuration.
  *
  * Usable for both access and refresh token
  */
-export const generateJWTToken = (tokenType: JWTTokenType, payload: string | object) => {
-  const secretKey: string = tokenType === 'access' ? env.jwt.access.secret : env.jwt.refresh.secret
+export const generateJWTToken = (tokenType: JwtTokenType, payload: object) => {
+  const secretKey = tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET
   const signOptions: SignOptions = tokenType === 'access'
     ? {
-        audience: env.jwt.access.audience,
-        expiresIn: env.jwt.access.life,
-        issuer: env.jwt.access.issuer,
+        audience: JWT_ACCESS_AUDIENCE,
+        expiresIn: JWT_ACCESS_LIFE,
+        issuer: JWT_REFRESH_ISSUER,
       }
     : {
-        audience: env.jwt.refresh.audience,
-        expiresIn: env.jwt.refresh.life,
-        issuer: env.jwt.refresh.issuer,
+        audience: JWT_REFRESH_AUDIENCE,
+        expiresIn: JWT_REFRESH_LIFE,
+        issuer: JWT_REFRESH_ISSUER,
       }
 
   const generatedToken = jwt.sign(payload, secretKey, signOptions)
@@ -114,7 +115,7 @@ export const generateJwtTokens = (payload: object, fullyConnected = false) => {
  * @param {string} token JWT token to be verified
  * @param {string} type Type of JWT token. Can be either "access" or "refresh"
  */
-export const verifyToken = async (provider: any, token: any, type: any) => {
+export const verifyTokenOld = async (provider: any, token: any, type: any) => {
   const { verifyJWTToken, env, logger, getTokenSessionModel } = provider
   try {
     const tokenConfig
@@ -148,4 +149,36 @@ export const verifyToken = async (provider: any, token: any, type: any) => {
     logger.error(error)
     return { error: UNAUTHORIZED }
   }
+}
+
+/**
+ * // TODO: add unit tests
+ */
+export const verifyToken = (token: string, tokenType: JwtTokenType) => {
+  const payload = jwt.verify(
+    token,
+    tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET,
+    {
+      algorithms: [
+        ALGORITHM,
+        // TODO: remove 'HS256' algorithm
+        'HS256',
+      ],
+      audience: tokenType === 'access' ? JWT_ACCESS_AUDIENCE : JWT_REFRESH_AUDIENCE,
+      issuer: tokenType === 'access' ? JWT_ACCESS_ISSUER : JWT_REFRESH_ISSUER,
+    }) as jwt.JwtPayload
+
+  return payload
+}
+
+export const checkTokenValidity = async (token: string) => {
+  // Check token existence
+  const tokenInfo = await getTokenInfoRequest(prismaClient, token)
+  if (!tokenInfo)
+    return { error: UNAUTHORIZED }
+
+  // Check token validity & extract the payload
+  const tokenPayload = verifyToken(tokenInfo.token, tokenInfo.type)
+
+  return { tokenPayload }
 }
