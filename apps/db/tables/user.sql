@@ -6,7 +6,7 @@ CREATE TABLE "user" (
     username varchar,
     password varchar,
     salt varchar,
-    totp_seed varchar
+    two_factor_secret varchar
     email varchar,
     roles text[],
     reset_token varchar,

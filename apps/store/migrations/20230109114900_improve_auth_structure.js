@@ -11,26 +11,30 @@ exports.up = async (knex) => {
     return Promise.resolve()
 
   // == Clean up ==
-  // Remove lines from "user_session" table where "user_id" is NULL or "type" is not "access" or "refresh":
   await knex.raw('DELETE FROM user_session WHERE user_id IS NULL OR type NOT IN (\'access\', \'refresh\');')
+  await knex.raw('DELETE FROM user_session WHERE token IS NULL;')
 
   // == Enum ==
   await knex.raw('CREATE TYPE "JwtTokenType" AS ENUM (\'access\', \'refresh\');')
 
   // == Tables ==
   // = user_session =
-  // Edit the "type" column to change type to "JwtTokenType"
+  // Edit the "type" column to change type to "JwtTokenType" & NOT NULL
   await knex.raw('ALTER TABLE user_session ALTER COLUMN type TYPE "JwtTokenType" USING type::"JwtTokenType";')
+  await knex.raw('ALTER TABLE user_session ALTER COLUMN type SET NOT NULL;')
   // Add new "fully_connected_at" timestamp column to "user_session" table
   await knex.raw('ALTER TABLE user_session ADD fully_connected_at timestamptz NULL;')
   // Add UNIQUE constraint to token column
   await knex.raw('ALTER TABLE user_session ADD CONSTRAINT user_session_token_unique UNIQUE (token);')
+  await knex.raw('ALTER TABLE token ALTER COLUMN type SET NOT NULL;')
   // Add NOT NULL constraint to "user_id" column
   await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id SET NOT NULL;')
+  // Add NOT NULL constraint to "created_at" column
+  await knex.raw('ALTER TABLE user_session ALTER COLUMN created_at SET NOT NULL;')
 
   // = user =
-  // Add "totp_seed" column to "user" table
-  await knex.raw('ALTER TABLE "user" ADD totp_seed varchar;')
+  // Add "two_factor_secret" column to "user" table
+  await knex.raw('ALTER TABLE "user" ADD two_factor_secret varchar;')
 }
 
 /**
@@ -51,6 +55,6 @@ exports.down = async (knex) => {
   // Remove NOT NULL constraint to "user_id" column
   await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id DROP NOT NULL;')
 
-  // Remove "totp_seed" column to "user" table
-  await knex.raw('ALTER TABLE "user" DROP COLUMN totp_seed;')
+  // Remove "two_factor_secret" column to "user" table
+  await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_secret;')
 }
