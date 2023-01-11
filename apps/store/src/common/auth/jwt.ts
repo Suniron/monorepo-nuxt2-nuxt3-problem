@@ -2,10 +2,11 @@ import type { JwtTokenType } from '@prisma/client'
 import type { Algorithm, SignOptions } from 'jsonwebtoken'
 import jwt from 'jsonwebtoken'
 import { JWT_ACCESS_AUDIENCE, JWT_ACCESS_ISSUER, JWT_ACCESS_LIFE, JWT_ACCESS_SECRET, JWT_REFRESH_AUDIENCE, JWT_REFRESH_ISSUER, JWT_REFRESH_LIFE, JWT_REFRESH_SECRET } from '../../config/env'
+import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
 import { getTokenInfoRequest } from '../../requests/tokens'
 
-import { UNAUTHORIZED } from '../constants'
+import { MODEL_ERROR, UNAUTHORIZED } from '../constants'
 
 export const ALGORITHM: Algorithm = 'HS512'
 export const TOKEN_TYPE = Object.freeze({
@@ -155,22 +156,42 @@ export const verifyTokenOld = async (provider: any, token: any, type: any) => {
  * // TODO: add unit tests
  */
 export const verifyToken = (token: string, tokenType: JwtTokenType) => {
-  const payload = jwt.verify(
-    token,
-    tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET,
-    {
-      algorithms: [
-        ALGORITHM,
-        // TODO: remove 'HS256' algorithm
-        'HS256',
-      ],
-      audience: tokenType === 'access' ? JWT_ACCESS_AUDIENCE : JWT_REFRESH_AUDIENCE,
-      issuer: tokenType === 'access' ? JWT_ACCESS_ISSUER : JWT_REFRESH_ISSUER,
-    }) as jwt.JwtPayload
+  try {
+    const payload = jwt.verify(
+      token,
+      tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET,
+      {
+        algorithms: [
+          ALGORITHM,
+          // TODO: remove 'HS256' algorithm
+          'HS256',
+        ],
+        audience: tokenType === 'access' ? JWT_ACCESS_AUDIENCE : JWT_REFRESH_AUDIENCE,
+        issuer: tokenType === 'access' ? JWT_ACCESS_ISSUER : JWT_REFRESH_ISSUER,
+      }) as jwt.JwtPayload
 
-  return payload
+    return { payload }
+  }
+  catch (error) {
+    log.withError(error).error('verifyToken')
+
+    const message = (error as any)?.message as string
+    if (message) {
+      if (message.includes('jwt expired'))
+        return { error: UNAUTHORIZED, errorMessage: 'token expired' }
+      else if (message.includes('invalid signature'))
+        return { error: UNAUTHORIZED, errorMessage: 'invalid signature' }
+      else if (message.includes('jwt malformed'))
+        return { error: UNAUTHORIZED, errorMessage: 'token malformed' }
+    }
+
+    return { error: MODEL_ERROR, errorMessage: 'unknown error' }
+  }
 }
 
+/**
+ * // TODO: unused ?
+ */
 export const checkTokenValidity = async (token: string) => {
   // Check token existence
   const tokenInfo = await getTokenInfoRequest(prismaClient, token)
@@ -178,7 +199,7 @@ export const checkTokenValidity = async (token: string) => {
     return { error: UNAUTHORIZED }
 
   // Check token validity & extract the payload
-  const tokenPayload = verifyToken(tokenInfo.token, tokenInfo.type)
+  const { payload } = verifyToken(tokenInfo.token, tokenInfo.type)
 
-  return { tokenPayload }
+  return { payload }
 }

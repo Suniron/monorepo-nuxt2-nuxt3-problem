@@ -32,17 +32,17 @@ describe('POST /login/password', () => {
   })
 
   it('when a user attempt to log it with correct username and correct password', async () => {
-    const loggedUser = mockLoggedAsUser()
+    const { user } = mockLoggedAsUser()
 
     const response = await request(app)
       .post('/login/password')
       .send({
         password: 'P@ssw0rd',
-        username: loggedUser.username,
+        username: user.username,
       })
       .expect(201)
 
-    expect(response).toEqual(expect.not.objectContaining(loggedUser))
+    expect(response).toEqual(expect.not.objectContaining(user))
     expect(response.body.is2faInitialized).toBe(false)
   })
 })

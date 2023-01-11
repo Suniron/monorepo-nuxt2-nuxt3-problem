@@ -11,6 +11,7 @@ import prismaClient from '../../../src/prismaClient'
 import type { LoggedUser } from '../../../types/user'
 import { getHashedPassword } from '../../common/auth/sha512'
 import { log } from '../../lib/logger'
+import { getUserByIdRequest } from '../../requests/users'
 
 /**
  *
@@ -356,6 +357,21 @@ export const getUserByEmailOrUsername = async (userLogin: string) => {
   }
   catch (error) {
     log.withError(error).error('getUserByEmailOrUsername: Error getting user by email')
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const is2faInitialized = async (userId: string) => {
+  try {
+    const user = await getUserByIdRequest(prismaClient, userId)
+
+    if (!user)
+      return { error: UNAUTHORIZED }
+
+    return { isInitialized: !!user.two_factor_secret }
+  }
+  catch (error) {
+    log.withError(error).error('is2faInitialized')
     return { error: MODEL_ERROR }
   }
 }

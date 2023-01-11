@@ -1,10 +1,11 @@
 import type { user } from '@prisma/client'
 import { prismaMock } from '../mockPrisma'
 import {
-  getUserByEmailOrUsername,
+  getUserByEmailOrUsername, is2faInitialized,
 } from '../../src/models/users'
 
-import { MODEL_ERROR } from '../../src/common/constants'
+import { MODEL_ERROR, UNAUTHORIZED } from '../../src/common/constants'
+import { fakeUserInDb } from '../utils/mockAuth'
 
 describe('getUserByEmailOrUsername', () => {
   it('Should return model error if prisma throw error', async () => {
@@ -28,6 +29,7 @@ describe('getUserByEmailOrUsername', () => {
       roles: ['admin'],
       salt: 'salt',
       token_expires_at: new Date().toString(),
+      two_factor_secret: null,
       username: 'username',
     }
     prismaMock.user.findFirst.mockResolvedValue(expectedUser)
@@ -44,5 +46,33 @@ describe('getUserByEmailOrUsername', () => {
     const user = await getUserByEmailOrUsername('myGoodEmail')
     expect(user?.error).toBeUndefined()
     expect(user?.user).toBeNull()
+  })
+})
+
+describe('is2faInitialized', () => {
+  it('should return model error on prisma crash', async () => {
+    prismaMock.user.findUnique.mockRejectedValue(
+      new Error('test: error in prisma'),
+    )
+    expect((await is2faInitialized('goodUserId'))?.error).toBe(MODEL_ERROR)
+  })
+
+  it('should return unauthorized if userId not exists', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(null)
+    expect((await is2faInitialized('badUserId'))?.error).toBe(UNAUTHORIZED)
+  })
+
+  it('should return is2faInitialized = true if userId exists and have a 2fa secret', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(
+      { ...fakeUserInDb, two_factor_secret: 'myTwoFactorSecret' },
+    )
+    expect((await is2faInitialized('goodUserId'))?.isInitialized).toBe(true)
+  })
+
+  it('should return is2faInitialized = false if userId exists but not 2fa secret', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(
+      { ...fakeUserInDb, two_factor_secret: null },
+    )
+    expect((await is2faInitialized('goodUserId'))?.isInitialized).toBe(false)
   })
 })

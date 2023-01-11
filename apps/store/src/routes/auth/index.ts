@@ -11,6 +11,7 @@ import {
   verifyAssetPermissionController,
 } from '../../controllers/auth'
 import { lightAuthenticationVerify } from '../../middlewares/authentication'
+import { twoFactorSetupController } from '../../controllers/auth/twoFactor'
 
 const router = Router()
 
@@ -28,18 +29,19 @@ router.post('/refresh-token', refreshAccessTokenController)
 router.post('/reset-password', sendResetMailPassword)
 router.patch('/reset-password', updateResetPasswordByToken)
 
-// Light authentication point (used to jump to 2fa setup / sign-in)
+// Light authentication point (used to jump to 2fa setup / 2fa sign-in)
 router.use(lightAuthenticationVerify)
 router.get('/is-authorized/light', isAuthorizedController)
+router.get('/2fa/setup', twoFactorSetupController)
 
 // Strong authentication point
 
+router.get('/is-authorized', isAuthorizedController)
 // Authentication point
 router.use(jwtVerifyOld) // TODO: old
 router.use('/assets/:id', verifyAssetPermissionController)
 
 // Private routes after authentication
 router.delete('/logout', logoutController)
-router.get('/is-authorized', isAuthorizedController)
 
 export default router

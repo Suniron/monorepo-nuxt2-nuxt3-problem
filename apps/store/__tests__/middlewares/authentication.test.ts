@@ -1,7 +1,6 @@
 import request from 'supertest'
-import { prismaMock } from '../mockPrisma'
-import { generateJWTToken } from '../../src/common/auth/jwt'
 import app from '../utils/fakeApp'
+import { mockLoggedAsUser } from '../utils/mockAuth'
 
 describe('lightAuthenticationVerify', () => {
   it('should return 401 if no token is provided', async () => {
@@ -18,9 +17,7 @@ describe('lightAuthenticationVerify', () => {
     expect(response.status).toBe(401)
   })
 
-  it('should return 401 with bad token', async () => {
-    prismaMock.user_session.findUnique.mockResolvedValue(null)
-
+  it('should return 401 with a malformed token', async () => {
     const response = await request(app)
       .get('/is-authorized/light')
       .set('Authorization', 'Bearer badToken')
@@ -28,22 +25,20 @@ describe('lightAuthenticationVerify', () => {
     expect(response.status).toBe(401)
   })
 
-  it('should return 201 if good token', async () => {
-    const accessToken = generateJWTToken('access', {})
+  it('should return 401 with wrong token', async () => {
+    const response = await request(app)
+      .get('/is-authorized/light')
+      .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjoxLCJlbWFpbCI6ImNyeEFkbWluQGNvcmV4YWx5cy5jb20iLCJmaXJzdF9uYW1lIjoiU3VwZXIiLCJpZCI6IjMxZjBiYmE5LTIwNWItNDk1Ni05MDc5LWQyNjliNTA0YzQxNiIsImxhc3RfbmFtZSI6IkFkbWluIiwicm9sZXMiOlsiYWRtaW4iXSwidXNlcm5hbWUiOiJhZG1pbiIsImZ1bGx5Q29ubmVjdGVkIjpmYWxzZSwiaWF0IjoxNjczNDQ3NDExLCJleHAiOjE2NzM0NDkyMTEsImF1ZCI6Imh0dHBzOi8veHJhdG9yLmNvbSIsImlzcyI6Imh0dHBzOi8vc3RvcmUueHJhdG9yLmNvbSJ9.crVriW4rEd97D0MO0HJDITnarvQGJdWGoaYASfvruY0')
 
-    prismaMock.user_session.findUnique.mockResolvedValue({
-      created_at: new Date(),
-      deleted_at: null,
-      fully_connected_at: null,
-      id: 'goodTokenId',
-      token: accessToken,
-      type: 'access',
-      user_id: 'userId',
-    })
+    expect(response.status).toBe(401)
+  })
+
+  it('should return 201 if good token', async () => {
+    const { token } = mockLoggedAsUser()
 
     const response = await request(app)
       .get('/is-authorized/light')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(201)
   })

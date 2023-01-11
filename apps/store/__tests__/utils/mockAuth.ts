@@ -1,4 +1,5 @@
 import type { user as User, user_session as UserSession } from '@prisma/client'
+import { generateJWTToken } from '../../src/common/auth/jwt'
 import type { DefaultLoggedUser, OptionalUserInfo } from '../../types/user'
 import { prismaMock } from '../mockPrisma'
 
@@ -11,6 +12,7 @@ const fakeLoggedUser: DefaultLoggedUser = {
   firstName: 'DefaultValue',
   iat: 1647445921,
   id: '5dfa3005-5f8f-41f6-befe-bb1603e6dd9c',
+  is2faInitialized: false,
   iss: 'https://store.xrator.com',
   lastName: 'DefaultValue',
   roles: [],
@@ -29,6 +31,7 @@ export const fakeUserInDb: User = {
   roles: [],
   salt: '$6$k0R5arXFGDx80oUT',
   token_expires_at: null,
+  two_factor_secret: null,
   username: 'etienne',
 }
 
@@ -54,20 +57,29 @@ const mockPassportLocalStrategy = (user: User) => {
   ])
 }
 
-export const mockLoggedAsUser = (customUserInfo: OptionalUserInfo = {}): DefaultLoggedUser => {
+/**
+ * Mock the auth strategy, and return the access token
+ */
+const mockAuthStrategy = (user: User) => {
+  mockPassportLocalStrategy(user)
+
+  const accessToken = generateJWTToken('access', {})
+
+  return accessToken
+}
+
+export const mockLoggedAsUser = (customUserInfo: OptionalUserInfo = {}): { user: DefaultLoggedUser; token: string } => {
   const customLoggedUser: DefaultLoggedUser = { ...fakeLoggedUser, ...customUserInfo, roles: ['member'] }
   const generatedUser: User = { ...fakeUserInDb, ...customUserInfo, roles: ['member'] }
 
-  mockPassportLocalStrategy(generatedUser)
-
-  return customLoggedUser
+  const generatedToken = mockAuthStrategy(generatedUser)
+  return { token: generatedToken, user: customLoggedUser }
 }
 
-export const mockLoggedAsAdmin = (customUserInfo: OptionalUserInfo = {}): DefaultLoggedUser => {
+export const mockLoggedAsAdmin = (customUserInfo: OptionalUserInfo = {}): { user: DefaultLoggedUser; token: string } => {
   const customLoggedUser: DefaultLoggedUser = { ...fakeLoggedUser, ...customUserInfo, roles: ['admin'] }
   const generatedUser: User = { ...fakeUserInDb, ...customUserInfo, roles: ['admin'] }
 
-  mockPassportLocalStrategy(generatedUser)
-
-  return customLoggedUser
+  const generatedToken = mockAuthStrategy(generatedUser)
+  return { token: generatedToken, user: customLoggedUser }
 }

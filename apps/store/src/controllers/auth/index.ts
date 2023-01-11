@@ -110,7 +110,7 @@ export const loginWithCredentialsController = async (req: Request, res: Response
       })
 
       // 4) Send response
-      return res.status(201).send({ accessToken, is2faInitialized: false, user })
+      return res.status(201).send({ accessToken, is2faInitialized: !!userFromDb.two_factor_secret, user })
     })(req, res, next)
   }
   catch (error) {

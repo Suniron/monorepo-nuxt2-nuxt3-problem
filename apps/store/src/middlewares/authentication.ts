@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { checkTokenValidity } from '../common/auth/jwt'
+import { verifyToken } from '../common/auth/jwt'
 import { throwHTTPError, throwUnauthorizedError } from '../common/errors'
 
 /**
@@ -25,15 +25,15 @@ export const lightAuthenticationVerify = async (req: Request, res: Response, nex
       })
     }
 
-    // 2) Verify JWT Token validity
-    const { error: checkTokenError, tokenPayload } = await checkTokenValidity(token)
-    if (checkTokenError) {
-      throwHTTPError(checkTokenError)
+    // 2) Verify JWT Token validity and extract the payload
+    const { payload, error, errorMessage } = verifyToken(token, 'access')
+    if (error) {
+      throwHTTPError(error, errorMessage)
       return
     }
 
     // If all is good, set user info in request and go to next middleware / controller
-    req.user = tokenPayload
+    req.user = payload
     next()
   }
   catch (error) {
