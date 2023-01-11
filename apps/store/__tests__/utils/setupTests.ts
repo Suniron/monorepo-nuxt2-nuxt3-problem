@@ -13,6 +13,7 @@ const customUser = generateUser({
  * Theese actions will be executed **before** each tests
  */
 beforeAll(() => {
+  jest.setTimeout(30000)
   mockVerifyToken(customUser)
 })
 

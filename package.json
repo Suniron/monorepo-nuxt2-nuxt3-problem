@@ -43,5 +43,8 @@
   },
   "jest": {
     "preset": "jest-presets/jest/node"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
   }
 }
