@@ -10,7 +10,6 @@ import { knex } from '../../common/db'
 
 import {
   TOKEN_TYPE,
-  checkTokenValidity,
   verifyTokenOld,
 } from '../../common/auth/jwt'
 
@@ -29,7 +28,7 @@ import { UNAUTHORIZED } from '../../common/constants'
 
 const REFRESH_TOKEN_COOKIE_NAME = 'rt'
 
-const createJwtProvider = () => {
+const createJwtProviderOld = () => {
   const dbProvider = {
     knex,
     logger: console,
@@ -43,7 +42,7 @@ const createJwtProvider = () => {
   }
 }
 
-export const jwtVerify = async (req: any, _res: any, next: any) => {
+export const jwtVerifyOld = async (req: any, _res: any, next: any) => {
   try {
     const authHeader = req.headers.authorization
     if (!authHeader)
@@ -56,7 +55,7 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
       })
     }
 
-    const provider = createJwtProvider()
+    const provider = createJwtProviderOld()
     const { user, error } = await verifyTokenOld(
       provider,
       token,
@@ -69,46 +68,6 @@ export const jwtVerify = async (req: any, _res: any, next: any) => {
     next()
   }
   catch (error) {
-    next(error)
-  }
-}
-
-/**
- * This controller will check the light Authentication.
- *
- * It means that the user is not fully connected. He needs to authenticate with a 2FA way.
- *
- * This check is a pre-requisite to make the strong Authentication.
- */
-export const lightAuthenticationVerify = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // 1) Verify JWT Token presence and format
-    const authHeader = req.headers.authorization
-    if (!authHeader) {
-      throwUnauthorizedError({ message: 'Authorization header not found' })
-      return
-    }
-
-    const token = authHeader.split(' ')[1]
-    if (!token) {
-      throwUnauthorizedError({
-        message: 'Cannot parse token from Authorization header',
-      })
-    }
-
-    // 2) Verify JWT Token validity
-    const { error: checkTokenError, tokenPayload } = await checkTokenValidity(token)
-    if (checkTokenError) {
-      throwHTTPError(checkTokenError)
-      return
-    }
-
-    // If all is good, set user info in request and go to next middleware / controller
-    req.user = tokenPayload
-    next()
-  }
-  catch (error) {
-    req.log.withError(error).error('lightAuthenticationVerify')
     next(error)
   }
 }
@@ -177,7 +136,7 @@ export const refreshAccessTokenController = async (
     }
 
     // Check token validity:
-    const provider = createJwtProvider()
+    const provider = createJwtProviderOld()
     const { user, error: jwtError } = await verifyTokenOld(
       provider,
       refreshToken,
