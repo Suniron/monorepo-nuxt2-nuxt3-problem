@@ -73,6 +73,10 @@
       "username": "postgres",
       "password": "P@ssw0rd"
     }
+  ],
+  "cSpell.words": [
+    "TOTP",
+    "XRATOR"
   ]
 
 }
