@@ -207,7 +207,7 @@ export const isSuperAsset = (assetType) => {
 }
 
 export const validateSubnet = (mask) => {
-  if (mask % 8 !== 0 || mask > 32)
+  if (mask < 1 || mask > 32)
     return { isValid: false, response: 'Netmask is not valid' }
   else
     return { isValid: true, response: mask }
@@ -228,7 +228,7 @@ export const netmaskValid = (netmask) => {
     return validateSubnet(netmask)
   }
   else { // other
-    return validateSubnet('false')
+    return validateSubnet(-1)
   }
 }
 
