@@ -1,10 +1,10 @@
-import type { user as User } from '@prisma/client'
-import type { JWTTokenType } from '../../common/auth/jwt'
+import type { JwtTokenType, user as User } from '@prisma/client'
 import { MODEL_ERROR, VALIDATION_ERROR } from '../../common/constants'
 import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
 
-export const saveTokens = async (userId: User['id'], tokensToSave: { token: string; tokenType: JWTTokenType }[]) => {
+// TODO: remove if not used
+export const saveTokens = async (userId: User['id'], tokensToSave: { token: string; tokenType: JwtTokenType }[]) => {
   try {
     // Check size of given token list
     if (tokensToSave.length < 1 || tokensToSave.length > 2) {
