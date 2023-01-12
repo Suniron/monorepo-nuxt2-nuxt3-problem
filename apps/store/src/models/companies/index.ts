@@ -14,6 +14,7 @@ import {
   convertBufferToBase64Image,
   isValidBase64Image,
 } from '../../utils/image.utils'
+import type { LoggedUser } from '../../../types/user'
 
 export const searchCompanyModel = async (params: any) => {
   try {
@@ -63,12 +64,8 @@ export const createCompanyModel = async (params: any) => {
   }
 }
 
-/**
- *
- * @param {*} loggedUserInfo
- * @returns {Promise<{logo?: string|null, error?: string}>}
- */
-export const searchCompanyLogoModel = async (loggedUserInfo = {}) => {
+export const searchCompanyLogoModel = async (loggedUserInfo: LoggedUser) => {
+  console.log('searchCompanyLogoModel', loggedUserInfo)
   if (!loggedUserInfo.companyId || typeof loggedUserInfo.companyId !== 'number')
     return { error: MODEL_ERROR }
 

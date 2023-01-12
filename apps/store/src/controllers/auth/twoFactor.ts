@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from 'express'
-import type { LoggedUser } from '../../../types/user'
 import { throwHTTPError, throwValidationError } from '../../common/errors'
 import { initTotpAuthenticationModel, loginWithTotpModel } from '../../models/auth/twoFactor'
 import { is2faInitialized } from '../../models/users'
@@ -7,7 +6,7 @@ import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, REFRESH_TOKEN_C
 
 export const twoFactorSetupController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = req.user as LoggedUser
+    const user = req.user as Express.User
 
     const { error, isInitialized } = await is2faInitialized(user.id)
     if (error)
@@ -31,7 +30,7 @@ export const twoFactorSetupController = async (req: Request, res: Response, next
 
 export const loginWithTotpController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = req.user as LoggedUser
+    const user = req.user as Express.User
     const { totp } = req.body as { totp: number }
 
     // Get fully connected tokens

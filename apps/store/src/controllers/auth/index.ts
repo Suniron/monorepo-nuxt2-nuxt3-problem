@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
-import type { user } from '@prisma/client'
+import type { user as User } from '@prisma/client'
 import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, REFRESH_TOKEN_COOKIE_NAME, isProduction } from '../../config/env'
 import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
@@ -48,7 +48,7 @@ const createJwtProviderOld = () => {
 export const loginWithCredentialsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1) Check auth
-    return passport.authenticate('local', async (error, userFromDb: false | user) => {
+    return passport.authenticate('local', async (error, userFromDb: false | User & { company: { name: string } }) => {
       // Error handler
       if (error as HTTPStatus) {
         switch (error) {

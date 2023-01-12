@@ -1,11 +1,11 @@
 import type { JwtTokenType } from '@prisma/client'
 import type { Algorithm, SignOptions } from 'jsonwebtoken'
-import jwt from 'jsonwebtoken'
+import jwt, { verify } from 'jsonwebtoken'
 import { JWT_ACCESS_AUDIENCE, JWT_ACCESS_ISSUER, JWT_ACCESS_LIFE, JWT_ACCESS_SECRET, JWT_REFRESH_AUDIENCE, JWT_REFRESH_ISSUER, JWT_REFRESH_LIFE, JWT_REFRESH_SECRET } from '../../config/env'
 import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
 import { getTokenInfoRequest } from '../../requests/tokens'
-
+import type { SanitizedUser } from '../../utils/user.utils'
 import { MODEL_ERROR, UNAUTHORIZED } from '../constants'
 
 const HASH_ALGORITHM: Algorithm = 'HS512'
@@ -14,12 +14,24 @@ export const TOKEN_TYPE = Object.freeze({
   refresh: 'refresh',
 })
 
+export interface JwtTokenPayloadInput extends SanitizedUser {
+  companyName: string
+  fullyConnected: boolean
+}
+
+export interface JwtTokenPayload extends JwtTokenPayloadInput {
+  iat: number
+  exp: number
+  iss: string
+  aud: string
+}
+
 /**
  * It generates a JWT token with the given configuration.
  *
  * Usable for both access and refresh token
  */
-export const generateJWTToken = (tokenType: JwtTokenType, payload: object) => {
+export const generateJWTToken = (tokenType: JwtTokenType, payload: JwtTokenPayloadInput) => {
   const secretKey = tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET
   const signOptions: SignOptions = tokenType === 'access'
     ? {
@@ -42,9 +54,9 @@ export const generateJWTToken = (tokenType: JwtTokenType, payload: object) => {
  *
  * By default, it generates a non fully connected token.
  */
-export const generateJwtTokens = (payload: object, fullyConnected = false) => {
-  const accessToken = generateJWTToken('access', { ...payload, fullyConnected })
-  const refreshToken = generateJWTToken('refresh', { ...payload, fullyConnected })
+export const generateJwtTokens = (userInfo: SanitizedUser & { companyName: string }, fullyConnected = false) => {
+  const accessToken = generateJWTToken('access', { ...userInfo, fullyConnected })
+  const refreshToken = generateJWTToken('refresh', { ...userInfo, fullyConnected })
   return { accessToken, refreshToken }
 }
 
@@ -157,7 +169,7 @@ export const verifyTokenOld = async (provider: any, token: any, type: any) => {
  */
 export const verifyToken = (token: string, tokenType: JwtTokenType) => {
   try {
-    const payload = jwt.verify(
+    const payload = verify(
       token,
       tokenType === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET,
       {
@@ -168,7 +180,7 @@ export const verifyToken = (token: string, tokenType: JwtTokenType) => {
         ],
         audience: tokenType === 'access' ? JWT_ACCESS_AUDIENCE : JWT_REFRESH_AUDIENCE,
         issuer: tokenType === 'access' ? JWT_ACCESS_ISSUER : JWT_REFRESH_ISSUER,
-      }) as jwt.JwtPayload
+      }) as JwtTokenPayload
 
     return { payload }
   }

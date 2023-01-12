@@ -48,6 +48,7 @@ export default async function loadPassport(app: Application) {
         // TODO: add analytics here ?
         // All good
         log.info(`Passport local strategy: user ${user.id} logged in`)
+        // TODO: fix this type:
         return done(null, user)
       }
       catch (error) {
