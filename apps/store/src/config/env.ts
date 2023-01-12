@@ -45,6 +45,7 @@ export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET as string
 export const JWT_ACCESS_TYPE = process.env.JWT_ACCESS_TYPE as string
 
 // Refresh Token
+export const REFRESH_TOKEN_COOKIE_NAME = 'rt'
 export const JWT_REFRESH_AUDIENCE = process.env.JWT_REFRESH_AUD as string
 export const JWT_REFRESH_DOMAIN = process.env.JWT_REFRESH_DOMAIN as string
 export const JWT_REFRESH_ISSUER = process.env.JWT_REFRESH_ISS as string

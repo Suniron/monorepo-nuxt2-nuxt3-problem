@@ -12,27 +12,13 @@ export const revokeAllUserTokensRequest = (client: PrismaClient | Prisma.Transac
   },
 })
 
-export const storeTokenRequest = (client: PrismaClient | Prisma.TransactionClient, userId: string, token: string, tokenType: JwtTokenType) => client.user_session.create({
+export const saveJwtTokenRequest = (client: PrismaClient | Prisma.TransactionClient, userId: string, token: string, tokenType: JwtTokenType, isFullyConnected = false) => client.user_session.create({
   data: {
+    fully_connected: isFullyConnected,
     token,
     type: tokenType,
     user_id: userId,
   },
 })
 
-/**
- * It change the `fully_connected_at` field to the current date.
- *
- * Optionally, you can pass a custom upgrade date.
- */
-export const upgradeTokenToFullyConnectedRequest = (client: PrismaClient | Prisma.TransactionClient, token: string, upgradeDate = new Date()) => client.user_session.update({
-  data: {
-    fully_connected_at: upgradeDate,
-  },
-  where: {
-    token,
-  },
-})
-
 export const getTokenInfoRequest = (client: PrismaClient | Prisma.TransactionClient, token: string) => client.user_session.findUnique({ where: { token } })
-

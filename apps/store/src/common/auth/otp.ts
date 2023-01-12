@@ -1,13 +1,17 @@
-import crypto from 'crypto'
 import * as OTPAuth from 'otpauth'
 import { log } from '../../lib/logger'
+import { generateBase32String } from '../../utils/random'
 
-export const generateTotpToken = (secret: string) => {
+const totp = new OTPAuth.TOTP({
+  label: 'xrator',
+
+})
+/**
+ * Generate a new TOTP token based with given base32 secret.
+ */
+export const generateTotpToken = (base32secret: string) => {
   try {
-    const totp = new OTPAuth.TOTP({
-      label: 'xrator',
-      secret,
-    })
+    totp.secret = OTPAuth.Secret.fromBase32(base32secret)
     return totp.generate()
   }
   catch (error) {
@@ -16,13 +20,10 @@ export const generateTotpToken = (secret: string) => {
   }
 }
 
-export const generateOtpSecret = () => {
+export const generateBase32Secret = (length: number) => {
   try {
-    // Generate a 16-byte buffer of random bytes
-    const buffer = crypto.randomBytes(16)
-
-    // Convert the buffer to a hexadecimal string
-    return buffer.toString('hex')
+    const randomKey = generateBase32String(length)
+    return randomKey
   }
   catch (error) {
     log.withError(error).error('generateOtpSecret')

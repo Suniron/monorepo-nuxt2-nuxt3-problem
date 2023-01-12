@@ -1,8 +1,9 @@
 import type { NextFunction, Request, Response } from 'express'
 import type { LoggedUser } from '../../../types/user'
 import { throwHTTPError, throwValidationError } from '../../common/errors'
-import { initTotpAuthenticationModel } from '../../models/auth/twoFactor'
+import { initTotpAuthenticationModel, loginWithTotpModel } from '../../models/auth/twoFactor'
 import { is2faInitialized } from '../../models/users'
+import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, REFRESH_TOKEN_COOKIE_NAME, isProduction } from '../../config/env'
 
 export const twoFactorSetupController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,17 +14,41 @@ export const twoFactorSetupController = async (req: Request, res: Response, next
       return throwHTTPError(error)
 
     // If the user has already initialized 2FA, we return a 400 error
-    if (isInitialized) {
-      throwValidationError({ message: '2FA already initialized' })
-      return
-    }
+    if (isInitialized)
+      return throwValidationError({ message: '2FA already initialized' })
 
     // Generate a new totp seed for the user
-    const { error: totpTokenError, token } = await initTotpAuthenticationModel(user.id)
+    const { error: totpTokenError, seed } = await initTotpAuthenticationModel(user.id)
     if (totpTokenError)
       return throwHTTPError(totpTokenError)
 
-    res.status(200).send({ token })
+    res.status(200).send({ seed })
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const loginWithTotpController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user as LoggedUser
+    const { totp } = req.body as { totp: number }
+
+    // Get fully connected tokens
+    const { accessToken, refreshToken, error, message } = await loginWithTotpModel(user.id, totp)
+    if (error)
+      return throwHTTPError(error, message)
+
+    // Set the refresh token in the cookies
+    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
+      domain: JWT_REFRESH_DOMAIN,
+      httpOnly: true,
+      maxAge: JWT_REFRESH_LIFE_MS,
+      secure: isProduction && HTTPS_ENABLED,
+    })
+
+    // Return the access token
+    res.status(200).send({ accessToken })
   }
   catch (error) {
     next(error)

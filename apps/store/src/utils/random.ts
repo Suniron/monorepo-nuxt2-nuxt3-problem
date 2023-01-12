@@ -21,3 +21,14 @@ export const generateString = (length: number) => {
 
   return buf.join('')
 }
+
+export const generateBase32String = (length: number) => {
+  const buf = []
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+  const charlen = chars.length
+
+  for (let i = 0; i < length; ++i)
+    buf.push(chars[generateRandomInt(0, charlen - 1)])
+
+  return buf.join('')
+}

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import type { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
 import type { user } from '@prisma/client'
-import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, isProduction } from '../../config/env'
+import { HTTPS_ENABLED, JWT_REFRESH_DOMAIN, JWT_REFRESH_LIFE_MS, REFRESH_TOKEN_COOKIE_NAME, isProduction } from '../../config/env'
 import { throwHTTPError, throwUnauthorizedError } from '../../common/errors'
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
 import { genSaltSync, getHashedPassword } from '../../common/auth/sha512'
@@ -26,8 +26,6 @@ import {
 import type { HTTPStatus } from '../../common/constants'
 import { UNAUTHORIZED } from '../../common/constants'
 
-const REFRESH_TOKEN_COOKIE_NAME = 'rt'
-
 const createJwtProviderOld = () => {
   const dbProvider = {
     knex,
@@ -39,36 +37,6 @@ const createJwtProviderOld = () => {
       getTokenSessionModel(dbProvider, token, type),
     logger: console,
     verifyJWTToken: jwt.verify,
-  }
-}
-
-export const jwtVerifyOld = async (req: any, _res: any, next: any) => {
-  try {
-    const authHeader = req.headers.authorization
-    if (!authHeader)
-      throwUnauthorizedError({ message: 'Authorization header not found' })
-
-    const token = authHeader.split(' ')[1]
-    if (!token) {
-      throwUnauthorizedError({
-        message: 'Cannot parse token from Authorization header',
-      })
-    }
-
-    const provider = createJwtProviderOld()
-    const { user, error } = await verifyTokenOld(
-      provider,
-      token,
-      TOKEN_TYPE.access,
-    )
-    if (error)
-      throwUnauthorizedError()
-
-    req.user = user
-    next()
-  }
-  catch (error) {
-    next(error)
   }
 }
 

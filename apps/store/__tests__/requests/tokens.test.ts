@@ -1,6 +1,6 @@
 import type { user_session as UserSession } from '@prisma/client'
 import { prismaMock } from '../mockPrisma'
-import { getTokenInfoRequest, revokeAllUserTokensRequest, storeTokenRequest, upgradeTokenToFullyConnectedRequest } from '../../src/requests/tokens'
+import { getTokenInfoRequest, revokeAllUserTokensRequest, saveJwtTokenRequest } from '../../src/requests/tokens'
 
 describe('revokeAllUserTokensRequest', () => {
   it('should have a count of 1 updated token', async () => {
@@ -13,55 +13,76 @@ describe('revokeAllUserTokensRequest', () => {
 })
 
 describe('storeTokenRequest', () => {
-  it('should return the stored access token', async () => {
+  it('should return the stored access token (not fully connected)', async () => {
     prismaMock.user_session.create.mockResolvedValue({
       created_at: new Date(),
       deleted_at: null,
-      fully_connected_at: null,
+      fully_connected: false,
       id: 'goodId',
       token: 'goodToken',
       type: 'access',
       user_id: 'goodUserId',
     })
 
-    const storedToken = await storeTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'access')
+    const storedToken = await saveJwtTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'access')
 
     expect(storedToken.token).toBe('goodToken')
     expect(storedToken.type).toBe('access')
+    expect(storedToken.fully_connected).toBe(false)
   })
 
-  it('should return the stored refresh token', async () => {
+  it('should return the stored refresh token (not fully connected)', async () => {
     prismaMock.user_session.create.mockResolvedValue({
       created_at: new Date(),
       deleted_at: null,
-      fully_connected_at: null,
+      fully_connected: false,
       id: 'goodId',
       token: 'goodToken',
       type: 'refresh',
       user_id: 'goodUserId',
     })
 
-    const storedToken = await storeTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'refresh')
+    const storedToken = await saveJwtTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'refresh')
 
     expect(storedToken.token).toBe('goodToken')
     expect(storedToken.type).toBe('refresh')
+    expect(storedToken.fully_connected).toBe(false)
   })
-})
 
-describe('upgradeTokenToFullyConnected', () => {
-  it('should return the upgraded access token with a fully_connected_at non-null date', async () => {
-    const fully_connected_at = new Date()
-    prismaMock.user_session.update.mockResolvedValue({
+  it('should return the stored access token (fully connected)', async () => {
+    prismaMock.user_session.create.mockResolvedValue({
       created_at: new Date(),
       deleted_at: null,
-      fully_connected_at,
+      fully_connected: true,
       id: 'goodId',
       token: 'goodToken',
       type: 'access',
       user_id: 'goodUserId',
     })
 
-    expect((await upgradeTokenToFullyConnectedRequest(prismaMock, 'goodToken'))?.fully_connected_at).toBe(fully_connected_at)
+    const storedToken = await saveJwtTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'access')
+
+    expect(storedToken.token).toBe('goodToken')
+    expect(storedToken.type).toBe('access')
+    expect(storedToken.fully_connected).toBe(true)
+  })
+
+  it('should return the stored refresh token (fully connected)', async () => {
+    prismaMock.user_session.create.mockResolvedValue({
+      created_at: new Date(),
+      deleted_at: null,
+      fully_connected: true,
+      id: 'goodId',
+      token: 'goodToken',
+      type: 'refresh',
+      user_id: 'goodUserId',
+    })
+
+    const storedToken = await saveJwtTokenRequest(prismaMock, 'goodUserId', 'goodToken', 'refresh')
+
+    expect(storedToken.token).toBe('goodToken')
+    expect(storedToken.type).toBe('refresh')
+    expect(storedToken.fully_connected).toBe(true)
   })
 })
 
@@ -70,7 +91,7 @@ describe('getTokenInfoRequest', () => {
     const tokenInfo: UserSession = {
       created_at: new Date(),
       deleted_at: null,
-      fully_connected_at: null,
+      fully_connected: false,
       id: 'goodId',
       token: 'goodToken',
       type: 'access',

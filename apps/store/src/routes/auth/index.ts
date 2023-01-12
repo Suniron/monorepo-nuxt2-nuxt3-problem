@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   isAuthorizedController,
-  jwtVerifyOld,
   loginWithCredentialsController,
   logoutController,
   refreshAccessTokenController,
@@ -11,7 +10,7 @@ import {
   verifyAssetPermissionController,
 } from '../../controllers/auth'
 import { lightAuthenticationVerify } from '../../middlewares/authentication'
-import { twoFactorSetupController } from '../../controllers/auth/twoFactor'
+import { loginWithTotpController, twoFactorSetupController } from '../../controllers/auth/twoFactor'
 
 const router = Router()
 
@@ -20,6 +19,12 @@ const loginWithCredentialsValidation = celebrate({
   [Segments.BODY]: Joi.object({
     password: Joi.string().required(),
     username: Joi.string().required(),
+  }),
+})
+
+const loginWithTotpValidation = celebrate({
+  [Segments.BODY]: Joi.object({
+    totp: Joi.number().integer().required(),
   }),
 })
 
@@ -32,13 +37,14 @@ router.patch('/reset-password', updateResetPasswordByToken)
 // Light authentication point (used to jump to 2fa setup / 2fa sign-in)
 router.use(lightAuthenticationVerify)
 router.get('/is-authorized/light', isAuthorizedController)
+
 router.get('/2fa/setup', twoFactorSetupController)
+router.post('/login/totp', loginWithTotpValidation, loginWithTotpController)
 
 // Strong authentication point
 
 router.get('/is-authorized', isAuthorizedController)
 // Authentication point
-router.use(jwtVerifyOld) // TODO: old
 router.use('/assets/:id', verifyAssetPermissionController)
 
 // Private routes after authentication

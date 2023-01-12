@@ -15,7 +15,7 @@ import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
 import { generateJwtTokens } from '../../common/auth/jwt'
 import { sanitizeUser } from '../../utils/user.utils'
-import { revokeAllUserTokensRequest, storeTokenRequest } from '../../requests/tokens'
+import { revokeAllUserTokensRequest, saveJwtTokenRequest } from '../../requests/tokens'
 
 export const getTokenSessionModel = async (
   provider: any,
@@ -330,13 +330,13 @@ export const initTokensModel = async (user: User) => {
     const sanitizedUser = sanitizeUser(user)
     const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser)
 
-    // 2) Revoke all existing tokens:
+    // 2) Revoke all existing tokens
     await revokeAllUserTokensRequest(prismaClient, user.id)
 
     // 3) Save tokens in DB
     const [accessSession, refreshSession] = await prismaClient.$transaction([
-      storeTokenRequest(prismaClient, user.id, accessToken, 'access'),
-      storeTokenRequest(prismaClient, user.id, refreshToken, 'refresh'),
+      saveJwtTokenRequest(prismaClient, user.id, accessToken, 'access'),
+      saveJwtTokenRequest(prismaClient, user.id, refreshToken, 'refresh'),
     ])
 
     if (!accessSession.token || !refreshSession.token)

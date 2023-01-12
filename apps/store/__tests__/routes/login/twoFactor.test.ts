@@ -4,7 +4,7 @@ import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 import { fakeUserInDb, mockLoggedAsUser } from '../../utils/mockAuth'
 
-describe('POST /2fa/setup', () => {
+describe('GET /2fa/setup', () => {
   it('should return a 401 if fetched without auth', async () => {
     const response = await request(app).get('/2fa/setup')
 
@@ -40,7 +40,7 @@ describe('POST /2fa/setup', () => {
       .get('/2fa/setup')
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty('token')
+    expect(response.body).toHaveProperty('seed')
   })
 
   it('should return a 200 with a token in body if 2fa not fully initialized (not confirmed by user)', async () => {
@@ -58,6 +58,35 @@ describe('POST /2fa/setup', () => {
       .get('/2fa/setup')
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty('token')
+    expect(response.body).toHaveProperty('seed')
+  })
+})
+
+describe('POST /login/totp', () => {
+  it('should return a 401 if fetched without auth', async () => {
+    const response = await request(app).post('/login/totp')
+
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the user 2fa is not yet initialized', async () => {
+    // TODO
+    const response = await request(app).post('/login/totp')
+
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the given token is wrong', async () => {
+    // TODO
+    const response = await request(app).post('/login/totp')
+
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 200 if the given token is valid', async () => {
+    // TODO
+    const response = await request(app).post('/login/totp')
+
+    expect(response.status).toBe(401)
   })
 })
