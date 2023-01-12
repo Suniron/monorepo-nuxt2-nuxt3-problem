@@ -324,19 +324,19 @@ export const updateResetPasswordUsingToken = async (
  * - Save them in DB
  * - return a sanitized version of it (whithout password, salt, ...), and JWT Tokens
  */
-export const initTokensModel = async (user: User) => {
+export const initTokensModel = async (userWithCompanyName: User & { company: { name: string } }) => {
   try {
     // 1) Generate JWT tokens
-    const sanitizedUser = sanitizeUser(user)
-    const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser)
+    const sanitizedUser = sanitizeUser(userWithCompanyName)
+    const { accessToken, refreshToken } = generateJwtTokens({ ...sanitizedUser, companyName: userWithCompanyName.company.name })
 
     // 2) Revoke all existing tokens
-    await revokeAllUserTokensRequest(prismaClient, user.id)
+    await revokeAllUserTokensRequest(prismaClient, userWithCompanyName.id)
 
     // 3) Save tokens in DB
     const [accessSession, refreshSession] = await prismaClient.$transaction([
-      saveJwtTokenRequest(prismaClient, user.id, accessToken, 'access'),
-      saveJwtTokenRequest(prismaClient, user.id, refreshToken, 'refresh'),
+      saveJwtTokenRequest(prismaClient, userWithCompanyName.id, accessToken, 'access'),
+      saveJwtTokenRequest(prismaClient, userWithCompanyName.id, refreshToken, 'refresh'),
     ])
 
     if (!accessSession.token || !refreshSession.token)

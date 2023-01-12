@@ -9,7 +9,7 @@ import {
   updateResetPasswordByToken,
   verifyAssetPermissionController,
 } from '../../controllers/auth'
-import { lightAuthenticationVerify } from '../../middlewares/authentication'
+import { lightAuthenticationVerify, strongAuthenticationVerify } from '../../middlewares/authentication'
 import { loginWithTotpController, twoFactorSetupController } from '../../controllers/auth/twoFactor'
 
 const router = Router()
@@ -42,7 +42,7 @@ router.get('/2fa/setup', twoFactorSetupController)
 router.post('/login/totp', loginWithTotpValidation, loginWithTotpController)
 
 // Strong authentication point
-
+router.use(strongAuthenticationVerify)
 router.get('/is-authorized', isAuthorizedController)
 // Authentication point
 router.use('/assets/:id', verifyAssetPermissionController)

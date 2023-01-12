@@ -4,7 +4,7 @@ import { UNAUTHORIZED } from '../../common/constants'
 import prismaClient from '../../prismaClient'
 import { revokeAllUserTokensRequest, saveJwtTokenRequest } from '../../requests/tokens'
 import { confirmTwoFactorRequest, saveTwoFactorSecretRequest } from '../../requests/twoFactor'
-import { getUserByIdRequest } from '../../requests/users'
+import { getUserAndCompanyNameByIdRequest, getUserByIdRequest } from '../../requests/users'
 import { sanitizeUser } from '../../utils/user.utils'
 
 /**
@@ -39,7 +39,7 @@ export const initTotpAuthenticationModel = async (userId: string) => {
 
 export const loginWithTotpModel = async (userId: string, totp: number) => {
   // 1) check if a secret already exists
-  const user = await getUserByIdRequest(prismaClient, userId)
+  const user = await getUserAndCompanyNameByIdRequest(prismaClient, userId)
   if (!user)
     return { error: UNAUTHORIZED }
   if (!user.two_factor_secret && user.is_two_factor_required)
@@ -63,7 +63,7 @@ export const loginWithTotpModel = async (userId: string, totp: number) => {
 
   // 4) generate fully connected access & refresh token
   const sanitizedUser = sanitizeUser(user)
-  const { accessToken, refreshToken } = generateJwtTokens(sanitizedUser, true)
+  const { accessToken, refreshToken } = generateJwtTokens({ ...sanitizedUser, companyName: user.company?.name as string }, true)
 
   // 5) Revoke all existing tokens:
   await revokeAllUserTokensRequest(prismaClient, user.id)

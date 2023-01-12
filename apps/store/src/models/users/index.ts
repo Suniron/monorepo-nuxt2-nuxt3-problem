@@ -348,6 +348,9 @@ export const deleteUserModel = async (
 export const getUserByEmailOrUsername = async (userLogin: string) => {
   try {
     const user = await prismaClient.user.findFirst({
+      include: {
+        company: { select: { name: true } },
+      },
       where: {
         OR: [{ username: userLogin }, { email: userLogin }],
       },
