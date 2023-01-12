@@ -2,13 +2,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import Knex from 'knex'
-import { UNAUTHORIZED } from '../src/common/constants'
+// import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
-import * as jwt from '../src/common/auth/jwt'
+// import * as jwt from '../src/common/auth/jwt'
 import type { OptionalUserInfo } from '../@types/user'
 import { getAdminUser, getNonAdminUser } from './utils'
 
-jest.mock('../src/common/auth/jwt')
+// jest.mock('../src/common/auth/jwt') // ===> fout la merde
 jest.mock('knex')
 jest.mock('../src/common/db')
 
@@ -191,13 +191,13 @@ export function mockKnexWithFinalValues(
 }
 
 export function mockVerifyToken(user) {
-  jwt.verifyToken = jest.fn(() => {
-    if (user)
-      return { user }
+  // jwt.verifyToken = jest.fn(() => {
+  //   if (user)
+  //     return { user }
 
-    return { error: UNAUTHORIZED }
-  })
-  return jwt.verifyToken
+  //   return { error: UNAUTHORIZED }
+  // })
+  /* jwt.verifyToken */
 }
 
 export const mockAdminUser = (userInfos: OptionalUserInfo) =>
