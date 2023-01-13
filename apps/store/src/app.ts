@@ -20,13 +20,14 @@ async function startServer() {
   const app = await initServer()
 
   if (env.nodeEnv.isProduction && !env.httpsEnabled) {
-    console.warn(
-      '[WARN] Building for production without certificate. Please provide both `server_key.pem` and `server_cert.pem` files.',
+    log.warn(
+      'Building for production without certificate. Please provide both `server_key.pem` and `server_cert.pem` files.',
     )
   }
+
   if (env.nodeEnv.isProduction && env.httpsEnabled) {
     const readConfigFile = (filename: any) =>
-      fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
+      fs.readFileSync(path.resolve(__dirname, '../../../secrets/', filename))
     const httpsOpts = {
       ca: [readConfigFile('api_cert.pem')],
       cert: readConfigFile('server_cert.pem'),
