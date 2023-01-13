@@ -135,6 +135,9 @@ export default {
         ip,
       )
     },
+    isAMainIp() {
+      return this.asset.ips.filter(elt => elt.isMain === true && elt.address === this.itemSelected.address).length > 0
+    },
     macValidation(mac) {
       return (
         /^[0-9a-fA-F]{1,2}([.:-])(?:[0-9a-fA-F]{1,2}\1){4}[0-9a-fA-F]{1,2}$/.test(
@@ -149,6 +152,7 @@ export default {
       this.itemSelected = {
         address: '',
         iface: '',
+        isMain: false,
         mac: '',
         mask: '',
       }
@@ -304,10 +308,24 @@ export default {
                           label="Interface"
                         />
                       </v-col>
-                      <v-col cols="12" sm="6" md="3">
+                      <v-col cols="12" sm="4" md="3">
                         <v-text-field
                           v-model="itemSelected.mask"
                           label="Netmask"
+                        />
+                      </v-col>
+                      <v-col v-if="!isCreating" cols="12" sm="4" md="3">
+                        <v-checkbox
+                          v-if="!isAMainIp() "
+                          v-model="itemSelected.isMain"
+                          label="Is main address"
+                          value="true"
+                        />
+                        <v-checkbox
+                          v-else
+                          input-value="true"
+                          label="Is main address"
+                          disabled
                         />
                       </v-col>
                     </v-row>

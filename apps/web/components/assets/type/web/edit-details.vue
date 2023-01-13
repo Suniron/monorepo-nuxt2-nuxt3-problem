@@ -38,7 +38,6 @@ export default {
       serviceParams.types = ['USER', 'SERVER', 'GROUP']
       // serviceParams.attribute = 'name'
       const { assets } = await searchAssetsService(this.$axios, serviceParams)
-      console.log(assets)
       this.assets = assets
     },
     fetchRelations(rel, multiple) {
