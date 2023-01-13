@@ -76,7 +76,7 @@ if (!isTest && ELASTICSEARCH_URL) {
 // We only need to create the logging library instance once
 const p = pino(
   {
-    enabled: true, // !isTest,
+    enabled: !isTest,
     level: 'trace', // this MUST be set at the lowest level of the destinations,
     redact: isProduction
       ? [

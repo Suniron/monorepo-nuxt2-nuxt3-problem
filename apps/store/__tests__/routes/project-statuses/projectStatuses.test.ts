@@ -1,25 +1,19 @@
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { generateUser } from '../../utils'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
+import type { ProjectStatus, ProjectStatusWorkflow } from '../../../types/projectStatus'
 
-/**
- * @type {import('@/types/projectStatus').ProjectStatus[]}
- */
-let projectStatuses: any = []
-/**
- * @type {import('@/types/projectStatus').ProjectStatusWorkflow[]}
- */
-let projectStatusWorkflows: any = []
+let projectStatuses: ProjectStatus[] = []
+let projectStatusWorkflows: ProjectStatusWorkflow[] = []
 
-const customUser = generateUser({
-  firstName: 'xrator-test',
-  lastName: 'xrator-test',
-})
+let token = ''
 
 beforeAll(async () => {
-  // Get datas:
+  token = mockLoggedAsFullyConnectedUser().token
+
+  // Get data:
   projectStatuses = await csv({
     ignoreEmpty: true,
   }).fromFile('./seeds/csv_seed_files/init_data/project_status.csv')
@@ -48,11 +42,10 @@ describe('/projects/available-transitions', () => {
       })
 
       mockKnexWithFinalValue(availableTransitions)
-      mockVerifyToken(customUser)
 
       const response = await request(app)
         .get('/projects/available-transitions')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toEqual(availableTransitions)
     })
@@ -85,11 +78,10 @@ describe('/projects/available-transitions/:statusId', () => {
         })
 
       mockKnexWithFinalValue(availableTransitions)
-      mockVerifyToken(customUser)
 
       const response = await request(app)
         .get(`/projects/available-transitions/${status}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toEqual(availableTransitions)
     })

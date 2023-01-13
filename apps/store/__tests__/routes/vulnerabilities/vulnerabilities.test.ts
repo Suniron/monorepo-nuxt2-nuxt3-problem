@@ -2,6 +2,7 @@ import request from 'supertest'
 import csv from 'csvtojson'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedAdmin, mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 /**
  * @type {import('@/types/vulnerability').VulnerabilityAssets[]}
@@ -29,7 +30,7 @@ let cvss: any = []
 let userGroups: any = []
 
 beforeAll(async () => {
-  // Get datas:
+  // Get data:
   vulnerabilityAssets = await csv({
     ignoreEmpty: true,
   }).fromFile('./seeds/csv_seed_files/demo/vulnerability_asset.csv')
@@ -149,8 +150,13 @@ const expectedVulnerability = {
   id: expect.any(String),
 }
 
-describe('/vulnerabilities/assets', () => {
-  describe('GET /', () => {
+describe('GET /vulnerabilities/assets', () => {
+  describe('as fully connected admin', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedAdmin().token
+    })
+
     it('as admin without any parameters should return all vulnerabilities with their assets', async () => {
       const getVulnerabilities = getVulnerabilityWithTheirAssets(
         {},
@@ -172,7 +178,7 @@ describe('/vulnerabilities/assets', () => {
 
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
       expect(response.body.total).toEqual(getVulnerabilities.length)
@@ -209,7 +215,7 @@ describe('/vulnerabilities/assets', () => {
 
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .query(params)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
@@ -240,7 +246,7 @@ describe('/vulnerabilities/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .query(params)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
@@ -276,7 +282,7 @@ describe('/vulnerabilities/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .query(params)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
@@ -315,7 +321,7 @@ describe('/vulnerabilities/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .query(params)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
@@ -334,6 +340,13 @@ describe('/vulnerabilities/assets', () => {
         })
       })
     })
+  })
+
+  describe('as fully connected user', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().token
+    })
 
     it('as non admin with no group return 0 result', async () => {
       const getVulnerabilities = getVulnerabilityWithTheirAssets(
@@ -350,7 +363,7 @@ describe('/vulnerabilities/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
       expect(response.body.total).toEqual(0)
@@ -383,7 +396,7 @@ describe('/vulnerabilities/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get('/vulnerabilities/assets')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('total')
       expect(response.body.total).toEqual(getVulnerabilities.length)
@@ -407,8 +420,13 @@ describe('/vulnerabilities/assets', () => {
   })
 })
 
-describe('/vulnerabilities/:vid/assets', () => {
-  describe('GET /', () => {
+describe('GET /vulnerabilities/:vid/assets', () => {
+  describe('as fully connected admin', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedAdmin().token
+    })
+
     it('as admin without any params except for the vid should return the vulnerability with the right id', async () => {
       const params = { vid: '16' }
       const getVulnerabilities = getVulnerabilityWithTheirAssets(params, {
@@ -427,7 +445,7 @@ describe('/vulnerabilities/:vid/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject(expectedVulnerability)
       expect(response.body.id).toEqual(params.vid)
@@ -453,9 +471,16 @@ describe('/vulnerabilities/:vid/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .query({ search: params.search })
       expect(response.status).toBe(404)
+    })
+  })
+
+  describe('as fully connected user', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().token
     })
 
     it('as non admin with no group with vid matching an existing vulnerability should return not found', async () => {
@@ -471,7 +496,7 @@ describe('/vulnerabilities/:vid/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(404)
     })
 
@@ -493,7 +518,7 @@ describe('/vulnerabilities/:vid/assets', () => {
       prismaMock.vulnerability.findMany.mockResolvedValue(getVulnerabilities)
       const response = await request(app)
         .get(`/vulnerabilities/${params.vid}/assets`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject(expectedVulnerability)
       expect(response.body.id).toEqual(params.vid)

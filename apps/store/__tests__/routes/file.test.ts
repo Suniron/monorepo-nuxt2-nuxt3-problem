@@ -1,16 +1,20 @@
 import request from 'supertest'
 import { prismaMock } from '../mockPrisma'
 import app from '../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../utils/mockAuth'
 
-describe('/files/:id', () => {
-  describe('GET/', () => {
-    it('should return a model error if Prisma crash', async () => {
-      prismaMock.store.findFirst.mockRejectedValue(new Error('Prisma error'))
+describe('GET /files/:id', () => {
+  let token = ''
+  beforeAll(() => {
+    token = mockLoggedAsFullyConnectedUser().token
+  })
 
-      const response = await request(app)
-        .patch('/company')
-        .set('Authorization', 'Bearer fake@token')
-      expect(response.status).toBe(500)
-    })
+  it('should return a model error if Prisma crash', async () => {
+    prismaMock.store.findFirst.mockRejectedValue(new Error('Prisma error'))
+
+    const response = await request(app)
+      .patch('/company')
+      .set('Authorization', `Bearer ${token}`)
+    expect(response.status).toBe(500)
   })
 })

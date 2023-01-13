@@ -54,6 +54,7 @@ describe('POST /refresh-token', () => {
     prismaMock.user_session.findFirst.mockResolvedValue({
       created_at: new Date(),
       deleted_at: null,
+      fully_connected: false,
       id: 'userSessionId',
       token: 'token',
       type: 'refresh',

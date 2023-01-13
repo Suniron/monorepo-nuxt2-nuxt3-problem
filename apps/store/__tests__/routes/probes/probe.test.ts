@@ -1,31 +1,15 @@
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
+import { mockLoggedAsFullyConnectedAdmin, mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 import app from '../../utils/fakeApp'
 
 import probes from '../../example-values/probes.json'
-import { mockAdminUser } from '../../mocks'
 
-describe('/probes/:id', () => {
-  describe('patch /', () => {
+describe('PATCH /probes/:id', () => {
+  describe('as fully connected user', () => {
+    let token = ''
     beforeAll(() => {
-      mockAdminUser({ companyId: 1 })
-    })
-    it('should return 200 if the request is a success', async () => {
-      // this is the data used for the test, this is the only thing you should modify
-      const id = 1
-      const body = { name: 'testProbeName' }
-
-      const result = probes.find((e: any) => e.id === id)
-
-      prismaMock.probe.findFirst.mockResolvedValue(result)
-
-      prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
-      const response = await request(app)
-        .patch(`/probes/${id}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
-        .send(body)
-      // .expect('Content-Type', /json/)
-      expect(response.status).toBe(204)
+      token = mockLoggedAsFullyConnectedUser().token
     })
     it('should return 400 if there is no "name" in the body', async () => {
       // this is the data used for the test, this is the only thing you should modify
@@ -39,7 +23,7 @@ describe('/probes/:id', () => {
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch(`/probes/${id}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send(body)
       expect(response.status).toBe(400)
     })
@@ -55,12 +39,38 @@ describe('/probes/:id', () => {
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch(`/probes/${id}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send(body)
       expect(response.status).toBe(400)
     })
+  })
+
+  describe('as fully connected admin', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedAdmin().token
+    })
+
+    it('should return 204 if the request is a success', async () => {
+    // this is the data used for the test, this is the only thing you should modify
+      const id = 1
+      const body = { name: 'testProbeName' }
+
+      const result = probes.find((e: any) => e.id === id)
+
+      prismaMock.probe.findFirst.mockResolvedValue(result)
+
+      prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
+      const response = await request(app)
+        .patch(`/probes/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(body)
+      // .expect('Content-Type', /json/)
+      expect(response.status).toBe(204)
+    })
+
     it('should return 404 not found if there is no probe existing with this id', async () => {
-      // this is the data used for the test, this is the only thing you should modify
+    // this is the data used for the test, this is the only thing you should modify
       const id = 10
       const body = { name: 'testProbeName' }
 
@@ -71,7 +81,7 @@ describe('/probes/:id', () => {
       prismaMock.probe.update.mockResolvedValue({ ...result, name: body.name })
       const response = await request(app)
         .patch(`/probes/${id}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send(body)
       expect(response.status).toBe(404)
     })

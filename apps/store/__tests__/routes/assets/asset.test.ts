@@ -1,6 +1,7 @@
 import request from 'supertest'
-import { mockKnexWithFinalValue } from '../../mocks'
 import { prismaMock } from '../../mockPrisma'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
+import { mockKnexWithFinalValue } from '../../mocks'
 
 import { vulnerabilities } from '../../example-values/vulnerabilities_asset.json'
 
@@ -16,6 +17,8 @@ describe('/assets', () => {
   })
 
   it(' GET / should return 200 if we fetch with token', () => {
+    const { token } = mockLoggedAsFullyConnectedUser()
+
     prismaMock.user_group.findMany.mockResolvedValue([
       { group_id: 1, user_id: 'user id' },
     ])
@@ -23,7 +26,7 @@ describe('/assets', () => {
 
     return request(app)
       .get('/assets')
-      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -33,49 +36,61 @@ describe('/assets/:id', () => {
   it(' GET / should return 401 if we fetch without token', () => {
     return request(app).get('/assets').expect(401)
   })
-  it(' GET / should return 200 if we fetch with token', () => {
-    prismaMock.user_group.findMany.mockResolvedValue([
-      { group_id: 1, user_id: 'user id' },
-    ])
-    mockKnexWithFinalValue([assets])
-    return request(app)
-      .get('/assets/33')
-      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
-      .expect(200)
-      .expect('Content-Type', /json/)
-  })
-  it('PATCH / should return 204 if we update an asset', () => {
-    mockKnexWithFinalValue([])
-    return request(app)
-      .patch('/assets/133')
-      .send(assetsPatch)
-      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
-      .expect(204)
-  })
-  it('DELETE / should return 204 if we delete an asset', () => {
-    mockKnexWithFinalValue([{ id: '63' }])
-    return request(app)
-      .delete('/assets/63')
-      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
-      .expect(204)
+
+  describe('as fully connected user', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().token
+    })
+
+    it(' GET / should return 200 if we fetch with token', () => {
+      prismaMock.user_group.findMany.mockResolvedValue([
+        { group_id: 1, user_id: 'user id' },
+      ])
+      mockKnexWithFinalValue([assets])
+      return request(app)
+        .get('/assets/33')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+    })
+    it('PATCH / should return 204 if we update an asset', () => {
+      mockKnexWithFinalValue([])
+      return request(app)
+        .patch('/assets/133')
+        .send(assetsPatch)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204)
+    })
+    it('DELETE / should return 204 if we delete an asset', () => {
+      mockKnexWithFinalValue([{ id: '63' }])
+      return request(app)
+        .delete('/assets/63')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204)
+    })
   })
 })
 
 describe('/assets/:id/ports', () => {
   it('GET/ should return status 200 and list of ports', () => {
+    const { token } = mockLoggedAsFullyConnectedUser()
+
     return request(app)
       .get('/assets/63/ports')
-      .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
   })
 })
 
 describe('/assets/:id/vulnerabilities', () => {
   it('GET/ should return status 200 and list of vulnerabitilies', async () => {
+    const { token } = mockLoggedAsFullyConnectedUser()
+
     mockKnexWithFinalValue([vulnerabilities])
     return request(app)
       .get('/assets/33/vulnerabilities')
-      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -83,13 +98,16 @@ describe('/assets/:id/vulnerabilities', () => {
 
 describe('/assets/belonging', () => {
   it('GET /assets/belonging should return status 200 and list of assets and their children (BELONGS_TO relation type)', async () => {
+    const { token } = mockLoggedAsFullyConnectedUser()
+
     prismaMock.user_group.findMany.mockResolvedValue([
       { group_id: 1, user_id: 'user id' },
     ])
     mockKnexWithFinalValue(assetBelonging.input)
+
     const result = await request(app)
       .get('/assets/belonging')
-      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
 
@@ -99,6 +117,8 @@ describe('/assets/belonging', () => {
 
 describe('/assets/:id/risk', () => {
   it('GET /assets/:id/risk should return status 200 and risk properties of the asset', async () => {
+    const { token } = mockLoggedAsFullyConnectedUser()
+
     const assetId = 11
     const risk = assetRisk.find(ast => ast.asset_id === assetId) || null
 
@@ -108,7 +128,7 @@ describe('/assets/:id/risk', () => {
 
     const result = await request(app)
       .get(`/assets/${assetId}/risk`)
-      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
     expect(result.body).toHaveProperty('lastScanDate')
@@ -122,12 +142,13 @@ describe('/assets/:id/risk', () => {
   })
 
   it('GET /assets/:id/risk should return status 404 Not found when it is not an asset of the same company as the logged user', async () => {
-    const assetId = 113
+    const { token } = mockLoggedAsFullyConnectedUser()
 
     prismaMock.v_asset_risk_scores.findFirst.mockResolvedValue(null)
+
     return request(app)
-      .get(`/assets/${assetId}/risk`)
-      .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+      .get('/assets/113/risk')
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
   })

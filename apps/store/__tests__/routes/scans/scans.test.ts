@@ -3,7 +3,7 @@ import scans, {
   createScanContent,
   generateScans,
   probe,
-} from '../../example-values/scans.ts'
+} from '../../example-values/scans'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 

@@ -1,13 +1,20 @@
 import request from 'supertest'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
+
+let token = ''
+
+beforeAll(() => {
+  token = mockLoggedAsFullyConnectedUser().token
+})
 
 describe('/relations/bulk', () => {
   describe('POST /', () => {
     it('with bad asset id format that is not a number should return an error 400', async () => {
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 'bad_id_format',
@@ -22,7 +29,7 @@ describe('/relations/bulk', () => {
       prismaMock.relation.findMany.mockResolvedValue([])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 100,
@@ -37,7 +44,7 @@ describe('/relations/bulk', () => {
       prismaMock.asset.findMany.mockResolvedValue([{ id: 100 }])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 100,
@@ -52,7 +59,7 @@ describe('/relations/bulk', () => {
       prismaMock.asset.findMany.mockResolvedValue([{ id: 10 }])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 10,
@@ -73,7 +80,7 @@ describe('/relations/bulk', () => {
       ])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 10,
@@ -103,7 +110,7 @@ describe('/relations/bulk', () => {
       ])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 10,
@@ -130,7 +137,7 @@ describe('/relations/bulk', () => {
       ])
       const response = await request(app)
         .post('/relations/bulk')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .send([
           {
             fromAssetId: 10,
@@ -154,7 +161,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
     it('with bad asset id format that is not a number should return an error 400', async () => {
       const response = await request(app)
         .delete('/relations/bad_id_format/BELONGS_TO/bad_id_format')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(400)
     })
     it('with a not existing relation type should return 404', async () => {
@@ -163,7 +170,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       })
       const response = await request(app)
         .delete('/relations/100/BAD_TYPE/101')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(404)
     })
     it('with a relationship of an asset couple that does not exist should return 404', async () => {
@@ -172,7 +179,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       })
       const response = await request(app)
         .delete('/relations/100/BELONGS_TO/100')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(404)
     })
     it('with existing assets relation should return status 200 with count 1', async () => {
@@ -181,7 +188,7 @@ describe('/relations/:fromAssetId/:relationType/:toAssetId', () => {
       })
       const response = await request(app)
         .delete('/relations/100/BELONGS_TO/101')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('count')
       expect(response.body.count).toEqual(1)
