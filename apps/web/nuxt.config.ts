@@ -7,8 +7,8 @@ import { version } from './package.json'
 
 const isProd = process.env.NODE_ENV === 'production'
 const httpsEnabled
-  = fs.existsSync(path.resolve(__dirname, 'secrets/server.key'))
-  && fs.existsSync(path.resolve(__dirname, 'secrets/server.crt'))
+  = fs.existsSync(path.resolve(__dirname, '../../secrets/server.key'))
+  && fs.existsSync(path.resolve(__dirname, '../../secrets/server.crt'))
 
 if (isProd && !httpsEnabled) {
   console.warn(
@@ -19,8 +19,8 @@ const server
   = isProd && httpsEnabled
     ? {
         https: {
-          cert: fs.readFileSync(path.resolve(__dirname, 'secrets/server.crt')),
-          key: fs.readFileSync(path.resolve(__dirname, 'secrets/server.key')),
+          cert: fs.readFileSync(path.resolve(__dirname, '../../secrets/server.crt')),
+          key: fs.readFileSync(path.resolve(__dirname, '../../secrets/server.key')),
         },
       }
     : undefined

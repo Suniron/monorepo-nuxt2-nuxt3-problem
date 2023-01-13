@@ -16,7 +16,7 @@ async function startServer() {
   }
   if (env.nodeEnv.isProduction && env.httpsEnabled) {
     const readConfigFile = filename =>
-      fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
+      fs.readFileSync(path.resolve(__dirname, '../../../secrets/', filename))
     const httpsOpts = {
       cert: readConfigFile('server_cert.pem'),
       key: readConfigFile('server_key.pem'),
