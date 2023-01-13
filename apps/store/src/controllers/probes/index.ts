@@ -1,8 +1,9 @@
+import type { NextFunction, Request, Response } from 'express'
 import { throwHTTPError } from '../../common/errors'
 
 import { searchProbesModel, updateProbeModel } from '../../models/probes'
 
-export const searchProbesController = async (req: any, res: any, next: any) => {
+export const searchProbesController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { error, probes } = await searchProbesModel(
       {
@@ -21,7 +22,7 @@ export const searchProbesController = async (req: any, res: any, next: any) => {
   }
 }
 
-export const updateProbeController = async (req: any, res: any, next: any) => {
+export const updateProbeController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { error } = await updateProbeModel(
       {

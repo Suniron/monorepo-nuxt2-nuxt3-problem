@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import type { JwtTokenPayload } from '../../common/auth/jwt'
 import { throwHTTPError } from '../../common/errors/'
 import {
   createRemediationProjectsModel,
@@ -20,7 +21,7 @@ export const getRemediationProjectsController = async (
   try {
     const result = await getRemediationProjectsModel(
       Number(req.params.id),
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -34,9 +35,9 @@ export const getRemediationProjectsController = async (
 }
 
 export const getRemediationProjectsSummaryController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const result = await getRemediationProjectsSummaryModel(
@@ -44,7 +45,7 @@ export const getRemediationProjectsSummaryController = async (
         ...(req.params || {}),
         ...(req.query || {}),
       },
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -65,7 +66,7 @@ export const getRemediationProjectsScopeController = async (
   try {
     const result = await getRemediationProjectsScopeModel(
       Number(req.params.id),
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -79,14 +80,14 @@ export const getRemediationProjectsScopeController = async (
 }
 
 export const getRemediationProjectStatusHistoryController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const result = await getRemediationProjectStatusHistoryModel(
       Number(req.params.id),
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -108,7 +109,7 @@ export const updateRemediationProjectsController = async (
     const result = await updateRemediationProjectsModel(
       Number(req.params.id),
       req.body,
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -127,7 +128,7 @@ export const createRemediationProjectsController = async (
   next: NextFunction,
 ) => {
   try {
-    const result = await createRemediationProjectsModel(req.body, req.user)
+    const result = await createRemediationProjectsModel(req.body, req.user as JwtTokenPayload)
 
     if ('error' in result)
       throwHTTPError(result.error)
@@ -140,15 +141,15 @@ export const createRemediationProjectsController = async (
 }
 
 export const updateRemediationProjectScopeController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const result = await updateRemediationProjectScopeModel(
       Number(req.params.id),
       req.body,
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)
@@ -162,18 +163,18 @@ export const updateRemediationProjectScopeController = async (
 }
 
 export const updateRemediationProjectScopeItemController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const result = await updateRemediationProjectScopeItemModel(
       Number(req.params.id),
       req.params.scopeId,
       req.body,
-      req.user,
+      req.user as JwtTokenPayload,
     )
-
+    console.log('result', result)
     if ('error' in result)
       throwHTTPError(result.error)
 
@@ -185,14 +186,14 @@ export const updateRemediationProjectScopeItemController = async (
 }
 
 export const getRemediationProjectCommentsController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const result = await getRemediationProjectCommentsModel(
       Number(req.params.id),
-      req.user,
+      req.user as JwtTokenPayload,
     )
 
     if ('error' in result)

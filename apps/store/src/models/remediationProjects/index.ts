@@ -17,7 +17,9 @@ import {
   isOwnerOrAssigneeOfRemediationProject,
   isScopeOfRemediationProject,
 } from '../../utils/remediationProject.utils'
-import type { RemediationProjectEdit } from '../../../types/remediationProject'
+import type { RemediationProjectEdit, RemediationProjectScopeItemEdit } from '../../../types/remediationProject'
+import type { JwtTokenPayload } from '../../common/auth/jwt'
+import { log } from '../../lib/logger'
 
 /**
  * @typedef {import('@/types/remediationProject').RemediationProjectSummary} RemediationProjectSummary
@@ -34,7 +36,7 @@ import type { RemediationProjectEdit } from '../../../types/remediationProject'
  */
 export const getRemediationProjectsModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -72,7 +74,7 @@ export const getRemediationProjectsModel = async (
  */
 export const getRemediationProjectsSummaryModel = async (
   _params: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -104,7 +106,7 @@ export const getRemediationProjectsSummaryModel = async (
  */
 export const getRemediationProjectsScopeModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -141,7 +143,7 @@ export const getRemediationProjectsScopeModel = async (
  */
 export const getRemediationProjectStatusHistoryModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {
@@ -172,7 +174,7 @@ export const getRemediationProjectStatusHistoryModel = async (
 export const updateRemediationProjectsModel = async (
   remediationProjectId: remediation_project['id'],
   params: RemediationProjectEdit,
-  { companyId: userCompanyId, id: userId }: { companyId: number; id: number },
+  { companyId: userCompanyId, id: userId }: JwtTokenPayload,
 ) => {
   try {
     // Check if the remediation project exists or belongs to the same company than the user
@@ -370,7 +372,7 @@ export const updateRemediationProjectsModel = async (
 export const updateRemediationProjectScopeModel = async (
   remediationProjectId: any,
   params: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -437,18 +439,11 @@ export const updateRemediationProjectScopeModel = async (
   }
 }
 
-/**
- * @param {number} remediationProjectId
- * @param {string} scopeItemId
- * @param {import('@/types/remediationProject').RemediationProjectScopeItemEdit} params
- * @param {Express.LoggedUser} loggedUserInfo
- * @returns {Promise<{status: string} | {error: string}>}
- */
 export const updateRemediationProjectScopeItemModel = async (
-  remediationProjectId: any,
-  scopeItemId: any,
-  params: any,
-  loggedUserInfo: any,
+  remediationProjectId: number,
+  scopeItemId: string,
+  params: RemediationProjectScopeItemEdit,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   try {
     const { companyId: userCompanyId } = loggedUserInfo
@@ -483,7 +478,7 @@ export const updateRemediationProjectScopeItemModel = async (
     return { status: SUCCESS }
   }
   catch (error) {
-    console.error(error)
+    log.withError(error).error('updateRemediationProjectScopeItemModel')
     return { error: MODEL_ERROR }
   }
 }
@@ -504,7 +499,7 @@ export const updateRemediationProjectScopeItemModel = async (
  */
 export const createRemediationProjectsModel = async (
   body: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   const {
     name,
@@ -578,7 +573,7 @@ export const createRemediationProjectsModel = async (
  */
 export const getRemediationProjectCommentsModel = async (
   remediationProjectId: any,
-  loggedUserInfo: any,
+  loggedUserInfo: JwtTokenPayload,
 ) => {
   const { companyId: userCompanyId } = loggedUserInfo
   try {

@@ -65,7 +65,6 @@ export const createCompanyModel = async (params: any) => {
 }
 
 export const searchCompanyLogoModel = async (loggedUserInfo: LoggedUser) => {
-  console.log('searchCompanyLogoModel', loggedUserInfo)
   if (!loggedUserInfo.companyId || typeof loggedUserInfo.companyId !== 'number')
     return { error: MODEL_ERROR }
 
