@@ -15,6 +15,20 @@ export const updateIpModel = async (ip: any, id: any) => {
         mask: ip.mask,
       })
       .where('ip.id', id)
+    if (ip.isMain !== 'No' || ip.isMain !== false) {
+      const [idServerToUpdate] = await knex.select('asset_server_id').from('ip').where('ip.id', id)
+      await knex('ip')
+        .update({
+          is_main: false,
+        })
+        .where('ip.asset_server_id', idServerToUpdate.asset_server_id)
+
+      await knex('ip')
+        .update({
+          is_main: true,
+        })
+        .where('ip.id', id)
+    }
     return { status: SUCCESS }
   }
   catch (error) {

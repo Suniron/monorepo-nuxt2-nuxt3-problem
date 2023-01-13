@@ -13,12 +13,12 @@ export const deleteIpService = async (axios, id) => {
   const response = await axios.delete(getEndpoint(id))
   return response
 }
-
 export const updateIpService = async (axios, item) => {
-  const { id, address, mask, mac, iface } = item
+  const { id, address, mask, mac, iface, isMain } = item
   const requestBody = {
     address,
     iface,
+    isMain,
     mac,
     mask,
   }

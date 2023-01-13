@@ -15,6 +15,7 @@ const updateValidation = celebrate({
   [Segments.BODY]: Joi.object({
     address: Joi.string().required(),
     iface: Joi.string().allow(null, '').required(),
+    isMain: Joi.string().allow(null, '').required(),
     mac: Joi.string().allow(null, '').required(),
     mask: Joi.string().allow(null, '').required(),
   }),
