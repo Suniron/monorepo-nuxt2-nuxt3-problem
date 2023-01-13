@@ -1,38 +1,42 @@
-import type { JwtTokenType, user as User } from '@prisma/client'
-import { MODEL_ERROR, VALIDATION_ERROR } from '../../common/constants'
-import { log } from '../../lib/logger'
+import { verifyToken } from '../../common/auth/jwt'
+import { MODEL_ERROR, UNAUTHORIZED } from '../../common/constants'
 import prismaClient from '../../prismaClient'
+import { getTokenInfoRequest } from '../../requests/tokens'
+import { generateNewTokensAndRevokeOldOnes } from '.'
 
-// TODO: remove if not used
-export const saveTokens = async (userId: User['id'], tokensToSave: { token: string; tokenType: JwtTokenType }[]) => {
-  try {
-    // Check size of given token list
-    if (tokensToSave.length < 1 || tokensToSave.length > 2) {
-      log.error(`saveTokens: tokensToSave.length < 1 || tokensToSave.length > 2: ${JSON.stringify(tokensToSave)}`)
-      return { error: VALIDATION_ERROR }
-    }
+export const renewRefreshTokenModel = async (refreshToken: string) => {
+  // 1) Verify refresh token validity
+  const { error, payload, errorMessage } = verifyToken(refreshToken, 'refresh')
+  if (error)
+    return { error, message: errorMessage }
 
-    // Check if same token type is present more than once
-    const accessTokenCount = tokensToSave.filter(({ tokenType }) => tokenType === 'access').length
-    const refreshTokenCount = tokensToSave.filter(({ tokenType }) => tokenType === 'refresh').length
-    if (accessTokenCount > 1 || refreshTokenCount > 1) {
-      log.error(`saveTokens: accessTokenCount > 1 || refreshTokenCount > 1: ${JSON.stringify(tokensToSave)}`)
-      return { error: VALIDATION_ERROR }
-    }
-
-    // TODO: Invalidate all previous tokens
-
-    // TODO: Save new tokens
-    await prismaClient.user_session.createMany({
-      data: tokensToSave.map(({ token, tokenType }) => ({
-        token,
-        type: tokenType,
-        user_id: userId,
-      })),
-    })
+  const userInfo = {
+    companyId: payload.companyId,
+    companyName: payload.companyName,
+    email: payload.email,
+    firstName: payload.firstName,
+    fullyConnected: payload.fullyConnected,
+    id: payload.id,
+    lastName: payload.lastName,
+    roles: payload.roles,
+    username: payload.username,
   }
-  catch (error) {
-    log.withError(error).error('saveTokens')
+
+  // 2) Verify refresh token existence in DB
+  const refreshTokenInfo = await getTokenInfoRequest(prismaClient, refreshToken)
+  if (!refreshTokenInfo)
+    return { error: UNAUTHORIZED, message: 'given refresh token not found, sign-in is needed' }
+  else if (refreshTokenInfo.deleted_at)
+    return { error: UNAUTHORIZED, message: 'given refresh token has been revoked, sign-in is needed' }
+  else if (refreshTokenInfo.type !== 'refresh')
+    return { error: UNAUTHORIZED, message: 'given refresh token is not a refresh token, sign-in is needed' }
+
+  // 3) Generate new tokens
+  const { accessSession, refreshSession } = await generateNewTokensAndRevokeOldOnes(userInfo,
+  )
+  if (!accessSession.token || !refreshSession.token)
     return { error: MODEL_ERROR }
-  }
+
+  // 4) Return new tokens
+  return { accessToken: accessSession.token, refreshToken: refreshSession.token, user: userInfo }
 }

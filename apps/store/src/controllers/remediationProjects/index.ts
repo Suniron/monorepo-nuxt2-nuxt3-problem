@@ -174,7 +174,6 @@ export const updateRemediationProjectScopeItemController = async (
       req.body,
       req.user as JwtTokenPayload,
     )
-    console.log('result', result)
     if ('error' in result)
       throwHTTPError(result.error)
 

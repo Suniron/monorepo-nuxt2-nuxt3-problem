@@ -13,6 +13,7 @@ import {
 import { knex } from '../../common/db'
 import { log } from '../../lib/logger'
 import prismaClient from '../../prismaClient'
+import type { JwtTokenPayloadInput } from '../../common/auth/jwt'
 import { generateJwtTokens } from '../../common/auth/jwt'
 import { sanitizeUser } from '../../utils/user.utils'
 import { revokeAllUserTokensRequest, saveJwtTokenRequest } from '../../requests/tokens'
@@ -282,7 +283,7 @@ export const updateResetPasswordUsingToken = async (
   provider: any,
   params: any,
 ) => {
-  const { knex, logger, createPasswordHash } = provider
+  const { knex, createPasswordHash } = provider
   try {
     const { password, token } = params
     if (token === null)
@@ -294,27 +295,42 @@ export const updateResetPasswordUsingToken = async (
       .where(function (this: any) {
         this.where('usr.reset_token', token)
       })
-    if (user) {
-      if (Date.now() > user.token_expires_at)
-        return { error: FORBIDDEN }
-      const { hash, salt } = createPasswordHash(password)
-      await knex('user').where('id', user.id).update({
-        password: hash,
-        reset_token: null,
-        salt,
-        token_expires_at: null,
-      })
-      user.reset_token = null
-      return { status: SUCCESS }
-    }
-    else {
+
+    if (!user)
       return { error: NOT_FOUND }
-    }
+
+    if (Date.now() > user.token_expires_at)
+      return { error: FORBIDDEN }
+    const { hash, salt } = createPasswordHash(password)
+    await knex('user').where('id', user.id).update({
+      password: hash,
+      reset_token: null,
+      salt,
+      token_expires_at: null,
+    })
+    user.reset_token = null
+    return { status: SUCCESS }
   }
   catch (error) {
-    logger.error(error)
+    log.withError(error).error('updateResetPasswordUsingToken')
     return { error: MODEL_ERROR }
   }
+}
+
+export const generateNewTokensAndRevokeOldOnes = async (payloadInput: JwtTokenPayloadInput) => {
+  // 1) Generate tokens
+  const { accessToken, refreshToken } = generateJwtTokens(payloadInput)
+
+  // 2) Revoke all existing tokens
+  await revokeAllUserTokensRequest(prismaClient, payloadInput.id)
+
+  // 3) Save tokens in DB
+  const [accessSession, refreshSession] = await prismaClient.$transaction([
+    saveJwtTokenRequest(prismaClient, payloadInput.id, accessToken, 'access'),
+    saveJwtTokenRequest(prismaClient, payloadInput.id, refreshToken, 'refresh'),
+  ])
+
+  return { accessSession, refreshSession }
 }
 
 /**
@@ -322,22 +338,13 @@ export const updateResetPasswordUsingToken = async (
  *
  * - Generate access and refresh tokens
  * - Save them in DB
- * - return a sanitized version of it (whithout password, salt, ...), and JWT Tokens
+ * - return a sanitized version of it (without password, salt, ...), and JWT Tokens
  */
-export const initTokensModel = async (userWithCompanyName: User & { company: { name: string } }) => {
+export const initTokensModel = async (userWithCompanyName: User & { company: { name: string } }, fullyConnected = false) => {
   try {
-    // 1) Generate JWT tokens
+    // 1) Generate tokens with sanitized user
     const sanitizedUser = sanitizeUser(userWithCompanyName)
-    const { accessToken, refreshToken } = generateJwtTokens({ ...sanitizedUser, companyName: userWithCompanyName.company.name })
-
-    // 2) Revoke all existing tokens
-    await revokeAllUserTokensRequest(prismaClient, userWithCompanyName.id)
-
-    // 3) Save tokens in DB
-    const [accessSession, refreshSession] = await prismaClient.$transaction([
-      saveJwtTokenRequest(prismaClient, userWithCompanyName.id, accessToken, 'access'),
-      saveJwtTokenRequest(prismaClient, userWithCompanyName.id, refreshToken, 'refresh'),
-    ])
+    const { accessSession, refreshSession } = await generateNewTokensAndRevokeOldOnes({ ...sanitizedUser, companyName: userWithCompanyName.company.name, fullyConnected })
 
     if (!accessSession.token || !refreshSession.token)
       return { error: MODEL_ERROR }

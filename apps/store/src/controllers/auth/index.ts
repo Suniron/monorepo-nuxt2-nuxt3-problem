@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'
 import type { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
 import type { user as User } from '@prisma/client'
@@ -9,36 +8,15 @@ import { genSaltSync, getHashedPassword } from '../../common/auth/sha512'
 import { knex } from '../../common/db'
 
 import {
-  TOKEN_TYPE,
-  verifyTokenOld,
-} from '../../common/auth/jwt'
-
-import {
   getResetPasswordToken,
-  getTokenSessionModel,
   initTokensModel,
-  isValidSessionRefreshToken,
   logoutModel,
-  refreshAccessToken,
   updateResetPasswordUsingToken,
   verifyAssetPermissionModel,
 } from '../../models/auth'
 import type { HTTPStatus } from '../../common/constants'
 import { UNAUTHORIZED } from '../../common/constants'
-
-const createJwtProviderOld = () => {
-  const dbProvider = {
-    knex,
-    logger: console,
-  }
-  return {
-    env: 'TODO: TO REMOVE',
-    getTokenSessionModel: (token: any, type: any) =>
-      getTokenSessionModel(dbProvider, token, type),
-    logger: console,
-    verifyJWTToken: jwt.verify,
-  }
-}
+import { renewRefreshTokenModel } from '../../models/auth/tokens'
 
 /**
  * On success, the user is not fully connected. He needs to authenticate with a 2FA way.
@@ -93,45 +71,28 @@ export const refreshAccessTokenController = async (
   next: NextFunction,
 ) => {
   try {
-    /**
-     * @type {string | undefined}
-     */
-    const refreshToken = req.cookies.rt
-
+    // 1) Verify refresh token format
+    const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME] as string
     if (!refreshToken || refreshToken === 'undefined') {
-      throwUnauthorizedError({ message: 'Refresh token not found' })
+      throwUnauthorizedError({ message: 'refresh token not found' })
       return
     }
 
-    // Check token validity:
-    const provider = createJwtProviderOld()
-    const { user, error: jwtError } = await verifyTokenOld(
-      provider,
-      refreshToken,
-      TOKEN_TYPE.refresh,
-    )
-    if (jwtError || !user || !user.id) {
-      throwUnauthorizedError()
-      return
-    }
+    // 2) Renew refresh token:
+    const { accessToken, user, refreshToken: newRefreshToken, error, message } = await renewRefreshTokenModel(refreshToken)
+    if (error)
+      return throwHTTPError(error, message)
 
-    // Check existing session refresh token:
-    if (!(await isValidSessionRefreshToken(refreshToken, user.id))) {
-      throwUnauthorizedError()
-      return
-    }
+    // 3) Set cookie with new refresh token
+    res.cookie(REFRESH_TOKEN_COOKIE_NAME, newRefreshToken, {
+      domain: JWT_REFRESH_DOMAIN,
+      httpOnly: true,
+      maxAge: JWT_REFRESH_LIFE_MS,
+      secure: isProduction && HTTPS_ENABLED,
+    })
 
-    const {
-      error: refreshAccessTokenError,
-      accessToken,
-      user: freshUser,
-    } = await refreshAccessToken(user.id)
-    if (refreshAccessTokenError) {
-      throwUnauthorizedError()
-      return
-    }
-
-    res.status(201).send({ accessToken, user: freshUser })
+    // 4) Send response
+    return res.status(201).send({ accessToken, user })
   }
   catch (error) {
     next(error)
