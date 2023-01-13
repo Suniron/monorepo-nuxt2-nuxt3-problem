@@ -7,7 +7,7 @@ import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 describe('/remediations/grouped', () => {
   it('GET /remediations/grouped should return status 200 and list of priorities', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
     mockKnexWithFinalValue(groupedRemediations.input)
     const result = await request(app)
       .get('/remediations/grouped')

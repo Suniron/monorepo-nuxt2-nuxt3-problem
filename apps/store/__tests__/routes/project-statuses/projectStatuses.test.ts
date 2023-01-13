@@ -11,7 +11,7 @@ let projectStatusWorkflows: ProjectStatusWorkflow[] = []
 let token = ''
 
 beforeAll(async () => {
-  token = mockLoggedAsFullyConnectedUser().token
+  token = mockLoggedAsFullyConnectedUser().accessToken
 
   // Get data:
   projectStatuses = await csv({

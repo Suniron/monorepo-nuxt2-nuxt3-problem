@@ -8,6 +8,7 @@ describe('sanitizeUser', () => {
       email: 'etienne@x-rator.com',
       first_name: 'Etienne',
       id: '1a3f30d8-a8fb-4f93-be14-5ba55edzefezfez',
+      is_two_factor_required: false,
       last_name: 'Blanc',
       password: 'myHashedPassword',
       reset_token: 'myResetToken',
@@ -16,17 +17,19 @@ describe('sanitizeUser', () => {
       ],
       salt: 'mySalt',
       token_expires_at: '1671640803114',
+      two_factor_confirmed_at: new Date(),
+      two_factor_secret: 'mySecret',
       username: 'etienne',
     }
 
     const sanitizedUser = sanitizeUser(user)
 
     expect(sanitizedUser).toEqual({
-      company_id: 1,
+      companyId: 1,
       email: 'etienne@x-rator.com',
-      first_name: 'Etienne',
+      firstName: 'Etienne',
       id: '1a3f30d8-a8fb-4f93-be14-5ba55edzefezfez',
-      last_name: 'Blanc',
+      lastName: 'Blanc',
       roles: [
         'admin',
       ],

@@ -86,7 +86,7 @@ const newProjectData = {
 let token = ''
 
 beforeAll(async () => {
-  token = mockLoggedAsFullyConnectedUser().token
+  token = mockLoggedAsFullyConnectedUser().accessToken
 
   // Get data:
   remediationProjects = await csv({
@@ -850,7 +850,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
     describe('as owner', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser({ id: 'i_am_owner_id' }).token
+        token = mockLoggedAsFullyConnectedUser({ id: 'i_am_owner_id' }).accessToken
       })
 
       describe('Change is_done of scope of a bad project (not a part of it)', () => {
@@ -911,7 +911,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
     describe('as non-owner but assignee', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser({ companyId: 1, id: 'i_am_assignee_id' }).token
+        token = mockLoggedAsFullyConnectedUser({ companyId: 1, id: 'i_am_assignee_id' }).accessToken
       })
 
       it('should return 204 change is_done of scope of a good project', async () => {

@@ -17,7 +17,7 @@ describe('/assets', () => {
   })
 
   it(' GET / should return 200 if we fetch with token', () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     prismaMock.user_group.findMany.mockResolvedValue([
       { group_id: 1, user_id: 'user id' },
@@ -40,7 +40,7 @@ describe('/assets/:id', () => {
   describe('as fully connected user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     it(' GET / should return 200 if we fetch with token', () => {
@@ -74,7 +74,7 @@ describe('/assets/:id', () => {
 
 describe('/assets/:id/ports', () => {
   it('GET/ should return status 200 and list of ports', () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     return request(app)
       .get('/assets/63/ports')
@@ -85,7 +85,7 @@ describe('/assets/:id/ports', () => {
 
 describe('/assets/:id/vulnerabilities', () => {
   it('GET/ should return status 200 and list of vulnerabitilies', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     mockKnexWithFinalValue([vulnerabilities])
     return request(app)
@@ -98,7 +98,7 @@ describe('/assets/:id/vulnerabilities', () => {
 
 describe('/assets/belonging', () => {
   it('GET /assets/belonging should return status 200 and list of assets and their children (BELONGS_TO relation type)', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     prismaMock.user_group.findMany.mockResolvedValue([
       { group_id: 1, user_id: 'user id' },
@@ -117,7 +117,7 @@ describe('/assets/belonging', () => {
 
 describe('/assets/:id/risk', () => {
   it('GET /assets/:id/risk should return status 200 and risk properties of the asset', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     const assetId = 11
     const risk = assetRisk.find(ast => ast.asset_id === assetId) || null
@@ -142,7 +142,7 @@ describe('/assets/:id/risk', () => {
   })
 
   it('GET /assets/:id/risk should return status 404 Not found when it is not an asset of the same company as the logged user', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     prismaMock.v_asset_risk_scores.findFirst.mockResolvedValue(null)
 

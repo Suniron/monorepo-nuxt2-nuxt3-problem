@@ -6,7 +6,7 @@ import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 describe('GET /phishing-scenarios-domains', () => {
   it('should return 200 if we fetch with token', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
     prismaMock.company.findFirst.mockResolvedValue({
       fk_phishing_scenario_domain_id: 1,
     })

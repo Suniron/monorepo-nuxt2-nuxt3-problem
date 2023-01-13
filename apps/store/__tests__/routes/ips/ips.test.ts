@@ -15,7 +15,7 @@ describe('/ips/:id', () => {
   describe('connected as user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     mockKnexWithFinalValue([ip])
@@ -72,7 +72,7 @@ describe('/ips/:assetId', () => {
   describe('connected as user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     mockKnexWithFinalValue([ip])

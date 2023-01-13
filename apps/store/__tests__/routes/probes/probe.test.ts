@@ -9,7 +9,7 @@ describe('PATCH /probes/:id', () => {
   describe('as fully connected user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
     it('should return 400 if there is no "name" in the body', async () => {
       // this is the data used for the test, this is the only thing you should modify
@@ -48,7 +48,7 @@ describe('PATCH /probes/:id', () => {
   describe('as fully connected admin', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedAdmin().token
+      token = mockLoggedAsFullyConnectedAdmin().accessToken
     })
 
     it('should return 204 if the request is a success', async () => {

@@ -107,6 +107,9 @@ const knexFunctions = [
   'toSQL',
 ]
 
+/**
+ * **VERY IMPORTANT**: must be imported before any other mock
+ */
 export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
   const knexMock = jest.fn(() => {
     return knexMock
@@ -142,6 +145,8 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
 }
 
 /**
+ * **VERY IMPORTANT**: must be imported before any other mock
+ *
  * Mock the knex query builder with the given final values.
  * The last value of the list will be repeated as the return value of all subsequent calls
  * @param finalValues The final values to return for each call in order

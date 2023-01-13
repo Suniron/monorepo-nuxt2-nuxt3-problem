@@ -154,7 +154,7 @@ describe('GET /vulnerabilities/assets', () => {
   describe('as fully connected admin', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedAdmin().token
+      token = mockLoggedAsFullyConnectedAdmin().accessToken
     })
 
     it('as admin without any parameters should return all vulnerabilities with their assets', async () => {
@@ -345,7 +345,7 @@ describe('GET /vulnerabilities/assets', () => {
   describe('as fully connected user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     it('as non admin with no group return 0 result', async () => {
@@ -424,7 +424,7 @@ describe('GET /vulnerabilities/:vid/assets', () => {
   describe('as fully connected admin', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedAdmin().token
+      token = mockLoggedAsFullyConnectedAdmin().accessToken
     })
 
     it('as admin without any params except for the vid should return the vulnerability with the right id', async () => {
@@ -480,7 +480,7 @@ describe('GET /vulnerabilities/:vid/assets', () => {
   describe('as fully connected user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     it('as non admin with no group with vid matching an existing vulnerability should return not found', async () => {

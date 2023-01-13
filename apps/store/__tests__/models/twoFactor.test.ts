@@ -30,23 +30,31 @@ describe('loginWithTotpModel', () => {
     const user = fakeUserInDb
     prismaMock.user.findUnique.mockResolvedValue({ ...user, two_factor_secret: null })
 
-    expect((await loginWithTotpModel(user.id, 123456))?.error).toBe(UNAUTHORIZED)
-    expect((await loginWithTotpModel(user.id, 123456))?.message).toBe('2FA not initialized yet')
+    const result = await loginWithTotpModel(user.id, 123456)
+
+    expect(result?.error).toBe(UNAUTHORIZED)
+    expect(result?.message).toBe('2FA not initialized yet')
   })
 
   it('should return unauthorized if given totp in not valid', async () => {
     const user = fakeUserInDb
     prismaMock.user.findUnique.mockResolvedValue({ ...user, two_factor_secret: 'myTwoFactorSecret' })
 
-    expect((await loginWithTotpModel(user.id, 123456))?.error).toBe(UNAUTHORIZED)
-    expect((await loginWithTotpModel(user.id, 123456))?.message).toBe('totp not valid')
+    const result = await loginWithTotpModel(user.id, 123456)
+
+    expect(result?.error).toBe(UNAUTHORIZED)
+    expect(result?.message).toBe('totp not valid')
   })
 
   it('should return access & refresh token if the user have a 2fa bypass', async () => {
     const user = fakeUserInDb
-    prismaMock.user.findUnique.mockResolvedValue({ ...user, is_two_factor_required: false, two_factor_secret: null })
 
-    expect((await loginWithTotpModel(user.id, 123456))).toHaveProperty('accessToken')
-    expect((await loginWithTotpModel(user.id, 123456))).toHaveProperty('refreshToken')
+    prismaMock.user.findUnique.mockResolvedValue({ ...user, is_two_factor_required: false, two_factor_secret: null })
+    prismaMock.$transaction.mockResolvedValue([{ token: 'accessToken' }, { token: 'refreshToken' }])
+
+    const result = await loginWithTotpModel(user.id, 123456)
+
+    expect(result).toHaveProperty('accessToken')
+    expect(result).toHaveProperty('refreshToken')
   })
 })

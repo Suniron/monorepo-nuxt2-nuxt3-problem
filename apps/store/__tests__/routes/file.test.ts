@@ -6,7 +6,7 @@ import { mockLoggedAsFullyConnectedUser } from '../utils/mockAuth'
 describe('GET /files/:id', () => {
   let token = ''
   beforeAll(() => {
-    token = mockLoggedAsFullyConnectedUser().token
+    token = mockLoggedAsFullyConnectedUser().accessToken
   })
 
   it('should return a model error if Prisma crash', async () => {

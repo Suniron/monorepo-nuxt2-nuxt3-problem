@@ -33,22 +33,22 @@ export const fakeUserInDb: User = {
   username: 'etienne',
 }
 
-const mockPassportLocalStrategy = (mockedUserFound: User) => {
+const mockPassportLocalStrategy = (mockedUserFound: User, accessToken: string, refreshToken: string) => {
   // Mock user found
-  prismaMock.user.findFirst.mockResolvedValue(mockedUserFound)
+  prismaMock.user.findFirst.mockResolvedValue({ ...mockedUserFound, company: { name: 'xrator' } })
   // Mock revoke old tokens
   prismaMock.user_session.updateMany.mockResolvedValue({ count: 1 })
   // Mock save tokens (access+refresh)
   prismaMock.$transaction.mockResolvedValue([
     {
       id: 'tokenId1',
-      token: 'token1',
+      token: accessToken,
       type: 'access',
       user_id: mockedUserFound.id,
     } as UserSession,
     {
       id: 'tokenId1',
-      token: 'token1',
+      token: refreshToken,
       type: 'refresh',
       user_id: mockedUserFound.id,
     } as UserSession,
@@ -59,35 +59,35 @@ const mockPassportLocalStrategy = (mockedUserFound: User) => {
  * Mock the auth strategy, and return the access token
  */
 const mockAuthStrategy = (user: User, payload: JwtTokenPayloadInput, fullyConnected: boolean) => {
-  mockPassportLocalStrategy(user)
+  const { accessToken, refreshToken } = generateJwtTokens(payload, fullyConnected)
 
-  const { accessToken } = generateJwtTokens(payload, fullyConnected)
+  mockPassportLocalStrategy(user, accessToken, refreshToken)
 
-  return accessToken
+  return { accessToken, refreshToken }
 }
 
 /**
  * **VERY IMPORTANT**: since it's a mock, you need to call this before all imported files to test
  *
  */
-export const mockLoggedAsUser = (customUserInfo: OptionalUserInfo = {}, fullyConnected = false): { user: JwtTokenPayloadInput; token: string } => {
+export const mockLoggedAsUser = (customUserInfo: OptionalUserInfo = {}, fullyConnected = false) => {
   const tokenPayload: JwtTokenPayloadInput = { ...fakeLoggedUser, ...customUserInfo, roles: ['member'] }
   const generatedUser: User = { ...fakeUserInDb, ...customUserInfo, roles: ['member'] }
 
-  const generatedToken = mockAuthStrategy(generatedUser, tokenPayload, fullyConnected)
-  return { token: generatedToken, user: tokenPayload }
+  const { accessToken, refreshToken } = mockAuthStrategy(generatedUser, tokenPayload, fullyConnected)
+  return { accessToken, refreshToken, user: tokenPayload }
 }
 
 /**
  * **VERY IMPORTANT**: since it's a mock, you need to call this before all imported files to test
  *
  */
-export const mockLoggedAsAdmin = (customUserInfo: OptionalUserInfo = {}, fullyConnected = false): { user: JwtTokenPayloadInput; token: string } => {
+export const mockLoggedAsAdmin = (customUserInfo: OptionalUserInfo = {}, fullyConnected = false) => {
   const tokenPayload: JwtTokenPayloadInput = { ...fakeLoggedUser, ...customUserInfo, roles: ['admin'] }
   const generatedUser: User = { ...fakeUserInDb, ...customUserInfo, roles: ['admin'] }
 
-  const generatedToken = mockAuthStrategy(generatedUser, tokenPayload, fullyConnected)
-  return { token: generatedToken, user: tokenPayload }
+  const { accessToken, refreshToken } = mockAuthStrategy(generatedUser, tokenPayload, fullyConnected)
+  return { accessToken, refreshToken, user: tokenPayload }
 }
 
 /**
@@ -97,7 +97,7 @@ export const mockLoggedAsAdmin = (customUserInfo: OptionalUserInfo = {}, fullyCo
  *
  * Sugar syntax for mockLoggedAsUser with fullyConnected = true
  */
-export const mockLoggedAsFullyConnectedUser = (customUserInfo: OptionalUserInfo = {}): { user: JwtTokenPayloadInput; token: string } => mockLoggedAsUser(customUserInfo, true)
+export const mockLoggedAsFullyConnectedUser = (customUserInfo: OptionalUserInfo = {}) => mockLoggedAsUser(customUserInfo, true)
 
 /**
  * **VERY IMPORTANT**: since it's a mock, you need to call this before all imported files to test
@@ -106,4 +106,4 @@ export const mockLoggedAsFullyConnectedUser = (customUserInfo: OptionalUserInfo 
  *
  * Sugar syntax for mockLoggedAsAdmin with fullyConnected = true
  */
-export const mockLoggedAsFullyConnectedAdmin = (customUserInfo: OptionalUserInfo = {}): { user: JwtTokenPayloadInput; token: string } => mockLoggedAsAdmin(customUserInfo, true)
+export const mockLoggedAsFullyConnectedAdmin = (customUserInfo: OptionalUserInfo = {}) => mockLoggedAsAdmin(customUserInfo, true)

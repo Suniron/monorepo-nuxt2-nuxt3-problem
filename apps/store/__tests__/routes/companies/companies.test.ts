@@ -24,7 +24,7 @@ describe('/company', () => {
   describe('PATCH/', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     it('should return a model error if the domain doesn\'t exists', async () => {
@@ -53,7 +53,7 @@ describe('/company', () => {
     })
 
     it('should update the data if the domain & company exists', async () => {
-      const { token } = mockLoggedAsFullyConnectedUser()
+      const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
       prismaMock.company.findFirst.mockResolvedValue({ id: 1 })
 
@@ -71,7 +71,7 @@ describe('/company', () => {
 
 describe('/company/risk/', () => {
   describe('GET /', () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     it('should return 200 and the global risk score of the logged user company', async () => {
       const businessMissions = assetRisk.filter(
@@ -111,7 +111,7 @@ describe('/company/logo/', () => {
     describe('with knex error', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser().token
+        token = mockLoggedAsFullyConnectedUser().accessToken
       })
 
       it('should be Content-Type json', async () => {
@@ -138,7 +138,7 @@ describe('/company/logo/', () => {
     describe('with good company data', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser().token
+        token = mockLoggedAsFullyConnectedUser().accessToken
       })
 
       it('should be Content-Type json', async () => {
@@ -187,7 +187,7 @@ describe('/company/logo/', () => {
     describe('with good logo param BUT knex error', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedAdmin().token
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       it('should be Content-Type json', async () => {
@@ -216,7 +216,7 @@ describe('/company/logo/', () => {
     describe('As admin, with good company data', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedAdmin().token
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       describe('without logo in req params', () => {
@@ -292,7 +292,7 @@ describe('/company/logo/', () => {
       describe('with knex error', () => {
         let token = ''
         beforeAll(() => {
-          token = mockLoggedAsFullyConnectedUser().token
+          token = mockLoggedAsFullyConnectedUser().accessToken
         })
 
         it('should be Content-Type json', async () => {
@@ -319,7 +319,7 @@ describe('/company/logo/', () => {
       describe('with good company data', () => {
         let token = ''
         beforeAll(() => {
-          token = mockLoggedAsFullyConnectedUser().token
+          token = mockLoggedAsFullyConnectedUser().accessToken
         })
 
         it('should be Content-Type json', async () => {
@@ -353,7 +353,7 @@ describe('/company/logo/', () => {
       describe('with good logo param', () => {
         let token = ''
         beforeAll(() => {
-          token = mockLoggedAsFullyConnectedUser().token
+          token = mockLoggedAsFullyConnectedUser().accessToken
         })
 
         it('should be status 403', async () => {

@@ -12,7 +12,7 @@ let severities: Severity[] = []
 let token = ''
 
 beforeAll(async () => {
-  token = mockLoggedAsFullyConnectedUser().token
+  token = mockLoggedAsFullyConnectedUser().accessToken
   // Get data:
   fearedEvents = await csv({
     ignoreEmpty: true,

@@ -21,7 +21,7 @@ describe('/groups/', () => {
     describe('as admin', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedAdmin().token
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       describe('get all groups of my company', () => {
@@ -45,7 +45,7 @@ describe('/groups/', () => {
     describe('as non admin', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser().token
+        token = mockLoggedAsFullyConnectedUser().accessToken
       })
 
       describe('get all available groups of my company', () => {
@@ -74,7 +74,7 @@ describe('/groups/', () => {
     describe('as non admin', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedUser().token
+        token = mockLoggedAsFullyConnectedUser().accessToken
       })
 
       it('should be status 403', async () => {
@@ -89,7 +89,7 @@ describe('/groups/', () => {
     describe('as admin', () => {
       let token = ''
       beforeAll(() => {
-        token = mockLoggedAsFullyConnectedAdmin().token
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       describe('rename group', () => {

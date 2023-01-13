@@ -6,7 +6,7 @@ import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 let token = ''
 
 beforeAll(() => {
-  token = mockLoggedAsFullyConnectedUser().token
+  token = mockLoggedAsFullyConnectedUser().accessToken
 })
 
 describe('/relations/bulk', () => {

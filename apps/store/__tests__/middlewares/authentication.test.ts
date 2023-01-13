@@ -34,7 +34,7 @@ describe('lightAuthenticationVerify', () => {
   })
 
   it('should return 201 if good token', async () => {
-    const { token } = mockLoggedAsUser()
+    const { accessToken: token } = mockLoggedAsUser()
 
     const response = await request(app)
       .get('/is-authorized/light')
@@ -68,7 +68,7 @@ describe('strongAuthenticationVerify', () => {
   })
 
   it('should return 201 if good token', async () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
 
     const response = await request(app)
       .get('/is-authorized')

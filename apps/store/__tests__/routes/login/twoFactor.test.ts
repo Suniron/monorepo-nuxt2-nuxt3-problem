@@ -12,7 +12,7 @@ describe('GET /2fa/setup', () => {
   })
 
   it('should return a 400 if fetched by a user who already have 2fa initialized', async () => {
-    const { token } = mockLoggedAsUser()
+    const { accessToken: token } = mockLoggedAsUser()
 
     prismaMock.user.findUnique.mockResolvedValue(
       { ...fakeUserInDb, two_factor_confirmed_at: new Date(), two_factor_secret: 'myTwoFactor' },
@@ -26,7 +26,7 @@ describe('GET /2fa/setup', () => {
   })
 
   it('should return a 200 with a token in body if 2fa not yet initialized', async () => {
-    const { token } = mockLoggedAsUser()
+    const { accessToken: token } = mockLoggedAsUser()
 
     prismaMock.user.findUnique.mockResolvedValue(
       { ...fakeUserInDb, two_factor_secret: null },
@@ -44,7 +44,7 @@ describe('GET /2fa/setup', () => {
   })
 
   it('should return a 200 with a token in body if 2fa not fully initialized (not confirmed by user)', async () => {
-    const { token } = mockLoggedAsUser()
+    const { accessToken: token } = mockLoggedAsUser()
 
     prismaMock.user.findUnique.mockResolvedValue(
       { ...fakeUserInDb, two_factor_secret: null },

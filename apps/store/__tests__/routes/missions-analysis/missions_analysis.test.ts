@@ -5,7 +5,7 @@ import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 describe('/missions_analysis/:id', () => {
   it('GET/ with bad data should be status 500', () => {
-    const { token } = mockLoggedAsFullyConnectedUser()
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
     mockKnexWithFinalValue(['missions_analysis_id_bad']) // bad data
     return request(app)
       .get('/missions_analysis/4')

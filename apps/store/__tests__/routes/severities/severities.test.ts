@@ -33,7 +33,7 @@ describe('/severities/', () => {
   describe('GET / with auth token', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     describe('with knex error', () => {
@@ -64,7 +64,7 @@ describe('/severities/', () => {
         mockKnexWithFinalValue(severities)
         const response = await request(app)
           .get('/severities/')
-          .set('Authorization', `Bearer ${user.token}`)
+          .set('Authorization', `Bearer ${user.accessToken}`)
 
         expect(response.status).toBe(200)
       })
@@ -95,7 +95,7 @@ describe('GET / /severities/:id', () => {
   describe('fully connected as user', () => {
     let token = ''
     beforeAll(() => {
-      token = mockLoggedAsFullyConnectedUser().token
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
     describe('with bad id', () => {
