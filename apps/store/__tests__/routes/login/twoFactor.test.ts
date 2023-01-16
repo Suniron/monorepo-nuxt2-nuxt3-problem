@@ -4,9 +4,9 @@ import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
 import { fakeUserInDb, mockLoggedAsUser } from '../../utils/mockAuth'
 
-describe('GET /2fa/setup', () => {
+describe('GET /two-factor/setup', () => {
   it('should return a 401 if fetched without auth', async () => {
-    const response = await request(app).get('/2fa/setup')
+    const response = await request(app).get('/two-factor/setup')
 
     expect(response.status).toBe(401)
   })
@@ -19,7 +19,7 @@ describe('GET /2fa/setup', () => {
     )
 
     const response = await request(app)
-      .get('/2fa/setup')
+      .get('/two-factor/setup')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(400)
@@ -37,7 +37,7 @@ describe('GET /2fa/setup', () => {
     prismaMock.user.update.mockResolvedValue({ ...fakeUserInDb, two_factor_secret: 'newGeneratedSecret' })
 
     const response = await request(app)
-      .get('/2fa/setup')
+      .get('/two-factor/setup')
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('seed')
@@ -55,7 +55,7 @@ describe('GET /2fa/setup', () => {
     prismaMock.user.update.mockResolvedValue({ ...fakeUserInDb, two_factor_secret: 'newGeneratedSecret' })
 
     const response = await request(app)
-      .get('/2fa/setup')
+      .get('/two-factor/setup')
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('seed')

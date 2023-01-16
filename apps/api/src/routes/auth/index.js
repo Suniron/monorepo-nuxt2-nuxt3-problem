@@ -40,7 +40,7 @@ router.use(jwtAuthParsing)
 router.get('/is-authorized/light', passThroughController) // light auth check (no 2fa)
 router.get('/is-authorized', passThroughController) // strong auth check (2fa)
 
-router.get('/2fa/setup', passThroughController)
+router.get('/two-factor/setup', passThroughController)
 router.post('/login/totp', passThroughController)
 
 // Private routes AFTER JWT authentication

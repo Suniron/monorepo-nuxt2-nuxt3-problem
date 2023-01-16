@@ -5,5 +5,5 @@ Since this project will be archived in the future, there is a controller to bypa
 To do the bypass, use this controller: `passThroughController`, like this:
 
 ```js
-router.get('/2fa/setup', passThroughController)
+router.get('/two-factor/setup', passThroughController)
 ```
