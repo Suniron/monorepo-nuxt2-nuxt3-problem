@@ -60,4 +60,5 @@ exports.down = async (knex) => {
   // Remove "two_factor_secret" column to "user" table
   await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_secret;')
   await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_confirmed_at;')
+  await knex.raw('ALTER TABLE "user" DROP COLUMN is_two_factor_required;')
 }
