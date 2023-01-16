@@ -26,9 +26,6 @@ export const requestLogin = async (provider, params) => {
   }
   catch (error) {
     log.withError(error).error('requestLogin')
-    // if ()
-    const test = createAPIError(error)
-    console.log('==================>==============>', test)
     return createAPIError(error)
   }
 }
