@@ -1,4 +1,5 @@
 import {
+  BAD_REQUEST,
   NOT_FOUND,
   STORE_API_ERROR,
   UNAUTHORIZED,
@@ -9,12 +10,13 @@ export const createAPIError = (error) => {
   const errorType = error?.response?.data?.errorType
   const errorMessage = error?.response?.data?.message
 
-  if (errorType || errorMessage) {
-    switch (errorType || errorMessage) {
+  if (errorType) {
+    switch (errorType) {
       case NOT_FOUND:
       case VALIDATION_ERROR:
       case UNAUTHORIZED:
-        return { error: errorType || errorMessage }
+      case BAD_REQUEST:
+        return { error: errorType, message: errorMessage }
       default:
         return { error: error.response.data }
     }

@@ -1,5 +1,6 @@
-import { throwHTTPError } from '@/common/errors'
+// @ts-check
 import { createAPIError } from '@/common/errors/api'
+import { log } from '@/lib/logger'
 
 export const requestPassThroughService = async (
   provider,
@@ -15,14 +16,14 @@ export const requestPassThroughService = async (
    * logger: any
    * }}
    */
-  const { axios, logger } = provider
+  const { axios } = provider
   try {
     const reqConfig = {
       ...(accessToken && {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { error, status, data } = await axios.request({
+    const { status, data } = await axios.request({
       // Using the concatenation syntax to preserve arguments autocompletion
       method,
       url: axios.defaults.baseURL + path,
@@ -30,13 +31,11 @@ export const requestPassThroughService = async (
       data: body,
       params: query,
     })
-    if (error)
-      throwHTTPError(error)
 
     return { data, status }
   }
   catch (error) {
-    logger.error(error)
+    log.withError(error).error(`requestPassThroughService: ${method.toUpperCase()} ${path}`)
     return createAPIError(error)
   }
 }
