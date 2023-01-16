@@ -6,12 +6,15 @@ import {
 } from '@/common/constants'
 
 export const createAPIError = (error) => {
-  if (error?.response?.data?.errorType) {
-    switch (error.response.data.errorType) {
+  const errorType = error?.response?.data?.errorType
+  const errorMessage = error?.response?.data?.message
+
+  if (errorType || errorMessage) {
+    switch (errorType || errorMessage) {
       case NOT_FOUND:
       case VALIDATION_ERROR:
       case UNAUTHORIZED:
-        return { error: error.response.data.errorType }
+        return { error: errorType || errorMessage }
       default:
         return { error: error.response.data }
     }
