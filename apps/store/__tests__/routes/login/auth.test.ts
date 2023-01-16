@@ -5,12 +5,12 @@ import app from '../../utils/fakeApp'
 import { fakeUserInDb, mockLoggedAsFullyConnectedUser, mockLoggedAsUser } from '../../utils/mockAuth'
 import { REFRESH_TOKEN_COOKIE_NAME } from '../../../src/config/env'
 
-describe('POST /login/password', () => {
+describe('POST /login/credentials', () => {
   it('should return a 401 when a user attempt to log it with a bad username', async () => {
     // Mock no user found
     prismaMock.user.findFirst.mockResolvedValue(null)
 
-    const response = await request(app).post('/login/password').send({
+    const response = await request(app).post('/login/credentials').send({
       password: 'goodPassword',
       username: 'badUserName',
     })
@@ -22,7 +22,7 @@ describe('POST /login/password', () => {
     // Mock user found
     prismaMock.user.findFirst.mockResolvedValue(fakeUserInDb)
 
-    const response = await request(app).post('/login/password').send({
+    const response = await request(app).post('/login/credentials').send({
       password: 'badPassword',
       username: 'username',
     })
@@ -33,7 +33,7 @@ describe('POST /login/password', () => {
     const { user } = mockLoggedAsUser()
 
     const response = await request(app)
-      .post('/login/password')
+      .post('/login/credentials')
       .send({
         password: 'P@ssw0rd',
         username: user.username,

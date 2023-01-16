@@ -1,3 +1,5 @@
+// @ts-check
+
 import { throwHTTPError } from '@/common/errors'
 import { passThroughService } from '@/services'
 

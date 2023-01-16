@@ -5,7 +5,7 @@ import { PASSWORD_VALIDATION_REGEXP } from '@/common/regexps/users'
 
 export const loginService = async (params) => {
   const { username, password } = params
-  const { error, accessToken, refreshTokenCookie, user } = await authAPIs.login(
+  const { error, accessToken, refreshTokenCookie, user, is2faInitialized } = await authAPIs.login(
     {
       password,
       username,
@@ -13,7 +13,7 @@ export const loginService = async (params) => {
   )
   if (error)
     return createServiceError(error)
-  return { accessToken, refreshTokenCookie, user }
+  return { accessToken, is2faInitialized, refreshTokenCookie, user }
 }
 
 export const refreshAccessTokenService = async (refreshToken, accessToken) => {

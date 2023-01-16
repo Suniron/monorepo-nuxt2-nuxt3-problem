@@ -29,7 +29,7 @@ const loginWithTotpValidation = celebrate({
 })
 
 // Public routes for authentication
-router.post('/login/password', loginWithCredentialsValidation, loginWithCredentialsController)
+router.post('/login/credentials', loginWithCredentialsValidation, loginWithCredentialsController)
 router.post('/refresh-token', refreshAccessTokenController)
 router.post('/reset-password', sendResetMailPassword)
 router.patch('/reset-password', updateResetPasswordByToken)

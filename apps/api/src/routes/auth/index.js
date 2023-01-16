@@ -28,7 +28,7 @@ const resetPayloadValidation = celebrate({
 })
 
 // Public routes BEFORE JWT authentication
-router.post('/login/password', loginPayloadValidation, loginController)
+router.post('/login/credentials', loginPayloadValidation, loginController)
 router.post('/refresh-token', refreshAccessTokenController)
 
 router.patch('/reset-password', updatePasswordByToken)

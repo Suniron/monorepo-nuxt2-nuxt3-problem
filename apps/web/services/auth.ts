@@ -8,7 +8,7 @@ export const loginService = async (axios: NuxtAxiosInstance, params: { username:
   const bodyParams = { password, username }
   const {
     data: { accessToken, user },
-  } = await axios.post('/login/password', bodyParams, {
+  } = await axios.post('/login/credentials', bodyParams, {
     withCredentials: true,
   })
   return { accessToken, user }

@@ -1709,7 +1709,7 @@ paths:
             type: integer
           required: true
           description: Numeric ID of the asset to Get
-  /login/password:
+  /login/credentials:
     post:
       tags:
         - 'Login'
