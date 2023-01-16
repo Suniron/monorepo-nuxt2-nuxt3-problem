@@ -38,6 +38,9 @@ router.patch('/reset-password', updateResetPasswordByToken)
 router.use(lightAuthenticationVerify)
 router.get('/is-authorized/light', isAuthorizedController)
 
+// Private routes after authentication
+router.delete('/logout', logoutController)
+
 router.get('/2fa/setup', twoFactorSetupController)
 router.post('/login/totp', loginWithTotpValidation, loginWithTotpController)
 
@@ -47,7 +50,5 @@ router.get('/is-authorized', isAuthorizedController)
 // Authentication point
 router.use('/assets/:id', verifyAssetPermissionController)
 
-// Private routes after authentication
-router.delete('/logout', logoutController)
 
 export default router
