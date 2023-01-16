@@ -349,10 +349,12 @@ export const initTokensModel = async (userWithCompanyName: User & { company: { n
     if (!accessSession.token || !refreshSession.token)
       return { error: MODEL_ERROR }
 
+    const bypass2fa = userWithCompanyName.is_two_factor_required === false
+
     return {
       accessToken: accessSession.token,
       refreshToken: refreshSession.token,
-      user: sanitizedUser,
+      user: { ...sanitizedUser, fullyConnected: fullyConnected || bypass2fa },
     }
   }
   catch (error) {
