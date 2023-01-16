@@ -75,6 +75,7 @@
     }
   ],
   "cSpell.words": [
+    "axios",
     "nuxt",
     "totp",
     "xrator"
