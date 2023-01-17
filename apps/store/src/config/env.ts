@@ -19,8 +19,8 @@ let httpsEnabled = false
 if (process.env.NODE_ENV !== 'test') {
   dotenv.config()
   httpsEnabled
-    = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
-    && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
+    = fs.existsSync(path.resolve(__dirname, '../../../../secrets/server_key.pem'))
+    && fs.existsSync(path.resolve(__dirname, '../../../../secrets/server_cert.pem'))
 }
 
 // = Application =

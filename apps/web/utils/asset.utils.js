@@ -205,3 +205,30 @@ export { allowedRelationsTypes }
 export const isSuperAsset = (assetType) => {
   return SUPER_ASSET_TYPES.includes(assetType)
 }
+
+export const validateSubnet = (mask) => {
+  if (mask < 1 || mask > 32)
+    return { isValid: false, response: 'Netmask is not valid' }
+  else
+    return { isValid: true, response: mask }
+}
+
+export const netmaskValid = (netmask) => {
+  // netmask as 255.255.255.0
+  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(netmask)) {
+    const ip = netmask.split('.').map((octet) => {
+      return parseInt(octet, 10)
+    })
+    const count = ip.reduce((acc, octet) => {
+      return acc + octet.toString(2).split('1').length - 1
+    }, 0)
+    return validateSubnet(count)
+  }// netmask as 24
+  else if (/^[0-9]{1,2}$/.test(netmask)) {
+    return validateSubnet(netmask)
+  }
+  else { // other
+    return validateSubnet(-1)
+  }
+}
+

@@ -26,7 +26,7 @@ async function startServer() {
   }
   if (isProduction && HTTPS_ENABLED) {
     const readConfigFile = (filename: any) =>
-      fs.readFileSync(path.resolve(__dirname, '../secrets/', filename))
+      fs.readFileSync(path.resolve(__dirname, '../../../secrets/', filename))
     const httpsOpts = {
       ca: [readConfigFile('api_cert.pem')],
       cert: readConfigFile('server_cert.pem'),

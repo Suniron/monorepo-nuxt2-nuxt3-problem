@@ -15,8 +15,8 @@ import { version } from '../../package.json'
 dotenv.config()
 
 const httpsEnabled
-  = fs.existsSync(path.resolve(__dirname, '../../secrets/server_key.pem'))
-  && fs.existsSync(path.resolve(__dirname, '../../secrets/server_cert.pem'))
+  = fs.existsSync(path.resolve(__dirname, '../../../../secrets/server_key.pem'))
+  && fs.existsSync(path.resolve(__dirname, '../../../../secrets/server_cert.pem'))
 
 /**
  * Environmental variables

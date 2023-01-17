@@ -33,6 +33,7 @@ describe('/ips/:id', () => {
         .send({
           address: '10.254.1.12',
           iface: 'iface',
+          isMain: 'true',
           mac: 'mac',
           mask: 'mask',
         })

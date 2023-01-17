@@ -41,16 +41,16 @@ const fetchSeveritiesSummary = async (params: any) => {
   const query = knex
     .select({
       critical: knex.raw(
-        'count(vast.id) FILTER (WHERE vast.severity = \'critical\' or cvss.score >= 9)',
+        'count(vast.id) FILTER (WHERE (vast.severity = \'critical\' or cvss.score >= 9) and (vast.status = \'open\' or vast.status is null ))',
       ),
       high: knex.raw(
-        'count(vast.id) FILTER (WHERE vast.severity = \'high\' or (cvss.score <= 8.9 and cvss.score >= 7))',
+        'count(vast.id) FILTER (WHERE (vast.severity = \'high\' or (cvss.score <= 8.9 and cvss.score >= 7)) and (vast.status = \'open\' or vast.status is null))',
       ),
       low: knex.raw(
-        'count(vast.id) FILTER (WHERE vast.severity = \'low\' or cvss.score <= 3.9)',
+        'count(vast.id) FILTER (WHERE (vast.severity = \'low\' or cvss.score <= 3.9) and (vast.status = \'open\' or vast.status is null))',
       ),
       medium: knex.raw(
-        'count(vast.id) FILTER (WHERE vast.severity = \'medium\' or (cvss.score <= 6.9 and cvss.score >= 4))',
+        'count(vast.id) FILTER (WHERE (vast.severity = \'medium\' or (cvss.score <= 6.9 and cvss.score >= 4)) and (vast.status = \'open\' or vast.status is null))',
       ),
     })
     .from({ vast: 'vulnerability_asset' })

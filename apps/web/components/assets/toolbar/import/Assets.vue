@@ -5,6 +5,14 @@ import { processCSV } from '~/services/fileUpload'
 import BaseAlert from '~/components/base/Alert.vue'
 import type { FailedCsvImportSimple, FailedCsvImportWithAssetData } from '~/services/assets'
 import { importCsvService } from '~/services/assets'
+import type { AssetType } from '~/types/asset'
+
+interface CsvHeader {
+  csv: number[]
+  key: string
+}
+
+const validAssetTypes: AssetType[] = ['BUILDING', 'MISSION', 'NETWORK', 'SERVER', 'UNIT', 'USER', 'WEB']
 
 const axios = useContext().$axios
 
@@ -14,7 +22,7 @@ const uploadedCsvFile = ref<File>()
 const isCsvValid = ref(false)
 const csvDataRows = ref<string[][]>([])
 
-const csvHeaders = ref<{ csv: number[]; key: string }[]>([])
+const csvHeaders = ref<CsvHeader[]>([])
 
 const failedToImport = ref<(FailedCsvImportSimple | FailedCsvImportWithAssetData)[]>([])
 const failedImportedAssets = computed(() => {
@@ -33,6 +41,29 @@ const resetState = () => {
   isCsvValid.value = false
   csvDataRows.value = []
   csvHeaders.value = []
+}
+
+const cleanRows = (rowsData: string[][], headers: CsvHeader[]): string[][] => {
+  const cleanedRows = []
+
+  const typeHeader = headers.find(h => h.key === 'type')
+
+  for (const row of rowsData) {
+    // Convert type to uppercase
+    if (typeHeader)
+      row[typeHeader.csv[0]] = row[typeHeader.csv[0]].toUpperCase()
+
+    cleanedRows.push(row)
+  }
+
+  // Return only rows with good type (if there is a type column)
+  return cleanedRows.filter((row) => {
+    if (typeHeader) {
+      const type = row[typeHeader.csv[0]]
+      return validAssetTypes.includes(type as AssetType)
+    }
+    return true
+  })
 }
 
 /**
@@ -71,6 +102,11 @@ const handleFileInput = async (e:
     fileWarningMessage.value = 'Your CSV file is empty, please fill it with your assets.'
     return
   }
+  // If there is only one column, it can be an error with csv format (like ";" instead of ",")
+  else if (data.csvHeaders.length <= 1) {
+    fileWarningMessage.value = 'Your CSV file is not valid: only one column is detected. Please, follow "sample file" structure (.csv separated by comma).'
+    return
+  }
   // If some column headers are not valid
   else if (data.csvHeaders.length !== data.headers.length) {
     /**
@@ -81,8 +117,14 @@ const handleFileInput = async (e:
     return
   }
 
+  const cleanedRowsData = cleanRows(data.csvData, data.headers)
+  if (cleanedRowsData.length !== data.csvData.length) {
+    fileWarningMessage.value = 'Some rows in your CSV file have an invalid type, please correct them.'
+    return
+  }
+
   csvHeaders.value = data.headers
-  csvDataRows.value = data.csvData
+  csvDataRows.value = cleanedRowsData
   isCsvValid.value = true
 }
 
