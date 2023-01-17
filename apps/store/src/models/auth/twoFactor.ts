@@ -63,7 +63,7 @@ export const loginWithTotpModel = async (userId: string, totp: number) => {
 
   // 4) generate fully connected access & refresh token
   const sanitizedUser = sanitizeUser(user)
-  const { accessToken, refreshToken } = generateJwtTokens({ ...sanitizedUser, companyName: user.company?.name as string }, true)
+  const { accessToken, refreshToken } = generateJwtTokens({ ...sanitizedUser, companyName: user.company?.name as string, fullyConnected: true })
 
   // 5) Revoke all existing tokens:
   await revokeAllUserTokensRequest(prismaClient, user.id)

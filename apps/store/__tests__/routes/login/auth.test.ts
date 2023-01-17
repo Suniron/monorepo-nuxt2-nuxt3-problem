@@ -2,7 +2,7 @@ import request from 'supertest'
 import { mockKnexWithFinalValue } from '../../mocks'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
-import { fakeUserInDb, mockLoggedAsFullyConnectedUser, mockLoggedAsUser } from '../../utils/mockAuth'
+import { fakeUserInDb, mockLoggedAsFullyConnectedUser, mockLoggedAsUser, mockPassportLocalStrategy } from '../../utils/mockAuth'
 import { REFRESH_TOKEN_COOKIE_NAME } from '../../../src/config/env'
 
 describe('POST /login/credentials', () => {
@@ -18,7 +18,7 @@ describe('POST /login/credentials', () => {
     expect(response.status).toBe(401)
   })
 
-  it('should return a 401  when a user attempt to log it with correct username but wrong password', async () => {
+  it('should return a 401 when a user attempt to log it with correct username but wrong password', async () => {
     // Mock user found
     prismaMock.user.findFirst.mockResolvedValue(fakeUserInDb)
 
@@ -29,7 +29,7 @@ describe('POST /login/credentials', () => {
     expect(response.status).toBe(401)
   })
 
-  it('when a user attempt to log it with correct username and correct password', async () => {
+  it('should return a 201 with user and is2faInitialized=false in body with correct username and correct password', async () => {
     const { user } = mockLoggedAsUser()
 
     const response = await request(app)
@@ -42,6 +42,24 @@ describe('POST /login/credentials', () => {
 
     expect(response).toEqual(expect.not.objectContaining(user))
     expect(response.body.is2faInitialized).toBe(false)
+  })
+
+  it('should return a 201 with user with fullyConnected=true and is2faInitialized=true in body for a user with 2fa bypass', async () => {
+    mockPassportLocalStrategy({
+      ...fakeUserInDb,
+      is_two_factor_required: false,
+    }, 'accessToken', 'refreshToken')
+
+    const response = await request(app)
+      .post('/login/credentials')
+      .send({
+        password: 'P@ssw0rd',
+        username: 'Etienne',
+      })
+      .expect(201)
+
+    expect(response.body.user.fullyConnected).toBe(true)
+    expect(response.body.is2faInitialized).toBe(true)
   })
 })
 

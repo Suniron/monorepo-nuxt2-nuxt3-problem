@@ -41,8 +41,10 @@ export const loginWithCredentialsController = async (req: Request, res: Response
       // This should not happen because it is handled above
       if (!userFromDb)
         return res.status(401).send({ message: 'Unauthorized' })
-      // 2) Get tokens
-      const { accessToken, refreshToken, user, error: initTokensError } = await initTokensModel(userFromDb)
+
+      // 2) Generate and get tokens
+      const bypass2fa = userFromDb.is_two_factor_required === false
+      const { accessToken, refreshToken, user, error: initTokensError } = await initTokensModel(userFromDb, bypass2fa)
       if (initTokensError) {
         // TODO: handle different error
         return res.status(500).send()
@@ -56,7 +58,9 @@ export const loginWithCredentialsController = async (req: Request, res: Response
       })
 
       // 4) Send response
-      return res.status(201).send({ accessToken, is2faInitialized: !!userFromDb.two_factor_secret, user })
+      // Enable 2fa bypass for some users (developers, ...)
+      const is2faInitialized = !userFromDb.is_two_factor_required ? true : !!userFromDb.two_factor_secret
+      return res.status(201).send({ accessToken, is2faInitialized, user })
     })(req, res, next)
   }
   catch (error) {

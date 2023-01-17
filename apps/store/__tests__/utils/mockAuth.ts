@@ -33,7 +33,7 @@ export const fakeUserInDb: User = {
   username: 'etienne',
 }
 
-const mockPassportLocalStrategy = (mockedUserFound: User, accessToken: string, refreshToken: string) => {
+export const mockPassportLocalStrategy = (mockedUserFound: User, accessToken: string, refreshToken: string) => {
   // Mock user found
   prismaMock.user.findFirst.mockResolvedValue({ ...mockedUserFound, company: { name: 'xrator' } })
   // Mock revoke old tokens
@@ -58,8 +58,8 @@ const mockPassportLocalStrategy = (mockedUserFound: User, accessToken: string, r
 /**
  * Mock the auth strategy, and return the access token
  */
-const mockAuthStrategy = (user: User, payload: JwtTokenPayloadInput, fullyConnected: boolean) => {
-  const { accessToken, refreshToken } = generateJwtTokens(payload, fullyConnected)
+export const mockAuthStrategy = (user: User, payload: JwtTokenPayloadInput, fullyConnected: boolean) => {
+  const { accessToken, refreshToken } = generateJwtTokens({ ...payload, fullyConnected })
 
   mockPassportLocalStrategy(user, accessToken, refreshToken)
 

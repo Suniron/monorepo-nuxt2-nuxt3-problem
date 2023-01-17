@@ -78,6 +78,7 @@ export const strongAuthenticationVerify = async (req: Request, _res: Response, n
       throwUnauthorizedError({
         message: 'User is not fully connected, please authenticate with a 2FA way',
       })
+      return
     }
 
     // If all is good, set user info in request and go to next middleware / controller

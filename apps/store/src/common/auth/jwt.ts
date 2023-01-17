@@ -54,9 +54,9 @@ export const generateJWTToken = (tokenType: JwtTokenType, payload: JwtTokenPaylo
  *
  * By default, it generates a non fully connected token.
  */
-export const generateJwtTokens = (userInfo: SanitizedUser & { companyName: string }, fullyConnected = false) => {
-  const accessToken = generateJWTToken('access', { ...userInfo, fullyConnected })
-  const refreshToken = generateJWTToken('refresh', { ...userInfo, fullyConnected })
+export const generateJwtTokens = (userInfo: SanitizedUser & { companyName: string; fullyConnected: boolean }) => {
+  const accessToken = generateJWTToken('access', userInfo)
+  const refreshToken = generateJWTToken('refresh', userInfo)
   return { accessToken, refreshToken }
 }
 

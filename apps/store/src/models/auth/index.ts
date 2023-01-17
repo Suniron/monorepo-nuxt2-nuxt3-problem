@@ -342,19 +342,20 @@ export const generateNewTokensAndRevokeOldOnes = async (payloadInput: JwtTokenPa
  */
 export const initTokensModel = async (userWithCompanyName: User & { company: { name: string } }, fullyConnected = false) => {
   try {
+    // Determine if user is fully connected (or can bypass 2fa)
+    const userIsFullyConnected = userWithCompanyName.is_two_factor_required === false ? true : fullyConnected
+
     // 1) Generate tokens with sanitized user
     const sanitizedUser = sanitizeUser(userWithCompanyName)
-    const { accessSession, refreshSession } = await generateNewTokensAndRevokeOldOnes({ ...sanitizedUser, companyName: userWithCompanyName.company.name, fullyConnected })
+    const { accessSession, refreshSession } = await generateNewTokensAndRevokeOldOnes({ ...sanitizedUser, companyName: userWithCompanyName.company.name, fullyConnected: userIsFullyConnected })
 
     if (!accessSession.token || !refreshSession.token)
       return { error: MODEL_ERROR }
 
-    const bypass2fa = userWithCompanyName.is_two_factor_required === false
-
     return {
       accessToken: accessSession.token,
       refreshToken: refreshSession.token,
-      user: { ...sanitizedUser, fullyConnected: fullyConnected || bypass2fa },
+      user: { ...sanitizedUser, fullyConnected: userIsFullyConnected },
     }
   }
   catch (error) {
