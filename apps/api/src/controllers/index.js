@@ -1,3 +1,5 @@
+// @ts-check
+
 import { throwHTTPError } from '@/common/errors'
 import { passThroughService } from '@/services'
 
@@ -16,7 +18,7 @@ export const passThroughController = async (req, res, next) => {
       req.accessToken,
     )
     if (storeResponse.error)
-      throwHTTPError(storeResponse.error)
+      throwHTTPError(storeResponse.error, storeResponse.message)
     res.status(storeResponse.status).send(storeResponse.data)
   }
   catch (error) {

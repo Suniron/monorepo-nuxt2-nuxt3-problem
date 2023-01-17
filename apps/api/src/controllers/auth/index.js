@@ -29,7 +29,7 @@ export const jwtAuthParsing = (req, _res, next) => {
 
 export const loginController = async (req, res, next) => {
   try {
-    const { error, accessToken, refreshTokenCookie, user } = await loginService(
+    const { error, accessToken, refreshTokenCookie, user, is2faInitialized } = await loginService(
       req.body,
     )
     if (error) {
@@ -39,7 +39,7 @@ export const loginController = async (req, res, next) => {
     }
 
     res.set('Set-Cookie', refreshTokenCookie)
-    res.status(201).send({ accessToken, user })
+    res.status(201).send({ accessToken, is2faInitialized, user })
   }
   catch (error) {
     next(error)

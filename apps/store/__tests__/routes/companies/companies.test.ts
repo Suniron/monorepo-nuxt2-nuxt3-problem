@@ -1,8 +1,9 @@
 import request from 'supertest'
 import csv from 'csvtojson'
 import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
-import { convertBase64ImageToBuffer } from '../../../src/utils/image.utils'
 import { prismaMock } from '../../mockPrisma'
+import { mockLoggedAsFullyConnectedAdmin, mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
+import { convertBase64ImageToBuffer } from '../../../src/utils/image.utils'
 import app from '../../utils/fakeApp'
 import { getNonAdminUser } from '../../utils'
 import assetRisk from '../../example-values/asset-risk-scores'
@@ -13,7 +14,7 @@ import assetRisk from '../../example-values/asset-risk-scores'
 let companies: any = []
 
 beforeAll(async () => {
-  // Get datas:
+  // Get data:
   companies = await csv({
     ignoreEmpty: true,
   }).fromFile('./seeds/csv_seed_files/demo/company.csv')
@@ -21,7 +22,12 @@ beforeAll(async () => {
 
 describe('/company', () => {
   describe('PATCH/', () => {
-    it('should return a model error if the domain doesnt exists', async () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().accessToken
+    })
+
+    it('should return a model error if the domain doesn\'t exists', async () => {
       prismaMock.company.findFirst.mockResolvedValue({
         id: 1,
       })
@@ -29,10 +35,11 @@ describe('/company', () => {
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue(null)
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', 'Bearer fake@token')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(500)
     })
-    it('should return a model error if the company doesnt exists', async () => {
+
+    it('should return a model error if the company doesn\'t exists', async () => {
       prismaMock.company.findFirst.mockResolvedValue(null)
 
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
@@ -41,10 +48,13 @@ describe('/company', () => {
       })
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', 'Bearer fake@token')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(500)
     })
+
     it('should update the data if the domain & company exists', async () => {
+      const { accessToken: token } = mockLoggedAsFullyConnectedUser()
+
       prismaMock.company.findFirst.mockResolvedValue({ id: 1 })
 
       prismaMock.phishing_scenario_domain.findFirst.mockResolvedValue({
@@ -53,7 +63,7 @@ describe('/company', () => {
       })
       const response = await request(app)
         .patch('/company')
-        .set('Authorization', 'Bearer fake@token')
+        .set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
     })
   })
@@ -61,6 +71,8 @@ describe('/company', () => {
 
 describe('/company/risk/', () => {
   describe('GET /', () => {
+    const { accessToken: token } = mockLoggedAsFullyConnectedUser()
+
     it('should return 200 and the global risk score of the logged user company', async () => {
       const businessMissions = assetRisk.filter(
         ast => ast.asset_type === 'MISSION' && ast.compound_score !== null,
@@ -71,7 +83,7 @@ describe('/company/risk/', () => {
       )
       const response = await request(app)
         .get('/company/risk/')
-        .set('Authorization', 'Bearer fake@token')
+        .set('Authorization', `Bearer ${token}`)
 
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
@@ -97,33 +109,43 @@ describe('/company/logo/', () => {
     })
 
     describe('with knex error', () => {
+      let token = ''
+      beforeAll(() => {
+        token = mockLoggedAsFullyConnectedUser().accessToken
+      })
+
       it('should be Content-Type json', async () => {
-        mockKnexWithFinalValue(['some bad datas'], true)
+        mockKnexWithFinalValue(['some bad data'], true)
 
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.type).toBe('application/json')
       })
 
       it('should be status 500', async () => {
-        mockKnexWithFinalValue(['some bad datas'], true)
+        mockKnexWithFinalValue(['some bad data'], true)
 
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(500)
       })
     })
 
-    describe('with good company datas', () => {
+    describe('with good company data', () => {
+      let token = ''
+      beforeAll(() => {
+        token = mockLoggedAsFullyConnectedUser().accessToken
+      })
+
       it('should be Content-Type json', async () => {
         mockKnexWithFinalValue([companies[0]])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.type).toBe('application/json')
       })
@@ -132,7 +154,7 @@ describe('/company/logo/', () => {
         mockKnexWithFinalValue([companies[0]])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(200)
       })
@@ -146,7 +168,7 @@ describe('/company/logo/', () => {
         ])
         const response = await request(app)
           .get('/company/logo/')
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.body.logo).toEqual(companies[0].base64_logo)
       })
@@ -160,132 +182,152 @@ describe('/company/logo/', () => {
 
         expect(response.status).toBe(401)
       })
+    })
 
-      describe('with good logo param BUT knex error', () => {
+    describe('with good logo param BUT knex error', () => {
+      let token = ''
+      beforeAll(() => {
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
+      })
+
+      it('should be Content-Type json', async () => {
+        mockKnexWithFinalValue(['some bad data'], true)
+
+        const response = await request(app)
+          .patch('/company/logo/')
+          .set('Authorization', `Bearer ${token}`)
+          .send({ logo: companies[0].base64_logo })
+
+        expect(response.type).toBe('application/json')
+      })
+
+      it('should be status 500', async () => {
+        mockKnexWithFinalValue(['some bad data'], true)
+
+        const response = await request(app)
+          .patch('/company/logo/')
+          .set('Authorization', `Bearer ${token}`)
+          .send({ logo: companies[0].base64_logo })
+
+        expect(response.status).toBe(500)
+      })
+    })
+
+    describe('As admin, with good company data', () => {
+      let token = ''
+      beforeAll(() => {
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
+      })
+
+      describe('without logo in req params', () => {
         it('should be Content-Type json', async () => {
-          mockKnexWithFinalValue(['some bad datas'], true)
-
+          mockKnexWithFinalValue([companies[0]])
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
-            .send({ logo: companies[0].base64_logo })
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.type).toBe('application/json')
         })
 
-        it('should be status 500', async () => {
-          mockKnexWithFinalValue(['some bad datas'], true)
-
+        it('should be status 400', async () => {
+          mockKnexWithFinalValue([companies[0]])
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
-            .send({ logo: companies[0].base64_logo })
+            .set('Authorization', `Bearer ${token}`)
 
-          expect(response.status).toBe(500)
+          expect(response.status).toBe(400)
         })
       })
 
-      describe('with good company datas', () => {
-        describe('without logo in req params', () => {
-          it('should be Content-Type json', async () => {
-            mockKnexWithFinalValue([companies[0]])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
+      describe('with bad logo param (without data:...)', () => {
+        it('should be Content-Type json', async () => {
+          mockKnexWithFinalValue([])
+          const response = await request(app)
+            .patch('/company/logo/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ logo: 'fake base64 image' })
 
-            expect(response.type).toBe('application/json')
-          })
-
-          it('should be status 400', async () => {
-            mockKnexWithFinalValue([companies[0]])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
-
-            expect(response.status).toBe(400)
-          })
+          expect(response.type).toBe('application/json')
         })
 
-        describe('with bad logo param (whithout data:...)', () => {
-          it('should be Content-Type json', async () => {
-            mockKnexWithFinalValue([])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
-              .send({ logo: 'fake base64 image' })
+        it('should be status 400', async () => {
+          mockKnexWithFinalValue([])
+          const response = await request(app)
+            .patch('/company/logo/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ logo: 'fake base64 image' })
 
-            expect(response.type).toBe('application/json')
-          })
-
-          it('should be status 400', async () => {
-            mockKnexWithFinalValue([])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
-              .send({ logo: 'fake base64 image' })
-
-            expect(response.status).toBe(400)
-          })
+          expect(response.status).toBe(400)
         })
+      })
 
-        describe('with bad base64 logo param (badly formatted)', () => {
-          it('should be status 400', async () => {
-            mockKnexWithFinalValue([])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
-              .send({
-                logo: `${companies[0].base64_logo}i_am_a_badly_formatted_extra_string!!!!!!!`,
-              })
+      describe('with bad base64 logo param (badly formatted)', () => {
+        it('should be status 400', async () => {
+          mockKnexWithFinalValue([])
+          const response = await request(app)
+            .patch('/company/logo/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+              logo: `${companies[0].base64_logo}i_am_a_badly_formatted_extra_string!!!!!!!`,
+            })
 
-            expect(response.status).toBe(400)
-          })
+          expect(response.status).toBe(400)
         })
+      })
 
-        describe('with good logo param', () => {
-          it('should be status 204', async () => {
-            mockKnexWithFinalValue([companies[0]])
-            const response = await request(app)
-              .patch('/company/logo/')
-              .set('Authorization', 'Bearer fake@token')
-              .send({ logo: companies[0].base64_logo })
+      describe('with good logo param', () => {
+        it('should be status 204', async () => {
+          mockKnexWithFinalValue([companies[0]])
+          const response = await request(app)
+            .patch('/company/logo/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ logo: companies[0].base64_logo })
 
-            expect(response.status).toBe(204)
-          })
+          expect(response.status).toBe(204)
         })
       })
     })
 
     describe('DELETE /', () => {
       describe('with knex error', () => {
+        let token = ''
+        beforeAll(() => {
+          token = mockLoggedAsFullyConnectedUser().accessToken
+        })
+
         it('should be Content-Type json', async () => {
-          mockKnexWithFinalValue(['some bad datas'], true)
+          mockKnexWithFinalValue(['some bad data'], true)
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.type).toBe('application/json')
         })
 
         it('should be status 500', async () => {
-          mockKnexWithFinalValue(['some bad datas'], true)
+          mockKnexWithFinalValue(['some bad data'], true)
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(500)
         })
       })
 
-      describe('with good company datas', () => {
+      describe('with good company data', () => {
+        let token = ''
+        beforeAll(() => {
+          token = mockLoggedAsFullyConnectedUser().accessToken
+        })
+
         it('should be Content-Type json', async () => {
           mockKnexWithFinalValue([companies[0]])
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.type).toBe('application/json')
         })
@@ -295,25 +337,30 @@ describe('/company/logo/', () => {
 
           const response = await request(app)
             .delete('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(200)
         })
       })
     })
   })
-  describe('with good company datas', () => {
+  describe('with good company data', () => {
     describe('as non-admin', () => {
       beforeAll(() => {
         mockVerifyToken(getNonAdminUser({}))
       })
 
       describe('with good logo param', () => {
+        let token = ''
+        beforeAll(() => {
+          token = mockLoggedAsFullyConnectedUser().accessToken
+        })
+
         it('should be status 403', async () => {
           mockKnexWithFinalValue([companies[0]])
           const response = await request(app)
             .patch('/company/logo/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
             .send({ logo: companies[0].base64_logo })
 
           expect(response.status).toBe(403)

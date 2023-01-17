@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { generateController } from '../../controllers/reports'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/reports', generateController)
 

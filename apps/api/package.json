@@ -4,7 +4,7 @@
   "description": "Backend services for xrator_ui (frontend)",
   "main": "index.js",
   "scripts": {
-    "dev": "PORT=3001 nodemon",
+    "dev": "PORT=3001 nodemon --inspect=0.0.0.0:9229",
     "dev:docker": "pnpm install --frozen-lockfile && nodemon",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf coverage",
     "start": "babel-node src/app.js",

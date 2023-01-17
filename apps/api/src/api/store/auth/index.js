@@ -1,21 +1,31 @@
+// @ts-check
 import { createAPIError } from '@/common/errors/api'
 import { createServiceError } from '@/common/errors/service'
+import { log } from '@/lib/logger'
 
+/**
+ *
+ * @param {{axios: import('axios').AxiosInstance}} provider
+ * @param {*} params
+ * @returns
+ */
 export const requestLogin = async (provider, params) => {
-  const { logger, axios } = provider
+  const { axios } = provider
   try {
     const { username, password } = params
     const bodyParams = { password, username }
 
-    const response = await axios.post('login', bodyParams)
+    const response = await axios.post('/login/credentials', bodyParams)
+
     const accessToken = response.data.accessToken || ''
     const refreshTokenCookie = response.headers['set-cookie'] || ''
-    const user = response.data.userInfo
+    const user = response.data.user
+    const is2faInitialized = response.data.is2faInitialized
 
-    return { accessToken, refreshTokenCookie, user }
+    return { accessToken, is2faInitialized, refreshTokenCookie, user }
   }
   catch (error) {
-    logger.error(error)
+    log.withError(error).error('requestLogin')
     return createAPIError(error)
   }
 }

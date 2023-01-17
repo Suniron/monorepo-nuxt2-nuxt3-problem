@@ -3,9 +3,7 @@ import csv from 'csvtojson'
 import {
   mockKnexWithFinalValue,
   mockKnexWithFinalValues,
-  mockVerifyToken,
 } from '../../mocks'
-import { generateUser } from '../../utils/'
 import priorities from '../../example-values/project-priorities.json'
 import remediationProjectData from '../../example-values/remediation-projects.json'
 import commentsRemediationProjectData from '../../example-values/comments-remediation-projects.json'
@@ -13,6 +11,7 @@ import commentsRemediationProjectData from '../../example-values/comments-remedi
 import { SUCCESS, UNAUTHORIZED } from '../../../src/common/constants'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 /**
  * @typedef {{
@@ -84,14 +83,12 @@ const newProjectData = {
   project_scope: [1],
 }
 
-const customUser = generateUser({
-  firstName: 'xrator-test',
-  id: 'xrator_test_id',
-  lastName: 'xrator-test',
-})
+let token = ''
 
 beforeAll(async () => {
-  // Get datas:
+  token = mockLoggedAsFullyConnectedUser().accessToken
+
+  // Get data:
   remediationProjects = await csv({
     ignoreEmpty: true,
   }).fromFile('./seeds/csv_seed_files/demo/remediation_project.csv')
@@ -180,11 +177,10 @@ describe('/remediation-projects/summary', () => {
         })
 
         mockKnexWithFinalValue(remediationProjectList)
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get('/remediation-projects/summary')
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(200)
         expect(response.body?.remediationProjects).toEqual(
           remediationProjectList,
@@ -203,7 +199,7 @@ describe('/remediation-projects', () => {
 
       const response = await request(app)
         .post('/remediation-projects')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .send(newProjectData)
 
@@ -230,11 +226,10 @@ describe('/remediation-projects/:id', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
@@ -314,11 +309,10 @@ describe('/remediation-projects/:id', () => {
           // Mock return remediation project details
           remediationProjectDetails,
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get(`/remediation-projects/${projectId}`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(200)
         expect(response.body).toEqual(remediationProjectDetails)
       })
@@ -332,23 +326,15 @@ describe('/remediation-projects/:id', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
     // TODO: fix it
     describe.skip('as the owner of a project', () => {
-      beforeAll(() => {
-        const projectOwner = generateUser({
-          id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
-          username: 'owner',
-        })
-        mockVerifyToken(projectOwner)
-      })
       it('when updating 4 properties of a remediation project', async () => {
         const Knex = mockKnexWithFinalValues([
           // Mock the same company_id as the user
@@ -367,7 +353,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send(patchData)
 
@@ -405,7 +391,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send({
             status_id: statusId,
@@ -424,13 +410,6 @@ describe('/remediation-projects/:id', () => {
     })
     // TODO: fix it
     describe.skip('As an assignee of a project', () => {
-      beforeAll(() => {
-        const projectAssignee = generateUser({
-          id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
-          username: 'assignee',
-        })
-        mockVerifyToken(projectAssignee)
-      })
       it('when updating 4 properties of a remediation project', async () => {
         const Knex = mockKnexWithFinalValues([
           // Mock the same company_id as the user
@@ -448,7 +427,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send(patchData)
 
@@ -471,7 +450,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send({
             status_id: statusId,
@@ -501,7 +480,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send({
             status_id: statusId,
@@ -514,13 +493,6 @@ describe('/remediation-projects/:id', () => {
     })
 
     describe('As a viewer of a project', () => {
-      beforeAll(() => {
-        const projectViewer = generateUser({
-          id: '3107ad82-cc71-4a7e-9f4c-1585716c0191',
-          username: 'viewer',
-        })
-        mockVerifyToken(projectViewer)
-      })
       it('when updating 4 properties of a remediation project', async () => {
         const Knex = mockKnexWithFinalValues([
           // Mock the same company_id as the user
@@ -538,7 +510,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send(patchData)
 
@@ -559,7 +531,7 @@ describe('/remediation-projects/:id', () => {
 
         const response = await request(app)
           .patch('/remediation-projects/1')
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .send({
             status_id: statusId,
@@ -581,11 +553,10 @@ describe('/remediation-projects/:id/scope', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get('/remediation-projects/1/scope')
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
@@ -649,11 +620,10 @@ describe('/remediation-projects/:id/scope', () => {
           [1],
           remediationProjectScope,
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get(`/remediation-projects/${projectId}/scope`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(200)
         expect(response.body).toEqual(remediationProjectScope)
@@ -666,7 +636,7 @@ describe('/remediation-projects/:id/scope', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -678,7 +648,7 @@ describe('/remediation-projects/:id/scope', () => {
           .patch(
             '/remediation-projects/' + 'bad_remediation_project_id' + '/scope',
           )
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -690,22 +660,19 @@ describe('/remediation-projects/:id/scope', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope`)
           .send({
             project_scope: [],
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
 
     describe('as non-owner', () => {
       it('should return 401', async () => {
-        mockVerifyToken(customUser)
-
         mockKnexWithFinalValues([
           // Mock the same company_id as the user
           [1],
@@ -718,7 +685,7 @@ describe('/remediation-projects/:id/scope', () => {
           .send({
             project_scope: [],
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(401)
       })
@@ -727,7 +694,6 @@ describe('/remediation-projects/:id/scope', () => {
     describe('as owner', () => {
       describe('Update scope with 4 deleted rows and no new rows', () => {
         it('should return 201', async () => {
-          mockVerifyToken(customUser)
           mockKnexWithFinalValues([
             // Mock the same company_id as the user
             [1],
@@ -744,7 +710,7 @@ describe('/remediation-projects/:id/scope', () => {
             .send({
               project_scope: [104, 105, 106, 107],
             })
-            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(201)
           expect(response.body).toHaveProperty('data')
@@ -757,7 +723,6 @@ describe('/remediation-projects/:id/scope', () => {
 
       describe('Update scope with 6 new rows and no deleted', () => {
         it('should return 201', async () => {
-          mockVerifyToken(customUser)
           mockKnexWithFinalValues([
             // Mock the same company_id as the user
             [1],
@@ -783,7 +748,7 @@ describe('/remediation-projects/:id/scope', () => {
             .send({
               project_scope: [104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
             })
-            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(201)
           expect(response.body).toHaveProperty('data')
@@ -813,7 +778,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -823,7 +788,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
       it('should return 400', async () => {
         const response = await request(app)
           .patch('/remediation-projects/bad_remediation_project_id/scope/1')
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -835,7 +800,7 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           .patch(
             `/remediation-projects/${remediationProjects[0].id}/scope/bad_scope_id`,
           )
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -847,26 +812,17 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
           .send({ is_done: true })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
 
     describe('as non-owner AND non-assignee', () => {
       it('should return 401', async () => {
-        // Generate and mock connected user id
-        const notOwnerOrAsigneeUser = generateUser({
-          firstName: 'xrator-test',
-          id: 'i_am_not_owner_or_assignee_id',
-          lastName: 'xrator-test',
-        })
-        mockVerifyToken(notOwnerOrAsigneeUser)
-
         mockKnexWithFinalValues([
           // Mock the same company_id as the user
           [1],
@@ -885,22 +841,16 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
         const response = await request(app)
           .patch(`/remediation-projects/${remediationProjects[0].id}/scope/1`)
           .send({ is_done: true })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(401)
       })
     })
 
     describe('as owner', () => {
+      let token = ''
       beforeAll(() => {
-        // Generate and mock connected user id
-        const ownerUser = generateUser({
-          firstName: 'xrator-test',
-          id: 'i_am_owner_id',
-          lastName: 'xrator-test',
-        })
-
-        mockVerifyToken(ownerUser)
+        token = mockLoggedAsFullyConnectedUser({ id: 'i_am_owner_id' }).accessToken
       })
 
       describe('Change is_done of scope of a bad project (not a part of it)', () => {
@@ -923,90 +873,80 @@ describe('/remediation-projects/:id/scope/:scope_id', () => {
             .send({
               is_done: true,
             })
-            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(400)
         })
       })
 
-      describe('Change is_done of scope of a good project', () => {
-        it('should return 204', async () => {
-          mockKnexWithFinalValues([
-            // Mock the same company_id as the user
-            [1],
-            // Mock project owner match:
-            [{ ...remediationProjects[0], fk_owner: 'i_am_owner_id' }],
-            // Simulate an object for this scope in this remediation project:
-            [{}],
-            // Simulate updated row:
-            1,
-          ])
-          // Find the first scope which corresponds to the first remediation project:
-          const goodScope = remediationProjectScopeTable.find(
-            rps => rps.fk_project_id === remediationProjects[0].id,
-          )
+      it('should return 204 on change is_done of scope of a good project', async () => {
+        mockKnexWithFinalValues([
+          // Mock the same company_id as the user
+          [1],
+          // Mock project owner match:
+          [{ ...remediationProjects[0], fk_owner: 'i_am_owner_id' }],
+          // Simulate an object for this scope in this remediation project:
+          [{}],
+          // Simulate updated row:
+          [{}],
+        ])
+        // Find the first scope which corresponds to the first remediation project:
+        const goodScope = remediationProjectScopeTable.find(
+          rps => rps.fk_project_id === remediationProjects[0].id,
+        )
 
-          const response = await request(app)
-            .patch(
+        const response = await request(app)
+          .patch(
               `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`,
-            )
-            .send({
-              is_done: !goodScope?.is_done,
-            })
-            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          )
+          .send({
+            is_done: !goodScope?.is_done,
+          })
+          .set('Authorization', `Bearer ${token}`)
 
-          expect(response.status).toBe(204)
-        })
+        expect(response.status).toBe(204)
       })
     })
 
     describe('as non-owner but assignee', () => {
+      let token = ''
       beforeAll(() => {
-        // Generate and mock connected user id
-        const ownerUser = generateUser({
-          firstName: 'xrator-test',
-          id: 'i_am_assignee_id',
-          lastName: 'xrator-test',
-        })
-
-        mockVerifyToken(ownerUser)
+        token = mockLoggedAsFullyConnectedUser({ companyId: 1, id: 'i_am_assignee_id' }).accessToken
       })
 
-      describe('Change is_done of scope of a good project', () => {
-        it('should return 204', async () => {
-          mockKnexWithFinalValues([
-            // Mock the same company_id as the user
-            [1],
-            // Mock no owner found:
-            [],
-            // Mock list of assignees witch includes the tested assignee:
-            [
-              ...remediationProjectAssignees.map(rpa => ({
-                fk_user_id: rpa.fk_user_id,
-              })),
-              { fk_user_id: 'i_am_assignee_id' },
-            ],
-            // Mock existing scope in this remediation project:
-            [remediationProjectScopeTable[0]],
-            // Simulate updated row:
-            1,
-          ])
-          // Find the first scope which corresponds to the first remediation project:
-          const goodScope = remediationProjectScopeTable.find(
-            rps => rps.fk_project_id === remediationProjects[0].id,
-          )
+      it('should return 204 change is_done of scope of a good project', async () => {
+        mockKnexWithFinalValues([
+          // Mock the same company_id as the user
+          [1],
+          // Mock no owner found:
+          [],
+          // Mock list of assignees witch includes the tested assignee:
+          [
+            ...remediationProjectAssignees.map(rpa => ({
+              fk_user_id: rpa.fk_user_id,
+            })),
+            { fk_user_id: 'i_am_assignee_id' },
+          ],
+          // Mock existing scope in this remediation project:
+          [remediationProjectScopeTable[0]],
+          // Simulate updated row:
+          1,
+        ])
+        // Find the first scope which corresponds to the first remediation project:
+        const goodScope = remediationProjectScopeTable.find(
+          rps => rps.fk_project_id === remediationProjects[0].id,
+        )
 
-          const response = await request(app)
-            .patch(
+        const response = await request(app)
+          .patch(
               `/remediation-projects/${remediationProjects[0].id}/scope/${goodScope?.id}`,
-            )
-            .send({
-              is_done: !goodScope?.is_done,
-            })
-            .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          )
+          .send({
+            is_done: !goodScope?.is_done,
+          })
+          .set('Authorization', `Bearer ${token}`)
 
-          expect(response.status).toBe(204)
-        })
+        expect(response.status).toBe(204)
       })
     })
   })
@@ -1029,20 +969,15 @@ describe('/remediation-projects/:id/status-history', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get(`/remediation-projects/${data[0].project_id}/status-history`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
 
     describe('getting a project\'s status history', () => {
-      beforeAll(() => {
-        mockVerifyToken(generateUser())
-      })
-
       it('should return the project\'s history', async () => {
         mockKnexWithFinalValues([
           // Mock same company_id as the user
@@ -1052,7 +987,7 @@ describe('/remediation-projects/:id/status-history', () => {
 
         const response = await request(app)
           .get(`/remediation-projects/${data[0].project_id}/status-history`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
 
         expect(response.body).toEqual(data)
@@ -1068,7 +1003,7 @@ describe('/projects/priorities', () => {
 
       const result = await request(app)
         .get('/projects/priorities')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
 
@@ -1082,7 +1017,7 @@ describe('/projects/priorities', () => {
 
       const result = await request(app)
         .get(`/projects/priorities/${priorities[0].id}`)
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
 
@@ -1111,11 +1046,10 @@ describe('/posts/remediation-project/:id', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .get(`/posts/remediation-project/${commentsData[0].project_id}`)
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
@@ -1129,7 +1063,7 @@ describe('/posts/remediation-project/:id', () => {
         ])
         const response = await request(app)
           .get(`/posts/remediation-project/${commentsData[0].project_id}`)
-          .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /json/)
         expect(response.body).toEqual(commentsData)
@@ -1144,14 +1078,13 @@ describe('/posts/remediation-project/:id', () => {
           // Mock bad company_id
           [],
         ])
-        mockVerifyToken(customUser)
 
         const response = await request(app)
           .post('/posts/remediation-project/1')
           .send({
             comment: 'A comment that will not be saved',
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
         expect(response.status).toBe(404)
       })
     })
@@ -1171,14 +1104,13 @@ describe('/posts/remediation-project/:id', () => {
           .send({
             comment: 'A comment that will not be saved',
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
           .expect(401)
       })
     })
     describe('as project owner of the project on which to post the comment', () => {
       it('comment without status_history_id should return 200', async () => {
         const returningId = [{ id: 1 }]
-        mockVerifyToken(customUser)
         mockKnexWithFinalValues([
           // Mock same company_id as the user
           [1],
@@ -1192,14 +1124,13 @@ describe('/posts/remediation-project/:id', () => {
           .send({
             comment: 'A comment that will be saved',
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(201)
         expect(response.body.id).toEqual(1)
       })
 
       it('comment with bad status_history_id should return 400', async () => {
-        mockVerifyToken(customUser)
         mockKnexWithFinalValues([
           // Mock same company_id as the user
           [1],
@@ -1216,7 +1147,7 @@ describe('/posts/remediation-project/:id', () => {
             comment: 'A comment that will not be saved',
             remediation_project_status_history_id: 1,
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(400)
       })
@@ -1225,7 +1156,6 @@ describe('/posts/remediation-project/:id', () => {
         const returningId = [{ id: 1 }]
         const projectId = 3
         const projectStatusHistoryId = 3
-        mockVerifyToken(customUser)
         mockKnexWithFinalValues([
           // Mock same company_id as the user
           [1],
@@ -1246,7 +1176,7 @@ describe('/posts/remediation-project/:id', () => {
             comment: 'A comment that will be saved',
             remediation_project_status_history_id: projectStatusHistoryId,
           })
-          .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(201)
         expect(response.body.id).toEqual(1)

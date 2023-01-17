@@ -3,9 +3,10 @@ import scans, {
   createScanContent,
   generateScans,
   probe,
-} from '../../example-values/scans.ts'
+} from '../../example-values/scans'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 describe('/scans', () => {
   describe('GET /', () => {
@@ -17,88 +18,105 @@ describe('/scans', () => {
         })
     })
 
-    it('GET / should return 200 if we fetch with token', () => {
-      prismaMock.scan.findMany.mockResolvedValue(scans)
+    describe('as fully connected user', () => {
+      let token = ''
+      beforeAll(async () => {
+        token = mockLoggedAsFullyConnectedUser().accessToken
+      })
 
-      return request(app)
-        .get('/scans')
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
-        .expect(200)
-        .expect('Content-Type', /json/)
-    })
+      it('GET / should return 200 if we fetch with token', () => {
+        prismaMock.scan.findMany.mockResolvedValue(scans)
 
-    it('GET / with pagination should return subset of values', async () => {
-      const page = 1
-      const pageSize = 5
+        return request(app)
+          .get('/scans')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /json/)
+      })
 
-      prismaMock.scan.count.mockResolvedValue(pageSize)
+      it('GET / with pagination should return subset of values', async () => {
+        const page = 1
+        const pageSize = 5
 
-      prismaMock.scan.findMany.mockResolvedValue(generateScans(5))
-      const result = await request(app)
-        .get(`/scans?page=${page}&pageSize=${pageSize}`)
-        .set('Authorization', 'Bearer zdadzzddzaaaaaaaaaaaaa@dzazadzda')
-        .expect(200)
-        .expect('Content-Type', /json/)
+        prismaMock.scan.count.mockResolvedValue(pageSize)
 
-      expect(result.body.scans.length).toEqual(5)
-      expect(result.body.total).toEqual(5)
-      expect(result.body.scans[0]).toHaveProperty('assets')
-      result.body.scans.forEach((scan: any) => {
-        expect(
-          isSortedAlphabetically(scan.assets.map((ast: any) => ast.name)),
-        ).toEqual(true)
+        prismaMock.scan.findMany.mockResolvedValue(generateScans(5))
+        const result = await request(app)
+          .get(`/scans?page=${page}&pageSize=${pageSize}`)
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /json/)
+
+        expect(result.body.scans.length).toEqual(5)
+        expect(result.body.total).toEqual(5)
+        expect(result.body.scans[0]).toHaveProperty('assets')
+        result.body.scans.forEach((scan: any) => {
+          expect(
+            isSortedAlphabetically(scan.assets.map((ast: any) => ast.name)),
+          ).toEqual(true)
+        })
       })
     })
-  })
-  describe('POST /', () => {
-    it('should return a 200 with an array of one if we pass only one type', async () => {
-      const numberOfScanTypePassed = 1
+    describe('POST /', () => {
+      let token = ''
+      beforeAll(async () => {
+        token = mockLoggedAsFullyConnectedUser().accessToken
+      })
 
-      prismaMock.probe.findFirst.mockResolvedValue(probe)
+      it('should return a 200 with an array of one if we pass only one type', async () => {
+        const numberOfScanTypePassed = 1
 
-      prismaMock.scan.create.mockResolvedValue({ id: 66 })
-      const response = await request(app)
-        .post('/scans')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
-        .expect(200)
-        .send(createScanContent(numberOfScanTypePassed))
-      expect(response.body.id.length).toEqual(numberOfScanTypePassed)
-    })
-    it('should return an array with length of 2 if we passed two types', async () => {
-      const numberOfScanTypePassed = 2
+        prismaMock.probe.findFirst.mockResolvedValue(probe)
 
-      prismaMock.probe.findFirst.mockResolvedValue(probe)
+        prismaMock.scan.create.mockResolvedValue({ id: 66 })
+        const response = await request(app)
+          .post('/scans')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200)
+          .send(createScanContent(numberOfScanTypePassed))
+        expect(response.body.id.length).toEqual(numberOfScanTypePassed)
+      })
+      it('should return an array with length of 2 if we passed two types', async () => {
+        const numberOfScanTypePassed = 2
 
-      prismaMock.scan.create.mockResolvedValueOnce({ id: 66 })
+        prismaMock.probe.findFirst.mockResolvedValue(probe)
 
-      prismaMock.scan.create.mockResolvedValueOnce({ id: 67 })
-      const response = await request(app)
-        .post('/scans')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
-        .expect(200)
-        .send(createScanContent(numberOfScanTypePassed))
-      expect(response.body.id.length).toEqual(numberOfScanTypePassed)
-    })
-    it('should return a 400 if there is no content sent', async () => {
-      await request(app)
-        .post('/scans')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
-        .expect(400)
-        .send()
-    })
-    it('should return a 400 if there is no content sent', async () => {
-      await request(app)
-        .post('/scans')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
-        .expect(400)
-        .send({
-          wrongDataSent: 'yesItIs',
-        })
+        prismaMock.scan.create.mockResolvedValueOnce({ id: 66 })
+
+        prismaMock.scan.create.mockResolvedValueOnce({ id: 67 })
+        const response = await request(app)
+          .post('/scans')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200)
+          .send(createScanContent(numberOfScanTypePassed))
+        expect(response.body.id.length).toEqual(numberOfScanTypePassed)
+      })
+      it('should return a 400 if there is no content sent', async () => {
+        await request(app)
+          .post('/scans')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400)
+          .send()
+      })
+      it('should return a 400 if there is no content sent', async () => {
+        await request(app)
+          .post('/scans')
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400)
+          .send({
+            wrongDataSent: 'yesItIs',
+          })
+      })
     })
   })
 })
 
 describe('/scans/assets', () => {
+  let token = ''
+  beforeAll(async () => {
+    token = mockLoggedAsFullyConnectedUser().accessToken
+  })
+
   describe('GET /', () => {
     it('GET / should return 401 if we fetch without token', () => {
       return request(app)
@@ -137,7 +155,7 @@ describe('/scans/assets', () => {
       ])
       const response = await request(app)
         .get('/scans/assets')
-        .set('Authorization', 'Bearer zdadzzddzzdazaaaaaaaaaaaaa@dzazadzda')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
       expect(response.body).toEqual({
         assets: [

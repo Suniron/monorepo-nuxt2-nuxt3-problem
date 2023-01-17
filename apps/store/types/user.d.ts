@@ -7,7 +7,7 @@ export interface BaseUser {
 
 export type User = {
   id: string
-  company_id: integer
+  company_id: number
   first_name: string
   last_name: string
   username: string
@@ -52,7 +52,7 @@ export interface LoggedUser {
   default: DefaultLoggedUser
 }
 
-export interface OptionnalUserInfos {
+export interface OptionalUserInfo {
   firstName?: string
   lastName?: string
   username?: string

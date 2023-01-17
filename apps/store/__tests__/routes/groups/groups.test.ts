@@ -1,9 +1,9 @@
 import request from 'supertest'
 import csv from 'csvtojson'
 import type { group } from '@prisma/client'
-import { mockAdminUser, mockNonAdminUser } from '../../mocks'
 import { prismaMock } from '../../mockPrisma'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedAdmin, mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
 let groups: group[] = []
 
@@ -19,8 +19,9 @@ describe('/groups/', () => {
     // TODO: Get only groups where i am member, as non admin
     // TODO: Get all groups in company, as admin
     describe('as admin', () => {
+      let token = ''
       beforeAll(() => {
-        mockAdminUser({ companyId: 1 })
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       describe('get all groups of my company', () => {
@@ -33,58 +34,62 @@ describe('/groups/', () => {
 
           const response = await request(app)
             .get('/groups/')
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(200)
           expect(response.body.total).toBe(companyGroups.length)
         })
       })
+    })
 
-      describe('as non admin', () => {
-        beforeAll(() => {
-          mockNonAdminUser({ companyId: 1 })
-        })
+    describe('as non admin', () => {
+      let token = ''
+      beforeAll(() => {
+        token = mockLoggedAsFullyConnectedUser().accessToken
+      })
 
-        describe('get all available groups of my company', () => {
-          it('should be company groups count', async () => {
-            // TODO: need a filter by group member
-            const companyGroups = groups
+      describe('get all available groups of my company', () => {
+        it('should be company groups count', async () => {
+          // TODO: need a filter by group member
+          const companyGroups = groups
 
-              .filter(g => g.company_id === 1)
+            .filter(g => g.company_id === 1)
 
-              .map(cg => ({ ...cg, user_group: [] }))
+            .map(cg => ({ ...cg, user_group: [] }))
 
-            prismaMock.group.findMany.mockResolvedValue(companyGroups)
+          prismaMock.group.findMany.mockResolvedValue(companyGroups)
 
-            const response = await request(app)
-              .get('/groups/')
-              .set('Authorization', 'Bearer fake@token')
+          const response = await request(app)
+            .get('/groups/')
+            .set('Authorization', `Bearer ${token}`)
 
-            expect(response.status).toBe(200)
-            expect(response.body.total).toBe(companyGroups.length)
-          })
+          expect(response.status).toBe(200)
+          expect(response.body.total).toBe(companyGroups.length)
         })
       })
     })
   })
+
   describe('PATCH /:id', () => {
     describe('as non admin', () => {
+      let token = ''
       beforeAll(() => {
-        mockNonAdminUser({})
+        token = mockLoggedAsFullyConnectedUser().accessToken
       })
 
       it('should be status 403', async () => {
         const response = await request(app)
           .patch(`/groups/${groups[0].id}`)
-          .set('Authorization', 'Bearer fake@token')
+          .set('Authorization', `Bearer ${token}`)
 
         expect(response.status).toBe(403)
       })
     })
 
     describe('as admin', () => {
+      let token = ''
       beforeAll(() => {
-        mockAdminUser({ companyId: 1 })
+        token = mockLoggedAsFullyConnectedAdmin().accessToken
       })
 
       describe('rename group', () => {
@@ -110,7 +115,7 @@ describe('/groups/', () => {
 
           const response = await request(app)
             .patch(`/groups/${companyGroups[0]?.id}`)
-            .set('Authorization', 'Bearer fake@token')
+            .set('Authorization', `Bearer ${token}`)
 
           expect(response.status).toBe(200)
         })

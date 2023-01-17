@@ -7,7 +7,7 @@ import {
 
 import { knex } from '../../common/db'
 
-import { genSaltSync, hashSync } from '../../common/auth/sha512'
+import { genSaltSync, getHashedPassword } from '../../common/auth/sha512'
 
 import { createPasswordHash, passwordsMatch } from '../../common/auth/passwords'
 
@@ -41,7 +41,7 @@ export const createUserController = async (req: any, res: any, next: any) => {
         createPasswordHash(
           {
             genSaltSync,
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
         ),
@@ -65,7 +65,7 @@ export const updateUserController = async (req: any, res: any, next: any) => {
         createPasswordHash(
           {
             genSaltSync,
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
         ),
@@ -74,7 +74,7 @@ export const updateUserController = async (req: any, res: any, next: any) => {
       passwordsMatch: (password: any, hash: any, salt: any) =>
         passwordsMatch(
           {
-            hashSync,
+            hashSync: getHashedPassword,
           },
           password,
           hash,

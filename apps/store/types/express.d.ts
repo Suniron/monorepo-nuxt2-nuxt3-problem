@@ -1,48 +1,18 @@
 import type { Logger } from "../src/lib/logger";
+import type { JwtTokenPayload } from "../src/common/auth/jwt";
 
 declare global {
   namespace Express {
-    type UserRole = 'admin' | 'member'
+    interface User extends JwtTokenPayload {
 
-    interface DefaultLoggedUser {
-      id: string
-      firstName: string
-      lastName: string
-      username: string
-      email: string
-      companyId: number
-      companyName: string
-      roles: UserRole[]
-      typ: string
-      iat: number
-      exp: number
-      aud: string
-      iss: string
     }
-
-    /**
-     * TODO: on Typescript migration, use existing type in **user.d.ts**
-     */
-    export interface LoggedUser {
-      id: string
-      firstName: string
-      lastName: string
-      username: string
-      email: string
-      companyId: number
-      companyName: string
-      roles: UserRole[]
-      typ: string
-      iat: number
-      exp: number
-      aud: string
-      iss: string
-      default: DefaultLoggedUser
-    }
-
     export interface Request {
-      user: LoggedUser
-      log: Logger
+      /**
+       * In fact, user is not always defined but in most cases it is: only few routes not requiring auth don't have it.
+       */
+      // user: JwtTokenPayload
+      log: Logger,
+      duration?: number
     }
   }
 }

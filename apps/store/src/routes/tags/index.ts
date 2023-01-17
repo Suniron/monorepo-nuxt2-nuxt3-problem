@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import {
   createTagController,
   deleteTagController,
@@ -6,7 +6,7 @@ import {
   updateTagController,
 } from '../../controllers/tags'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/tags', searchTagsController)
 router.get('/tags/:id', searchTagsController)

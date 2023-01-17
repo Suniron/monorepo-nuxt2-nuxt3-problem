@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { updateFearedEventsController } from '../../controllers/fearedEvents'
 
-const router = express.Router()
+const router = Router()
 
 // FearedEvent endpoints
 router.patch('/feared-events/:id', updateFearedEventsController)

@@ -1,3 +1,6 @@
+import { log } from '../../lib/logger'
+import { getHashedPassword } from './sha512'
+
 /**
  * Returns a password hashed and its salt
  *
@@ -19,20 +22,43 @@ export const createPasswordHash = (provider: any, pass: any) => {
 /**
  * Compares a raw password with the saved password hash and its salt.
  *
- * @param {{ hashSync: (password: string, salt: string) => string }} provider Provides hashing functions
- * @param {string} password Raw password string to be tested against a password hash
- * @param {string} hash Saved password hash
- * @param {string} salt Saved salt used to hash the saved password
- * @returns {boolean} True if passwords' hashes match. False otherwise
+ * Return True if passwords' hashes match. False otherwise.
  */
 export const passwordsMatch = (
-  provider: any,
-  password: any,
-  hash: any,
-  salt: any,
-) => {
+  /**
+   * Provides hashing functions
+   */
+  provider: { hashSync: (password: string, salt: string) => string },
+  /**
+   * Raw password string to be tested against a password hash
+   */
+  password: string,
+  /**
+   * Saved password hash
+   */
+  hash: string,
+  /**
+   * Saved salt used to hash the saved password
+   */
+  salt: string,
+): boolean => {
   const { hashSync } = provider
   const passwordHashToTest = hashSync(password, salt)
 
   return passwordHashToTest === hash
+}
+
+export const doesPlaintextAndHashedPasswordMatch = (
+  plaintextPassword: string,
+  hashedPassword: string,
+  salt: string,
+): boolean => {
+  try {
+    const hashedClearPassword = getHashedPassword(plaintextPassword, salt)
+    return hashedClearPassword === hashedPassword
+  }
+  catch (error) {
+    log.withError(error).error('doesPlaintextAndHashedPasswordMatch')
+    throw error
+  }
 }

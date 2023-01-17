@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const crypto = require('crypto')
-const unixcrypt = require('unixcrypt')
+import crypto from 'crypto'
+import { encrypt } from 'unixcrypt'
 
 export const genSaltSync = (rounds: any) => {
   if (rounds >= 15)
@@ -15,7 +14,7 @@ export const genSaltSync = (rounds: any) => {
     .slice(0, 15)}`
 }
 
-export const hashSync = (password: any, salt: any) => {
-  const value = unixcrypt.encrypt(password, salt)
+export const getHashedPassword = (password: string, salt: string) => {
+  const value = encrypt(password, salt)
   return value
 }

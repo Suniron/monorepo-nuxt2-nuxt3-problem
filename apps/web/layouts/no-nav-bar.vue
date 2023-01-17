@@ -3,62 +3,39 @@
 import LoadingSpinner from '~/components/utils/LoadingSpinner.vue'
 
 export default {
+  name: 'DefaultLayout',
   components: {
     LoadingSpinner
-  },
-  name: 'DefaultLayout',
-  data() {
-    return {
-      assets: [],
-      showMenu: true
-    }
   },
   computed: {
     isAppLoading() {
       return this.$store.state.isLoading
     },
   },
+  data() {
+    return {
+      assets: [],
+      showMenu: true
+    }
+  },
 }
 </script>
 
 <template>
-  <v-app id="xrator">
-    <v-main class="main-content" style="height: 100vh">
-      <v-row style="height: 100%">
-        <v-col v-if="isAppLoading" class="d-flex align-center justify-center">
-          <LoadingSpinner />
-        </v-col>
-        <template v-else>
-          <v-col class="d-flex align-center justify-center" md="6" sm="12">
-            <img
-              cols="12"
-              class="logo-img align-self-center"
-              src="~/assets/img/logos/xrator-full.png"
-              alt="Xrator logo"
-            >
-          </v-col>
-          <v-col class="d-flex align-center justify-center" md="6" sm="12">
-            <nuxt class="align-stretch" />
-          </v-col>
-        </template>
-      </v-row>
-    </v-main>
-  </v-app>
+  <div class="h-screen flex items-center">
+    <div class="flex flex-col lg:flex-row sm:px-12 md:px-44 items-center place-content-center gap-10">
+      <LoadingSpinner v-if="isAppLoading" />
+      <template v-else>
+        <div class="w-1/2 h-fit flex justify-center">
+          <img
+            class="logo-img align-self-center"
+            src="~/assets/img/logos/xrator-full.png"
+            alt="Xrator logo"
+          >
+        </div>
+        <!-- Main content -->
+        <nuxt class="w-1/2 h-fit flex justify-center" />
+      </template>
+    </div>
+  </div>
 </template>
-
-<style lang="scss">
-@import '~/assets/styles/sass/main';
-
-#xrator {
-  .main-content {
-    display: flex;
-    width: 100vw;
-    // & > div {
-    //   display: flex;
-    // }
-  }
-}
-html {
-  background-color: $bg-light;
-}
-</style>

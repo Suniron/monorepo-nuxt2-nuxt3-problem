@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   createBulkRelationController,
@@ -8,7 +8,7 @@ import {
   updateRelationController,
 } from '../../controllers/relations'
 
-const router = express.Router()
+const router = Router()
 
 const createBulkRelationValidation = celebrate({
   [Segments.BODY]: Joi.array().items(

@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 
 import {
   searchBusinessImpactController,
@@ -6,7 +6,7 @@ import {
   updateBusinessImpactIntoUnit,
 } from '../../controllers/missions_analysis'
 
-const router = express.Router()
+const router = Router()
 // Assets endpoints
 router.get('/missions_analysis/:id', searchMissionAnalysisController)
 

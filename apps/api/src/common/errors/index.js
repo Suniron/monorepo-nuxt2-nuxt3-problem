@@ -6,6 +6,7 @@ import {
   getUnauthorizedError,
 } from '@/common/errors/http'
 import {
+  BAD_REQUEST,
   NOT_FOUND,
   SERVICE_ERROR,
   UNAUTHORIZED,
@@ -80,6 +81,8 @@ export const throwHTTPError = (error, message) => {
       return throwNotFoundError({ message })
     case UNAUTHORIZED:
       return throwUnauthorizedError({ message })
+    case BAD_REQUEST:
+      return throwBadRequestError({ message })
     case SERVICE_ERROR:
     default:
       return throwInternalServerError({ message })

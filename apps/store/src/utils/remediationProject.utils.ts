@@ -29,23 +29,18 @@ export const isOwnerOfRemediationProject = async (
 
 /**
  * Returns **true** if the user is a collaborator of the remediation project (owner or assignee).
- *
- * @param {string|number} remediationProjectId
- * @param {string} userId
- * @returns {Promise<boolean>}
  */
 export const isAssigneeOfRemediationProject = async (
-  remediationProjectId: any,
-  userId: any,
+  remediationProjectId: number,
+  userId: string,
 ) => {
   // Check if in assignees:
-  const assigneeIds = (
-    await knex
-      .select('fk_user_id')
-      .from('remediation_project_assignee')
-      .where('fk_project_id', remediationProjectId)
-  ).map((result: any) => result.fk_user_id)
+  const assignees = await knex
+    .select('fk_user_id')
+    .from('remediation_project_assignee')
+    .where('fk_project_id', remediationProjectId)
 
+  const assigneeIds = assignees.map((result: any) => result.fk_user_id)
   if (assigneeIds.includes(userId))
     return true
 
@@ -54,19 +49,17 @@ export const isAssigneeOfRemediationProject = async (
 
 /**
  * Returns **true** if the user is a collaborator of the remediation project (owner or assignee).
- *
- * @param {string|number} remediationProjectId
- * @param {string} userId
- * @returns {Promise<boolean>}
  */
 export const isOwnerOrAssigneeOfRemediationProject = async (
-  remediationProjectId: any,
-  userId: any,
+  remediationProjectId: number,
+  userId: string,
 ) => {
   // Check if owner or assignee:
+  const isOwner = await isOwnerOfRemediationProject(remediationProjectId, userId)
+  const isAssignee = await isAssigneeOfRemediationProject(remediationProjectId, userId)
+
   if (
-    (await isOwnerOfRemediationProject(remediationProjectId, userId))
-    || (await isAssigneeOfRemediationProject(remediationProjectId, userId))
+    isOwner || isAssignee
   )
     return true
 
@@ -75,20 +68,18 @@ export const isOwnerOrAssigneeOfRemediationProject = async (
 
 /**
  * Returns **true** if the scope is belongs to remediation project .
- *
- * @param {string|number} remediationProjectId
- * @param {string|number} projectScopeId
- * @returns {Promise<boolean>}
  */
 export const isScopeOfRemediationProject = async (
-  remediationProjectId: any,
-  projectScopeId: any,
+  remediationProjectId: number,
+  projectScopeId: string,
 ) => {
+  const scope = await knex
+    .select('*')
+    .from('public.remediation_project_scope')
+    .where({ fk_project_id: remediationProjectId, id: projectScopeId })
+
   return !!(
-    await knex
-      .select('*')
-      .from('public.remediation_project_scope')
-      .where({ fk_project_id: remediationProjectId, id: projectScopeId })
+    scope
   ).length
 }
 

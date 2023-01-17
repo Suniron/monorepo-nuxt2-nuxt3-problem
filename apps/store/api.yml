@@ -1726,7 +1726,7 @@ paths:
             example: 2
           required: true
           description: Numeric ID of the status for which to get available transition
-  /login:
+  /login/credentials:
     post:
       tags:
         - "Login"
@@ -1898,7 +1898,24 @@ paths:
                       items:
                         type: string
                       example: ["France"]
-  /is-authorized:
+  /is-authorized/:
+    get:
+      tags:
+        - "Login"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isAuthorized:
+                    type: boolean
+                    example: true
+      summary: Authorize the user to access specific data
+
+  /is-authorized/light:
     get:
       tags:
         - "Login"

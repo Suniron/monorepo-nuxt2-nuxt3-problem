@@ -8,6 +8,10 @@ import {
 } from '../../../src/common/constants'
 
 import prismaClient from '../../../src/prismaClient'
+import type { LoggedUser } from '../../../types/user'
+import { getHashedPassword } from '../../common/auth/sha512'
+import { log } from '../../lib/logger'
+import { getUserByIdRequest } from '../../requests/users'
 
 /**
  *
@@ -198,9 +202,20 @@ export const createUser = async (
  */
 export const updateUserModel = async (
   provider: any,
-  params: any,
-  loggedUserInfo: any,
-) => {
+  params: {
+    id: string
+    email: string
+    username: string
+    roles: string[]
+    groupIds: string
+    firstName: string
+    lastName: string
+    oldPassword: string
+    password1: string
+    password2: string
+  },
+  loggedUserInfo: LoggedUser,
+): Promise<{ error?: string; message?: string }> => {
   const { knex, logger, createPasswordHash, passwordsMatch } = provider
   try {
     const {
@@ -239,6 +254,9 @@ export const updateUserModel = async (
       return { error: UNAUTHORIZED }
     if (oldPassword) {
       const isCorrectPass = passwordsMatch(
+        {
+          hashSync: getHashedPassword,
+        },
         oldPassword,
         user.password,
         user.salt,
@@ -320,6 +338,47 @@ export const deleteUserModel = async (
   catch (error) {
     logger.error(error)
 
+    return { error: MODEL_ERROR }
+  }
+}
+
+/**
+ * **Important note**: the returned user object will contain the password and salt fields
+ */
+export const getUserByEmailOrUsername = async (userLogin: string) => {
+  try {
+    const user = await prismaClient.user.findFirst({
+      include: {
+        company: { select: { name: true } },
+      },
+      where: {
+        OR: [{ username: userLogin }, { email: userLogin }],
+      },
+    })
+
+    return { user }
+  }
+  catch (error) {
+    log.withError(error).error('getUserByEmailOrUsername: Error getting user by email')
+    return { error: MODEL_ERROR }
+  }
+}
+
+export const is2faInitialized = async (userId: string) => {
+  try {
+    const user = await getUserByIdRequest(prismaClient, userId)
+
+    if (!user)
+      return { error: UNAUTHORIZED }
+
+    // If 2FA bypass is enable (for developers for example)
+    if (!user.is_two_factor_required)
+      return { isInitialized: true }
+
+    return { isInitialized: !!user.two_factor_secret && !!user.two_factor_confirmed_at }
+  }
+  catch (error) {
+    log.withError(error).error('is2faInitialized')
     return { error: MODEL_ERROR }
   }
 }

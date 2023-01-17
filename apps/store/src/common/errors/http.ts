@@ -1,4 +1,4 @@
-import env from '../../config/env'
+import { isTest } from '../../config/env'
 /**
  * @typedef {{errorType?: string, message?: string}} ErrorParam
  */
@@ -24,7 +24,7 @@ export class HTTPError extends Error {
    * This method will print the error message **excepted in test environment**.
    */
   printError() {
-    if (!env.nodeEnv.isTest)
+    if (!isTest)
       console.error(this.message)
   }
 

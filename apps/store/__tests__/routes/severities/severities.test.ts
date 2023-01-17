@@ -1,27 +1,20 @@
 import request from 'supertest'
-import csv from 'csvtojson'
+import type { severity as Severity } from '@prisma/client'
 import { mockKnexWithFinalValue } from '../../mocks'
 import app from '../../utils/fakeApp'
+import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 
-/**
- * @type number
- */
 let EXISTING_SEVERITY_ID = 0
-/**
- * @type number
- */
 let NOTEXISTING_SEVERITY_ID = 0
-/**
- * @type {import('@/types/severity').Severity[]}
- */
-let severities: any = []
+const severities: Severity[] = [
+  { id: 1, name: 'C1' },
+  { id: 2, name: 'C2' },
+  { id: 3, name: 'C3' },
+  { id: 4, name: 'C4' },
+  { id: 5, name: 'C5' },
+]
 
 beforeAll(async () => {
-  // Get datas:
-  severities = await csv({
-    ignoreEmpty: true,
-  }).fromFile('./seeds/csv_seed_files/init_data/severity.csv')
-
   // Make ids:
   EXISTING_SEVERITY_ID = severities[0].id
   NOTEXISTING_SEVERITY_ID
@@ -37,60 +30,59 @@ describe('/severities/', () => {
     })
   })
 
-  describe('GET / with knex error', () => {
-    it('should be Content-Type json', async () => {
-      mockKnexWithFinalValue(undefined, true)
-
-      const response = await request(app)
-        .get('/severities/')
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.type).toBe('application/json')
+  describe('GET / with auth token', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
-    it('should be status 500', async () => {
-      mockKnexWithFinalValue(undefined, true)
+    describe('with knex error', () => {
+      it('should return 500 and content should be Content-Type json', async () => {
+        mockKnexWithFinalValue(undefined, true)
 
-      const response = await request(app)
-        .get('/severities/')
-        .set('Authorization', 'Bearer fake@token')
+        const response = await request(app)
+          .get('/severities/')
+          .set('Authorization', `Bearer ${token}`)
 
-      expect(response.status).toBe(500)
-    })
-  })
-
-  describe('GET / with good datas', () => {
-    it('should be Content-Type json', async () => {
-      mockKnexWithFinalValue(severities)
-      const response = await request(app)
-        .get('/severities/')
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.type).toBe('application/json')
+        expect(response.type).toBe('application/json')
+        expect(response.status).toBe(500)
+      })
     })
 
-    it('should be status 200', async () => {
-      mockKnexWithFinalValue(severities)
-      const response = await request(app)
-        .get('/severities/')
-        .set('Authorization', 'Bearer fake@token')
+    describe('with good data', () => {
+      it('should be Content-Type json', async () => {
+        mockKnexWithFinalValue(severities)
+        const response = await request(app)
+          .get('/severities/')
+          .set('Authorization', `Bearer ${token}`)
 
-      expect(response.status).toBe(200)
-    })
+        expect(response.type).toBe('application/json')
+      })
 
-    it('should found datas', async () => {
-      mockKnexWithFinalValue(severities)
-      const response = await request(app)
-        .get('/severities/')
-        .set('Authorization', 'Bearer fake@token')
+      it('should be status 200', async () => {
+        const user = mockLoggedAsFullyConnectedUser()
+        mockKnexWithFinalValue(severities)
+        const response = await request(app)
+          .get('/severities/')
+          .set('Authorization', `Bearer ${user.accessToken}`)
 
-      expect(response.body).toEqual(severities)
+        expect(response.status).toBe(200)
+      })
+
+      it('should found data', async () => {
+        mockKnexWithFinalValue(severities)
+        const response = await request(app)
+          .get('/severities/')
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(response.body).toEqual(severities)
+      })
     })
   })
 })
 
-describe('/severities/:id', () => {
-  describe('GET / without auth token', () => {
+describe('GET / /severities/:id', () => {
+  describe('without auth', () => {
     it('should return 401 ', async () => {
       const response = await request(app).get(
         `/severities/${EXISTING_SEVERITY_ID}`,
@@ -100,85 +92,92 @@ describe('/severities/:id', () => {
     })
   })
 
-  describe('GET / with bad id', () => {
-    it('should be 400', async () => {
-      mockKnexWithFinalValue(severities)
-      const response = await request(app)
-        .get('/severities/bad_id')
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.status).toBe(400)
-    })
-  })
-
-  describe('GET / with knex error', () => {
-    it('should be Content-Type json', async () => {
-      mockKnexWithFinalValue(undefined, true)
-
-      const response = await request(app)
-        .get(`/severities/${EXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.type).toBe('application/json')
+  describe('fully connected as user', () => {
+    let token = ''
+    beforeAll(() => {
+      token = mockLoggedAsFullyConnectedUser().accessToken
     })
 
-    it('should be status 500', async () => {
-      mockKnexWithFinalValue(undefined, true)
+    describe('with bad id', () => {
+      it('should be 400', async () => {
+        mockKnexWithFinalValue(severities)
+        const response = await request(app)
+          .get('/severities/bad_id')
+          .set('Authorization', `Bearer ${token}`)
 
-      const response = await request(app)
-        .get(`/severities/${EXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.status).toBe(500)
-    })
-  })
-
-  describe('GET / with good id', () => {
-    it('should be Content-Type json', async () => {
-      mockKnexWithFinalValue([severities[0]])
-      const response = await request(app)
-        .get(`/severities/${EXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
-
-      expect(response.type).toBe('application/json')
+        expect(response.status).toBe(400)
+      })
     })
 
-    it('should be status 200', async () => {
-      mockKnexWithFinalValue([severities[0]])
-      const response = await request(app)
-        .get(`/severities/${EXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
+    describe('with knex error', () => {
+      it('should be Content-Type json', async () => {
+        mockKnexWithFinalValue(undefined, true)
 
-      expect(response.status).toBe(200)
+        const response = await request(app)
+          .get(`/severities/${EXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(response.type).toBe('application/json')
+      })
+
+      it('should be status 500', async () => {
+        mockKnexWithFinalValue(undefined, true)
+
+        const response = await request(app)
+          .get(`/severities/${EXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(response.status).toBe(500)
+      })
     })
 
-    it('should found data', async () => {
-      mockKnexWithFinalValue([severities[0]])
-      const response = await request(app)
-        .get(`/severities/${severities[0].id}`)
-        .set('Authorization', 'Bearer fake@token')
+    describe('with good id', () => {
+      it('should be Content-Type json', async () => {
+        mockKnexWithFinalValue([severities[0]])
+        const response = await request(app)
+          .get(`/severities/${EXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
 
-      expect(response.body).toEqual(severities[0])
+        expect(response.type).toBe('application/json')
+      })
+
+      it('should be status 200', async () => {
+        mockKnexWithFinalValue([severities[0]])
+        const response = await request(app)
+          .get(`/severities/${EXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(response.status).toBe(200)
+      })
+
+      it('should found data', async () => {
+        mockKnexWithFinalValue([severities[0]])
+        const response = await request(app)
+          .get(`/severities/${severities[0].id}`)
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(response.body).toEqual(severities[0])
+      })
     })
-  })
 
-  describe('GET / with unexisting id', () => {
-    it('should be Content-Type json', async () => {
-      mockKnexWithFinalValue([])
-      const response = await request(app)
-        .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
+    describe('with not existing id', () => {
+      it('should be Content-Type json', async () => {
+        mockKnexWithFinalValue([])
+        const response = await request(app)
+          .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
 
-      expect(response.type).toBe('application/json')
-    })
+        expect(response.type).toBe('application/json')
+      })
 
-    it('should be status 404', async () => {
-      mockKnexWithFinalValue([])
-      const response = await request(app)
-        .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
-        .set('Authorization', 'Bearer fake@token')
+      it('should be status 404', async () => {
+        mockKnexWithFinalValue([])
+        const response = await request(app)
+          .get(`/severities/${NOTEXISTING_SEVERITY_ID}`)
+          .set('Authorization', `Bearer ${token}`)
 
-      expect(response.status).toBe(404)
+        expect(response.status).toBe(404)
+      })
     })
   })
 })

@@ -7,7 +7,7 @@ import {
   SUCCESS,
   UNAUTHORIZED,
 } from '../../../src/common/constants'
-import type { LoggedUser } from '../../../types/loggedUser'
+import type { LoggedUser } from '../../../types/user'
 
 export const createRelationModel = async (params: any, loggedUserInfo = {}) => {
   try {

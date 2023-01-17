@@ -4,6 +4,7 @@
  * @typedef {import('express').NextFunction} NextFunction
  */
 
+import type { NextFunction, Request, Response } from 'express'
 import { throwHTTPError } from '../../common/errors'
 import {
   createCompanyModel,
@@ -69,7 +70,6 @@ export const searchCompanyLogoController = async (
 ) => {
   try {
     const { error, logo } = await searchCompanyLogoModel(req.user)
-
     if (error)
       throwHTTPError(error)
 
@@ -80,23 +80,16 @@ export const searchCompanyLogoController = async (
   }
 }
 
-/**
- *
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- */
 export const updateCompanyLogoController = async (
-  req: any,
-  res: any,
-  next: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   try {
     const { error, status } = await updateCompanyLogoModel(
       req.user,
       req.body.logo,
     )
-
     if (error)
       throwHTTPError(error)
 

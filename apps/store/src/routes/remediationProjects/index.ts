@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 
 import {
@@ -13,7 +13,7 @@ import {
   updateRemediationProjectsController,
 } from '../../controllers/remediationProjects'
 
-const router = express.Router()
+const router = Router()
 
 const getRemediationProjectByIdValidation = celebrate({
   [Segments.PARAMS]: Joi.object().keys({

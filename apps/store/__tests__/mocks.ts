@@ -2,13 +2,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import Knex from 'knex'
-import { UNAUTHORIZED } from '../src/common/constants'
+// import { UNAUTHORIZED } from '../src/common/constants'
 import * as knex from '../src/common/db'
-import * as jwt from '../src/common/auth/jwt'
-import type { OptionnalUserInfos } from '../@types/user'
+// import * as jwt from '../src/common/auth/jwt'
+import type { OptionalUserInfo } from '../@types/user'
 import { getAdminUser, getNonAdminUser } from './utils'
 
-jest.mock('../src/common/auth/jwt')
+// jest.mock('../src/common/auth/jwt') // ===> fout la merde
 jest.mock('knex')
 jest.mock('../src/common/db')
 
@@ -107,6 +107,9 @@ const knexFunctions = [
   'toSQL',
 ]
 
+/**
+ * **VERY IMPORTANT**: must be imported before any other mock
+ */
 export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
   const knexMock = jest.fn(() => {
     return knexMock
@@ -142,6 +145,8 @@ export function mockKnexWithFinalValue(finalValue, shouldReject = false) {
 }
 
 /**
+ * **VERY IMPORTANT**: must be imported before any other mock
+ *
  * Mock the knex query builder with the given final values.
  * The last value of the list will be repeated as the return value of all subsequent calls
  * @param finalValues The final values to return for each call in order
@@ -190,18 +195,18 @@ export function mockKnexWithFinalValues(
   return knexMock
 }
 
-export function mockVerifyToken(user) {
-  jwt.verifyToken = jest.fn(() => {
-    if (user)
-      return { user }
+export function mockVerifyToken(_user) {
+  // jwt.verifyToken = jest.fn(() => {
+  //   if (user)
+  //     return { user }
 
-    return { error: UNAUTHORIZED }
-  })
-  return jwt.verifyToken
+  //   return { error: UNAUTHORIZED }
+  // })
+  /* jwt.verifyToken */
 }
 
-export const mockAdminUser = (userInfos: OptionnalUserInfos) =>
+export const mockAdminUser = (userInfos: OptionalUserInfo) =>
   mockVerifyToken(getAdminUser(userInfos))
 
-export const mockNonAdminUser = (userInfos: OptionnalUserInfos) =>
+export const mockNonAdminUser = (userInfos: OptionalUserInfo) =>
   mockVerifyToken(getNonAdminUser(userInfos))

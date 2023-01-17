@@ -1,11 +1,11 @@
-import express from 'express'
+import { Router } from 'express'
 import {
   chartsDataController,
   fetchDashboardController,
   updateDashboardUserController,
 } from '../../controllers/dashboard'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/dashboard', chartsDataController)
 router.get('/dashboard/:cid', chartsDataController)

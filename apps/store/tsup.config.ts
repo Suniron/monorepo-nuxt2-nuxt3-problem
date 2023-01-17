@@ -12,11 +12,11 @@ export default defineConfig(() => ({
   clean: true,
   entry: ['src', 'prisma/**/*.ts', 'migrations/**/*.ts', 'seeds/**/*.ts'],
   format: ['cjs'],
+  loader: {
+    '.md': 'file',
+  },
   onSuccess,
-
   platform: 'node',
-
-  // == DEV CONF ==
   sourcemap: isDev,
   target: 'esnext',
   watch: isDev,

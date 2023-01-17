@@ -1,28 +1,23 @@
 import { HTTPError } from '../errors/http'
 
-/**
- * @typedef {'ModelError' | 'ValidationError' | 'NotFound' | 'Unauthorized' | 'Forbidden' | 'SUCCESS'} HTTPStatus
- */
+export type HTTPStatus =
+  | 'ModelError'
+  | 'ValidationError'
+  | 'NotFound'
+  | 'Unauthorized'
+  | 'Forbidden'
+  | 'SUCCESS'
 
 /**
  * Error list
  * Using getters to avoid always using the same HTTPError instance
  */
 
-/**
- * @type {HTTPStatus}
- */
-export const MODEL_ERROR = 'ModelError'
+export const MODEL_ERROR: HTTPStatus = 'ModelError'
 
-/**
- * @type {HTTPStatus}
- */
-export const NOT_FOUND = 'NotFound'
+export const NOT_FOUND: HTTPStatus = 'NotFound'
 
-/**
- * @type {HTTPStatus}
- */
-export const VALIDATION_ERROR = 'ValidationError'
+export const VALIDATION_ERROR: HTTPStatus = 'ValidationError'
 
 export const DUPLICATE = {
   get MAIL() {
@@ -39,19 +34,8 @@ export const DUPLICATE = {
   },
 }
 
-/**
- * @type {HTTPStatus}
- */
-export const UNAUTHORIZED = 'Unauthorized'
+export const UNAUTHORIZED: HTTPStatus = 'Unauthorized'
 
-/**
- * @type {HTTPStatus}
- */
-export const FORBIDDEN = 'Forbidden'
+export const FORBIDDEN: HTTPStatus = 'Forbidden'
 
-// Status
-
-/**
- * @type {HTTPStatus}
- */
-export const SUCCESS = 'SUCCESS'
+export const SUCCESS: HTTPStatus = 'SUCCESS'

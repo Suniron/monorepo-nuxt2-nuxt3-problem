@@ -1,4 +1,4 @@
-import express from 'express'
+import { Router } from 'express'
 import { Joi, Segments, celebrate } from 'celebrate'
 import {
   createRemediationProjectPostsController,
@@ -11,7 +11,7 @@ const getRemediationProjectByIdValidation = celebrate({
   }),
 })
 
-const router = express.Router()
+const router = Router()
 router.get('/posts', fetchPostsController)
 router.post(
   '/posts/remediation-project/:id',

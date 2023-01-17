@@ -1,9 +1,9 @@
-import express from 'express'
+import { Router } from 'express'
 
 import { Joi, Segments, celebrate } from 'celebrate'
 import { getAvailableTransitionsController } from '../../controllers/project-statuses'
 
-const router = express.Router()
+const router = Router()
 
 const getAvailableTransitionByIdValidation = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
