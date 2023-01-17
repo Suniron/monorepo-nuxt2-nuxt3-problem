@@ -4,7 +4,7 @@ import { generateBase32String } from '../../utils/random'
 
 const totp = new OTPAuth.TOTP({
   label: 'xrator',
-
+  period: 60, // code is valid for 60 seconds
 })
 /**
  * Generate a new TOTP token based with given base32 secret.
