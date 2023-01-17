@@ -6,6 +6,7 @@ import PasswordPolicyTooltipWrapper from '~/components/users/PasswordPolicyToolt
 
 export default {
   components: { PasswordPolicyTooltipWrapper },
+  middleware: ['auth'],
   data() {
     return {
       form: {
@@ -58,10 +59,9 @@ export default {
       }
     }
   },
-  middleware: ['auth'],
   computed: {
     ...mapGetters('user', [
-      'isLoggedIn',
+      'isLoggedWithCredentials',
       'firstName',
       'lastName',
       'id',

@@ -5,24 +5,43 @@ import { mapGetters } from 'vuex'
 // Services
 import ResetPassword from '~/components/sign-in/ResetPassword.vue'
 import Login from '~/components/sign-in/Login.vue'
+import TwoFactor from '~/components/two-factor/index.vue'
 
 export default {
-  components: { Login, ResetPassword },
+  components: { Login, ResetPassword, TwoFactor },
   computed: {
-    ...mapGetters('user', ['isLoggedIn', 'wrongLogin']),
+    ...mapGetters('user', ['isLoggedWithCredentials', 'wrongLogin', 'isFullyConnected']),
+    /**
+     * @returns {boolean}
+     */
+    showTwoFactor() {
+      return !this.isFullyConnected && this.isLoggedWithCredentials
+    },
   },
   created() {
-    if (!this.isLoggedIn)
+    if (!this.isLoggedWithCredentials)
       this.$store.dispatch('changePageTitle', this.$t('action.login'))
     this.redirectIfLoggedIn()
   },
   data() {
     return {
       toggleForgotPassword: false,
+      /**
+       * @type {'init' | 'verify'}
+       */
+      twoFactorMode: 'init',
+      twoFactorNeeded: false,
     }
   },
   layout: 'no-nav-bar',
   methods: {
+    /**
+     * @param {'init' | 'verify'} mode
+     */
+    handleTwoFactorNeeded(mode) {
+      this.twoFactorNeeded = true
+      this.twoFactorMode = mode
+    },
     redirectIfLoggedIn() {
       const redirectUrl = new URL(location.href).searchParams.get('redirect')
       if (redirectUrl) {
@@ -35,23 +54,19 @@ export default {
       }
     },
   },
-  name: 'SigninPage',
+  name: 'SignInPage',
 }
 </script>
 
 <template>
-  <v-container class="login">
-    <v-row>
-      <v-col>
-        <!-- FORGOT PASSWORD FORM -->
-        <ResetPassword
-          v-if="toggleForgotPassword"
-          @goToLogin="toggleForgotPassword = false"
-        />
+  <div>
+    <!-- FORGOT PASSWORD FORM -->
+    <ResetPassword v-if="toggleForgotPassword" @goToLogin="toggleForgotPassword = false" />
 
-        <!-- LOGIN FORM -->
-        <Login v-else @goToForgotPassword="toggleForgotPassword = true" />
-      </v-col>
-    </v-row>
-  </v-container>
+    <!-- 2FA FORM -->
+    <TwoFactor v-else-if="showTwoFactor" :mode="twoFactorMode" />
+
+    <!-- LOGIN FORM -->
+    <Login v-else @goToForgotPassword="toggleForgotPassword = true" @twoFactorNeeded="handleTwoFactorNeeded" />
+  </div>
 </template>

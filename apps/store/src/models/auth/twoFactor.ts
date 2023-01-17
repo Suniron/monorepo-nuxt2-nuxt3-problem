@@ -1,5 +1,5 @@
 import { generateJwtTokens } from '../../common/auth/jwt'
-import { generateBase32Secret, generateTotpToken } from '../../common/auth/otp'
+import { generateBase32Secret, getSeedUrlFromSeed, validateTotpToken } from '../../common/auth/otp'
 import { UNAUTHORIZED } from '../../common/constants'
 import prismaClient from '../../prismaClient'
 import { revokeAllUserTokensRequest, saveJwtTokenRequest } from '../../requests/tokens'
@@ -34,7 +34,9 @@ export const initTotpAuthenticationModel = async (userId: string) => {
     seed = updatedUser.two_factor_secret
   }
 
-  return { seed }
+  const seedUrl = getSeedUrlFromSeed(seed)
+
+  return { seed, seedUrl }
 }
 
 export const loginWithTotpModel = async (userId: string, totp: number) => {
@@ -52,7 +54,7 @@ export const loginWithTotpModel = async (userId: string, totp: number) => {
     isValidTotp = true
   // For common users:
   else
-    isValidTotp = generateTotpToken(user.two_factor_secret as string) === totp.toString()
+    isValidTotp = validateTotpToken(user.two_factor_secret as string, totp.toString())
 
   if (!isValidTotp)
     return { error: UNAUTHORIZED, message: 'totp not valid' }
@@ -74,5 +76,5 @@ export const loginWithTotpModel = async (userId: string, totp: number) => {
     saveJwtTokenRequest(prismaClient, user.id, refreshToken, 'refresh', true),
   ])
 
-  return { accessToken: accessSession.token, refreshToken: refreshSession.token }
+  return { accessToken: accessSession.token, refreshToken: refreshSession.token, user: { ...sanitizedUser, fullyConnected: true } }
 }

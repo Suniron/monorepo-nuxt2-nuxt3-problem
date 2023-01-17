@@ -10,7 +10,7 @@ const axiosPlugin = ({ $axios, store, redirect, app }: {
   app: NuxtApp
   route: Route
 }) => {
-  // Configure authentification bearer token, on each request:
+  // Configure authentication bearer token, on each request:
   $axios.onRequest((config) => {
     if (store.state.user.accessToken)
       config.headers.Authorization = `Bearer ${store.state.user.accessToken}`
@@ -27,9 +27,15 @@ const axiosPlugin = ({ $axios, store, redirect, app }: {
     // Error handler:
     async (error) => {
       const config = error.config
+
       // When the access token is expired and the user want to continue use the website.
+      // Next case : ignore login totp errors (handled by the login page)
+      if (error?.response.config.url.includes('login/totp')
+      ) {
+        return Promise.reject(error)
+      }
       // First case : a submit or modify data
-      if (
+      else if (
         error.response
         && error.response.status === 401
         && error.response.config.url !== 'refresh-token'
@@ -47,7 +53,8 @@ const axiosPlugin = ({ $axios, store, redirect, app }: {
         config._retry = true
         config.headers.Authorization = `Bearer ${store.state.user.accessToken}`
         return $axios(config)
-      } // second case : getter method  with multiple requests
+      }
+      // Next case : getter method with multiple requests
       else if (
         error.response
         && error.response.status === 401
@@ -96,6 +103,7 @@ const axiosPlugin = ({ $axios, store, redirect, app }: {
       {},
       { timeout: 4000, withCredentials: true },
     )
+
     // when the refresh token is good and the user get a new access token.
     const accessToken = response.data.accessToken
     const user = response.data.user

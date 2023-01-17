@@ -17,11 +17,11 @@ export const twoFactorSetupController = async (req: Request, res: Response, next
       return throwValidationError({ message: '2FA already initialized' })
 
     // Generate a new totp seed for the user
-    const { error: totpTokenError, seed } = await initTotpAuthenticationModel(user.id)
+    const { error: totpTokenError, seed, seedUrl } = await initTotpAuthenticationModel(user.id)
     if (totpTokenError)
       return throwHTTPError(totpTokenError)
 
-    res.status(200).send({ seed })
+    res.status(200).send({ seed, seedUrl })
   }
   catch (error) {
     next(error)
@@ -34,7 +34,7 @@ export const loginWithTotpController = async (req: Request, res: Response, next:
     const { totp } = req.body as { totp: number }
 
     // Get fully connected tokens
-    const { accessToken, refreshToken, error, message } = await loginWithTotpModel(user.id, totp)
+    const { accessToken, refreshToken, error, message, user: loggedUser } = await loginWithTotpModel(user.id, totp)
     if (error)
       return throwHTTPError(error, message)
 
@@ -47,7 +47,7 @@ export const loginWithTotpController = async (req: Request, res: Response, next:
     })
 
     // Return the access token
-    res.status(200).send({ accessToken })
+    res.status(200).send({ accessToken, user: loggedUser })
   }
   catch (error) {
     next(error)

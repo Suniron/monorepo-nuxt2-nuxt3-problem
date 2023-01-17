@@ -59,7 +59,9 @@ export const loginWithCredentialsController = async (req: Request, res: Response
 
       // 4) Send response
       // Enable 2fa bypass for some users (developers, ...)
-      const is2faInitialized = !userFromDb.is_two_factor_required ? true : !!userFromDb.two_factor_secret
+      const is2faInitialized = !userFromDb.is_two_factor_required
+      // ... or if 2fa seed is set and confirmed
+        ?? (userFromDb.two_factor_secret && userFromDb.two_factor_confirmed_at)
       return res.status(201).send({ accessToken, is2faInitialized, user })
     })(req, res, next)
   }

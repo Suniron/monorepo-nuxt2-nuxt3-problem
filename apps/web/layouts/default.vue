@@ -10,12 +10,12 @@ import { getCompanyLogo } from '~/services/companies/index.js'
 const DEBOUNCE_WAIT = 300 // ms
 
 export default {
-  name: 'DefaultLayout',
   components: { siteNavMenu },
+  name: 'DefaultLayout',
   computed: {
     ...mapState(['pageTitle']),
     ...mapState('company', ['logo']),
-    ...mapGetters('user', ['isLoggedIn', 'firstName', 'lastName']),
+    ...mapGetters('user', ['isLoggedWithCredentials', 'firstName', 'lastName']),
     ...mapGetters('assets', ['assetNamesIds']),
     ...mapState('company', {
       companyLogoInStore: 'logo',
@@ -72,24 +72,24 @@ export default {
     },
   },
   watch: {
-    isLoggedIn: {
-      /**
-       * @param {boolean} isLogged **true** if user log into app
-       */
-      handler(isLogged) {
-        // Ignore the reset password page
-        if (this.$route.path.startsWith('/reset-password'))
-          return
+    // isLoggedWithCredentials: {
+    //   /**
+    //    * @param {boolean} isLogged **true** if user log into app
+    //    */
+    //   handler(isLogged) {
+    //     // Ignore the reset password page
+    //     if (this.$route.path.startsWith('/reset-password'))
+    //       return
 
-        if (!isLogged) {
-          this.$router.push('/sign-in')
-          return
-        }
+    //     if (!isLogged) {
+    //       this.$router.push('/sign-in')
+    //       return
+    //     }
 
-        this.fetchCompanyLogo()
-      },
-      immediate: true, // needed to watch vuex state
-    },
+    //     this.fetchCompanyLogo()
+    //   },
+    //   immediate: true, // needed to watch vuex state
+    // },
   },
 }
 </script>
@@ -110,7 +110,7 @@ export default {
       />
 
       <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
-      <template v-if="isLoggedIn">
+      <template v-if="isLoggedWithCredentials">
         <v-divider vertical inset class="mx-4" />
         <v-combobox
           hide-details

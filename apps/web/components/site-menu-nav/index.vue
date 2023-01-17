@@ -6,10 +6,10 @@ import DropdownMenuItem from '~/components/site-menu-nav/DropdownMenuItem.vue'
 import ICONS from '~/assets/img/icons'
 
 export default {
-  name: 'SiteNavMenu',
   components: { DropdownMenuItem, SimpleMenuItem },
+  name: 'SiteNavMenu',
   computed: {
-    ...mapGetters('user', ['isLoggedIn']),
+    ...mapGetters('user', ['isLoggedWithCredentials']),
     /**
      * @returns {boolean}
      */
@@ -161,7 +161,7 @@ export default {
   >
     <!-- Logged in menu -->
     <v-list
-      v-if="isLoggedIn"
+      v-if="isLoggedWithCredentials"
       class="site-nav-list pl-0 pr-0 text-no-wrap"
       dense
       nav

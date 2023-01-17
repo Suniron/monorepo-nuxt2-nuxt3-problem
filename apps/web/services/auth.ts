@@ -5,13 +5,12 @@ export const loginService = async (axios: NuxtAxiosInstance, params: { username:
   if (!username || !password)
     throw new Error('Username and password required')
 
-  const bodyParams = { password, username }
   const {
-    data: { accessToken, user },
-  } = await axios.post('/login/credentials', bodyParams, {
+    data: { accessToken, user, is2faInitialized },
+  } = await axios.post('/login/credentials', { password, username }, {
     withCredentials: true,
   })
-  return { accessToken, user }
+  return { accessToken, is2faInitialized, user }
 }
 
 export const refreshTokenService = async (axios: NuxtAxiosInstance) => {
@@ -53,4 +52,17 @@ export const updatePasswordByToken = async (axios: NuxtAxiosInstance, params: { 
     },
   )
   return data
+}
+
+export const twoFactorSetupService = (axios: NuxtAxiosInstance):
+Promise<{ data: { seed: string; seedUrl: string } }> => {
+  return axios.get('/two-factor/setup')
+}
+
+export const loginTotpService = (axios: NuxtAxiosInstance,
+  /**
+   * 6 digit totp code
+   */
+  totp: string | number) => {
+  return axios.post('/login/totp', { totp }, { withCredentials: true })
 }

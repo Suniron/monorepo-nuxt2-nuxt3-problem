@@ -41,6 +41,7 @@ describe('GET /two-factor/setup', () => {
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('seed')
+    expect(response.body).toHaveProperty('seedUrl')
   })
 
   it('should return a 200 with a token in body if 2fa not fully initialized (not confirmed by user)', async () => {
@@ -59,6 +60,7 @@ describe('GET /two-factor/setup', () => {
       .set('Authorization', `Bearer ${token}`)
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('seed')
+    expect(response.body).toHaveProperty('seedUrl')
   })
 })
 
@@ -89,4 +91,6 @@ describe('POST /login/totp', () => {
 
     expect(response.status).toBe(401)
   })
+
+  // TODO: on success, should return a 200 + in body a new access token and user with "fullyConnected: true"
 })

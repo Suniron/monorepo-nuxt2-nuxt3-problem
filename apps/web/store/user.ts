@@ -10,6 +10,7 @@ export const state = () => ({
   email: '',
   firstName: '',
   id: '',
+  isFullyConnected: false,
   lastName: '',
   roles: [],
   username: '',
@@ -21,7 +22,8 @@ export const getters = {
   firstName: state => state.firstName,
   id: state => state.id,
   isAdmin: state => state.roles.includes('admin'),
-  isLoggedIn: state => !!(state.accessToken && state.id),
+  isFullyConnected: state => state.isFullyConnected,
+  isLoggedWithCredentials: state => !!(state.accessToken && state.id),
   lastName: state => state.lastName,
   roles: state => state.roles,
   username: state => state.username,
@@ -52,6 +54,7 @@ export const mutations = {
     state.username = user.username
     state.email = user.email
     state.roles = user.roles
+    state.isFullyConnected = user.fullyConnected
   },
   [types.DELETE_SESSION](state) {
     state.accessToken = ''
@@ -61,6 +64,7 @@ export const mutations = {
     state.username = ''
     state.email = ''
     state.roles = []
+    state.isFullyConnected = false
   },
   [types.WRONG_LOGIN](state, value) {
     state.wrongLogin = value
@@ -81,7 +85,6 @@ export const actions = {
   authorize({ commit }, payload) {
     if (!payload?.accessToken || !payload?.user)
       return
-
     commit(types.CREATE_SESSION, payload)
   },
   changeUserValueAfterUpdate({ commit }, value) {
