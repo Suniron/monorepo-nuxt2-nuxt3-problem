@@ -33,6 +33,18 @@ stages:
 # # ============
 
 unit-test-job:
+  variables:
+    JWT_REFRESH_LIFE_MS: "7776000000"
+    JWT_ACCESS_SECRET: "myJwtSecret"
+    JWT_ACCESS_LIFE: "30m"
+    JWT_ACCESS_TYPE: "access"
+    JWT_ACCESS_AUD: "https://xrator.com"
+    JWT_ACCESS_ISS: "https://store.xrator.com"
+    JWT_REFRESH_SECRET: "myRefreshSecret"
+    JWT_REFRESH_LIFE: "90d"
+    JWT_REFRESH_TYPE: "refresh"
+    JWT_REFRESH_AUD: "https://xrator.com"
+    JWT_REFRESH_ISS: "https://store.xrator.com
   extends: 
     - .get-versions
     - .pnpm-install
