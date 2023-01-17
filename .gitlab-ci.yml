@@ -44,7 +44,7 @@ unit-test-job:
     JWT_REFRESH_LIFE: "90d"
     JWT_REFRESH_TYPE: "refresh"
     JWT_REFRESH_AUD: "https://xrator.com"
-    JWT_REFRESH_ISS: "https://store.xrator.com
+    JWT_REFRESH_ISS: "https://store.xrator.com"
   extends: 
     - .get-versions
     - .pnpm-install
