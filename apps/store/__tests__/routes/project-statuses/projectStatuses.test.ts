@@ -1,6 +1,6 @@
 import request from 'supertest'
 import csv from 'csvtojson'
-import { mockKnexWithFinalValue, mockVerifyToken } from '../../mocks'
+import { mockKnexWithFinalValue } from '../../mocks'
 import app from '../../utils/fakeApp'
 import { mockLoggedAsFullyConnectedUser } from '../../utils/mockAuth'
 import type { ProjectStatus, ProjectStatusWorkflow } from '../../../types/projectStatus'

@@ -195,7 +195,7 @@ export function mockKnexWithFinalValues(
   return knexMock
 }
 
-export function mockVerifyToken(user) {
+export function mockVerifyToken(_user) {
   // jwt.verifyToken = jest.fn(() => {
   //   if (user)
   //     return { user }
