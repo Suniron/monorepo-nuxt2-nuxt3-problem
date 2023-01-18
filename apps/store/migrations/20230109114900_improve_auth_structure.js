@@ -11,7 +11,7 @@ exports.up = async (knex) => {
     return Promise.resolve()
 
   // == Clean up ==
-  await knex.raw('DELETE FROM user_session WHERE user_id IS NULL OR type NOT IN (\'access\', \'refresh\');')
+  await knex.raw('DELETE FROM public.user_session WHERE user_id IS NULL OR type NOT IN (\'access\', \'refresh\');')
   await knex.raw('DELETE FROM user_session WHERE token IS NULL;')
 
   // == Enum ==
@@ -20,23 +20,23 @@ exports.up = async (knex) => {
   // == Tables ==
   // = user_session =
   // Edit the "type" column to change type to "JwtTokenType" & NOT NULL
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN type TYPE "JwtTokenType" USING type::"JwtTokenType";')
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN type SET NOT NULL;')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN type TYPE "JwtTokenType" USING type::"JwtTokenType";')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN type SET NOT NULL;')
   // Add new "fully_connected" timestamp column to "user_session" table
-  await knex.raw('ALTER TABLE user_session ADD fully_connected boolean DEFAULT false NOT NULL')
+  await knex.raw('ALTER TABLE public.user_session ADD fully_connected boolean DEFAULT false NOT NULL')
   // Add UNIQUE constraint to token column
-  await knex.raw('ALTER TABLE user_session ADD CONSTRAINT user_session_token_unique UNIQUE (token);')
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN token SET NOT NULL;')
+  await knex.raw('ALTER TABLE public.user_session ADD CONSTRAINT user_session_token_unique UNIQUE (token);')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN token SET NOT NULL;')
   // Add NOT NULL constraint to "user_id" column
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id SET NOT NULL;')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN user_id SET NOT NULL;')
   // Add NOT NULL constraint to "created_at" column
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN created_at SET NOT NULL;')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN created_at SET NOT NULL;')
 
-  // = user =
+  // = public.user =
   // Add two factor columns to "user" table
-  await knex.raw('ALTER TABLE "user" ADD two_factor_secret VARCHAR;')
-  await knex.raw('ALTER TABLE "user" ADD two_factor_confirmed_at TIMESTAMP WITH TIME ZONE;')
-  await knex.raw('ALTER TABLE "user" ADD is_two_factor_required BOOLEAN DEFAULT false;')
+  await knex.raw('ALTER TABLE public.user ADD two_factor_secret VARCHAR;')
+  await knex.raw('ALTER TABLE public.user ADD two_factor_confirmed_at TIMESTAMP WITH TIME ZONE;')
+  await knex.raw('ALTER TABLE public.user ADD is_two_factor_required BOOLEAN DEFAULT true;')
 }
 
 /**
@@ -53,12 +53,12 @@ exports.down = async (knex) => {
     table.dropColumn('fully_connected')
   })
   // Remove UNIQUE constraint to token column
-  await knex.raw('ALTER TABLE user_session DROP CONSTRAINT user_session_token_unique;')
+  await knex.raw('ALTER TABLE public.user_session DROP CONSTRAINT user_session_token_unique;')
   // Remove NOT NULL constraint to "user_id" column
-  await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id DROP NOT NULL;')
+  await knex.raw('ALTER TABLE public.user_session ALTER COLUMN user_id DROP NOT NULL;')
 
   // Remove "two_factor_secret" column to "user" table
-  await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_secret;')
-  await knex.raw('ALTER TABLE "user" DROP COLUMN two_factor_confirmed_at;')
-  await knex.raw('ALTER TABLE "user" DROP COLUMN is_two_factor_required;')
+  await knex.raw('ALTER TABLE public.user DROP COLUMN two_factor_secret;')
+  await knex.raw('ALTER TABLE public.user DROP COLUMN two_factor_confirmed_at;')
+  await knex.raw('ALTER TABLE public.user DROP COLUMN is_two_factor_required;')
 }
