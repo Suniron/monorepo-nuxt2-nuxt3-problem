@@ -1,7 +1,11 @@
 import type { Prisma, PrismaClient } from '@prisma/client'
 
+/**
+ * Save new two factor secret and reset the confirmed date.
+ */
 export const saveTwoFactorSecretRequest = async (client: PrismaClient | Prisma.TransactionClient, userId: string, twoFactorToken: string) => client.user.update({
   data: {
+    two_factor_confirmed_at: null,
     two_factor_secret: twoFactorToken,
   },
   where: {
