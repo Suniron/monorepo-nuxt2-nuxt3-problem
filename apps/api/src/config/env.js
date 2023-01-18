@@ -39,10 +39,10 @@ export const buildEnvObj = env => ({
     isTest: env.NODE_ENV === 'test',
     value: env.NODE_ENV || 'development',
   },
-  port: env.PORT || '3001',
+  port: env.API_PORT || '3001',
   self: {
     origin:
-      env.PUBLIC_DOMAIN.replace(/:\d+/, `:${env.PORT}`)
+      env.PUBLIC_DOMAIN.replace(/:\d+/, `:${env.API_PORT}`)
       || 'http://localhost:3001',
   },
   store: {

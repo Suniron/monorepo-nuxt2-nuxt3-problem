@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'test') {
 export const appVersion = version
 export const ELASTICSEARCH_URL = process.env.ELASTICSEARCH_URL
 export const INSTANCE_NAME = process.env.INSTANCE_NAME
-export const APP_PORT = process.env.PORT || '3002'
+export const APP_PORT = process.env.APP_PORT || '3002'
 export const POSTGRES_URI = process.env.POSTGRES_URI || ''
 export const HTTPS_ENABLED = httpsEnabled
 

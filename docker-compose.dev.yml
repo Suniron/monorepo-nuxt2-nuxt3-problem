@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
       target: dev
     environment:
-      - PORT=3001
+      - API_PORT=3001
       - STORE_BASE_URL=http://xrator_store:3002 #http://store.${HOSTNAME}.x-rator.lan:3002
       - PUBLIC_DOMAIN=http://${HOSTNAME}.x-rator.lan:3000
       - NODE_ENV=development
@@ -58,7 +58,7 @@ services:
       target: base
     environment:
       - NODE_ENV=development
-      - PORT=3002
+      - STORE_PORT=3002
       - POSTGRES_URI=postgres://postgres:P@ssw0rd@xrator_db:5432/xrator
       - JWT_ACCESS_SECRET=uW%k02xpw&ukfF0C2!VYAM!WK%76rTSY
       - JWT_ACCESS_LIFE=30m

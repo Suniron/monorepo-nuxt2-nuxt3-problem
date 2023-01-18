@@ -54,6 +54,8 @@
     "JWT_REFRESH_AUD",
     "JWT_REFRESH_ISS",
     "JWT_REFRESH_DOMAIN",
-    "PORT"
+    "PORT",
+    "API_PORT",
+    "STORE_PORT"
   ]
 }
