@@ -1,5 +1,6 @@
 import { isCelebrateError } from 'celebrate'
 import { HTTPError, getBadRequestError, getInternalServerError } from '@/common/errors/http'
+import { log } from '@/lib/logger'
 
 /**
  *
@@ -13,10 +14,12 @@ export const errorHandler = (err, req, res, _next) => {
 
   if (err instanceof HTTPError) {
     httpError = err
-    req.log.withError(err).error('Error handler: http error')
+    if (req.log)
+      req.log.withError(err).error('Error handler: http error')
+    else log.withError(err).error('Error handler: http error')
   }
   else if (isCelebrateError(err)) {
-    let message = 'ValidatonErrpr'
+    let message = 'ValidatonError'
 
     // TODO: fix this useless loop
     // eslint-disable-next-line no-unreachable-loop, @typescript-eslint/no-unused-vars
@@ -29,11 +32,15 @@ export const errorHandler = (err, req, res, _next) => {
       errorType: 'ValidationError',
       message,
     })
-    req.log.withError(err).error('Error handler: celebrate error')
+    if (req.log)
+      req.log.withError(err).error('Error handler: celebrate error')
+    else log.withError(err).error('Error handler: celebrate error')
   }
   else {
     // Log if error is unhandled
-    req.log.withError(err).error('Error handler: Unhandled error')
+    if (req.log)
+      req.log.withError(err).error('Error handler: Unhandled error')
+    else log.withError(err).error('Error handler: Unhandled error')
   }
   return res.status(httpError.code).send(httpError.toJSON())
 }
