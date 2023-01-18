@@ -23,7 +23,7 @@ export const requestPassThroughService = async (
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     }
-    const { status, data } = await axios.request({
+    const { status, data, headers } = await axios.request({
       // Using the concatenation syntax to preserve arguments autocompletion
       method,
       url: axios.defaults.baseURL + path,
@@ -32,7 +32,7 @@ export const requestPassThroughService = async (
       params: query,
     })
 
-    return { data, status }
+    return { data, headers, status }
   }
   catch (error) {
     log.withError(error).error(`requestPassThroughService: ${method.toUpperCase()} ${path}`)

@@ -19,6 +19,12 @@ export const passThroughController = async (req, res, next) => {
     )
     if (storeResponse.error)
       throwHTTPError(storeResponse.error, storeResponse.message)
+
+    // Set cookies from the store response
+    const setCookie = storeResponse.headers['set-cookie']
+    if (setCookie)
+      res.setHeader('set-cookie', setCookie)
+
     res.status(storeResponse.status).send(storeResponse.data)
   }
   catch (error) {
