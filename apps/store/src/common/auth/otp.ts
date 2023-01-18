@@ -2,17 +2,18 @@
  * See https://github.com/hectorm/otpauth for the documentation
  */
 import * as OTPAuth from 'otpauth'
+import { isDevelopment } from '../../config/env'
 import { log } from '../../lib/logger'
 import { generateBase32String } from '../../utils/random'
 
 const totp = new OTPAuth.TOTP({
   algorithm: 'SHA1',
   digits: 6,
-  issuer: 'xrator',
-  label: 'xrator',
+  issuer: isDevelopment ? 'xrator-dev' : 'xrator',
+  label: 'login',
   period: 30, // code is valid for 30 seconds only
-
 })
+
 /**
  * Generate a new TOTP token based with given base32 secret.
  */
