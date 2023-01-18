@@ -10,7 +10,7 @@ import { sanitizeUser } from '../../utils/user.utils'
 /**
  * First init (or reset) the TOTP authentication.
  *
- * It will use the current secret or generate a new one if not exists.
+ * It will use the current secret or generate a new one if not exists yet.
  *
  * It will return a new TOTP token.
  */
