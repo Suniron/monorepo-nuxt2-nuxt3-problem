@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
-    "billboard.js": "^3.7.1",
+    "billboard.js": "^3.4.1",
     "cytoscape": "^3.19.1",
     "cytoscape-context-menus": "^4.1.0",
     "cytoscape-edgehandles": "^4.0.1",
