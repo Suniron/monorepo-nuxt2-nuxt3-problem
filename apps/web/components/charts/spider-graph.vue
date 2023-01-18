@@ -2,17 +2,24 @@
 // @ts-check
 import 'billboard.js/dist/billboard.css'
 import 'billboard.js/dist/theme/insight.css'
+import { bb, radar } from 'billboard.js'
 
 export default {
-  name: 'SpiderGraph',
   data() {
     return {
       isExporting: false
     }
   },
+  name: 'SpiderGraph',
+  watch: {
+    data: {
+      deep: true,
+      handler() {
+        this.reloadChartData()
+      },
+    }
+  },
   mounted() {
-    // Import billboard here, so it's only imported in client-side
-    const { bb, radar } = require('billboard.js')
 
     const data = this.createChartDataConfig(this.data)
     const chartConfig = {
@@ -39,14 +46,6 @@ export default {
       }
     }
     this.chart = bb.generate(chartConfig)
-  },
-  watch: {
-    data: {
-      deep: true,
-      handler() {
-        this.reloadChartData()
-      },
-    }
   },
   methods: {
     createChartDataConfig(data) {

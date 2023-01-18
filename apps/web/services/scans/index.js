@@ -1,4 +1,4 @@
-const baselines = require('./baselines.json')
+import baselines from './baselines.json'
 
 export const getScansChartDataService = async (axios) => {
   const { data } = await axios.get('/dashboard/scanHistory')

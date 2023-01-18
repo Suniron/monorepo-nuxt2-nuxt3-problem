@@ -1,8 +1,10 @@
 <script>
 import 'billboard.js/dist/billboard.css'
 import 'billboard.js/dist/theme/insight.css'
+import { bb, gauge } from 'billboard.js'
 
 export default {
+  name: 'GaugeChart',
   created() {
     // Non-reactive data
     this.chart = null
@@ -14,10 +16,7 @@ export default {
       green: '#60B044'
     }
   },
-  name: 'GaugeChart',
   mounted() {
-    // Import billboard here, so it's only imported in client-side
-    const { bb, gauge } = require('billboard.js')
     const data = this.createChartDataConfig(this.data)
 
     const outputsize = () => {
@@ -28,10 +27,7 @@ export default {
 
     const colors = this.colors
     this.chart = bb.generate({
-      // Overridable configuration
-      legend: {
-        show: false,
-      },
+      
       color: {
         pattern: [
           colors['dark-red'],
@@ -44,76 +40,26 @@ export default {
           values: [9, 29, 69, 89, 100]
         }
       },
+      // Overridable configuration
+legend: {
+        show: false,
+      },
       tooltip: {
-        show: false
+        show: false,
       },
       ...this.config,
-
       
       bindto: `#${this.id}`,
       // Non-overridable configuration
-data: {
+      data: {
         ...data,
         onclick: (data, el) => {
           this.$emit('click', { data, el })
         },
-        type: gauge()
+        type: gauge(),
       }
     })
     this.chart.resize()
-  },
-  methods: {
-    createChartDataConfig(data) {
-      // Values
-      const columns = []
-      for (const name in data) {
-        if (data.hasOwnProperty(name)) {
-          if (!isNaN(data[name].value)) {
-            columns.push([name, Number(data[name].value)])
-          }
- else {
-            throw new TypeError(
-              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`,
-            )
-          }
-        }
-      }
-
-      // Colors
-      let colors
-      // If a color is defined for any of the data points
-      if (Object.values(data).some(config => !!config.color)) {
-        colors = {}
-
-        for (const name in data) {
-          if (data.hasOwnProperty(name)) {
-            const config = data[name]
-
-            if (config.color) 
-              colors[name] = config.color
-            
-          }
-        }
-      }
-
-      const chartData = { colors, columns }
-
-      return chartData
-    },
-    reloadChartData() {
-      if (this.chart) {
-        const { columns } = this.createChartDataConfig(this.data)
-
-        const self = this
-        this.chart.load({
-          columns,
-          done: () => {
-            this.chart.resize()
-            self.$emit('loaded')
-          },
-        })
-      }
-    },
   },
   props: {
 
@@ -156,6 +102,58 @@ data: {
     id: {
       required: true,
       type: String,
+    },
+  },
+  methods: {
+    createChartDataConfig(data) {
+      // Values
+      const columns = []
+      for (const name in data) {
+        if (data.hasOwnProperty(name)) {
+          if (!isNaN(data[name].value)) {
+            columns.push([name, Number(data[name].value)])
+          }
+          else {
+            throw new TypeError(
+              `[PieChart] Invalid data configuration. ${name} should be a number or an array of numbers`,
+            )
+          }
+        }
+      }
+
+      // Colors
+      let colors
+      // If a color is defined for any of the data points
+      if (Object.values(data).some(config => !!config.color)) {
+        colors = {}
+
+        for (const name in data) {
+          if (data.hasOwnProperty(name)) {
+            const config = data[name]
+
+            if (config.color)
+              colors[name] = config.color
+          }
+        }
+      }
+
+      const chartData = { colors, columns }
+
+      return chartData
+    },
+    reloadChartData() {
+      if (this.chart) {
+        const { columns } = this.createChartDataConfig(this.data)
+
+        const self = this
+        this.chart.load({
+          columns,
+          done: () => {
+            this.chart.resize()
+            self.$emit('loaded')
+          },
+        })
+      }
     },
   },
   watch: {
