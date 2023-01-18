@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useContext, useStore } from '@nuxtjs/composition-api'
+import { useContext, useRouter } from '@nuxtjs/composition-api'
 import { ref } from 'vue'
 import Notification from '../common/Notification.vue'
 import BaseInput from '~/components/base/Input.vue'
@@ -7,6 +7,8 @@ import { loginTotpService } from '~/services/auth'
 
 const emits = defineEmits(['success', 'error'])
 const { $axios: axios, store } = useContext()
+
+const router = useRouter()
 
 const isLoading = ref(false)
 const userTotpCode = ref('')
@@ -33,6 +35,13 @@ const handleSubmitCode = async (e: Event) => {
       accessToken,
       user,
     })
+
+    // Force to redirect (it's normally handled by parent component)
+    const redirectUrl = new URL(location.href).searchParams.get('redirect')
+    if (!redirectUrl)
+      return router.push('/dashboard')
+
+    router.push(decodeURIComponent(redirectUrl))
 
     emits('success')
   }
