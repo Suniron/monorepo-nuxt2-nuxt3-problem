@@ -26,7 +26,7 @@ exports.up = async (knex) => {
   await knex.raw('ALTER TABLE user_session ADD fully_connected boolean DEFAULT false NOT NULL')
   // Add UNIQUE constraint to token column
   await knex.raw('ALTER TABLE user_session ADD CONSTRAINT user_session_token_unique UNIQUE (token);')
-  await knex.raw('ALTER TABLE token ALTER COLUMN type SET NOT NULL;')
+  await knex.raw('ALTER TABLE user_session ALTER COLUMN token SET NOT NULL;')
   // Add NOT NULL constraint to "user_id" column
   await knex.raw('ALTER TABLE user_session ALTER COLUMN user_id SET NOT NULL;')
   // Add NOT NULL constraint to "created_at" column
