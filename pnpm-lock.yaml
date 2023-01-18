@@ -259,7 +259,6 @@ importers:
       qrcode: ^1.5.1
       tailwindcss: ^3.2.4
       vue: ^2.7.14
-      vue-date-fns: ^2.0.1
       vue-quill-editor: ^3.0.6
       vue-responsive-dash: ^0.5.0
       vue-router: ^3.6.5
@@ -281,7 +280,6 @@ importers:
       nuxt-i18n: 6.28.1_vue@2.7.14
       qrcode: 1.5.1
       vue: 2.7.14
-      vue-date-fns: 2.0.2
       vue-quill-editor: 3.0.6
       vue-responsive-dash: 0.5.0_w3babolzjit53pudqniy7mx2qa
       vue-router: 3.6.5_vue@2.7.14
@@ -2958,7 +2956,7 @@ packages:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
       '@types/eslint': 8.4.10
-      '@types/estree': 0.0.51
+      '@types/estree': 1.0.0
     dev: true
 
   /@types/eslint/7.29.0:
@@ -2971,7 +2969,7 @@ packages:
   /@types/eslint/8.4.10:
     resolution: {integrity: sha512-Sl/HOqN8NKPmhWo2VBEPm0nvHnu2LL3v9vKo8MEq0EtbJ4eVzGPl41VNPvn5E1i5poMk4/XD8UriLHpJvEP/Nw==}
     dependencies:
-      '@types/estree': 0.0.51
+      '@types/estree': 1.0.0
       '@types/json-schema': 7.0.11
     dev: true
 
@@ -14206,12 +14204,6 @@ packages:
 
   /vue-client-only/2.1.0:
     resolution: {integrity: sha512-vKl1skEKn8EK9f8P2ZzhRnuaRHLHrlt1sbRmazlvsx6EiC3A8oWF8YCBrMJzoN+W3OnElwIGbVjsx6/xelY1AA==}
-
-  /vue-date-fns/2.0.2:
-    resolution: {integrity: sha512-XHd2oYZY0AfWJohCwREhvfziJdiUHit6HYKUPTyvx5wDUaFA4TWDdkFp78IIrn0nl86oTGM1/5yXtNvqYXL5ew==}
-    dependencies:
-      date-fns: 2.29.3
-    dev: false
 
   /vue-element-resize-detector/1.0.6:
     resolution: {integrity: sha512-1vh9GtSFcwEJJEGkSZfYV3kKYqCoDGmtlOZhLcy7Itt0f5mK4V9Pa/r/9qmRa031VUIdO0WTXsHrNQnY9A/+Gw==}
