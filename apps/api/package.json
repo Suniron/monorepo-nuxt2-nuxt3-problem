@@ -1,5 +1,5 @@
 {
-  "name": "@xrator-operator/api",
+  "name": "@xrator/api",
   "version": "1.15.0",
   "description": "Backend services for xrator_ui (frontend)",
   "main": "index.js",

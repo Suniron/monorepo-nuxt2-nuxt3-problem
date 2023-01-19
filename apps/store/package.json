@@ -1,5 +1,5 @@
 {
-  "name": "@xrator-operator/store",
+  "name": "@xrator/store",
   "version": "1.15.0",
   "scripts": {
     "import-demo": "NODE_ENV=development node import_demo.js",

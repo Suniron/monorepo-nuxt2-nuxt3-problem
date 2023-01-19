@@ -27,7 +27,7 @@ RUN apk add --no-cache libc6-compat
 RUN yarn global add turbo
 COPY . .
 
-RUN turbo prune --scope=@xrator-operator/store --docker
+RUN turbo prune --scope=@xrator/store --docker
 
 ###################
 # INSTALLER STAGE # This stage is used to build application before production
@@ -52,7 +52,7 @@ RUN pnpm install -r --frozen-lockfile
 COPY --from=builder /store/out/full/ ./
 
 # Build the project
-RUN pnpm turbo build --filter=@xrator-operator/store...
+RUN pnpm turbo build --filter=@xrator/store...
 RUN pnpm prisma generate
 
 ##############

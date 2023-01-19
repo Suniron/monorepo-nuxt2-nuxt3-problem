@@ -27,7 +27,7 @@ RUN apk add --no-cache libc6-compat
 RUN yarn global add turbo
 COPY . .
 
-RUN turbo prune --scope=@xrator-operator/api --docker
+RUN turbo prune --scope=@xrator/api --docker
 
 ###################
 # INSTALLER STAGE # This stage is used to build application before production
@@ -52,7 +52,7 @@ RUN pnpm install -r --frozen-lockfile
 COPY --from=builder /api/out/full/ ./
 
 # TODO when Typescript will be used, build the project here
-# RUN pnpm turbo build --filter=@xrator-operator/api...
+# RUN pnpm turbo build --filter=@xrator/api...
 
 ##############
 # PROD STAGE # This stage is used is production
@@ -79,4 +79,4 @@ USER expressjs
 
 COPY --from=installer /api .
 
-CMD pnpm --filter=@xrator-operator/api... start
+CMD pnpm --filter=@xrator/api... start

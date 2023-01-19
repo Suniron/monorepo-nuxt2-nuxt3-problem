@@ -30,7 +30,7 @@ RUN apk add --no-cache libc6-compat
 RUN yarn global add turbo
 COPY . .
 
-RUN turbo prune --scope=@xrator-operator/web --docker
+RUN turbo prune --scope=@xrator/web --docker
 
 ###################
 # INSTALLER STAGE # This stage is used to build application before production
@@ -62,10 +62,10 @@ RUN pnpm install -r --frozen-lockfile
 COPY --from=builder /web/out/full/ ./
 
 # Build the project
-RUN pnpm turbo build --filter=@xrator-operator/web...
+RUN pnpm turbo build --filter=@xrator/web...
 
 # Generate static files // TODO: find why it doesn't work
-# RUN pnpm --filter=@xrator-operator/web... generate
+# RUN pnpm --filter=@xrator/web... generate
 
 FROM node:18-alpine3.16 AS prod
 
@@ -92,4 +92,4 @@ USER nuxtjs
 
 COPY --from=installer --chown=nuxtjs:nodejs /web/ /web/
 
-CMD ["pnpm", "--filter=@xrator-operator/web...", "start"]
+CMD ["pnpm", "--filter=@xrator/web...", "start"]
