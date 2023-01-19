@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt -p 3000",
     "dev:docker": "pnpm install --frozen-lockfile && nuxt",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf .nuxt",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf .nuxt && rm -rf .output",
     "spa": "nuxt --spa",
     "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "start": "nuxt start",
@@ -48,6 +48,7 @@
     "@types/leaflet": "^1.9.0",
     "@types/lodash": "^4.14.182",
     "@types/qrcode": "^1.5.0",
+    "@xrator/ui": "workspace:*",
     "autoprefixer": "^10.4.13",
     "cytoscape-fcose": "^2.2.0",
     "daisyui": "^2.47.0",

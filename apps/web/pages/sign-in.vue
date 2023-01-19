@@ -3,12 +3,13 @@
 // Libs
 import { mapGetters } from 'vuex'
 // Services
+import { XButton } from '@xrator/ui'
 import ResetPassword from '~/components/sign-in/ResetPassword.vue'
 import Login from '~/components/sign-in/Login.vue'
 import TwoFactor from '~/components/two-factor/index.vue'
 
 export default {
-  components: { Login, ResetPassword, TwoFactor },
+  components: { Login, ResetPassword, TwoFactor, XButton },
   computed: {
     ...mapGetters('user', ['isLoggedWithCredentials', 'wrongLogin', 'isFullyConnected']),
     /**
@@ -68,5 +69,6 @@ export default {
 
     <!-- LOGIN FORM -->
     <Login v-else @goToForgotPassword="toggleForgotPassword = true" @twoFactorNeeded="handleTwoFactorNeeded" />
+    <XButton>Hello</XButton>
   </div>
 </template>
