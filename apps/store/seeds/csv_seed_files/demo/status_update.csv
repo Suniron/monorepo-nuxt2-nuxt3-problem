@@ -1,5 +1,0 @@
-id, vulnerability_asset_id, orig_status, updated_status, cdate, comment
-"1","275","open","accepted","2022-01-26 09:00:03.804",
-"2","275","accepted","remediated","2022-01-26 09:00:16.805",
-"3","271",,"accepted","2022-01-29 13:29:14.088",
-"4","271","accepted","accepted","2022-01-29 13:29:30.277","<p>toto</p>"

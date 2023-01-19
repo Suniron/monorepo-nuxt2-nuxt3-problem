@@ -1,6 +1,0 @@
-id, company_id, store_id, cdate, name, probe_type, status, gw, exit_ip, address, mask, mac, url, info
-"1","1",,"2021-11-24 04:42:02.17868+00","YellowProbe","OVA","Down",,,,,,,
-"2","1",,"2021-11-24 04:42:02.17868+00","RedProbe","OVA","Down",,,,,,,
-"3","1",,"2021-11-24 04:42:02.17868+00","GreenProbe","VMDK","Down",,,,,,,
-"4","1",,"2021-11-24 04:42:02.17868+00","BlueProbe","VMDK","Down",,,,,,,
-"5","1",,"2021-11-24 04:42:02.17868+00","PurpleProbe","SERVER","Down",,,,,,,

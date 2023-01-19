@@ -1,2 +1,0 @@
-id, company_id, first_name, last_name, username, password, salt, email, roles
-"31f0bba9-205b-4956-9079-d269b504c416","1","Super","Admin","admin","$6$k0R5arXFGDx80oUT$csmMAe7wM.qWgxgbZexiNGGmQQUPtXlgJF7V4/2pDPsd5PbCRrJ8DAXL9MeOVm6OdG9BvHiztQVS3NAYR4dB7.","$6$k0R5arXFGDx80oUT","crxAdmin@corexalys.com","{admin}"

@@ -1,5 +1,0 @@
-.git
-.nuxt
-**/node_modules
-nginx
-.pnpm-store/

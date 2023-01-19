@@ -1,50 +1,38 @@
 {
-  "name": "xrator-operator",
+  "name": "the-monorepo",
   "version": "1.15.0",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "packageManager": "pnpm@7.14.2",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "build": "turbo run build",
-    "build:docker": "docker-compose -f docker-compose.prod.yml build",
-    "clean": "turbo run clean",
+    "clean": "turbo run clean && rm -rf node_modules",
     "dev": "turbo run dev --parallel",
-    "dev:back": "turbo run dev --parallel --filter=@xrator/store... --filter=@xrator/api...",
-    "dev:web": "turbo run dev --parallel --filter=@xrator/web...",
-    "dev:docker": "docker compose -f docker-compose.dev.yml up -d ",
-    "dev:docker:back": "docker compose -f docker-compose.dev.yml up -d xrator_store xrator_db",
-    "dev:docker:front": "docker compose -f docker-compose.dev.yml up -d xrator_api xrator_ui",
+    "dev:nuxt2": "turbo run dev --parallel --filter=@the-monorepo/nuxt2...",
+    "dev:nuxt3": "turbo run dev --parallel --filter=@the-monorepo/nuxt3...",
     "format": "prettier --write \"**/*.{ts,md}\"",
     "lint": "turbo run lint",
-    "prisma:generate": "prisma generate",
     "start": "turbo run start",
-    "start:docker": "docker-compose -f docker-compose.prod.yml up -d",
-    "start:docker:db": "docker compose -f docker-compose.dev.yml up -d xrator_db",
-    "test": "turbo run test",
-    "rm:docker:db": "docker stop xrator_db && docker rm xrator_db && docker image rm xrator-operator-xrator_db && docker volume rm xrator-operator_pg_data"
+    "test": "turbo run test"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "eslint": "^8.29.0",
     "eslint-config-custom": "workspace:*",
-    "husky": "^8.0.2",
     "jest": "^29.3.1",
     "jest-presets": "workspace:*",
     "prettier": "latest",
     "turbo": "latest"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "packageManager": "pnpm@7.14.2",
-  "prisma": {
-    "schema": "apps/store/prisma/schema.prisma"
-  },
   "jest": {
     "preset": "jest-presets/jest/node"
-  },
-  "dependencies": {
-    "dotenv": "^8.2.0"
   }
 }

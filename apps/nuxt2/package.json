@@ -1,0 +1,40 @@
+{
+  "name": "@the-monorepo/web",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@7.14.2",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt -p 3000",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf coverage && rm -rf .nuxt && rm -rf .output",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "prestart": "pnpm generate",
+    "lint:fix": "eslint --fix --ext .js,.vue . "
+  },
+  "dependencies": {
+    "nuxt": "^2.15.8",
+    "vue": "^2.7.14"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.15.8",
+    "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/composition-api": "^0.33.1",
+    "@nuxtjs/eslint-config": "^12.0.0",
+    "@nuxtjs/eslint-module": "^3.1.0",
+    "@the-monorepo/ui": "workspace:*",
+    "autoprefixer": "^10.4.13",
+    "daisyui": "^2.47.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-nuxt": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.3.1",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.3",
+    "tailwindcss": "^3.2.4"
+  }
+}

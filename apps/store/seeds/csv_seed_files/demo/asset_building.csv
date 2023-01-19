@@ -1,6 +1,0 @@
-id, type, location, longitude, latitude, phone_number, postal_address
-"18","BUILDING","Cadafais",-9,39,"+33 123456789","10 avenue xrator"
-"19","BUILDING","Bargas",-4.01979,39.94113,"+33 123456789","10 bld xrator "
-"20","BUILDING","Saint-Flour",3.094862,45.033026,"+33 123456789","10 bis xrator"
-"17","BUILDING","Paris",2.333333,48.866667,"+33 123456789","10 rue xrator"
-"21","BUILDING","Landivy",-1.0350,48.4813,"+33 123456777","10 rue xrator is the best"

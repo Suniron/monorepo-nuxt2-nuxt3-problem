@@ -1,9 +1,0 @@
-id, fk_company_id, name, description, fk_owner, fk_priority_id, start_date, creation_date, due_date
-1,1,"Upgrade Debian version","The debian version of all linux pc's must be updated.","3381af4c-8690-496b-a086-b346e9fbc1bc",3,"2022-07-07T00:00:00.000Z","2022-06-07T14:00:00.000Z","2022-07-01T00:00:00.000Z"
-2,1,"Remediation of all asset web","All asset web must be remediated before august 2022","03d21be5-0196-4557-8e55-8c03c9020201",2,,"2022-06-06T14:00:00.000Z","2022-08-01T00:00:00.000Z"
-3,1,"Remediation Project test 1","A beautifull description of the project","f7f2ded2-8e0b-4e50-85d8-ca0ab1ab2a5a",4,"2022-06-16T00:00:00.000Z","2022-06-06T14:00:00.000Z","2022-08-21T10:00:00.000Z"
-4,1,"Remediation Project test 2","A beautifull description of the project","1a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc",2,,"2022-06-06T18:30:00.000Z","2022-06-15T08:30:00.000Z"
-5,1,"Remediation Project test 3","A beautifull description of the project","1a3f30d8-a8fb-4f93-be14-5ba55e5a4bdc",1,,"2022-05-30T10:35:00.000Z","2022-07-15T08:30:00.000Z"
-6,1,"Remediation Project test 4","A beautifull description of the project","d080ea8b-7957-4ad3-86ec-0959cf0a050b",3,"2022-06-06T00:00:00.000Z","2022-06-05T08:32:00.000Z","2022-06-16T12:00:00.000Z"
-7,1,"Remediation Project test 5","A beautifull description of the project","71ca8bcb-9167-40fc-a5ec-fb229696a588",1,,"2022-06-15T15:30:00.000Z","2022-07-20T08:30:00.000Z"
-8,1,"Critical remediation project","A beautifull description of the project","03d21be5-0196-4557-8e55-8c03c9020201",4,"2022-06-05T00:00:00.000Z","2022-06-01T08:33:40.000Z","2022-06-20T00:00:00.000Z"
