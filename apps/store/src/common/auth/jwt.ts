@@ -96,18 +96,3 @@ export const verifyToken = (token: string, tokenType: JwtTokenType) => {
     return { error: MODEL_ERROR, errorMessage: 'unknown error' }
   }
 }
-
-/**
- * // TODO: unused ?
- */
-export const checkTokenValidity = async (token: string) => {
-  // Check token existence
-  const tokenInfo = await getTokenInfoRequest(prismaClient, token)
-  if (!tokenInfo)
-    return { error: UNAUTHORIZED }
-
-  // Check token validity & extract the payload
-  const { payload } = verifyToken(tokenInfo.token, tokenInfo.type)
-
-  return { payload }
-}
